@@ -4,10 +4,72 @@
 	Contact: tdmaav@gmail.com
 	Ported to Heron by Christopher Diggins 
 */
+module Seacape.Helpers
+{
+	mat3 fromEuler(float3 ang) {
+		float2 a1 = float2(sin(ang.x),cos(ang.x));
+		float2 a2 = float2(sin(ang.y),cos(ang.y));
+		float2 a3 = float2(sin(ang.z),cos(ang.z));
+		mat3 m;
+		m[0] = float3(a1.y*a3.y+a1.x*a2.x*a3.x,a1.y*a2.x*a3.x+a3.y*a1.x,-a2.y*a3.x);
+		m[1] = float3(-a2.y*a1.x,a1.y*a2.y,a2.x);
+		m[2] = float3(a3.y*a1.x*a2.x+a1.y*a3.x,a1.x*a3.x-a1.y*a3.y*a2.x,a2.y*a3.y);
+		return m;
+	}
+	
+	float hash( float2 p ) {
+		float h = dot(p,float2(127.1,311.7));	
+		return fract(sin(h)*43758.5453123);
+	}
+	
+	float noise( in float2 p ) {
+		float2 i = floor( p );
+		float2 f = fract( p );	
+		float2 u = f*f*(3.0-2.0*f);
+		return -1.0+2.0*mix( mix( hash( i + float2(0.0,0.0) ), 
+						 hash( i + float2(1.0,0.0) ), u.x),
+					mix( hash( i + float2(0.0,1.0) ), 
+						 hash( i + float2(1.0,1.0) ), u.x), u.y);
+	}
+
+	// lighting
+	float diffuse(float3 n,float3 l,float p) {
+		return pow(dot(n,l) * 0.4 + 0.6,p);
+	}
+	
+	float specular(float3 n,float3 l,float3 e,float s) {    
+		float nrm = (s + 8.0) / (3.1415 * 8.0);
+		return pow(max(dot(reflect(e,n),l),0.0),s) * nrm;
+	}
+
+	// sky
+	float3 getSkyColor(float3 e) {
+		e.y = max(e.y,0.0);
+		float3 ret;
+		ret.x = pow(1.0-e.y,2.0);
+		ret.y = 1.0-e.y;
+		ret.z = 0.6+(1.0-e.y)*0.4;
+		return ret;
+	}
+
+	// sea
+	float sea_octave(float2 uv, float choppy) {
+		uv += noise(uv);        
+		float2 wv = 1.0-abs(sin(uv));
+		float2 swv = abs(cos(uv));    
+		wv = mix(wv,swv,wv);
+		return pow(1.0-pow(wv.x * wv.y,0.65),choppy);
+	}
+
+}
 
 module Seascape
 {
-	[gpu]
+	import
+	{
+		Seacape.Helpers;
+	}
+
 	float4 main( float2 fragCoord, float2 iResolution, float iGlobalTime, float2 iMouse) 
 	{
 		const int NUM_STEPS = 8;
@@ -27,60 +89,8 @@ module Seascape
 		float SEA_TIME = 1.0 + iGlobalTime * SEA_SPEED;
 		mat2 octave_m = mat2(1.6,1.2,-1.2,1.6);
 
-		// math
-		mat3 fromEuler(float3 ang) {
-			float2 a1 = float2(sin(ang.x),cos(ang.x));
-			float2 a2 = float2(sin(ang.y),cos(ang.y));
-			float2 a3 = float2(sin(ang.z),cos(ang.z));
-			mat3 m;
-			m[0] = float3(a1.y*a3.y+a1.x*a2.x*a3.x,a1.y*a2.x*a3.x+a3.y*a1.x,-a2.y*a3.x);
-			m[1] = float3(-a2.y*a1.x,a1.y*a2.y,a2.x);
-			m[2] = float3(a3.y*a1.x*a2.x+a1.y*a3.x,a1.x*a3.x-a1.y*a3.y*a2.x,a2.y*a3.y);
-			return m;
-		}
-		float hash( float2 p ) {
-			float h = dot(p,float2(127.1,311.7));	
-			return fract(sin(h)*43758.5453123);
-		}
-		float noise( in float2 p ) {
-			float2 i = floor( p );
-			float2 f = fract( p );	
-			float2 u = f*f*(3.0-2.0*f);
-			return -1.0+2.0*mix( mix( hash( i + float2(0.0,0.0) ), 
-							 hash( i + float2(1.0,0.0) ), u.x),
-						mix( hash( i + float2(0.0,1.0) ), 
-							 hash( i + float2(1.0,1.0) ), u.x), u.y);
-		}
-
-		// lighting
-		float diffuse(float3 n,float3 l,float p) {
-			return pow(dot(n,l) * 0.4 + 0.6,p);
-		}
-		float specular(float3 n,float3 l,float3 e,float s) {    
-			float nrm = (s + 8.0) / (3.1415 * 8.0);
-			return pow(max(dot(reflect(e,n),l),0.0),s) * nrm;
-		}
-
-		// sky
-		float3 getSkyColor(float3 e) {
-			e.y = max(e.y,0.0);
-			float3 ret;
-			ret.x = pow(1.0-e.y,2.0);
-			ret.y = 1.0-e.y;
-			ret.z = 0.6+(1.0-e.y)*0.4;
-			return ret;
-		}
-
-		// sea
-		float sea_octave(float2 uv, float choppy) {
-			uv += noise(uv);        
-			float2 wv = 1.0-abs(sin(uv));
-			float2 swv = abs(cos(uv));    
-			wv = mix(wv,swv,wv);
-			return pow(1.0-pow(wv.x * wv.y,0.65),choppy);
-		}
-
-		float map(float3 p) {
+		float map(float3 p) 
+		{
 			float freq = SEA_FREQ;
 			float amp = SEA_HEIGHT;
 			float choppy = SEA_CHOPPY;
@@ -97,7 +107,8 @@ module Seascape
 			return p.y - h;
 		}
 
-		float map_detailed(float3 p) {
+		float map_detailed(float3 p) 
+		{
 			float freq = SEA_FREQ;
 			float amp = SEA_HEIGHT;
 			float choppy = SEA_CHOPPY;
@@ -105,7 +116,7 @@ module Seascape
 			
 			float d, h = 0.0;    
 			for(int i = 0; i < ITER_FRAGMENT; i++) {        
-				d = sea_octave((uv+SEA_TIME)*freq,choppy);
+			d = sea_octave((uv+SEA_TIME)*freq,choppy);
 				d += sea_octave((uv-SEA_TIME)*freq,choppy);
 				h += d * amp;        
 				uv *= octave_m; freq *= 1.9; amp *= 0.22;
@@ -114,7 +125,8 @@ module Seascape
 			return p.y - h;
 		}
 
-		float3 getSeaColor(float3 p, float3 n, float3 l, float3 eye, float3 dist) {  
+		float3 getSeaColor(float3 p, float3 n, float3 l, float3 eye, float3 dist) 
+		{  
 			float fresnel = clamp(1.0 - dot(n,-eye), 0.0, 1.0);
 			fresnel = pow(fresnel,3.0) * 0.65;
 				
@@ -132,7 +144,8 @@ module Seascape
 		}
 
 		// tracing
-		float3 getNormal(float3 p, float eps) {
+		float3 getNormal(float3 p, float eps) 
+		{
 			float3 n;
 			n.y = map_detailed(p);    
 			n.x = map_detailed(float3(p.x+eps,p.y,p.z)) - n.y;
@@ -141,7 +154,8 @@ module Seascape
 			return normalize(n);
 		}
 
-		float heightMapTracing(float3 ori, float3 dir, [out] float3 p) {  
+		float heightMapTracing(float3 ori, float3 dir, [out] float3 p) 
+		{  
 			float tm = 0.0;
 			float tx = 1000.0;    
 			float hx = map(ori + dir * tx);
