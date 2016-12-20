@@ -1,0 +1,28 @@
+<html>
+<head>
+<title></title>
+</head>
+<body>
+<script src="main.js"></script>
+<script src="jquery.min.js"></script>
+<script>
+$(document).ready(function() {
+    simpleTests();
+    $('#input').on('propertychange change keyup paste input', function() {
+        console.log("Something changed!")
+        var input = $('#input').val();
+        var r = testTokenize(input);
+        $('#output').value = "changed"; 
+    });
+});
+</script>
+<textarea rows=40 cols=40 id="input">Test 1 23 4.5 /* comment */ "sss" frazzles
+dazzle
+/*
+    sasd
+*/
+</textarea>
+<textarea rows=40 cols=40 id="output">    
+</textarea>
+</body>
+</html>

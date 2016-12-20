@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Rhetoric Parsing Sandbox</title>
+</head>
+<body>
+  <div id="grammarSelectionDiv"></div>
+
+  <textarea rows=40 cols=80 id="grammarTextArea">
+  </textarea>
+
+    <script src="main.js"></script>
+    <script src="jquery.min.js"></script>
+    <script src="json_grammar.js"></script>
+  <script>
+    // TODO: 
+    // Create an array of grammars 
+    // Provide a combox box.
+    // I want each grammar to be able to describe itself. 
+    // I want a set of test suites to choose each grammar to be generated
+    // The type of parse can be chosen . . . 
+    //  * Tokenize
+    //  * Find nth instance of 
+    //  * Match
+    // The resulting parse tree can be pretty-printed as JSON.
+    // Do I let people edit the grammars? That is pretty cool, but a little perverse.
+    {
+        let myDiv = document.getElementById("grammarSelectionDiv");
+
+        //Create array of options to be added
+        let array = ["JsonGrammar"];
+
+        //Create and append select list
+        let selectList = document.createElement("select");
+        selectList.id = "grammarSelection";
+        myDiv.appendChild(selectList);
+
+        //Create and append the options
+        for (var i = 0; i < array.length; i++) {
+            var option = document.createElement("option");
+            option.value = array[i];
+            option.text = array[i];
+            selectList.appendChild(option);
+        }  
+    }
+    $(document).ready(function() {
+        // Display a text version of the grammar 
+        let g = new JsonGrammar();
+        let rep = Rhetoric.grammarToString(g);
+        $('#grammarTextArea').val(rep);  
+    });
+ </script>
+</body>
+</html>

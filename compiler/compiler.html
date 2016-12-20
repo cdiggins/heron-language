@@ -26,7 +26,8 @@ var compileButton = form.elements['compile-button'];
 compileButton.addEventListener('click', run);
 
 function run() {
-  outputArea.value = Heron.compile(sourceArea.value);
+  //outputArea.value = Heron.compile(sourceArea.value);
+  outputArea.value = HeronTokenize(sourceArea.value);
 }
 </script>
 
