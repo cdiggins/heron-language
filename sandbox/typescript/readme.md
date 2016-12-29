@@ -22,8 +22,8 @@ https://en.wikipedia.org/wiki/Parser_combinator
 
 Rhetoric can be used to construct parsers for languages (patterns) whose structure  
 can be described using a context-free grammar (CFG) or a regular expression (RE)
-This makes it more powerful than a regular expression parser.      
-For more information see: http://en.wikipedia.org/wiki/Chomsky_hierarchy.
+For more information on the relationship between these two pattern types 
+see: http://en.wikipedia.org/wiki/Chomsky_hierarchy.
 
 ## Related parsing libraries
 

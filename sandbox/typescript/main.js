@@ -1,3 +1,4 @@
+// Myna Parsing Library
 // Copyright (c) 2016 Christopher Diggins
 // Usage permitted under terms of MIT License
 var __extends = (this && this.__extends) || function (d, b) {
@@ -5,58 +6,44 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-var Rhetoric;
-(function (Rhetoric) {
-    // TODO: come up with a better id generation scheme
+var Myna;
+(function (Myna) {
+    // A lookup table of all grammars registered with Myna 
+    Myna.grammars = {};
+    // Generates a new ID for rules 
     var _nextId = 0;
     function genId() {
         return _nextId++;
     }
-    // This is used to memorize parses and rules 
+    // This is used to store (memoize) parses and rules. 
+    // When a rule is started it is associated with the value "true", afterwards it is either 
+    // a parse-node, or null  
     var _cache = {};
-    // Set to false if you want to turn off caching. This will slow down the parser, but consume less memory. 
-    var _useCache = false;
+    // This is the input text 
+    var input = "";
     // Clears the internal cache: should be called whenever a new parsing session is started  
-    function Initialize() {
+    function initialize(text) {
         _cache = {};
+        input = text;
     }
-    Rhetoric.Initialize = Initialize;
-    // A ParseIndex represents a location in the input token stream or character stream.
-    // It has three fields: end, input, index.  
-    var ParseIndex = (function () {
-        function ParseIndex(input, index) {
-            if (index === void 0) { index = 0; }
-            this.input = input;
-            this.index = index;
-            this.end = input.length;
-        }
-        ParseIndex.prototype.isText = function () {
-            return typeof (this.input) == "string";
-        };
-        ParseIndex.prototype.getToken = function () {
-            return this.input[this.index];
-        };
-        ParseIndex.prototype.getText = function () {
-            return this.input;
-        };
-        ParseIndex.prototype.advance = function (amount) {
-            return new ParseIndex(this.input, this.index + amount);
-        };
-        ParseIndex.prototype.atEnd = function () {
-            return this.index >= this.end;
-        };
-        return ParseIndex;
-    }());
-    Rhetoric.ParseIndex = ParseIndex;
+    Myna.initialize = initialize;
     // A node may have zero length, and may have child nodes.
-    // A successful parse function will return a ParseNode. 
+    // Any successful parse will return a ParseNode. 
     var ParseNode = (function () {
-        function ParseNode() {
-            this.children = new Array();
+        function ParseNode(start, end) {
+            this.start = start;
+            this.end = end;
         }
+        Object.defineProperty(ParseNode.prototype, "contents", {
+            get: function () {
+                return input.slice(this.start, this.end);
+            },
+            enumerable: true,
+            configurable: true
+        });
         return ParseNode;
     }());
-    Rhetoric.ParseNode = ParseNode;
+    Myna.ParseNode = ParseNode;
     // A Rule is both a rule in the PEG grammar and a parser. The parse function takes  
     // a particular parse location (in either a string, or array of tokens) and will return eith a  
     // ParseNode if the rule is succefully matched or null otherwise. The input argument 
@@ -71,38 +58,39 @@ var Rhetoric;
             this.id = genId();
             // Identifies types of rules.  
             this.type = "";
-            // Indicates whether nodes should be created for this rule or not
+            // Indicates whether generated nodes should be added to the abstract syntax tree
+            // Generally speaking this will be true, unless the rule  
             this.skip = true;
         }
-        // Generates a hash code for this rule at a particular index
-        Rule.prototype.genHashCode = function (index) {
-            return this.name + this.id + "_" + index;
-        };
         // Default implementation returns true or creates a node, depending on the 'genNode'
-        Rule.prototype.parseImplementation = function (index) {
+        Rule.prototype.parseImplementation = function (index, parent) {
             throw "Not implemented, this function is supposed to be overridden";
         };
         // Calls the derived class parser if necessary, but first looks up whether this rule has already 
         // been tested against this spot in the input. This is the memoization step used by the PEG PackRat
         // parsing technique, and reduces the complexity of the algorithm to O(N).    
-        Rule.prototype.parse = function (index) {
-            if (_useCache) {
-                var hash = this.genHashCode(index.index);
-                if (!(hash in _cache))
-                    _cache[hash] = this.parseImplementation(index);
-                return _cache[hash];
+        Rule.prototype.parse = function (index, node) {
+            var result = null;
+            // Check if we create a node or not for this rule.  
+            var child = this.skip ? node : new ParseNode(index, index);
+            var end = this.parseImplementation(index, child);
+            // Check that parsing is successful
+            if (end !== null) {
+                // The child node and the parent node are finished at the same index 
+                child.end = end;
+                node.end = end;
+                // If not skipping, we add the child node to the parent node.  
+                if (!this.skip) {
+                    // Create the array only if we need to.
+                    if (node.children === undefined)
+                        node.children = new Array();
+                    node.children.push(child);
+                }
+                // Either way the result is the node                
+                result = node;
             }
-            else {
-                return this.parseImplementation(index);
-            }
-        };
-        // Creates a default node for this rule
-        Rule.prototype.createNode = function (index) {
-            var node = new ParseNode();
-            node.rule = this;
-            node.start = index;
-            node.end = index;
-            return node;
+            // Finished!
+            return result;
         };
         // Defines the type of rules. Used for defining new rule types as combinators. 
         Rule.prototype.setType = function (typeName) {
@@ -112,14 +100,6 @@ var Rhetoric;
         // Sets the name of the rule. 
         Rule.prototype.setName = function (name) {
             this.name = name;
-            return this;
-        };
-        // When called, the Parse node is created and kept.
-        Rule.prototype.astNode = function (name) {
-            if (name === void 0) { name = ""; }
-            if (name != "")
-                this.name = name;
-            this.skip = false;
             return this;
         };
         Object.defineProperty(Rule.prototype, "definition", {
@@ -142,17 +122,42 @@ var Rhetoric;
         Rule.prototype.toString = function () {
             return this.name + " \t<- " + this.definition;
         };
+        Object.defineProperty(Rule.prototype, "opt", {
+            // Extensions to support method/property chaining a.k.a. fluent syntax
+            get: function () { return opt(this); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Rule.prototype, "star", {
+            get: function () { return star(this); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Rule.prototype, "plus", {
+            get: function () { return plus(this); },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Rule.prototype, "not", {
+            get: function () { return not(this); },
+            enumerable: true,
+            configurable: true
+        });
+        Rule.prototype.andThen = function (r) { return seq(this, r); };
+        Rule.prototype.andThenAt = function (r) { return this.andThen(at(r)); };
+        Rule.prototype.andThenNot = function (r) { return this.andThen(not(r)); };
+        Rule.prototype.or = function (r) { return choice(this, r); };
+        Rule.prototype.repeatUntil = function (r) { return repeatWhileNot(this, r); };
+        Rule.prototype.repeatUntilPast = function (r) { return repeatUntilPast(this, r); };
+        Rule.prototype.repeat = function (count) { return repeat(this, count); };
+        Rule.prototype.bounded = function (min, max) { return bounded(this, min, max); };
         return Rule;
     }());
-    Rhetoric.Rule = Rule;
-})(Rhetoric || (Rhetoric = {}));
-// These are the core Rule classes of Rhetoric. These should not be used directly, instead use the functions that
-// generate instances of these rules instead, they provide additional help and convenience. 
-// If you fork this code, think twice before adding new classes here. Maybe you can implement your new Rule
-// in terms of functions or other low-level rules. Then you can be happy knowing that the same code is being 
-// re-used and tested all the time.  
-var Rhetoric;
-(function (Rhetoric) {
+    Myna.Rule = Rule;
+    // These are the core Rule classes of Myna. Normally you would not use theses directly but use the factory methods
+    // If you fork this code, think twice before adding new classes here. Maybe you can implement your new Rule
+    // in terms of functions or other low-level rules. Then you can be happy knowing that the same code is being 
+    // re-used and tested all the time.  
     // Matches a series of rules in order. Succeeds only if all sub-rules succeed. 
     var Sequence = (function (_super) {
         __extends(Sequence, _super);
@@ -160,20 +165,15 @@ var Rhetoric;
             _super.call(this, rules);
             this.type = "sequence";
         }
-        Sequence.prototype.parseImplementation = function (index) {
-            var node = _super.prototype.createNode.call(this, index);
+        Sequence.prototype.parseImplementation = function (index, node) {
             for (var _i = 0, _a = this.rules; _i < _a.length; _i++) {
                 var r = _a[_i];
-                var child = r.parse(index);
-                if (child == null)
+                var child = r.parse(index, node);
+                if (child === null)
                     return null;
                 index = child.end;
-                if (!r.skip)
-                    node.children.push(child);
-                child.parent = node;
-                node.end = index;
             }
-            return node;
+            return index;
         };
         Object.defineProperty(Sequence.prototype, "definition", {
             // Returns a string representing the definition of the rule 
@@ -184,8 +184,8 @@ var Rhetoric;
             configurable: true
         });
         return Sequence;
-    }(Rhetoric.Rule));
-    Rhetoric.Sequence = Sequence;
+    }(Rule));
+    Myna.Sequence = Sequence;
     // Tries to match each rule in order until one succeeds. Succeeds if any of the sub-rules succeed. 
     var Choice = (function (_super) {
         __extends(Choice, _super);
@@ -193,18 +193,13 @@ var Rhetoric;
             _super.call(this, rules);
             this.type = "choice";
         }
-        Choice.prototype.parseImplementation = function (index) {
-            var node = _super.prototype.createNode.call(this, index);
+        Choice.prototype.parseImplementation = function (index, node) {
             for (var _i = 0, _a = this.rules; _i < _a.length; _i++) {
                 var r = _a[_i];
-                var child = r.parse(index);
+                var child = r.parse(index, node);
                 if (child == null)
                     continue;
-                child.parent = node;
-                if (!r.skip)
-                    node.children.push(child);
-                node.end = index;
-                return child;
+                return child.end;
             }
             return null;
         };
@@ -217,8 +212,8 @@ var Rhetoric;
             configurable: true
         });
         return Choice;
-    }(Rhetoric.Rule));
-    Rhetoric.Choice = Choice;
+    }(Rule));
+    Myna.Choice = Choice;
     // Returns true only if the child rule fails to match.
     var Not = (function (_super) {
         __extends(Not, _super);
@@ -226,11 +221,10 @@ var Rhetoric;
             _super.call(this, [rule]);
             this.type = "not";
         }
-        Not.prototype.parseImplementation = function (index) {
-            var node = _super.prototype.createNode.call(this, index);
-            if (this.rules[0].parse(index) != null)
+        Not.prototype.parseImplementation = function (index, node) {
+            if (this.rules[0].parse(index, node) != null)
                 return null;
-            return node;
+            return index;
         };
         Object.defineProperty(Not.prototype, "definition", {
             get: function () {
@@ -240,8 +234,8 @@ var Rhetoric;
             configurable: true
         });
         return Not;
-    }(Rhetoric.Rule));
-    Rhetoric.Not = Not;
+    }(Rule));
+    Myna.Not = Not;
     // Returns true only if the child rule matches, but does not advance the parser
     var And = (function (_super) {
         __extends(And, _super);
@@ -249,11 +243,10 @@ var Rhetoric;
             _super.call(this, [rule]);
             this.type = "and";
         }
-        And.prototype.parseImplementation = function (index) {
-            var node = _super.prototype.createNode.call(this, index);
-            if (this.rules[0].parse(index) == null)
+        And.prototype.parseImplementation = function (index, node) {
+            if (this.rules[0].parse(index, node) == null)
                 return null;
-            return node;
+            return index;
         };
         Object.defineProperty(And.prototype, "definition", {
             get: function () {
@@ -263,8 +256,8 @@ var Rhetoric;
             configurable: true
         });
         return And;
-    }(Rhetoric.Rule));
-    Rhetoric.And = And;
+    }(Rule));
+    Myna.And = And;
     // A generalization of several other rules such as star (0+), plus (1+), opt(0 or 1),   
     var BoundedRule = (function (_super) {
         __extends(BoundedRule, _super);
@@ -276,21 +269,17 @@ var Rhetoric;
             this.max = max;
             this.type = "bounded";
         }
-        BoundedRule.prototype.parseImplementation = function (index) {
-            var node = _super.prototype.createNode.call(this, index);
-            var child = this.rules[0].parse(index);
+        BoundedRule.prototype.parseImplementation = function (index, node) {
+            var child = this.rules[0].parse(index, node);
             var i = 0;
             while (child != null && i < this.max) {
                 i++;
-                if (!this.rules[0].skip)
-                    node.children.push(child);
                 index = child.end;
-                node.end = index;
-                child = this.rules[0].parse(index);
+                child = this.rules[0].parse(index, node);
             }
             if (i < this.min)
                 return null;
-            return node;
+            return index;
         };
         Object.defineProperty(BoundedRule.prototype, "definition", {
             get: function () {
@@ -300,8 +289,8 @@ var Rhetoric;
             configurable: true
         });
         return BoundedRule;
-    }(Rhetoric.Rule));
-    Rhetoric.BoundedRule = BoundedRule;
+    }(Rule));
+    Myna.BoundedRule = BoundedRule;
     // Matches a rule 0 or 1 times  
     var Optional = (function (_super) {
         __extends(Optional, _super);
@@ -318,7 +307,7 @@ var Rhetoric;
         });
         return Optional;
     }(BoundedRule));
-    Rhetoric.Optional = Optional;
+    Myna.Optional = Optional;
     // Greedily matches a given rule zero or more times.  
     var Star = (function (_super) {
         __extends(Star, _super);
@@ -335,7 +324,7 @@ var Rhetoric;
         });
         return Star;
     }(BoundedRule));
-    Rhetoric.Star = Star;
+    Myna.Star = Star;
     // Greedily matches a given rule one or more times.  
     var Plus = (function (_super) {
         __extends(Plus, _super);
@@ -352,7 +341,7 @@ var Rhetoric;
         });
         return Plus;
     }(BoundedRule));
-    Rhetoric.Plus = Plus;
+    Myna.Plus = Plus;
     // Returns true if at the end of the input
     var End = (function (_super) {
         __extends(End, _super);
@@ -360,9 +349,8 @@ var Rhetoric;
             _super.call(this, []);
             this.type = "end";
         }
-        End.prototype.parseImplementation = function (index) {
-            var node = _super.prototype.createNode.call(this, index);
-            return index.atEnd() ? node : null;
+        End.prototype.parseImplementation = function (index, node) {
+            return index >= text.length ? index : null;
         };
         Object.defineProperty(End.prototype, "definition", {
             get: function () {
@@ -372,70 +360,85 @@ var Rhetoric;
             configurable: true
         });
         return End;
-    }(Rhetoric.Rule));
-    Rhetoric.End = End;
+    }(Rule));
+    Myna.End = End;
     // Advances the parser by one token, but returns false if at the end. 
-    var Advance = (function (_super) {
-        __extends(Advance, _super);
-        function Advance() {
+    var Any = (function (_super) {
+        __extends(Any, _super);
+        function Any() {
             _super.call(this, []);
-            this.type = "advance";
+            this.type = "any";
         }
-        Advance.prototype.parseImplementation = function (index) {
-            if (index.atEnd())
-                return null;
-            var node = _super.prototype.createNode.call(this, index);
-            node.end = index.advance(1);
-            return node;
+        Any.prototype.parseImplementation = function (index, node) {
+            return index >= text.length ? null : index++;
         };
-        return Advance;
-    }(Rhetoric.Rule));
-    Rhetoric.Advance = Advance;
-    // Applies a regular expression to the input string, or against the current token. 
-    var Re = (function (_super) {
-        __extends(Re, _super);
-        function Re(regex) {
-            _super.call(this, []);
-            this.regex = regex;
-            this.type = "regex";
-        }
-        Re.prototype.parseImplementation = function (index) {
-            var node = _super.prototype.createNode.call(this, index);
-            if (index.isText()) {
-                this.regex.lastIndex = index.index;
-                var matchResults = this.regex.exec(index.getText());
-                if (matchResults == null)
-                    return null;
-                if (matchResults.index != index.index)
-                    return null;
-                var match = matchResults[0];
-                node.end = index.advance(match.length);
-            }
-            else {
-                // We just match the regular expression against the token 
-                this.regex.lastIndex = 0;
-                var token = index.getToken();
-                var matchResults = this.regex.exec(token);
-                if (matchResults == null)
-                    return null;
-                if (matchResults.index != token.length)
-                    return null;
-                node.end = index.advance(1);
-            }
-            return node;
-        };
-        Object.defineProperty(Re.prototype, "definition", {
+        Object.defineProperty(Any.prototype, "definition", {
             get: function () {
-                return "/" + this.regex.source + "/";
+                return ".";
             },
             enumerable: true,
             configurable: true
         });
-        return Re;
-    }(Rhetoric.Rule));
-    Rhetoric.Re = Re;
+        return Any;
+    }(Rule));
+    Myna.Any = Any;
+    // Uses a lookup table to decide whether the value is true or not.   
+    var Lookup = (function (_super) {
+        __extends(Lookup, _super);
+        function Lookup(lookup, neg) {
+            _super.call(this, []);
+            this.lookup = lookup;
+            this.neg = neg;
+            this.type = "lookup";
+        }
+        Lookup.prototype.parseImplementation = function (index, node) {
+            if (index >= input.length)
+                return null;
+            var tkn = input[index];
+            var hasTkn = tkn in this.lookup;
+            var success = this.neg ? !hasTkn : hasTkn;
+            if (!success)
+                return null;
+            return index + 1;
+        };
+        Object.defineProperty(Lookup.prototype, "definition", {
+            get: function () {
+                return this.lookup;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return Lookup;
+    }(Rule));
+    Myna.Lookup = Lookup;
+    // Advance the token and returns true if the token is in the given range.    
+    var Range = (function (_super) {
+        __extends(Range, _super);
+        function Range(min, max) {
+            _super.call(this, []);
+            this.min = min;
+            this.max = max;
+            this.type = "range";
+        }
+        Range.prototype.parseImplementation = function (index, node) {
+            if (index >= input.length)
+                return null;
+            var tkn = input[index];
+            if (tkn < this.min || tkn > this.max)
+                return null;
+            return index + 1;
+        };
+        Object.defineProperty(Range.prototype, "definition", {
+            get: function () {
+                return "[" + this.min + " .. " + this.max + "]";
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return Range;
+    }(Rule));
+    Myna.Range = Range;
     // Used to match a string in the input string. 
-    // If the input is a series of tokens, it will match the text of the current token.  
     var Text = (function (_super) {
         __extends(Text, _super);
         function Text(text) {
@@ -443,22 +446,16 @@ var Rhetoric;
             this.text = text;
             this.type = "text";
         }
-        Text.prototype.parseImplementation = function (index) {
-            var node = _super.prototype.createNode.call(this, index);
-            var start = index.index;
-            var end = index.index + this.text.length;
-            if (index.isText()) {
-                var substring = index.getText().slice(start, end);
-                if (substring !== this.text)
-                    return null;
-                node.end = index.advance(this.text.length);
-            }
-            else {
-                if (index.getToken() !== this.text)
-                    return null;
-                node.end = index.advance(1);
-            }
-            return node;
+        Text.prototype.parseImplementation = function (index, node) {
+            if (index >= input.length)
+                return null;
+            var start = index;
+            var end = index + this.text.length;
+            // TODO: optimize by not creating a copy of memory, just advance two pointers 
+            var substring = input.slice(start, end);
+            if (substring !== this.text)
+                return null;
+            return index + this.text.length;
         };
         Object.defineProperty(Text.prototype, "definition", {
             get: function () {
@@ -468,8 +465,8 @@ var Rhetoric;
             configurable: true
         });
         return Text;
-    }(Rhetoric.Rule));
-    Rhetoric.Text = Text;
+    }(Rule));
+    Myna.Text = Text;
     // Creates a zero-length node, and executes some action during parsing. 
     // Grammars that embed actions give programmers headaches so i suggest avoiding this 
     // unless you want to throw an exception or do some logging. 
@@ -480,13 +477,13 @@ var Rhetoric;
             this.fn = fn;
             this.type = "action";
         }
-        Action.prototype.parseImplementation = function (index) {
+        Action.prototype.parseImplementation = function (index, node) {
             this.fn(index);
-            return _super.prototype.createNode.call(this, index);
+            return index;
         };
         return Action;
-    }(Rhetoric.Rule));
-    Rhetoric.Action = Action;
+    }(Rule));
+    Myna.Action = Action;
     // Creates a rule that is defined from a function that generates the rule. 
     // This allows two rules to have a cyclic relation. 
     var Delay = (function (_super) {
@@ -496,8 +493,8 @@ var Rhetoric;
             this.fn = fn;
             this.type = "delay";
         }
-        Delay.prototype.parseImplementation = function (index) {
-            return this.fn().parse(index);
+        Delay.prototype.parseImplementation = function (index, node) {
+            return this.fn().parse(index, node).end;
         };
         Object.defineProperty(Delay.prototype, "definition", {
             get: function () {
@@ -507,111 +504,123 @@ var Rhetoric;
             configurable: true
         });
         return Delay;
-    }(Rhetoric.Rule));
-    Rhetoric.Delay = Delay;
-})(Rhetoric || (Rhetoric = {}));
-// The are function that create rules, usually in terms of other rules. 
-// The low-level rules are atEnd, advance, re, and text.  
-// These functions take a "RuleType" argument, which can be a string or regular expression.
-// This simplifies parsing. 
-var Rhetoric;
-(function (Rhetoric) {
+    }(Rule));
+    Myna.Delay = Delay;
     // Given a RuleType returns an instance of a Rule.
     function RuleTypeToRule(rule) {
-        if (rule instanceof Rhetoric.Rule)
+        if (rule instanceof Rule)
             return rule;
-        if (rule instanceof RegExp)
-            return new Rhetoric.Re(rule);
         if (typeof (rule) == "string")
-            return new Rhetoric.Text(rule);
+            return new Text(rule);
         if (rule == undefined || rule == null)
-            throw "undefined rule";
-        throw "Unhandled rule type";
+            throw "undefined";
+        throw "Internal error: not a rule type " + rule;
     }
-    Rhetoric.RuleTypeToRule = RuleTypeToRule;
+    Myna.RuleTypeToRule = RuleTypeToRule;
+    // Matches a series of rules in order, and succeeds if they all do
     function seq() {
         var rules = [];
         for (var _i = 0; _i < arguments.length; _i++) {
             rules[_i - 0] = arguments[_i];
         }
-        //if (rules.length >= 2 && rules[0] instanceof Seq) 
-        //    return new Seq((rules[0] as Seq).rules.concat(rules.slice(1)));
-        return new Rhetoric.Sequence(rules.map(RuleTypeToRule));
+        return new Sequence(rules.map(RuleTypeToRule));
     }
-    Rhetoric.seq = seq;
+    Myna.seq = seq;
+    // Tries to match each rule in order, and succeeds if one does 
     function choice() {
         var rules = [];
         for (var _i = 0; _i < arguments.length; _i++) {
             rules[_i - 0] = arguments[_i];
         }
-        //if (rules.length >= 2 && rules[0] instanceof Choice) 
-        //    return new Choice((rules[0] as Choice).rules.concat(rules.slice(1)));
-        return new Rhetoric.Choice(rules.map(RuleTypeToRule));
+        return new Choice(rules.map(RuleTypeToRule));
     }
-    Rhetoric.choice = choice;
+    Myna.choice = choice;
     // Enables Rules to be defined in terms of variables that are defined later on. This 
     // enables cyclic rule definitions.  
-    function delay(fxn) { return new Rhetoric.Delay(function () { return RuleTypeToRule(fxn()); }); }
-    Rhetoric.delay = delay;
+    function delay(fxn) { return new Delay(function () { return RuleTypeToRule(fxn()); }); }
+    Myna.delay = delay;
     // Terminal rules 
-    Rhetoric.end = new Rhetoric.End();
-    Rhetoric.advance = new Rhetoric.Advance();
-    function re(re) { return new Rhetoric.Re(re); }
-    Rhetoric.re = re;
-    function text(text) { return new Rhetoric.Text(text); }
-    Rhetoric.text = text;
-    // Basic rule operators (combinators)
-    function not(rule) { return new Rhetoric.Not(RuleTypeToRule(rule)); }
-    Rhetoric.not = not;
+    Myna.end = new End();
+    Myna.any = new Any();
+    Myna.all = Myna.any.star;
+    function text(text) { return new Text(text); }
+    Myna.text = text;
+    function range(min, max) { return new Range(min, max); }
+    Myna.range = range;
+    function set(chars, neg) {
+        if (neg === void 0) { neg = false; }
+        var d = {};
+        for (var _i = 0, chars_1 = chars; _i < chars_1.length; _i++) {
+            var c = chars_1[_i];
+            d[c] = c;
+        }
+        return new Lookup(d, neg);
+    }
+    Myna.set = set;
     ;
-    function star(rule) { return new Rhetoric.Star(RuleTypeToRule(rule)); }
-    Rhetoric.star = star;
+    function negSet(chars) { return set(chars, true); }
+    Myna.negSet = negSet;
     ;
-    function bounded(rule, min, max) { return new Rhetoric.BoundedRule(RuleTypeToRule(rule), min, max); }
-    Rhetoric.bounded = bounded;
+    // Basic rule operators (combinators).
+    function not(rule) { return new Not(RuleTypeToRule(rule)); }
+    Myna.not = not;
+    ;
+    function star(rule) { return new Star(RuleTypeToRule(rule)); }
+    Myna.star = star;
+    ;
+    function bounded(rule, min, max) { return new BoundedRule(RuleTypeToRule(rule), min, max); }
+    Myna.bounded = bounded;
     function repeat(rule, count) { return bounded(rule, count, count); }
-    Rhetoric.repeat = repeat;
-    function opt(rule) { return new Rhetoric.Optional(RuleTypeToRule(rule)); }
-    Rhetoric.opt = opt;
+    Myna.repeat = repeat;
+    function opt(rule) { return new Optional(RuleTypeToRule(rule)); }
+    Myna.opt = opt;
     ;
-    function at(rule) { return new Rhetoric.And(RuleTypeToRule(rule)); }
-    Rhetoric.at = at;
+    function at(rule) { return new And(RuleTypeToRule(rule)); }
+    Myna.at = at;
     ;
-    function plus(rule) { return new Rhetoric.Plus(RuleTypeToRule(rule)); }
-    Rhetoric.plus = plus;
+    function plus(rule) { return new Plus(RuleTypeToRule(rule)); }
+    Myna.plus = plus;
     // Advanced rule operators (combinator)
-    function delimitedList(rule, delimiter) { return seq(rule, star(seq(delimiter, rule))).setType("delimitedList"); }
-    Rhetoric.delimitedList = delimitedList;
+    function delimitedList(rule, delimiter) { return opt(seq(rule, star(seq(delimiter, rule)))).setType("delimitedList"); }
+    Myna.delimitedList = delimitedList;
     function except(condition, rule) { return seq(not(condition), rule).setType("except"); }
-    Rhetoric.except = except;
+    Myna.except = except;
     function repeatWhileNot(body, condition) { return star(except(condition, body)).setType("whileNot"); }
-    Rhetoric.repeatWhileNot = repeatWhileNot;
-    function repeatUntilPast(body, condition) { return seq(repeatWhileNot(body, condition), body).setType("repeatUntilPast"); }
-    Rhetoric.repeatUntilPast = repeatUntilPast;
-    function anyCharExcept(rule) { return except(rule, Rhetoric.advance).setType("advanceUnless"); }
-    Rhetoric.anyCharExcept = anyCharExcept;
+    Myna.repeatWhileNot = repeatWhileNot;
+    function repeatUntilPast(body, condition) { return seq(repeatWhileNot(body, condition), condition).setType("repeatUntilPast"); }
+    Myna.repeatUntilPast = repeatUntilPast;
+    function anyCharExcept(rule) { return except(rule, Myna.any).setType("anyCharExcept"); }
+    Myna.anyCharExcept = anyCharExcept;
     function advanceWhileNot(rule) { return star(anyCharExcept(rule)).setType("advanceWhileNot"); }
-    Rhetoric.advanceWhileNot = advanceWhileNot;
+    Myna.advanceWhileNot = advanceWhileNot;
     function advanceUntilPast(rule) { return seq(advanceWhileNot(rule), rule).setType("advanceUntilPast"); }
-    Rhetoric.advanceUntilPast = advanceUntilPast;
+    Myna.advanceUntilPast = advanceUntilPast;
     // Actions  
+    function action(fn) { return new Action(fn); }
+    Myna.action = action;
     function err(msg) {
         if (msg === void 0) { msg = "parsing error"; }
-        return new Rhetoric.Action(function (p) { throw (msg); }).setType("err");
+        return action(function (p) { throw (msg); }).setType("err");
     }
-    Rhetoric.err = err;
+    Myna.err = err;
     function log(msg) {
         if (msg === void 0) { msg = ""; }
-        return new Rhetoric.Action(function (p) { console.log(msg); }).setType("log");
+        return action(function (p) { console.log(msg); }).setType("log");
     }
-    Rhetoric.log = log;
+    Myna.log = log;
     // Guards
-    function assert(rule) { return choice(rule, err("Expected rule: " + rule.toString())).setType("assert"); }
-    Rhetoric.assert = assert;
-    function assertNot(rule) { return choice(not(rule), err("Rule should not have matched: " + rule.toString())).setType("assert"); }
-    Rhetoric.assertNot = assertNot;
+    function assert(rule, msg) {
+        if (msg === void 0) { msg = "Expected rule to match"; }
+        return choice(rule, err(msg)).setType("assert");
+    }
+    Myna.assert = assert;
+    function assertNot(rule, msg) {
+        if (msg === void 0) { msg = "Expected rule to not match"; }
+        return choice(not(rule), err(msg)).setType("assertNot");
+    }
+    Myna.assertNot = assertNot;
     function ifThenAssert(condition, body) { return seq(condition, assert(body)).setType("ifThenAssert"); }
-    Rhetoric.ifThenAssert = ifThenAssert;
+    Myna.ifThenAssert = ifThenAssert;
     function guardedSeq(condition) {
         var rules = [];
         for (var _i = 1; _i < arguments.length; _i++) {
@@ -619,96 +628,104 @@ var Rhetoric;
         }
         return ifThenAssert(condition, seq.apply(void 0, rules)).setType("guardedSeq");
     }
-    Rhetoric.guardedSeq = guardedSeq;
-    function assertAtEnd() { return assert(Rhetoric.end).setName("assertAtEnd"); }
-    Rhetoric.assertAtEnd = assertAtEnd;
-    function tokenize(text) {
-        var tokens = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            tokens[_i - 1] = arguments[_i];
-        }
-        var rule = star(choice.apply(void 0, tokens));
-        var result = rule.parse(new Rhetoric.ParseIndex(text));
-        if (result == null)
-            return result;
-        if (!result.end.atEnd())
-            throw "Did not reach the end of the input stream";
-        return result;
-    }
-    Rhetoric.tokenize = tokenize;
-})(Rhetoric || (Rhetoric = {}));
-// The following are predefined common rules and combinators  
-var Rhetoric;
-(function (Rhetoric) {
-    // Notice the usage of regular expressions in each of these, instead of building from lower-level parser.
-    // This is to improve performance.
-    Rhetoric.all = Rhetoric.star(Rhetoric.advance).setName("all");
-    Rhetoric.alphaLowerChar = Rhetoric.re(/[a-z]/).setName("alphaLowerChar");
-    Rhetoric.alphaUpperChar = Rhetoric.re(/[A-Z]/).setName("alphaUpperChar");
-    Rhetoric.alphaChar = Rhetoric.re(/[a-zA-Z]/).setName("alphaChar");
-    Rhetoric.digit = Rhetoric.re(/[0-9]/).setName("numericChar");
-    Rhetoric.digitNonZero = Rhetoric.re(/[1-9]/).setName("digitNonZero");
-    Rhetoric.integer = Rhetoric.re(/0|[1..9]\d*/).setName("integer");
-    Rhetoric.hexDigit = Rhetoric.re(/[0..9a-fA-F]/).setName("hexDigit");
-    Rhetoric.binaryDigit = Rhetoric.re(/[01]/).setName("binaryDigit");
-    Rhetoric.octalDigit = Rhetoric.re(/[0..7]/).setName("octalDigit");
-    Rhetoric.alphaNumericChar = Rhetoric.re(/[a-zA-Z0-9]/).setName("alphaNumericChar");
-    Rhetoric.identifierFirstChar = Rhetoric.re(/[_a-zA-Z]/).setName("identifierFirstChar");
-    Rhetoric.identifierNextChar = Rhetoric.re(/[_a-zA-Z0-9]/).setName("identifierNextChar");
-    Rhetoric.identifier = Rhetoric.re(/[_a-zA-Z][_a-zA-Z0-9]*/).setName("identifier");
-    Rhetoric.hyphen = Rhetoric.text("-").setName("hyphen");
-    Rhetoric.underscore = Rhetoric.text("_").setName("underscore");
-    Rhetoric.number = Rhetoric.re(/[+-]?\d+(\.\d+)?([eE][-+]?\d+)?/).setName("number");
-    Rhetoric.lineComment = Rhetoric.re(/\/\/.*$/).setName("lineComment");
-    Rhetoric.fullComment = Rhetoric.re(/\/\*[\s\S]*\*\//m).setName("fullComment");
-    Rhetoric.stringLiteral = Rhetoric.re(/"(\\"|[^"])*"/m).setName("stringLiteral");
-    Rhetoric.wsChar = Rhetoric.re(/\s/).setName("wsChar");
-    Rhetoric.ws = Rhetoric.re(/\s+/).setName("ws");
-    Rhetoric.notWsChar = Rhetoric.re(/\S/).setName("notWsChar");
-    Rhetoric.anyChar = Rhetoric.re(/[\s\S]/).setName("anyChar");
-    function keyword(text) { return Rhetoric.seq(text, Rhetoric.not(Rhetoric.identifierNextChar)); }
-    Rhetoric.keyword = keyword;
+    Myna.guardedSeq = guardedSeq;
+    function assertAtEnd() { return assert(Myna.end).setName("assertAtEnd"); }
+    Myna.assertAtEnd = assertAtEnd;
+    // The following are predefined common rules and additional combinators   
+    Myna.alphaLowerChar = range('a', 'z').setName("alphaLowerChar");
+    Myna.alphaUpperChar = range('A', 'Z').setName("alphaUpperChar");
+    Myna.alphaChar = choice(Myna.alphaLowerChar, Myna.alphaUpperChar).setName("alphaChar");
+    Myna.digit = range('0', '9').setName("numericChar");
+    Myna.digitNonZero = range('1', '9').setName("digitNonZero");
+    Myna.integer = choice('0', seq(Myna.digitNonZero, Myna.digit.star)).setName("integer");
+    Myna.hexDigit = choice(Myna.digit, range('a', 'f'), range('A', 'F')).setName("hexDigit");
+    Myna.binaryDigit = choice('0', '1').setName("binaryDigit");
+    Myna.octalDigit = range('0', '7').setName("octalDigit");
+    Myna.alphaNumericChar = choice(Myna.alphaChar, Myna.digit).setName("alphaNumericChar");
+    Myna.underscore = text("_").setName("underscore");
+    Myna.identifierFirst = choice(Myna.alphaChar, Myna.underscore).setName("identifierFirstChar");
+    Myna.identifierNext = choice(Myna.alphaNumericChar, Myna.underscore).setName("identifierNextChar");
+    Myna.identifier = seq(Myna.identifierFirst, Myna.identifierNext.star).setName("identifier");
+    Myna.hyphen = text("-").setName("hyphen");
+    Myna.crlf = text("\r\n");
+    Myna.newLine = choice(Myna.crlf, "\n");
+    Myna.space = text(" ");
+    Myna.tab = text("\t");
+    Myna.ws = set(" \t\r\n");
+    // A complete identifier, with no other letters 
+    function keyword(text) { return seq(text, not(Myna.identifierNext)); }
+    Myna.keyword = keyword;
     // Common guarded sequences. If first part of sequence passes, the rest must as well.
     // A failure in one of these is usually "catastrophic" meaning that we don't want the parser to continue.
-    function parenthesized(rule) { return Rhetoric.guardedSeq("(", rule, ")"); }
-    Rhetoric.parenthesized = parenthesized;
-    function braced(rule) { return Rhetoric.guardedSeq("{", rule, "}"); }
-    Rhetoric.braced = braced;
-    function bracketed(rule) { return Rhetoric.guardedSeq("[", rule, "]"); }
-    Rhetoric.bracketed = bracketed;
-    function doubleQuoted(rule) { return Rhetoric.guardedSeq("\"", rule, "\""); }
-    Rhetoric.doubleQuoted = doubleQuoted;
-    function singleQuoted(rule) { return Rhetoric.guardedSeq("'", rule, "'"); }
-    Rhetoric.singleQuoted = singleQuoted;
-    function tag(rule) { return Rhetoric.guardedSeq("<", rule, ">"); }
-    Rhetoric.tag = tag;
+    function parenthesized(rule) { return guardedSeq("(", rule, ")"); }
+    Myna.parenthesized = parenthesized;
+    function braced(rule) { return guardedSeq("{", rule, "}"); }
+    Myna.braced = braced;
+    function bracketed(rule) { return guardedSeq("[", rule, "]"); }
+    Myna.bracketed = bracketed;
+    function doubleQuoted(rule) { return guardedSeq("\"", rule, "\""); }
+    Myna.doubleQuoted = doubleQuoted;
+    function singleQuoted(rule) { return guardedSeq("'", rule, "'"); }
+    Myna.singleQuoted = singleQuoted;
+    function tag(rule) { return guardedSeq("<", rule, ">"); }
+    Myna.tag = tag;
     // Common types of delimited lists 
-    function commaDelimited(rule) { return Rhetoric.delimitedList(rule, ","); }
-    Rhetoric.commaDelimited = commaDelimited;
-    function semiColonDelimited(rule) { return Rhetoric.delimitedList(rule, ";"); }
-    Rhetoric.semiColonDelimited = semiColonDelimited;
-    function dotDelimited(rule) { return Rhetoric.delimitedList(rule, "."); }
-    Rhetoric.dotDelimited = dotDelimited;
-    function tabDelimited(rule) { return Rhetoric.delimitedList(rule, "\t"); }
-    Rhetoric.tabDelimited = tabDelimited;
-})(Rhetoric || (Rhetoric = {}));
-// The following functions are helper functions for grammars 
-var Rhetoric;
-(function (Rhetoric) {
+    function commaDelimited(rule) { return delimitedList(rule, ","); }
+    Myna.commaDelimited = commaDelimited;
+    function semiColonDelimited(rule) { return delimitedList(rule, ";"); }
+    Myna.semiColonDelimited = semiColonDelimited;
+    function colonDelimited(rule) { return delimitedList(rule, ":"); }
+    Myna.colonDelimited = colonDelimited;
+    function doubleColonDelimited(rule) { return delimitedList(rule, "::"); }
+    Myna.doubleColonDelimited = doubleColonDelimited;
+    function dotDelimited(rule) { return delimitedList(rule, "."); }
+    Myna.dotDelimited = dotDelimited;
+    function tabDelimited(rule) { return delimitedList(rule, "\t"); }
+    Myna.tabDelimited = tabDelimited;
+    function newLineDelimited(rule) { return delimitedList(rule, Myna.newLine); }
+    Myna.newLineDelimited = newLineDelimited;
+    // The following are helper functions for grammar objects. A grammar is a loosely defined concept.
+    // It is any JavaScript object where one or more member fields are instances of the Rule class.    
     // Returns all properties of an object that correspond to Rules 
     function grammarRules(g) {
         return Object
             .keys(g)
             .map(function (k) { return g[k]; })
-            .filter(function (v) { return v instanceof Rhetoric.Rule; });
+            .filter(function (v) { return v instanceof Rule; });
     }
-    Rhetoric.grammarRules = grammarRules;
+    Myna.grammarRules = grammarRules;
     // Returns the representation using the standard PEG notation 
     function grammarToString(g) {
         return grammarRules(g)
             .map(function (r) { return r.toString(); })
             .join('\n');
     }
-    Rhetoric.grammarToString = grammarToString;
-})(Rhetoric || (Rhetoric = {}));
+    Myna.grammarToString = grammarToString;
+    // Initializes a grammar object by setting names for all of the rules,
+    // assuring that nodes are created for each rule, and stores the grammar
+    // in the Myna.grammars object 
+    function registerGrammar(name, g) {
+        for (var k in g) {
+            if (g[k] instanceof Rule) {
+                g[k].setName(k);
+                g[k].skip = false;
+            }
+        }
+        this.grammars[name] = g;
+    }
+    Myna.registerGrammar = registerGrammar;
+    // Global parse function. 
+    // Given a rule and input string will generate an abstract syntax tree (AST). 
+    // This will also clear any previously cached results. 
+    function parse(r, s) {
+        initialize(s);
+        var parent = new ParseNode(0, 0);
+        var result = r.parse(0, parent);
+        if (result.end != s.length) {
+            throw "Did not parse the full content of the file";
+        }
+        return result;
+    }
+    Myna.parse = parse;
+})(Myna || (Myna = {}));
 //# sourceMappingURL=main.js.map

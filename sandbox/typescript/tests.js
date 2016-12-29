@@ -1,15 +1,12 @@
-// TODO: test each of the rule operators one by one.
-// Define basic rules. 
-// TODO: test the tokenizer  
-// TODO: add a parse function 
-// TODO: start with basic words 
+"use strict";
 
-function testParse(rule, text, shouldFail = false) {    
+function testParse(myna, rule, text, shouldFail)  {    
+    if (shouldFail == undefined) shouldFail = false;
     let startTime = performance.now();
     let node = undefined;
     let err = undefined;    
-    try {
-        node = rule.parse(new Rhetoric.ParseIndex(text));
+    try {        
+        node = myna.parse(rule, text);
     }
     catch (e) {
         err = e;
@@ -17,25 +14,29 @@ function testParse(rule, text, shouldFail = false) {
     let elapsed = performance.now() - startTime;
 
     return {
-        name : text,
+        name : rule.name + ": " + text,
         description : node == null ? "null" : node.end.index + "/" + text.length,
         negative : shouldFail,
         success : (node == null ? false : node.end.index == text.length) ^ shouldFail,
         error : err,
         elapsed : elapsed,
-        node : node, 
-        rule : rule.type + ": " + rule.toString(),        
+        node : node,
+        match : node == null ? null : node.contents, 
+        ruleDescr : rule.type + ": " + rule.toString(),
+        rule : rule        
     };
 }
 
-function testRule(rule, passStrings, failStrings=[]) {
+function testRule(myna, rule, passStrings, failStrings) 
+{
+    if (failStrings == undefined) failStrings = [];
     let passResults = passStrings.map(
         function (tkn) { 
-            return testParse(rule, tkn); 
+            return testParse(myna, rule, tkn, false); 
         });
     let failResults = failStrings.map(
         function (tkn) { 
-            return testParse(rule, tkn, true); 
+            return testParse(myna, rule, tkn, true); 
         });  
     return { 
         name: "Testing rule " + rule.name + " of type " + rule.type,
@@ -52,71 +53,104 @@ function oddNumberOfXGrammar() {
     return x();
 }
 
+function coreTests(m) {
+    return [
+        [m.end, [""], ["a", " a", "a "]],
+        [m.any, ["a", "Z", "9", "."], ["", " a"]],
+        [m.set("ab").star, ["", "a", "aabbaa"], ["c", "abc"]],
+        [m.text("ab"), ["ab"], ["abc"]],
+        [m.seq(m.not("ab"), m.all), ["ba", "aab"], ["ab"]],
+        [m.star("a"), ["", "a","aa", "aaa"], ["b", "aab"]],
+        [m.plus("a"), ["a","aa", "aaa"], ["", "b", "aab"]],
+        [m.star("ab"), ["","ab","ababab"], ["aab", "b"]],
+        [m.bounded("ab", 1, 2), ["ab", "abab"], ["", "ababab"]],
+        [m.repeat("a", 3), ["aaa"], ["aa", "aaaa"]],
+        [m.opt("ab"), ["", "ab"], ["abc"]],
+        [m.seq(m.opt("a"), "b"), ["b", "ab"], ["a", "bb", "aab", "abb"]],
+        [m.at("ab"), [], ["ab"]],
+        [m.delimitedList("a", ","), ["", "a", "a,a", "a,a,a"], ["a,", ",a", ",", "aa", "aa,aa"]],
+        [m.except("a", m.any), ["b", "c"], ["", "a"]],
+        [m.seq("a", "b"), ["ab"], ["abb", "", "aab", "ba"]],
+        [m.choice("a", "b"), ["a", "b"], ["ab", "", "c", "ba"]],
+        [m.seq(m.plus("a"), m.plus("b")), ["aab", "ab", "abb", "aaabb"], ["", "aa", "ba", "bb"]],
+        [m.anyCharExcept("a"), ["b","c"], ["a", ""]],
+        [m.seq(m.repeatWhileNot("a", "b"), "b"), ["aaab", "b"], ["abb", "bb"]],
+        [m.repeatUntilPast("a", "b"), ["aaab", "b"], ["abb", "bb"]],
+        [m.seq(m.advanceWhileNot("z"), "z"), ["aaaaz", "z", "abcz"], ["za", "abc", ""]],
+        [m.err("testing error"), [], ["", "a", "abc"]],
+        [m.log("testing log"), [""], ["a", "abc"]],
+        [m.assert("a"), ["a"], ["b"]],
+        [m.seq(m.assertNot("b"), "a"), ["a"], ["b"]],
+        [m.seq("a", m.assertAtEnd()), ["a"], ["", "ab", "b"]],
+        [m.keyword("abc"), ["abc"], ["ab", "abcd", "ABC", "abc "]],
+        [m.parenthesized("a"), ["(a)"], ["()", "a", ""]],         
+    ];
+}
 
-function testRules() {
-
-    let r = Rhetoric;
-
+/*
     let identifierTokens = [ "a", "_", "abc", "a_B", "_abc", "ABC_", "a0123", "A9Z", "qwertyuiopasdfghjklzxcvbnm" ];
-    let numberTokens = [ "1", "1.23", "+123", "-123", "1", "1.23e+45", "1.23e-45", "1.23E+45", "1.23E-45", "1.23E45", "1.23e45" ];
-    let numberNotTokens = [ ".1", "1.2.3", "+1+23", "-12-3", "1.23e+e45", "1.23e-4.5", "12E3E45" ];
+    //let numberTokens = [ "1", "1.23", "+123", "-123", "1", "1.23e+45", "1.23e-45", "1.23E+45", "1.23E-45", "1.23E45", "1.23e45" ];
+    //let numberNotTokens = [ ".1", "1.2.3", "+1+23", "-12-3", "1.23e+e45", "1.23e-4.5", "12E3E45" ];
     let newline = "\n";
     let space = " ";
     let tab = "\t";
     let wsTokens = [ space, tab, newline, space + space, tab + tab, newline + newline, space + tab + newline, space + tab + newline ];
+        //[m.identifier, identifierTokens, [].concat(numberTokens, wsTokens)],
+        //[m.ws, wsTokens, [].concat(numberTokens, identifierTokens)],
+*/
 
-    let jsBools = [ 'true', 'false' ];
-    let jsNulls = [ 'null' ];
-    let jsNumbers = [ '0', '100', '123.456', '0.34e-42', '-43' ];
-    let jsEscapedChar = [ '\\t', '\\b', '\\n', '\\r', '\\t' ];
-    let jsEscapedUnicodeChar = [ '\\u4a0d' ];
-    let jsStrings = [ '""', '"\t"', '"\\t"', '"\\""', '"abc\\"def"'];
-    let jsArrays = [ '[]', '[true]', '[null,1,2,false,0.43,"ab\"c"]'];
-    let jsObjects = [ '{}', '{ }', ' { } ', '{"":1}', '{a:[]}', '{" a ":0.45e+1}', '{"a":1,"b":"bb","c":true, "d"  :    false, "e": null}', '{a:{},b:{c:{d:42, e:3.4}}}'];
-
-    var jg = new JsonGrammar();
-
-    // TODO: test err, test log, test assert, test assertNot, test ifTHenAssert, test guaradedSeq        
-    
+function csvTests(m) {
+    let cg = new CsvGrammar(m);
+    let records = [
+            'Stock Name,Country of Listing,Ticker,Margin Rate,Go Short?,Limited Risk Premium',
+            '2 Ergo Group Plc,UK,RGO.L,25%,Yes,1.00%',
+            '"Bankrate, Inc.",USA,RATE.O,25%,No,0.30%'];
+    let file = records.join("\n");        
     return [
-        testRule(r.end, [""], ["a", " a", "a "]),
-        testRule(r.advance, ["a", "Z", "9", "."], ["", " a"]),
-        testRule(r.re(/[ab]*/), ["", "a", "aabbaa"], ["c", "abc"]),
-        testRule(r.text("ab"), ["ab"], ["abc"]),
-        testRule(r.seq(r.not("ab"), r.all), ["ba", "aab"], ["ab"]),
-        testRule(r.star("a"), ["", "a","aa", "aaa"], ["b", "aab"]),
-        testRule(r.plus("a"), ["a","aa", "aaa"], ["", "b", "aab"]),
-        testRule(r.star("ab"), ["","ab","ababab"], ["aab", "b"]),
-        testRule(r.bounded("ab", 1, 2), ["ab", "abab"], ["", "ababab"]),
-        testRule(r.repeat("a", 3), ["aaa"], ["aa", "aaaa"]),
-        testRule(r.opt("ab"), ["", "ab"], ["abc"]),
-        testRule(r.at("ab"), [], ["ab"]),
-        testRule(r.delimitedList("a", ","), ["", "a", "a,a", "a,a,a"], ["a,", ",a", ",", "aa", "aa,aa"]),
-        testRule(r.except("a", r.advance), ["b", "c"], ["", "a"]),
-        testRule(r.seq("a", "b"), ["ab"], ["abb", "", "aab", "ba"]),
-        testRule(r.choice("a", "b"), ["a", "b"], ["ab", "", "c", "ba"]),
-        testRule(r.seq(r.plus("a"), r.plus("b")), ["aab", "ab", "abb", "aaabb"], ["", "aa", "ba", "bb"]),
-        testRule(r.anyCharExcept("a"), ["b","c"], ["a", ""]),
-        testRule(r.seq(r.repeatWhileNot("a", "b"), "b"), ["aaab", "b"], ["abb", "bb"]),
-        testRule(r.repeatUntilPast("a", "b"), ["aaab", "b"], ["abb", "bb"]),
-        testRule(r.seq(r.advanceWhileNot("z"), "z"), ["aaaaz", "z", "abcz"], ["za", "abc", ""]),
-        testRule(r.err("testing error"), [], ["", "a", "abc"]),
-        testRule(r.log("testing log"), [""], ["a", "abc"]),
-        testRule(r.seq(r.assert("a"), "a"), ["a"], ["b"]),
-        testRule(r.seq(r.assertNot("b"), "a"), ["a"], ["b"]),
-        testRule(r.seq("a", r.assertAtEnd()), ["a"], ["", "ab", "b"]),
-        
-        testRule(r.identifier, identifierTokens, [].concat(numberTokens, wsTokens)),
-        testRule(r.number, numberTokens, [].concat(numberNotTokens, identifierTokens, wsTokens)),
-        testRule(r.ws, wsTokens, [].concat(numberTokens, identifierTokens)),
-        
-        // JsonGrammar rules
-        testRule(jg.bool, jsBools, [].concat(jsNulls, jsNumbers)),
-        testRule(jg.null, jsNulls, [].concat(jsBools, jsNumbers)),
-        testRule(jg.number, jsNumbers, [].concat(jsBools, jsNumbers)),
-        //testRule(jg.string, jsStrings, true),
-        //testRule(jg.array, jsArrays, true),
-        //testRule(jg.object, jsObjects, true),
+        [cg.textdata, ['a', '?', ' ', ';', '\t', '9', '.'], [',', '\n', '\r', '"']],
+        [cg.nonescaped, ['', 'Aa', 'a a', '.', ' 3.4 ', " 'abc'def "], ['"abc"', '\n', 'abc\rdef', 'bc,de']],
+        [cg.field, ['Stock Name', '"Bankrate, Inc."', '0.30%', '', '"a""b"'], ['"', 'abc,', ',', ',abc', 'ab,cd']],
+        [cg.record, records, []],
+        [cg.file, [file], []],
     ];
 }
+
+function jsonTests(m) {
+    let jg = new JsonGrammar(m);
+    return [
+        // JsonGrammar tests
+        [jg.bool, ["true", "false"], ["TRUE", "0", "fal"]],
+        [jg.null, ["null"], ["", "NULL", "nul"]],
+        [jg.number,  [ '0', '100', '123.456', '0.34e-42', '-43', '+43', '43', "+100", "-0"], ["abc", "1+2", "e+2", "01", "-"]],
+        [jg.string, ['""', '"a"', '"\t"', '"\\t"','"\\""', '"\\\\"',  '\"AB cd\"'], ['"', '"ab', 'abc', 'ab"', '"ab""', '"\\"'  ]],
+        
+        // TODO: add tokenization capabilities 
+        //[jg.array, ['[]', '[ 1 ]','[1,2, 3]', '[true,"4.3", 1.23e4]', '[[[],[], []]'], ['[', ']', '[1],2', '3,4','']]
+    ];
+}
+
+function runTests(m, inputs) {
+    return inputs.map(
+        function (input) { 
+            return testRule(m, input[0], input[1], input[2]); 
+        }); 
+}
+
+function runAllTests(myna) {
+    // Get all the tests and concatenate them together 
+    let tests = [].concat(
+        coreTests(myna),
+        jsonTests(myna),
+        csvTests(myna));
+   
+    // Validate tests 
+    for (let t of tests) {
+        if (t.length != 3 || t[0] === undefined) {
+            throw new Exception("Each test must have a rule, an array of passing strings, and an array of failing strings");
+        }
+    }
+    
+    return runTests(myna, tests);
+}
+
 

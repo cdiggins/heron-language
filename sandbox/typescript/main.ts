@@ -1,59 +1,42 @@
+// Myna Parsing Library
 // Copyright (c) 2016 Christopher Diggins
 // Usage permitted under terms of MIT License
 
-namespace Rhetoric
+module Myna
 {
-    // TODO: come up with a better id generation scheme
+    // A lookup table of all grammars registered with Myna 
+    export let grammars = {}
+
+    // Generates a new ID for rules 
     let _nextId = 0;
     function genId() { 
         return _nextId++;
     }
 
-    // This is used to memorize parses and rules 
+    // This is used to store (memoize) parses and rules. 
+    // When a rule is started it is associated with the value "true", afterwards it is either 
+    // a parse-node, or null  
     let _cache = {};
 
-    // Set to false if you want to turn off caching. This will slow down the parser, but consume less memory. 
-    let _useCache = false;
-    
-    // Clears the internal cache: should be called whenever a new parsing session is started  
-    export function Initialize() {
-        _cache = {};
-    }        
+    // This is the input text 
+    let input = "";
 
-    // A ParseIndex represents a location in the input token stream or character stream.
-    // It has three fields: end, input, index.  
-    export class ParseIndex
-    {
-        end:number;
-        constructor(public input:any, public index:number=0) { 
-            this.end = input.length;
-        }
-        isText() : boolean {
-            return typeof(this.input) == "string";
-        }
-        getToken() : string {
-            return this.input[this.index];
-        }
-        getText() : string {
-            return this.input as string; 
-        }
-        advance(amount:number) : ParseIndex { 
-            return new ParseIndex(this.input, this.index+amount);
-        }
-        atEnd() : boolean {
-            return this.index >= this.end;
-        }
+    // Clears the internal cache: should be called whenever a new parsing session is started  
+    export function initialize(text:string) {
+        _cache = {};
+        input = text; 
     }
 
     // A node may have zero length, and may have child nodes.
-    // A successful parse function will return a ParseNode. 
+    // Any successful parse will return a ParseNode. 
     export class ParseNode
     {
-        rule:Rule;
-        children: ParseNode[] = new Array<ParseNode>();
-        parent: ParseNode;
-        start: ParseIndex;
-        end: ParseIndex;
+        children: ParseNode[];
+        constructor(public start:number, public end:number)
+        { }
+        get contents() {
+            return input.slice(this.start, this.end);
+        } 
     }
 
     // A Rule is both a rule in the PEG grammar and a parser. The parse function takes  
@@ -71,45 +54,47 @@ namespace Rhetoric
         // Identifies types of rules.  
         type:string = "";
 
-        // Indicates whether nodes should be created for this rule or not
+        // Indicates whether generated nodes should be added to the abstract syntax tree
+        // Generally speaking this will be true, unless the rule  
         skip:boolean = true;
 
         // Note: child-rules are exposed as a public field
         constructor(public rules:Rule[]) {            
         }
 
-        // Generates a hash code for this rule at a particular index
-        genHashCode(index:number) : string {
-            return this.name + this.id + "_" + index;
-        }
-
         // Default implementation returns true or creates a node, depending on the 'genNode'
-        parseImplementation(index:ParseIndex):ParseNode { 
+        parseImplementation(index:number, parent:ParseNode):number { 
             throw "Not implemented, this function is supposed to be overridden";           
         }        
 
         // Calls the derived class parser if necessary, but first looks up whether this rule has already 
         // been tested against this spot in the input. This is the memoization step used by the PEG PackRat
         // parsing technique, and reduces the complexity of the algorithm to O(N).    
-        parse(index:ParseIndex):ParseNode { 
-            if (_useCache) {
-                var hash = this.genHashCode(index.index);
-                if (!(hash in _cache))
-                    _cache[hash] = this.parseImplementation(index);
-                return _cache[hash];
-            }
-            else {
-                return this.parseImplementation(index);
-            }                  
-        }
+        parse(index:number, node:ParseNode):ParseNode { 
+            let result = null;
 
-        // Creates a default node for this rule
-        createNode(index:ParseIndex):ParseNode {
-            let node = new ParseNode();
-            node.rule = this;
-            node.start = index;
-            node.end = index;
-            return node;
+            // Check if we create a node or not for this rule.  
+            let child = this.skip ? node : new ParseNode(index, index);
+            let end = this.parseImplementation(index, child);
+
+            // Check that parsing is successful
+            if (end !== null) {
+                // The child node and the parent node are finished at the same index 
+                child.end = end;
+                node.end = end;
+                // If not skipping, we add the child node to the parent node.  
+                if (!this.skip) {
+                    // Create the array only if we need to.
+                    if (node.children === undefined)
+                        node.children = new Array<ParseNode>();
+                    node.children.push(child);
+                }
+                // Either way the result is the node                
+                result = node;
+            }             
+            
+            // Finished!
+            return result;                              
         }
 
         // Defines the type of rules. Used for defining new rule types as combinators. 
@@ -122,13 +107,6 @@ namespace Rhetoric
         setName(name:string) : Rule {
             this.name = name;
             return this;            
-        }
-
-        // When called, the Parse node is created and kept.
-        astNode(name:string = "") : Rule {
-            if (name != "") this.name = name;
-            this.skip = false;
-            return this; 
         }
 
         // Returns a default string representation of the rule's definition  
@@ -145,16 +123,27 @@ namespace Rhetoric
         toString() : string {
             return this.name + " \t<- " + this.definition;
         }
-    }
-}
 
-// These are the core Rule classes of Rhetoric. These should not be used directly, instead use the functions that
-// generate instances of these rules instead, they provide additional help and convenience. 
-// If you fork this code, think twice before adding new classes here. Maybe you can implement your new Rule
-// in terms of functions or other low-level rules. Then you can be happy knowing that the same code is being 
-// re-used and tested all the time.  
-namespace Rhetoric 
-{
+        // Extensions to support method/property chaining a.k.a. fluent syntax
+        get opt() : Rule {  return opt(this); }
+        get star() : Rule { return star(this); }
+        get plus() : Rule { return plus(this); }
+        get not() : Rule { return not(this); }
+        andThen(r:RuleType) : Rule { return seq(this, r); }
+        andThenAt(r:RuleType) : Rule { return this.andThen(at(r)); }
+        andThenNot(r:RuleType) : Rule { return this.andThen(not(r)); }
+        or(r:RuleType) : Rule { return choice(this, r); } 
+        repeatUntil(r:RuleType) : Rule { return repeatWhileNot(this, r); }
+        repeatUntilPast(r:RuleType) : Rule { return repeatUntilPast(this, r); }        
+        repeat(count:number) { return repeat(this, count); }
+        bounded(min:number, max:number) { return bounded(this, min, max); }        
+    }
+
+    // These are the core Rule classes of Myna. Normally you would not use theses directly but use the factory methods
+    // If you fork this code, think twice before adding new classes here. Maybe you can implement your new Rule
+    // in terms of functions or other low-level rules. Then you can be happy knowing that the same code is being 
+    // re-used and tested all the time.  
+
     // Matches a series of rules in order. Succeeds only if all sub-rules succeed. 
     export class Sequence extends Rule 
     {
@@ -162,18 +151,13 @@ namespace Rhetoric
 
         constructor(rules:Rule[]) { super(rules); }
 
-        parseImplementation(index:ParseIndex): ParseNode {
-            let node = super.createNode(index);
+        parseImplementation(index:number, node:ParseNode): number {
             for (let r of this.rules) {
-                let child = r.parse(index);
-                if (child == null) return null;
+                let child = r.parse(index, node);
+                if (child === null) return null;
                 index = child.end;
-                if (!r.skip) 
-                    node.children.push(child);
-                child.parent = node;                
-                node.end = index;
             }
-            return node;
+            return index;
         }
 
         // Returns a string representing the definition of the rule 
@@ -189,16 +173,11 @@ namespace Rhetoric
 
         constructor(rules:Rule[]) { super(rules); }
 
-        parseImplementation(index:ParseIndex): ParseNode {
-            let node = super.createNode(index);
+        parseImplementation(index:number, node:ParseNode): number {
             for (let r of this.rules) {
-                let child = r.parse(index);
+                let child = r.parse(index, node);
                 if (child == null) continue;
-                child.parent = node;
-                if (!r.skip)                
-                    node.children.push(child);
-                node.end = index;
-                return child;
+                return child.end;
             }
             return null;
         }        
@@ -216,11 +195,10 @@ namespace Rhetoric
 
         constructor(rule:Rule) { super([rule]); }
 
-        parseImplementation(index:ParseIndex): ParseNode {
-            let node = super.createNode(index);
-            if (this.rules[0].parse(index) != null) 
+        parseImplementation(index:number, node:ParseNode): number {
+            if (this.rules[0].parse(index, node) != null) 
                 return null;
-            return node;
+            return index;
         }
 
         get definition() : string {
@@ -235,11 +213,10 @@ namespace Rhetoric
 
         constructor(rule:Rule) { super([rule]); }
 
-        parseImplementation(index:ParseIndex): ParseNode {
-            let node = super.createNode(index);
-            if (this.rules[0].parse(index) == null) 
+        parseImplementation(index:number, node:ParseNode): number {
+            if (this.rules[0].parse(index, node) == null) 
                 return null;
-            return node;
+            return index;
         }
 
         get definition() : string {
@@ -254,21 +231,17 @@ namespace Rhetoric
 
         constructor(rule:Rule, public min:number=0, public max:number=Number.MAX_VALUE) { super([rule]); }
 
-        parseImplementation(index:ParseIndex): ParseNode {
-            let node = super.createNode(index);
-            let child = this.rules[0].parse(index); 
+        parseImplementation(index:number, node:ParseNode): number {
+            let child = this.rules[0].parse(index, node); 
             let i = 0;
             while (child != null && i < this.max) {
                 i++;                
-                if (!this.rules[0].skip)  
-                    node.children.push(child);
                 index = child.end;
-                node.end = index;
-                child = this.rules[0].parse(index); 
+                child = this.rules[0].parse(index, node); 
             }
             if (i < this.min)
                 return null;
-            return node;
+            return index;
         }
 
         get definition() : string {
@@ -311,9 +284,8 @@ namespace Rhetoric
     {
         type = "end";
         constructor() { super([]); }
-        parseImplementation(index:ParseIndex): ParseNode {
-            let node = super.createNode(index);
-            return index.atEnd() ? node : null;
+        parseImplementation(index:number, node:ParseNode): number {
+            return index >= text.length ? index : null;
         }
         get definition() : string {
             return "$";
@@ -321,76 +293,66 @@ namespace Rhetoric
     }
 
     // Advances the parser by one token, but returns false if at the end. 
-    export class Advance extends Rule
+    export class Any extends Rule
     {
-        type = "advance";
+        type = "any";
         constructor() { super([]); }
-        parseImplementation(index:ParseIndex): ParseNode {            
-            if (index.atEnd()) return null;
-            let node = super.createNode(index);            
-            node.end = index.advance(1);
-            return node;
+        parseImplementation(index:number, node:ParseNode): number {            
+            return index >= text.length ? null : index++;
+        }
+        get definition() : string {
+            return ".";
         }        
     }
 
-    // Applies a regular expression to the input string, or against the current token. 
-    export class Re extends Rule
+    // Uses a lookup table to decide whether the value is true or not.   
+    export class Lookup extends Rule
     {
-        type = "regex";
-
-        constructor(public regex:RegExp) { super([]); }
-
-        parseImplementation(index:ParseIndex): ParseNode {
-            let node = super.createNode(index);
-            if (index.isText()) { 
-                this.regex.lastIndex = index.index;
-                let matchResults = this.regex.exec(index.getText());
-                if (matchResults == null) return null;
-                if (matchResults.index != index.index) return null;
-                let match = matchResults[0];
-                node.end = index.advance(match.length);
-            }
-            else {
-                // We just match the regular expression against the token 
-                this.regex.lastIndex = 0;
-                let token = index.getToken();
-                let matchResults = this.regex.exec(token);
-                if (matchResults == null) return null;
-                if (matchResults.index != token.length) return null;
-                node.end = index.advance(1);                
-            }
-            return node;
+        type = "lookup";
+        constructor(public lookup:any, public neg:boolean) { super([]); }        
+        parseImplementation(index:number, node:ParseNode): number {
+            if (index >= input.length) return null;
+            let tkn = input[index];
+            let hasTkn = tkn in this.lookup;
+            let success = this.neg ? !hasTkn : hasTkn;  
+            if (!success) return null;
+            return index + 1;
         }
-
         get definition() : string {
-            return "/" + this.regex.source + "/";
+            return this.lookup;
+        }
+    }
+
+    // Advance the token and returns true if the token is in the given range.    
+    export class Range extends Rule
+    {
+        type = "range";
+        constructor(public min:string, public max:string) { super([]); }        
+        parseImplementation(index:number, node:ParseNode): number {
+            if (index >= input.length) return null;
+            let tkn = input[index];
+            if (tkn < this.min || tkn > this.max) return null;
+            return index + 1;
+        }
+        get definition() : string {
+            return "[" + this.min + " .. " + this.max + "]";
         }
     }
 
     // Used to match a string in the input string. 
-    // If the input is a series of tokens, it will match the text of the current token.  
     export class Text extends Rule
     {
         type = "text";
-
         constructor(public text:string) { super([]); }
-
-        parseImplementation(index:ParseIndex): ParseNode {
-            let node = super.createNode(index);
-            let start = index.index;
-            let end = index.index + this.text.length;
-            if (index.isText()) {
-                let substring = index.getText().slice(start, end);
-                if (substring !== this.text) return null; 
-                node.end = index.advance(this.text.length);
-            }
-            else {
-                if (index.getToken() !== this.text) return null;
-                node.end = index.advance(1);
-            }
-            return node;
+        parseImplementation(index:number, node:ParseNode): number {
+            if (index >= input.length) return null;
+            let start = index;
+            let end = index + this.text.length;
+            // TODO: optimize by not creating a copy of memory, just advance two pointers 
+            let substring = input.slice(start, end);
+            if (substring !== this.text) return null; 
+            return index + this.text.length;
         }
-
         get definition() : string {
             return "'" + this.text +  "'";
         }
@@ -402,12 +364,10 @@ namespace Rhetoric
     export class Action extends Rule 
     {
         type = "action";
-
-        constructor(public fn:(index:ParseIndex)=>void) { super([]); }        
-
-        parseImplementation(index:ParseIndex): ParseNode {
+        constructor(public fn:(index:number)=>void) { super([]); }        
+        parseImplementation(index:number, node:ParseNode): number {
             this.fn(index);
-            return super.createNode(index);
+            return index;
         }
     } 
 
@@ -416,46 +376,37 @@ namespace Rhetoric
     export class Delay extends Rule 
     {
         type = "delay";
-
         constructor(public fn:()=>Rule) { super([]); }        
-
-        parseImplementation(index:ParseIndex): ParseNode {
-            return this.fn().parse(index);
+        parseImplementation(index:number, node:ParseNode): number {
+            return this.fn().parse(index, node).end;
         }
-
         get definition() : string {
             return this.fn().definition;
         }
     } 
-}
 
-// The are function that create rules, usually in terms of other rules. 
-// The low-level rules are atEnd, advance, re, and text.  
-// These functions take a "RuleType" argument, which can be a string or regular expression.
-// This simplifies parsing. 
-namespace Rhetoric
-{
+    // The are function that create rules, usually in terms of other rules. 
+    // The low-level rules are atEnd, advance, re, and text.  
+    // These functions take a "RuleType" argument, which can be a Rule, string or regular expression.
+
     // For convenience we enable strings and regular expressions to be used interchangably with Rules in the combinators.
     export type RuleType = Rule | string | RegExp | Function;
 
     // Given a RuleType returns an instance of a Rule.
     export function RuleTypeToRule(rule:RuleType) : Rule {
         if (rule instanceof Rule) return rule;
-        if (rule instanceof RegExp) return new Re(rule);
         if (typeof(rule) == "string") return new Text(rule);
-        if (rule == undefined || rule == null) throw "undefined rule";
-        throw "Unhandled rule type";
+        if (rule == undefined || rule == null) throw "undefined";
+        throw "Internal error: not a rule type " + rule;
     } 
 
+    // Matches a series of rules in order, and succeeds if they all do
     export function seq(...rules:RuleType[]) {
-        //if (rules.length >= 2 && rules[0] instanceof Seq) 
-        //    return new Seq((rules[0] as Seq).rules.concat(rules.slice(1)));
         return new Sequence(rules.map(RuleTypeToRule));
     }
 
+    // Tries to match each rule in order, and succeeds if one does 
     export function choice(...rules:RuleType[]) : Choice {
-        //if (rules.length >= 2 && rules[0] instanceof Choice) 
-        //    return new Choice((rules[0] as Choice).rules.concat(rules.slice(1)));
         return new Choice(rules.map(RuleTypeToRule));
     }        
 
@@ -465,11 +416,14 @@ namespace Rhetoric
 
     // Terminal rules 
     export let end = new End();
-    export let advance = new Advance();    
-    export function re(re:RegExp) { return new Re(re); }
-    export function text(text:string) { return new Text(text); }    
+    export let any = new Any();
+    export let all = any.star;    
+    export function text(text:string) { return new Text(text); }
+    export function range(min:string, max:string) { return new Range(min, max); }
+    export function set(chars:string, neg:boolean=false) { let d={}; for (let c of chars) d[c] = c; return new Lookup(d, neg); };    
+    export function negSet(chars:string) { return set(chars, true); };    
 
-    // Basic rule operators (combinators)
+    // Basic rule operators (combinators).
     export function not(rule:RuleType)  { return new Not(RuleTypeToRule(rule)); };
     export function star(rule:RuleType)  { return new Star(RuleTypeToRule(rule)); };
     export function bounded(rule:RuleType, min:number, max:number) { return new BoundedRule(RuleTypeToRule(rule), min, max); }
@@ -479,66 +433,50 @@ namespace Rhetoric
     export function plus(rule:RuleType)  { return new Plus(RuleTypeToRule(rule)); }
 
     // Advanced rule operators (combinator)
-    export function delimitedList(rule:RuleType, delimiter:RuleType) { return seq(rule, star(seq(delimiter, rule))).setType("delimitedList"); }
+    export function delimitedList(rule:RuleType, delimiter:RuleType) { return opt(seq(rule, star(seq(delimiter, rule)))).setType("delimitedList"); }
     export function except(condition:RuleType, rule:RuleType) { return seq(not(condition), rule).setType("except"); }        
     export function repeatWhileNot(body:RuleType, condition:RuleType) { return star(except(condition, body)).setType("whileNot"); }
-    export function repeatUntilPast(body:RuleType, condition:RuleType) { return seq(repeatWhileNot(body, condition), body).setType("repeatUntilPast"); }
-    export function anyCharExcept(rule:RuleType) { return except(rule, advance).setType("advanceUnless"); }    
+    export function repeatUntilPast(body:RuleType, condition:RuleType) { return seq(repeatWhileNot(body, condition), condition).setType("repeatUntilPast"); }
+    export function anyCharExcept(rule:RuleType) { return except(rule, any).setType("anyCharExcept"); }    
     export function advanceWhileNot(rule:RuleType) { return star(anyCharExcept(rule)).setType("advanceWhileNot"); }
     export function advanceUntilPast(rule:RuleType) { return seq(advanceWhileNot(rule), rule).setType("advanceUntilPast"); }
 
     // Actions  
-    export function err(msg:string = "parsing error") { return new Action(p=> { throw(msg); }).setType("err"); }
-    export function log(msg:string = "") { return new Action(p=> { console.log(msg); }).setType("log"); }
+    export function action(fn:(index:number)=>void) { return new Action(fn); }
+    export function err(msg:string = "parsing error") { return action(p=> { throw(msg); }).setType("err"); }
+    export function log(msg:string = "") { return action(p=> { console.log(msg); }).setType("log"); }
         
     // Guards
-    export function assert(rule:RuleType) { return choice(rule, err("Expected rule: " + rule.toString())).setType("assert"); }
-    export function assertNot(rule:RuleType) { return choice(not(rule), err("Rule should not have matched: " + rule.toString())).setType("assert"); }
+    export function assert(rule:RuleType, msg:string="Expected rule to match") { return choice(rule, err(msg)).setType("assert"); }
+    export function assertNot(rule:RuleType, msg:string="Expected rule to not match") { return choice(not(rule), err(msg)).setType("assertNot"); }
     export function ifThenAssert(condition:RuleType, body:RuleType) { return seq(condition, assert(body)).setType("ifThenAssert"); }
     export function guardedSeq(condition:RuleType, ...rules:RuleType[]) { return ifThenAssert(condition, seq(...rules)).setType("guardedSeq"); }
     export function assertAtEnd() { return assert(end).setName("assertAtEnd"); }
     
-    export function tokenize(text:string, ...tokens:RuleType[]) : ParseNode {
-        let rule = star(choice(...tokens));
-        let result = rule.parse(new ParseIndex(text));
-        if (result == null) 
-            return result;
-        if (!result.end.atEnd())
-            throw "Did not reach the end of the input stream";
-        return result;
-    }
-}
-
-// The following are predefined common rules and combinators  
-namespace Rhetoric
-{    
-    // Notice the usage of regular expressions in each of these, instead of building from lower-level parser.
-    // This is to improve performance.
-    export let all = star(advance).setName("all");
-    export let alphaLowerChar = re(/[a-z]/).setName("alphaLowerChar");
-    export let alphaUpperChar = re(/[A-Z]/).setName("alphaUpperChar");
-    export let alphaChar = re(/[a-zA-Z]/).setName("alphaChar");
-    export let digit = re(/[0-9]/).setName("numericChar");
-    export let digitNonZero = re(/[1-9]/).setName("digitNonZero");
-    export let integer = re(/0|[1..9]\d*/).setName("integer");
-    export let hexDigit = re(/[0..9a-fA-F]/).setName("hexDigit");
-    export let binaryDigit = re(/[01]/).setName("binaryDigit");
-    export let octalDigit = re(/[0..7]/).setName("octalDigit");
-    export let alphaNumericChar = re(/[a-zA-Z0-9]/).setName("alphaNumericChar");
-    export let identifierFirstChar = re(/[_a-zA-Z]/).setName("identifierFirstChar");
-    export let identifierNextChar = re(/[_a-zA-Z0-9]/).setName("identifierNextChar");     
-    export let identifier = re(/[_a-zA-Z][_a-zA-Z0-9]*/).setName("identifier");     
-    export let hyphen = text("-").setName("hyphen");
-    export let underscore = text("_").setName("underscore");
-    export let number = re(/[+-]?\d+(\.\d+)?([eE][-+]?\d+)?/).setName("number"); 
-    export let lineComment = re(/\/\/.*$/).setName("lineComment"); 
-    export let fullComment = re(/\/\*[\s\S]*\*\//m).setName("fullComment"); 
-    export let stringLiteral = re(/"(\\"|[^"])*"/m).setName("stringLiteral");  
-    export let wsChar = re(/\s/).setName("wsChar"); 
-    export let ws = re(/\s+/).setName("ws"); 
-    export let notWsChar = re(/\S/).setName("notWsChar");
-    export let anyChar = re(/[\s\S]/).setName("anyChar");
-    export function keyword(text:string) { return seq(text, not(identifierNextChar)); }
+    // The following are predefined common rules and additional combinators   
+    export let alphaLowerChar   = range('a','z').setName("alphaLowerChar");
+    export let alphaUpperChar   = range('A','Z').setName("alphaUpperChar");
+    export let alphaChar        = choice(alphaLowerChar, alphaUpperChar).setName("alphaChar");
+    export let digit            = range('0', '9').setName("numericChar");
+    export let digitNonZero     = range('1', '9').setName("digitNonZero");
+    export let integer          = choice('0', seq(digitNonZero, digit.star)).setName("integer");
+    export let hexDigit         = choice(digit,range('a','f'), range('A','F')).setName("hexDigit");
+    export let binaryDigit      = choice('0','1').setName("binaryDigit");
+    export let octalDigit       = range('0','7').setName("octalDigit");
+    export let alphaNumericChar = choice(alphaChar, digit).setName("alphaNumericChar");
+    export let underscore       = text("_").setName("underscore");
+    export let identifierFirst  = choice(alphaChar, underscore).setName("identifierFirstChar");
+    export let identifierNext   = choice(alphaNumericChar, underscore).setName("identifierNextChar");     
+    export let identifier       = seq(identifierFirst, identifierNext.star).setName("identifier");     
+    export let hyphen           = text("-").setName("hyphen");
+    export let crlf             = text("\r\n");
+    export let newLine          = choice(crlf, "\n");          
+    export let space            = text(" ");
+    export let tab              = text("\t");
+    export let ws               = set(" \t\r\n");
+        
+    // A complete identifier, with no other letters 
+    export function keyword(text:string) { return seq(text, not(identifierNext)); }
 
     // Common guarded sequences. If first part of sequence passes, the rest must as well.
     // A failure in one of these is usually "catastrophic" meaning that we don't want the parser to continue.
@@ -552,13 +490,15 @@ namespace Rhetoric
     // Common types of delimited lists 
     export function commaDelimited(rule:RuleType) { return delimitedList(rule, ","); }
     export function semiColonDelimited(rule:RuleType) { return delimitedList(rule, ";"); }
+    export function colonDelimited(rule:RuleType) { return delimitedList(rule, ":"); }
+    export function doubleColonDelimited(rule:RuleType) { return delimitedList(rule, "::"); }
     export function dotDelimited(rule:RuleType) { return delimitedList(rule, "."); }
     export function tabDelimited(rule:RuleType) { return delimitedList(rule, "\t"); }
-}
+    export function newLineDelimited(rule:RuleType) { return delimitedList(rule, newLine); }
 
-// The following functions are helper functions for grammars 
-namespace Rhetoric
-{
+    // The following are helper functions for grammar objects. A grammar is a loosely defined concept.
+    // It is any JavaScript object where one or more member fields are instances of the Rule class.    
+
     // Returns all properties of an object that correspond to Rules 
     export function grammarRules(g:any)
     {
@@ -574,5 +514,34 @@ namespace Rhetoric
         return grammarRules(g)
             .map(r => r.toString())
             .join('\n');
+    }
+
+    // Initializes a grammar object by setting names for all of the rules,
+    // assuring that nodes are created for each rule, and stores the grammar
+    // in the Myna.grammars object 
+    export function registerGrammar(name:string, g:any) 
+    {
+        for (let k in g) {
+            if (g[k] instanceof Rule) {
+                g[k].setName(k);
+                g[k].skip = false;
+            }
+        }
+        this.grammars[name] = g;
+    }
+
+    // Global parse function. 
+
+    // Given a rule and input string will generate an abstract syntax tree (AST). 
+    // This will also clear any previously cached results. 
+    export function parse(r : Rule, s : string) 
+    {
+        initialize(s);
+        var parent = new ParseNode(0, 0);        
+        var result = r.parse(0, parent);
+        if (result.end != s.length) {
+            throw "Did not parse the full content of the file";
+        }
+        return result;
     }
 }
