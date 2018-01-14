@@ -18,7 +18,7 @@ There are two main components to the Heron compiler being developed as standalon
 
 This is technically the third incarnation of the Heron language. The new Heron is a very different language from previous incarnations which were intended as general purpose languages.
 
-The first large public announcement of the original heron langauge was in 2006 https://developers.slashdot.org/story/04/12/08/1944233/introducing-the-heron-programming-language. That implementation was a Heron to C++ translator. It's primary contribution was a more advanced meta-programming system for C++ and a more regular synbtax.  
+The first large public announcement of the original Heron language was in 2006 https://developers.slashdot.org/story/04/12/08/1944233/introducing-the-heron-programming-language. That implementation was a Heron to C++ translator. It's primary contribution was a more advanced meta-programming system for C++ and a more regular synbtax.  
 
 Heron underwent several modifications and extensions and was revived in 2010 http://www.artima.com/weblogs/viewpost.jsp?thread=284558 with many new features. Achilleas Margaritas described the differences as "this new Heron seems to be a very different beast. It seems to be an enterprise-friendly application language like Java and C#, rather than a system/application one like C and C++."
 
