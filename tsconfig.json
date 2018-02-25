@@ -1,0 +1,15 @@
+{	
+	"compileOnSave": true,
+    "compilerOptions": {
+		"target": "ES5",
+		"module": "commonjs",
+		"sourceMap": true,
+		"outDir": "build",
+	},
+	"include": [
+		"*.ts"
+	],
+	"exclude": [
+		"node_modules"
+	]
+}

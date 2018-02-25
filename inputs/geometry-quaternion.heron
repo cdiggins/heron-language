@@ -1,0 +1,67 @@
+language heron:std:0.1;
+
+// https://referencesource.microsoft.com/#System.Numerics/System/Numerics/Quaternion.cs
+// http://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/index.htm
+
+module cdiggins:geometry:quaternion:0.1
+{
+    function quaternion(x, y, z, w)
+        = { x=x; y=y; z=z; w=w; };
+
+    function quaternion(x, y, z)
+        = quaternion(x, y, z, 1);
+
+    function quaternion(v, w)
+        = quaternion(v.x, v.y, v.z, w);
+
+    var quaternion_identity
+        = quaternion(0, 0, 0, 1);      
+
+    var quaternion_zero
+        = quaternion(0, 0, 0, 0);
+
+    function length2(q)
+        = q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w;
+    
+    function length(q)
+        = q.length2.sqrt;
+
+
+    // http://www.euclideanspace.com/maths/geometry/rotations/conversions/angleToQuaternion/index.htm
+    function quaternion(axis, angle)
+        = quaternion(
+            axis.x * sin(angle/2),
+            axis.y * sin(angle/2),
+            axis.z * sin(angle/2),
+            cos(angle/2));
+            
+    function quaternion() 
+        = quaternion(0, 0, 0, 0);
+
+    function angle(q)
+        = 2 * acos(q.w);
+
+    // http://www.euclideanspace.com/maths/geometry/rotations/conversions/eulerToQuaternion/index.htm
+    function quaternion(heading, attitude, bank) {
+        var c1 = cos(heading / 2);
+        var c2 = cos(attitude / 2);
+        var c3 = cos(bank / 2);
+        var s1 = sin(heading / 2);
+        var s2 = sin(attitude / 2);
+        var s3 = sin(bank / 2);
+        return quaternion(
+            s1 * s2 * c3 + c1 * c2 * s3
+            s1 * c2 * c3 + c1 * s2 * s3
+            c1 * s2 * c3 - s1 * c2 * s3
+            c1 * c2 * c3 - s1 * s2 * s3);
+
+    // http://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToAngle/
+    function axis(q)
+        = vector(
+            q.x / sqrt(1-q.w*q.w), 
+            q.y / sqrt(1-q.w*q.w), 
+            q.z / sqrt(1-q.w*q.w));
+    
+    function normal(q) =
+        var invLen = 1.0f / q.length in 
+            quaternion(q.X * invLen, q.Y * invLen, q.Z * invLen, q.W * invLen);

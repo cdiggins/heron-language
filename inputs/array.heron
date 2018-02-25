@@ -1,0 +1,179 @@
+language heron:std:0:1;
+
+module heron:array:0.1
+{
+    function array(len, f)
+        = { length=len; at=f; }; 
+
+    function map(xs, f)
+        = array(xs.length, i => f(xs[i]));
+
+    function min(x, y) 
+        = x <= y ? x : y;
+
+    function max(x, y) 
+        = x <= y ? x : y;
+   
+    function shorter(xs, ys) 
+        = xs.length <= ys.length ? xs : ys;
+   
+    function longer(xs, ys) 
+        = xs.length >= ys.length ? xs : ys;
+
+    function empty(xs) 
+        = xs.length == 0;
+
+    function at(xs, i) 
+        = xs[i];
+
+    function selectByIndex(xs, indices) 
+        = indices.map(xs.at);
+
+    function indices(xs) 
+        = 0 .. xs.length;
+
+    function zip(xs, ys, f) 
+        = xs.length <= ys.length 
+            ? xs.map((x, i) => f(x, ys[i]))
+            : ys.map((x, y) => f(x, xs[i]));
+
+    function all(xs, p) 
+        = xs.reduce(true, (prev, x) => prev && p(x));    
+
+    function any(xs, p) 
+        = xs.reduce(false, (prev, x) => prev || p(x));
+
+    function count(xs, p) 
+        = xs.reduce(0, (prev, x) => p(x) ? prev + 1 : prev);    
+
+    function eq(xs, ys) 
+        = xs.length == ys.length;    
+
+    function filter(xs, p) {
+        var ys = xs.mutable;
+        var i = 0;
+        for (var x in xs) 
+            if (p(x)) 
+                ys[i++] = x;
+        return ys.take(i);
+    }
+
+    function repeat(x, n) 
+        = (0 .. n).map(i => x);    
+
+    function prefixScan(xs, op) {
+        if (xs.empty) return xs;
+        var ys = xs[0].repeat(xs.length).mutable();
+        for (var i in 1 .. ys.length)
+            ys[i] = op(xs[i], ys[i-1]);
+        return ys;
+    }
+
+    function adjacentDifferences(xs) 
+        = xs.indices.map(i => i > 0 ? xs[i] - xs[i-1] : xs[i]);
+    
+    function slice(xs, from, to) 
+        = (from .. to).map(xs.at);    
+
+    function stride(xs, n) 
+        = (0 .. xs.length / n).map(i => xs[i * n]);    
+
+    function slices(xs, n) 
+        = (0 .. n).map(i => xs.slice(i * n, (i+1) * n));    
+
+    function take(xs, n) 
+        = xs.slice(0, n);    
+
+    function skip(xs, n) 
+        = xs.slice(n, xs.length - n);    
+
+    function dropSuffix(xs, n) 
+        = xs.take(xs.length - n);    
+
+    function suffix(xs, n) 
+        = xs.skip(xs.length-n);
+
+    function reverse(xs, n) 
+        = xs.indices.map(i => xs[xs.length-1-i]);    
+
+    function gen(cnt, f) 
+        = (0 .. cnt).map(f);    
+
+    function concat(xs, ys) 
+        = gen(xs.length + ys.length, i => i < xs.length ? xs[i] : ys[i - xs.length]);    
+
+    function cut(xs, from, n) 
+        = gen(xs.length - n, i < from ? xs[i] : xs[i + n]);    
+
+    function splice(xs, from, ys) 
+        = xs.take(from).concat(ys).concat(xs.drop(from));    
+
+    function sum(xs) 
+        = xs.reduce(0, op+);    
+
+    function product(xs) 
+        = xs.reduce(1, op*);    
+    
+    function average(xs) 
+        = xs.sum / xs.length;    
+
+    function minElement(xs) 
+        = xs.reduce(xs[0], min);    
+
+    function maxElement(xs) 
+        = xs.reduce(xs[0], max);
+
+    // https://en.wikipedia.org/wiki/Quicksort
+    function sort(xs) {
+        var a = xs.mutable();
+
+        // A function cannot modify an array passed to it. 
+        // A function that captures a variable and modifies it cannot be passed 
+        // as a lambda. It is an effectful function. 
+        function qsort(a, lo, hi) 
+        {
+            function partition() 
+            {
+                pivot = a[lo];
+                var i = lo-1;
+                var j = hi+1;
+                while (true) {
+                    do { i++; } while (a[i] < pivot);
+                    do { j--; } while (a[j] > pivot);
+                    if (i >= j) return j;
+                    var tmp = a[i];
+                    a[i] = a[j];
+                    a[j] = tmp;
+                }
+            }
+            if (lo < hi) {
+                p = partition();
+                qsort(a, lo, p);
+                qsort(a, p+1, hi);
+            }
+        }
+        return a;
+    }    
+
+    function median(xs) {        
+        var ys = xs.sort();
+        return ys.length % 2 == 0 
+            ? ys[ys.length / 2] 
+            : ys[ys.length / 2 - 1] + ys[ys.length / 2 + 1] / 2;
+    }
+
+    function inrange(xs, n) 
+        = n >= 0 && n < xs.length;    
+
+    function last(xs) 
+        = xs[xs.length - 1];    
+
+    function first(xs) 
+        = xs[0];
+
+    var pi = 3.14159265353897;
+
+    // https://en.wikipedia.org/wiki/Gaussian_blur
+    function gaussian_blur(x, y, sigma) 
+        = pow(1 / (2 * pi * sigma* sigma) * e,  -(x*x + y*y) / (2 * sigma * sigma));    
+}

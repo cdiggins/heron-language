@@ -1,0 +1,23 @@
+{
+  "name": "heron-lang",
+  "version": "1.0.0-alpha.1",
+  "description": "A cross-platform programming language that emphasizes simplicity, safety, and code reuse.",
+  "main": "src/heron.js",
+  "homepage": "https://github.com/cdiggins/heron-language",
+  "bugs": "https://github.com/cdiggins/heron-language/issues",
+  "license": "MIT",
+  "author": {
+    "name": "Christopher Diggins",
+    "email": "cdiggins@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cdiggins/heron-language.git"
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "myna-parser": ">=2.4.5"
+  }
+}

@@ -1,0 +1,72 @@
+language heron:std:0.1;
+
+module cdiggins:geometry:mesh:0.1
+{
+    var PI = 3.1415926535897;
+
+    function mesh(vertices) 
+        = mesh(vertices, vertices.indices);
+    
+    function mesh(vertices, indices) 
+        = mesh(vertices, indices, origin.repeat(0), origin.repeat(0));
+
+    function mesh(vertices, indices, colors, uvs)
+        = { vertices=vertices, indices=indices, colors=colors, uvs=uvs };
+
+    var tetrahedron 
+        = mesh([1, 1, 1,   -1, -1, 1,   -1, 1, -1,   1, -1, -1], 
+	           [2, 1, 0,    0, 3, 2,	1, 3, 0,	 2, 3, 1]);
+
+    /*
+    function sphere(radius, widthSegments, heightSegment, phiStart, phiLength, thetaStart, thetaLength) {
+        var indices = [];
+        var vertices = [];
+        var normals = [];
+        var uvs = [];
+
+        // generate vertices, normals and uvs
+
+        for ( var iy in 0 .. heightSegments ) 
+        {
+            var verticesRow = [];
+            var v = iy / heightSegments;
+
+            for ( var ix in 0 .. widthSegments ) {
+
+                var u = ix / widthSegments;
+
+                // vertex
+                var x = -radius * cos( phiStart + u * phiLength ) * sin( thetaStart + v * thetaLength );
+                var y = radius * cos( thetaStart + v * thetaLength );
+                var z = radius * sin( phiStart + u * phiLength ) * sin( thetaStart + v * thetaLength );
+
+                var vtx = vector(x, y, z);
+                vertices.push(vtx);
+
+                // normal
+                var normal = vector(x, y, z).normalize;
+                normals.push(normal);
+
+                // uv
+                var uv = vector(u, 1 - v, 0);
+                uvs.push(uv);
+                verticesRow.push( index ++ );
+            }
+
+            grid.push( verticesRow );
+        }
+
+        // indices
+        for ( var iy in 0 .. heightSegments ) {
+            for ( var ix in 0 .. widthSegments ) {
+                var a = grid[ iy ][ ix + 1 ];
+                var b = grid[ iy ][ ix ];
+                var c = grid[ iy + 1 ][ ix ];
+                var d = grid[ iy + 1 ][ ix + 1 ];
+                if ( iy !== 0 || thetaStart > 0 ) indices.push( a, b, d );
+                if ( iy !== heightSegments - 1 || thetaEnd < PI ) indices.push( b, c, d );
+            }        
+        }
+    }
+    */
+}   
