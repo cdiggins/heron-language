@@ -1,10 +1,10 @@
 "use strict";
 
-import { Myna as m } from "myna-parser";
+import * as Myna from "myna-parser";
 import { heronGrammar, parseHeron } from './heron-parser';
 import { heronToJs } from "./heron-to-js";
-import { Myna } from "myna-parser/myna";
 
+const m = Myna.Myna;
 const g = heronGrammar;
 
 declare var require;
@@ -89,12 +89,10 @@ function testParseFile(f) {
     console.log(cb.toString());    
 }
 
-// TEMP: 
-console.log(Myna.astSchemaToString('heron'));
 
 //testParseFile('.\\tests\\seascape.heron');
 //testParseFile('.\\tests\\stdlib.heron');
-testParseFile('.\\tests\\geometry-vector3.heron');
+testParseFile('.\\inputs\\geometry-vector3.heron');
 
 declare var process;
 process.exit();

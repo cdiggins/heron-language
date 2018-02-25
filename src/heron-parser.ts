@@ -79,7 +79,7 @@ const g = new function() {
     this.additiveOp         = m.choice(..."+ -".split(" ")).thenNot('=').ast;
     this.multiplicativeOp   = m.choice(..."* / %".split(" ")).thenNot('=').ast;
     this.logicalAndOp       = m.text('&&').ast;
-    this.logicalOrOp       = m.text('||').ast;
+    this.logicalOrOp        = m.text('||').ast;
     this.logicalXOrOp       = m.text('^^').ast;
     
     // Identifiers including special operator indicators 
