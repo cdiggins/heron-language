@@ -3,6 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Myna = require("myna-parser");
 var heron_parser_1 = require("./heron-parser");
 var heron_to_js_1 = require("./heron-to-js");
+var heron_ast_rewrite_1 = require("./heron-ast-rewrite");
+var heron_name_analysis_1 = require("./heron-name-analysis");
 var m = Myna.Myna;
 var g = heron_parser_1.heronGrammar;
 var assert = require('assert');
@@ -78,11 +80,27 @@ function testParsingRules() {
     }
 }
 var fs = require('fs');
+function outputScopeAnalysis(scope, indent) {
+    if (indent === void 0) { indent = ''; }
+    var nodeName = scope.node ? scope.node.name : "";
+    console.log(indent + "scope[" + scope.id + "] " + nodeName);
+    for (var _i = 0, _a = scope.defs; _i < _a.length; _i++) {
+        var def = _a[_i];
+        console.log(indent + "- var " + def.name + " used " + def.usages.length);
+    }
+    for (var _b = 0, _c = scope.children; _b < _c.length; _b++) {
+        var child = _c[_b];
+        outputScopeAnalysis(child, indent + '  ');
+    }
+}
 function testParseCode(code, r) {
     if (r === void 0) { r = g.file; }
     var ast = heron_parser_1.parseHeron(code, r);
+    ast = heron_ast_rewrite_1.transformAst(ast);
+    var names = heron_name_analysis_1.analyzeHeronNames(ast);
+    outputScopeAnalysis(names.curScope);
     var cb = heron_to_js_1.heronToJs(ast);
-    console.log(cb.toString());
+    //console.log(cb.toString());    
 }
 function testParseFile(f) {
     testParseCode(fs.readFileSync(f, 'utf-8'));
@@ -106,4 +124,4 @@ testParseCode("2 + 3", g.assignmentExpr);
 //testParseFile('.\\tests\\stdlib.heron');
 testParseFile('.\\inputs\\geometry-vector3.heron');
 process.exit();
-//# sourceMappingURL=heron-parser-tests.js.map
+//# sourceMappingURL=tests.js.map

@@ -79,6 +79,12 @@ var g = new function () {
     this.opSymbol = myna_parser_1.Myna.char('<>=+-*/%^|&$!');
     this.opName = myna_parser_1.Myna.seq("op", this.opSymbol.oneOrMore).ast;
     this.identifier = myna_parser_1.Myna.choice(this.opName, myna_parser_1.Myna.identifier).ast;
+    // Type information 
+    this.recType = myna_parser_1.Myna.delay(function () { return _this.type; });
+    this.typeParam = this.recType.ast;
+    this.typeParamList = guardedWsDelimSeq('<', commaDelimited(this.typeParam), '>').ast;
+    this.typeName = this.identifier.ast;
+    this.typeExpr = this.typeName.then(this.typeParamList.opt).ast;
     // Postfix expressions
     this.funCall = guardedWsDelimSeq("(", commaDelimited(this.expr), ")").ast;
     // TODO: consider this if we want to add syntactic support for slices and strides 
@@ -87,6 +93,7 @@ var g = new function () {
     //this.arrayIndex = guardedWsDelimSeq("[", this.expr, this.arraySlice.opt, "]").ast;
     this.arrayIndex = guardedWsDelimSeq("[", this.expr, "]").ast;
     this.fieldSelect = myna_parser_1.Myna.seq(".", this.identifier).ast;
+    this.asType = guardedWsDelimSeq(myna_parser_1.Myna.keyword("as"), this.typeExpr);
     this.postfixOp = myna_parser_1.Myna.choice(this.funCall, this.arrayIndex, this.fieldSelect, this.postIncOp, this.postDecOp).then(this.ws);
     // Expressions of different precedences 
     this.arrayExpr = guardedWsDelimSeq("[", commaDelimited(this.expr), "]").ast;
@@ -99,23 +106,22 @@ var g = new function () {
     this.varDecl = myna_parser_1.Myna.seq(this.varNameDecl, this.varInitialization).ast;
     this.varDecls = myna_parser_1.Myna.seq(this.varDecl, guardedWsDelimSeq(",", this.varDecl).zeroOrMore).ast;
     this.varExpr = guardedWsDelimSeq(myna_parser_1.Myna.keyword("var"), this.varDecls, myna_parser_1.Myna.keyword("in"), this.expr).ast;
-    // Type information 
-    this.recType = myna_parser_1.Myna.delay(function () { return _this.type; });
-    this.typeParam = this.recType.ast;
-    this.typeParamList = guardedWsDelimSeq('<', commaDelimited(this.typeParam), '>').ast;
-    this.typeName = this.identifier.ast;
-    this.typeExpr = this.typeName.then(this.typeParamList.opt).ast;
+    // Generic parameters 
+    this.genericConstraint = guardedWsDelimSeq(':', this.typeExpr).ast;
+    this.genericParam = this.identifier.then(this.genericConstraint.opt).ast;
+    this.genericsParams = guardedWsDelimSeq('<', commaDelimited(this.genericParam), '>').opt.ast;
     // Function definition
     this.funcName = this.identifier.ast;
     this.funcParamName = this.identifier.ast;
-    this.funcParamType = guardedWsDelimSeq(':', this.typeExpr).ast;
+    this.funcParamType = guardedWsDelimSeq(':', this.typeExpr);
     this.funcParam = this.funcParamName.then(this.funcParamType.opt).ast;
     this.funcParams = guardedWsDelimSeq("(", commaDelimited(this.funcParam), ")").ast;
     this.recCompoundStatement = myna_parser_1.Myna.delay(function () { return _this.compoundStatement; }).ast;
     this.funcBodyStatement = this.recCompoundStatement.ast;
     this.funcBodyExpr = guardedWsDelimSeq('=', this.expr, ';').ast;
     this.funcBody = myna_parser_1.Myna.choice(this.funcBodyStatement, this.funcBodyExpr).ast;
-    this.funcDef = guardedWsDelimSeq(myna_parser_1.Myna.keyword("function"), this.funcName, this.funcParams, this.funcBody).ast;
+    this.funcDef = guardedWsDelimSeq(myna_parser_1.Myna.keyword("function"), this.funcName, this.genericsParams, this.funcParams, this.funcBody).ast;
+    this.intrinsicDef = guardedWsDelimSeq(myna_parser_1.Myna.keyword("intrinsic"), this.funcName, this.genericsParams, this.funcParams, ';').ast;
     // Lambda expression 
     this.lambdaArg = this.identifier.then(this.funcParamType.opt).ast;
     this.lambdaBody = this.recCompoundStatement.or(this.expr).ast;
@@ -124,38 +130,38 @@ var g = new function () {
     this.lambdaArgs = myna_parser_1.Myna.choice(this.lambdaArgsNoParen, this.lambdaArgsWithParen).ast;
     this.lambdaExpr = myna_parser_1.Myna.seq(this.lambdaArgs, guardedWsDelimSeq("=>", this.lambdaBody)).ast;
     // Leaf expressions (unary expressions)
-    this.leafExpr = myna_parser_1.Myna.choice(this.varExpr, this.objectExpr, this.lambdaExpr, this.parenExpr, this.arrayExpr, this.literal, this.identifier).then(this.ws);
+    this.leafExpr = myna_parser_1.Myna.choice(this.varExpr, this.objectExpr, this.lambdaExpr, this.parenExpr, this.arrayExpr, this.literal, this.identifier).then(this.ws).ast;
     // Binary expressions 
     this.postfixExpr = this.leafExpr.then(this.postfixOp.zeroOrMore).ast;
     this.prefixExpr = this.prefixOp.zeroOrMore.then(this.postfixExpr).ast;
-    this.multiplicativeExprLeft = noAst(this.prefixExpr);
+    this.multiplicativeExprLeft = this.prefixExpr.ast;
     this.multiplicativeExprRight = guardedWsDelimSeq(this.multiplicativeOp, this.multiplicativeExprLeft).ast;
     this.multiplicativeExpr = this.multiplicativeExprLeft.then(this.multiplicativeExprRight.zeroOrMore).ast;
-    this.additiveExprLeft = noAst(this.multiplicativeExpr);
+    this.additiveExprLeft = this.multiplicativeExpr.ast;
     this.additiveExprRight = guardedWsDelimSeq(this.additiveOp, this.additiveExprLeft).ast;
     this.additiveExpr = this.additiveExprLeft.then(this.additiveExprRight.zeroOrMore).ast;
-    this.relationalExprLeft = noAst(this.additiveExpr);
+    this.relationalExprLeft = this.additiveExpr.ast;
     this.relationalExprRight = guardedWsDelimSeq(this.relationalOp, this.relationalExprLeft).ast;
     this.relationalExpr = this.relationalExprLeft.then(this.relationalExprRight.zeroOrMore).ast;
-    this.equalityExprLeft = noAst(this.relationalExpr);
+    this.equalityExprLeft = this.relationalExpr.ast;
     this.equalityExprRight = guardedWsDelimSeq(this.equalityOp, this.equalityExprLeft).ast;
     this.equalityExpr = this.equalityExprLeft.then(this.equalityExprRight.zeroOrMore).ast;
-    this.logicalAndExprLeft = noAst(this.equalityExpr);
+    this.logicalAndExprLeft = this.equalityExpr.ast;
     this.logicalAndExprRight = guardedWsDelimSeq(this.logicalAndOp, this.logicalAndExprLeft).ast;
     this.logicalAndExpr = this.logicalAndExprLeft.then(this.logicalAndExprRight.zeroOrMore).ast;
-    this.logicalXOrExprLeft = noAst(this.logicalAndExpr);
+    this.logicalXOrExprLeft = this.logicalAndExpr.ast;
     this.logicalXOrExprRight = guardedWsDelimSeq(this.logicalXOrOp, this.logicalXOrExprLeft).ast;
     this.logicalXOrExpr = this.logicalXOrExprLeft.then(this.logicalXOrExprRight.zeroOrMore).ast;
-    this.logicalOrExprLeft = noAst(this.logicalXOrExpr);
+    this.logicalOrExprLeft = this.logicalXOrExpr.ast;
     this.logicalOrExprRight = guardedWsDelimSeq(this.logicalOrOp, this.logicalOrExprLeft).ast;
     this.logicalOrExpr = this.logicalOrExprLeft.then(this.logicalOrExprRight.zeroOrMore).ast;
-    this.rangeExprLeft = noAst(this.logicalOrExpr);
+    this.rangeExprLeft = this.logicalOrExpr.ast;
     this.rangeExprRight = guardedWsDelimSeq("..", this.rangeExprLeft).ast;
     this.rangeExpr = this.rangeExprLeft.then(this.rangeExprRight.opt).ast;
-    this.conditionalExprLeft = noAst(this.rangeExpr);
+    this.conditionalExprLeft = this.rangeExpr.ast;
     this.conditionalExprRight = guardedWsDelimSeq("?", this.conditionalExprLeft, ":", this.conditionalExprLeft).ast;
     this.conditionalExpr = this.conditionalExprLeft.then(this.conditionalExprRight.zeroOrMore).ast;
-    this.assignmentExprLeft = noAst(this.conditionalExpr);
+    this.assignmentExprLeft = this.conditionalExpr.ast;
     this.assignmentExprRight = guardedWsDelimSeq(this.assignmentOp, this.assignmentExprLeft).ast;
     this.assignmentExpr = this.assignmentExprLeft.then(this.assignmentExprRight.zeroOrMore).ast;
     // Statements 
@@ -173,7 +179,9 @@ var g = new function () {
     this.continueStatement = guardedWsDelimSeq(myna_parser_1.Myna.keyword("continue"), this.eos).ast;
     this.returnStatement = guardedWsDelimSeq(myna_parser_1.Myna.keyword("return"), this.expr.opt, this.eos).ast;
     this.emptyStatement = this.eos.ast;
-    this.statement = myna_parser_1.Myna.choice(this.emptyStatement, this.compoundStatement, this.ifStatement, this.returnStatement, this.continueStatement, this.breakStatement, this.forLoop, this.doLoop, this.whileLoop, this.varDeclStatement, this.funcDef, this.exprStatement).then(this.ws).ast;
+    //this.typeDef = guardedWsDelimSeq('=', this.typeExpr);
+    //this.typeDecl = guardedWsDelimSeq(m.keyword("type"), this.identifier, this.typeDef.opt).ast;
+    this.statement = myna_parser_1.Myna.choice(this.emptyStatement, this.compoundStatement, this.ifStatement, this.returnStatement, this.continueStatement, this.breakStatement, this.forLoop, this.doLoop, this.whileLoop, this.varDeclStatement, this.funcDef, this.intrinsicDef, this.exprStatement).then(this.ws).ast;
     // Urns are used for the language definition and the module name 
     this.urnPart = myna_parser_1.Myna.alphaNumeric.or(myna_parser_1.Myna.char('.-')).zeroOrMore.ast;
     this.urnDiv = myna_parser_1.Myna.choice(':');
@@ -190,8 +198,9 @@ var g = new function () {
 myna_parser_1.Myna.registerGrammar('heron', g, g.file);
 exports.heronGrammar = myna_parser_1.Myna.grammars['heron'];
 exports.heronParser = myna_parser_1.Myna.parsers['heron'];
-function parseHeron(s) {
-    var ast = exports.heronParser(s);
+function parseHeron(s, r) {
+    if (r === void 0) { r = exports.heronGrammar.file; }
+    var ast = r.parse(s);
     if (ast.end != s.length)
         throw new Error("Whole input was not parsed");
     return ast;

@@ -1,9 +1,7 @@
 language heron:std:0.1;
 
-module cdiggins:geometry:mesh:0.1
+module heron:geometry.mesh:0.1
 {
-    var PI = 3.1415926535897;
-
     function mesh(vertices) 
         = mesh(vertices, vertices.indices);
     

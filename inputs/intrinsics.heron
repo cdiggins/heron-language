@@ -1,0 +1,61 @@
+language heron:std:0:1;
+
+// An intrinsic is a function that has an implementation provided by the compiler.
+
+module heron:std:intrinsics:0.1
+{
+    // TODO: eventually allow things like this
+    // type Num = Float | Float2 | Float3 | Float4;
+
+    var pi = 3.14159265358979323846;
+    var e = 2.71828182845904523536;
+
+    intrinsic float2(x: Float, y: Float): Float2;    
+    intrinsic x(v: Float2): Float;
+    intrinsic y(v: Float2): Float;
+
+    intrinsic float3(x: Float, y: Float, z: Float): Float3;
+    intrinsic x(v: Float3): Float;
+    intrinsic y(v: Float3): Float;
+    intrinsic z(v: Float3): Float;
+
+    intrinsic float4(x: Float, y: Float, z: Float, w: Float): Float4;
+    intrinsic x(v: Float4): Float;
+    intrinsic y(v: Float4): Float;
+    intrinsic z(v: Float4): Float;
+    intrinsic w(v: Float4): Float;
+
+    intrinsic abs<T: Num>(x: T): T;
+    intrinsic acos<T: Num>(x: T): T;
+    intrinsic asin<T: Num>(x: T): T
+    intrinsic atan<T: Num>(x: T): T;
+    intrinsic atan2<T: Num>(y: T, x: T): T;
+    intrinsic ceil<T: Num>(x: T, y: T): T;
+    intrinsic ceil<T: Num>(x: T): T;
+    intrinsic clamp<T: Num>(x: T, min: T, max: T): T;
+    intrinsic cos<T: Num>(x: T): T;
+    intrinsic exp<T: Num>(x: T): T;
+    intrinsic floor<T: Num>(x: T): T;
+    intrinsic log<T: Num>(x: T): T;
+    intrinsic max<T: Num>(x: T, y: T): T;
+    intrinsic min<T: Num>(x: T, y: T): T;
+    intrinsic pow<T: Num>(x: T, y: T): T;
+    intrinsic round<T: Num>(x: T): T;
+    intrinsic sin<T: Num>(x: T): T;
+    intrinsic sign<T: Num>(x: T): T;
+    intrinsic sqrt<T: Num>(x: T): T;
+    intrinsic tan<T: Num>(x: T): T;    
+
+    intrinsic op+ <T: Num>(x: T, y: T): T;
+    intrinsic op- <T: Num>(x: T, y: T): T;
+    intrinsic op* <T: Num>(x: T, y: T): T;
+    intrinsic op/ <T: Num>(x: T, y: T): T;
+    intrinsic op% <T: Num>(x: T, y: T): T;
+
+    intrinsic op>  <T: Num>(x: T, y: T): Bool;
+    intrinsic op>= <T: Num>(x: T, y: T): Bool;
+    intrinsic op<  <T: Num>(x: T, y: T): Bool;
+    intrinsic op<= <T: Num>(x: T, y: T): Bool;
+    intrinsic op!= <T: Num>(x: T, y: T): Bool;
+    intrinsic op== <T: Num>(x: T, y: T): Bool;
+}

@@ -1,18 +1,18 @@
 language heron:std:0.1;
 
-module cdiggins:geometry:transform:0.1
+module heron:geometry.transform:0.1
 {
     function transform(pos, rot, scl)
         = { position=pos; rotation=rot; scale=scl; };
     
     function translation(pos)
-        = transform(pos, quaternion(), ones);
+        = transform(pos, quaternion_zero, ones);
 
     function rotation(rot)
         = transform(origin, rot, ones);
 
     function scaling(scl)
-        = transform(origin, quaternion(), scl);
+        = transform(origin, quaternion_zero, scl);
 
     function matrix(t) 
         = translation_rotation_scaling_matrix(t.position, t.rotation, t.scale);    

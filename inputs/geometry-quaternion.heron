@@ -2,11 +2,15 @@ language heron:std:0.1;
 
 // https://referencesource.microsoft.com/#System.Numerics/System/Numerics/Quaternion.cs
 // http://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/index.htm
+// https://github.com/mrdoob/three.js/blob/master/src/math/Vector3.js
 
-module cdiggins:geometry:quaternion:0.1
+module heron:geometry.quaternion:0.1
 {
+    function quaternion(v)
+        = float4(v.x, v.y, v.z, v.w);
+
     function quaternion(x, y, z, w)
-        = { x=x; y=y; z=z; w=w; };
+        = float4(x, y, z, w);
 
     function quaternion(x, y, z)
         = quaternion(x, y, z, 1);
@@ -25,7 +29,6 @@ module cdiggins:geometry:quaternion:0.1
     
     function length(q)
         = q.length2.sqrt;
-
 
     // http://www.euclideanspace.com/maths/geometry/rotations/conversions/angleToQuaternion/index.htm
     function quaternion(axis, angle)

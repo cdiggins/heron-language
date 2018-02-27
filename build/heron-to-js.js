@@ -1,10 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var heron_ast_rewrite_1 = require("./heron-ast-rewrite");
+var heron_name_analysis_1 = require("./heron-name-analysis");
 //=====================================
 // Main entry function 
+// It is assumed that the AST is transformed
 function heronToJs(ast) {
-    ast = heron_ast_rewrite_1.transformAst(ast);
+    var na = heron_name_analysis_1.analyzeHeronNames(ast);
+    mergeMultipleDefs(ast, na);
     var js = new HeronToJs();
     var cb = new CodeBuilder();
     js.visitNode(ast, cb);
@@ -29,6 +32,33 @@ function generateAccessors(ast, state) {
     }
 }
 exports.generateAccessors = generateAccessors;
+function groupBy(xs, f) {
+    return xs.reduce(function (r, v, i, a, k) {
+        if (k === void 0) { k = f(v); }
+        return ((r[k] || (r[k] = [])).push(v), r);
+    }, {});
+}
+exports.groupBy = groupBy;
+function sortyBy(xs, f) {
+    return xs.slice().sort(function (a, b) { return (f(a) > f(b)) ? 1 : ((f(b) > f(a)) ? -1 : 0); });
+}
+exports.sortyBy = sortyBy;
+function mergeMultipleDefs(ast, nameAnalysis) {
+    var funcDefs = [];
+    for (var _i = 0, _a = nameAnalysis.scopes; _i < _a.length; _i++) {
+        var scope = _a[_i];
+        for (var _b = 0, _c = scope.defs; _b < _c.length; _b++) {
+            var def = _c[_b];
+            if (def.node.name === 'funcDef')
+                funcDefs.push(def);
+        }
+    }
+    var grps = groupBy(funcDefs, function (x) { return x.name; });
+    for (var grp in grps) {
+        console.log(grp + ": " + grps[grp].map(function (op) { return op.decoratedName; }));
+    }
+}
+exports.mergeMultipleDefs = mergeMultipleDefs;
 function findAllNodes(ast, f, r) {
     if (r === void 0) { r = []; }
     if (f(ast))
@@ -191,6 +221,13 @@ var HeronToJs = /** @class */ (function () {
         // funcParamName
         state.push(ast.allText);
     };
+    HeronToJs.prototype.visit_genericParam = function (ast, state) {
+        // Don't visit children for now. 
+    };
+    HeronToJs.prototype.visit_genericParams = function (ast, state) {
+        // genericParam[0, Infinity]
+        this.visitChildren(ast, state);
+    };
     HeronToJs.prototype.visit_identifier = function (ast, state) {
         // identifier
         state.push(heron_ast_rewrite_1.identifierToString(ast.allText));
@@ -213,7 +250,7 @@ var HeronToJs = /** @class */ (function () {
         this.visitChildren(ast, state);
     };
     HeronToJs.prototype.visit_moduleBody = function (ast, state) {
-        // topLevelStatement[0, infinity]
+        // statement[0, infinity]
         state.pushLine('{');
         generateAccessors(ast, state);
         this.visitChildren(ast, state);
@@ -239,10 +276,6 @@ var HeronToJs = /** @class */ (function () {
     };
     HeronToJs.prototype.visit_statement = function (ast, state) {
         // choice(emptyStatement,compoundStatement,ifStatement,returnStatement,continueStatement,breakStatement,forLoop,doLoop,whileLoop,varDecl,exprStatement,funcDef)
-        this.visitChildren(ast, state);
-    };
-    HeronToJs.prototype.visit_topLevelStatement = function (ast, state) {
-        // choice(emptyStatement,compoundStatement,ifStatement,forLoop,doLoop,whileLoop,varDecl,exprStatement,funcDef)
         this.visitChildren(ast, state);
     };
     HeronToJs.prototype.visit_varDecl = function (ast, state) {
@@ -361,6 +394,10 @@ var HeronToJs = /** @class */ (function () {
     };
     HeronToJs.prototype.visit_postfixExpr = function (ast, state) {
         // seq(leafExpr, postfixOp[0,Infinity])
+        if (ast.children.length == 1) {
+            this.visitNode(ast.children[0], state);
+            return;
+        }
         if (ast.children.length != 2)
             throw new Error("Expected two children for a postfix expression");
         var astFirst = ast.children[0];

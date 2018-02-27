@@ -1,11 +1,14 @@
 import { Myna } from "myna-parser/myna";
 import { transformAst, identifierToString } from "./heron-ast-rewrite";
+import { analyzeHeronNames, NameAnalyzer } from "./heron-name-analysis";
 
 //=====================================
 // Main entry function 
 
+// It is assumed that the AST is transformed
 export function heronToJs(ast) {
-    ast = transformAst(ast);
+    var na = analyzeHeronNames(ast);
+    mergeMultipleDefs(ast, na);
     let js = new HeronToJs();
     let cb = new CodeBuilder();
     js.visitNode(ast, cb);
@@ -25,6 +28,27 @@ export function generateAccessors(ast, state) {
     for (var obj of objs) 
         for (var field of obj.children) 
             generateAccessor(field, state);
+}
+
+export function groupBy(xs, f) {
+    return xs.reduce((r, v, i, a, k = f(v)) => ((r[k] || (r[k] = [])).push(v), r), {});
+}
+
+export function sortyBy(xs, f) {
+    return [...xs].sort(function(a,b) {return (f(a) > f(b)) ? 1 : ((f(b) > f(a)) ? -1 : 0);});
+}
+
+export function mergeMultipleDefs(ast, nameAnalysis: NameAnalyzer) {
+    var funcDefs = [];
+    for (var scope of nameAnalysis.scopes) 
+        for (var def of scope.defs) 
+            if (def.node.name === 'funcDef') 
+                funcDefs.push(def);
+    var grps = groupBy(funcDefs, x => x.name);
+    for (var grp in grps) 
+    {
+        console.log(grp + ": " + grps[grp].map(op => op.decoratedName));
+    }
 }
 
 export function findAllNodes(ast:Myna.AstNode, f:(_:Myna.AstNode)=>boolean, r:Myna.AstNode[]=[]): Myna.AstNode[] {
@@ -181,6 +205,13 @@ class HeronToJs
         // funcParamName
         state.push(ast.allText);
     }
+    visit_genericParam(ast, state) {
+        // Don't visit children for now. 
+    }
+    visit_genericParams(ast, state) {
+        // genericParam[0, Infinity]
+        this.visitChildren(ast, state);
+    }
     visit_identifier(ast, state) {
         // identifier
         state.push(identifierToString(ast.allText));
@@ -203,7 +234,7 @@ class HeronToJs
         this.visitChildren(ast, state);
     }
     visit_moduleBody(ast, state) {
-        // topLevelStatement[0, infinity]
+        // statement[0, infinity]
         state.pushLine('{');
         generateAccessors(ast, state);
         this.visitChildren(ast, state);
@@ -229,10 +260,6 @@ class HeronToJs
     }
     visit_statement(ast, state) {
         // choice(emptyStatement,compoundStatement,ifStatement,returnStatement,continueStatement,breakStatement,forLoop,doLoop,whileLoop,varDecl,exprStatement,funcDef)
-        this.visitChildren(ast, state);
-    }
-    visit_topLevelStatement(ast, state) {
-        // choice(emptyStatement,compoundStatement,ifStatement,forLoop,doLoop,whileLoop,varDecl,exprStatement,funcDef)
         this.visitChildren(ast, state);
     }
     visit_varDecl(ast, state) {
@@ -351,6 +378,11 @@ class HeronToJs
     }
     visit_postfixExpr(ast, state) {        
         // seq(leafExpr, postfixOp[0,Infinity])
+        if (ast.children.length == 1) {
+            this.visitNode(ast.children[0], state);
+            return;
+        }
+
         if (ast.children.length != 2)
             throw new Error("Expected two children for a postfix expression");
         

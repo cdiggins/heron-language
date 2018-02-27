@@ -94,13 +94,28 @@ function binaryOpToFunction(ast: Myna.AstNode): Myna.AstNode {
 // We want to make sure these expressions always have two children. 
 // (a op b op c op d) => (((a op b) op c) op d)
 // (a op b) => (a op b)
-// (a) => a
+// (a) => a 
 function exprListToPair(ast: Myna.AstNode): Myna.AstNode {
     ast.children = ast.children.map(exprListToPair);
 
     // We are only going to handle certain cases
     switch (ast.name)
     {    
+        case 'assignmentExprLeft':
+        case 'conditionalExprLeft':
+        case 'rangeExprLeft':
+        case 'logicalOrExprLeft':
+        case 'logicalXOrExprLeft':
+        case 'logicalAndExprLeft':
+        case 'equalityExprLeft':
+        case 'relationalExprLeft':
+        case 'additiveExprLeft':
+        case 'multiplicativeExprLeft':        
+            {
+                if (ast.children.length != 1)
+                    throw new Error("Exepcted exactly one child");
+                return ast.children[0];
+            }
         case 'assignmentExpr':
         case 'conditionalExpr':
         case 'rangeExpr':
@@ -123,7 +138,7 @@ function exprListToPair(ast: Myna.AstNode): Myna.AstNode {
         throw new Error("Expected at least one child");
 
     // If there is only one child: we just return that child 
-    if (ast.children.length == 1)
+    if (ast.children.length == 1) 
         return ast.children[0];
 
     // there are two already: we are done 
@@ -131,7 +146,7 @@ function exprListToPair(ast: Myna.AstNode): Myna.AstNode {
         return ast;
 
     // We are shifting left (in the case of most operations)
-    // Or are shifting right in the case of prefix expr ()
+    // Or are shifting right in the case of prefix expr 
     if (ast.name === 'prefixExpr') {
         // More than two, we are going to shift things to the left-side
         let right = ast.children[ast.children.length - 1];
@@ -158,7 +173,14 @@ function exprListToPair(ast: Myna.AstNode): Myna.AstNode {
 // Binary operators are converted to function calls. 
 // Binary expression chains are converted to nodes with two children
 export function transformAst(ast: Myna.AstNode) {
+    //console.log("Before transform");
+    //console.log(ast.toString())    
     ast = exprListToPair(ast);
+    
+    //console.log("After transform");
+    //console.log(ast.toString())
+    
+    //console.log("As function");
     ast = binaryOpToFunction(ast);
     return ast;
 }

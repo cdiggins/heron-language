@@ -15,8 +15,11 @@ Slice operator: xs[0:10]
 Stride operator: xs[0:100:2] 
 Arrow functions: 
 Type inference of polymorphic functions 
-Dot notation always available 
+All functions can be called using traditional function f(a, b) or invoked as method on first argument a.f(b)
 Structural subtyping 
+Operator overloading
+Object literals
+
 
 ## Features Omitted 
 
@@ -284,3 +287,57 @@ Simplification
 
 https://github.com/mrdoob/three.js/blob/master/examples/js/objects/Water.js
 
+//==
+
+Type switch?? 
+
+match (f.args.type) {
+    (Array, Number) -> vector3$Array;
+    (Array, Array) -> vector3$Array$Array;
+}
+
+https://fsharpforfunandprofit.com/posts/match-expression/
+https://tour.golang.org/methods/16 
+
+//==
+
+"as" 
+
+    intrinsic abs(x: Num): Num;
+    intrinsic acos(x: Num): Num;
+    intrinsic asin(x: Num): Num
+    intrinsic atan(x: Num): Num;
+    intrinsic atan2(y: Num, x: Num): Num;
+    intrinsic ceil(x: Num, y: Num): Num;
+    intrinsic ceil(x: Num): Num;
+    intrinsic clamp(x: Num, min: Num, max: Num): Num;
+    intrinsic cos(x: Num): Num;
+    intrinsic exp(x: Num): Num;
+    intrinsic floor(x: Num): Num;
+    intrinsic log(x: Num): Num;
+    intrinsic max(x: Num, y: Num): Num;
+    intrinsic min(x: Num, y: Num): Num;
+    intrinsic near(x: Num, y: Num, e: Num): Num;
+    intrinsic pow(x: Num, y: Num): Num;
+    intrinsic round(x: Num): Num;
+    intrinsic sin(x: Num): Num;
+    intrinsic sign(x: Num): Num;
+    intrinsic sqrt(x: Num): Num;
+    intrinsic tan(x: Num): Num;    
+
+    intrinsic op+(x: Num, y: Num): Num;
+    intrinsic op-(x: Num, y: Num): Num;
+    intrinsic op*(x: Num, y: Num): Num;
+    intrinsic op/(x: Num, y: Num): Num;
+    intrinsic op%(x: Num, y: Num): Num;
+
+    intrinsic op>(x: Num, y: Num): Bool;
+    intrinsic op>=(x: Num, y: Num): Bool;
+    intrinsic op<(x: Num, y: Num): Bool;
+    intrinsic op<=(x: Num, y: Num): Bool;
+    intrinsic op!=(x: Num, y: Num): Bool;
+    intrinsic op==(x: Num, y: Num): Bool;
+
+    //==
+
+    TODO: 

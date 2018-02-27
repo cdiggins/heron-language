@@ -1,12 +1,24 @@
 language heron:std:0:1;
 
-module heron:array:0.1
+module heron:std.array:0.1
 {
-    function array(len, f)
-        = { length=len; at=f; }; 
+    // The two Array types 
+
+    /*
+    type Array<T>
+        = { count: Int; at(n: Int): T; } 
+
+    type MutableArray<T> 
+        = { count: Int; at(n: Int): T; setAt(n: Int, x: T); }
+    */
+
+    // Functions
+
+    function array(n, f)
+        = { count=n; at=f; } as Array; 
 
     function map(xs, f)
-        = array(xs.length, i => f(xs[i]));
+        = array(xs.count, i => f(xs[i]));
 
     function min(x, y) 
         = x <= y ? x : y;
@@ -15,13 +27,13 @@ module heron:array:0.1
         = x <= y ? x : y;
    
     function shorter(xs, ys) 
-        = xs.length <= ys.length ? xs : ys;
+        = xs.count <= ys.count ? xs : ys;
    
     function longer(xs, ys) 
-        = xs.length >= ys.length ? xs : ys;
+        = xs.count >= ys.count ? xs : ys;
 
     function empty(xs) 
-        = xs.length == 0;
+        = xs.count == 0;
 
     function at(xs, i) 
         = xs[i];
@@ -30,10 +42,10 @@ module heron:array:0.1
         = indices.map(xs.at);
 
     function indices(xs) 
-        = 0 .. xs.length;
+        = 0 .. xs.count;
 
     function zip(xs, ys, f) 
-        = xs.length <= ys.length 
+        = xs.count <= ys.count 
             ? xs.map((x, i) => f(x, ys[i]))
             : ys.map((x, y) => f(x, xs[i]));
 
@@ -47,7 +59,7 @@ module heron:array:0.1
         = xs.reduce(0, (prev, x) => p(x) ? prev + 1 : prev);    
 
     function eq(xs, ys) 
-        = xs.length == ys.length;    
+        = xs.count == ys.count;    
 
     function filter(xs, p) {
         var ys = xs.mutable;
@@ -63,8 +75,8 @@ module heron:array:0.1
 
     function prefixScan(xs, op) {
         if (xs.empty) return xs;
-        var ys = xs[0].repeat(xs.length).mutable();
-        for (var i in 1 .. ys.length)
+        var ys = xs[0].repeat(xs.count).mutable();
+        for (var i in 1 .. ys.count)
             ys[i] = op(xs[i], ys[i-1]);
         return ys;
     }
@@ -76,7 +88,7 @@ module heron:array:0.1
         = (from .. to).map(xs.at);    
 
     function stride(xs, n) 
-        = (0 .. xs.length / n).map(i => xs[i * n]);    
+        = (0 .. xs.count / n).map(i => xs[i * n]);    
 
     function slices(xs, n) 
         = (0 .. n).map(i => xs.slice(i * n, (i+1) * n));    
@@ -85,25 +97,25 @@ module heron:array:0.1
         = xs.slice(0, n);    
 
     function skip(xs, n) 
-        = xs.slice(n, xs.length - n);    
+        = xs.slice(n, xs.count - n);    
 
     function dropSuffix(xs, n) 
-        = xs.take(xs.length - n);    
+        = xs.take(xs.count - n);    
 
     function suffix(xs, n) 
-        = xs.skip(xs.length-n);
+        = xs.skip(xs.count-n);
 
     function reverse(xs, n) 
-        = xs.indices.map(i => xs[xs.length-1-i]);    
+        = xs.indices.map(i => xs[xs.count-1-i]);    
 
     function gen(cnt, f) 
         = (0 .. cnt).map(f);    
 
     function concat(xs, ys) 
-        = gen(xs.length + ys.length, i => i < xs.length ? xs[i] : ys[i - xs.length]);    
+        = gen(xs.count + ys.count, i => i < xs.count ? xs[i] : ys[i - xs.count]);    
 
     function cut(xs, from, n) 
-        = gen(xs.length - n, i < from ? xs[i] : xs[i + n]);    
+        = gen(xs.count - n, i < from ? xs[i] : xs[i + n]);    
 
     function splice(xs, from, ys) 
         = xs.take(from).concat(ys).concat(xs.drop(from));    
@@ -115,7 +127,7 @@ module heron:array:0.1
         = xs.reduce(1, op*);    
     
     function average(xs) 
-        = xs.sum / xs.length;    
+        = xs.sum / xs.count;    
 
     function minElement(xs) 
         = xs.reduce(xs[0], min);    
@@ -157,16 +169,16 @@ module heron:array:0.1
 
     function median(xs) {        
         var ys = xs.sort();
-        return ys.length % 2 == 0 
-            ? ys[ys.length / 2] 
-            : ys[ys.length / 2 - 1] + ys[ys.length / 2 + 1] / 2;
+        return ys.count % 2 == 0 
+            ? ys[ys.count / 2] 
+            : ys[ys.count / 2 - 1] + ys[ys.count / 2 + 1] / 2;
     }
 
     function inrange(xs, n) 
-        = n >= 0 && n < xs.length;    
+        = n >= 0 && n < xs.count;    
 
     function last(xs) 
-        = xs[xs.length - 1];    
+        = xs[xs.count - 1];    
 
     function first(xs) 
         = xs[0];

@@ -3,6 +3,8 @@
 import * as Myna from "myna-parser";
 import { heronGrammar, parseHeron } from './heron-parser';
 import { heronToJs } from "./heron-to-js";
+import { transformAst } from "./heron-ast-rewrite";
+import { analyzeHeronNames, NameAnalyzer, Scope } from "./heron-name-analysis";
 
 const m = Myna.Myna;
 const g = heronGrammar;
@@ -71,24 +73,63 @@ const ruleTests = [
         ]]        
 ];
 
-for (let ruleTest of ruleTests) {
-    let rule = ruleTest[0];
-    for (let passInput of ruleTest[1]) 
-        testParse(rule, assert, passInput, true);
-    for (let failInput of ruleTest[2]) 
-        testParse(rule, assert, failInput, false);
+function testParsingRules() {
+    for (let ruleTest of ruleTests) {
+        let rule = ruleTest[0]; 
+        for (let passInput of ruleTest[1]) 
+            testParse(rule, assert, passInput, true);
+        for (let failInput of ruleTest[2]) 
+            testParse(rule, assert, failInput, false);
+    }
 }
+
+// TEMP: this needs to be uncommented
+// testParsingRules()
 
 declare var require;
 const fs = require('fs');
 
-function testParseFile(f) {
-    let heronTest = fs.readFileSync(f, 'utf-8');
-    let ast = parseHeron(heronTest);
-    let cb = heronToJs(ast);
-    console.log(cb.toString());    
+function outputScopeAnalysis(scope: Scope, indent = '')  
+{        
+    const nodeName = scope.node ? scope.node.name : "";
+    console.log(indent + "scope[" + scope.id + "] " + nodeName);
+    for (let def of scope.defs) {
+        console.log(indent + "- var " + def.name + " used " + def.usages.length);
+    }
+    for (let child of scope.children) {
+        outputScopeAnalysis(child, indent + '  ');
+    }
 }
 
+function testParseCode(code, r = g.file) {
+    let ast = parseHeron(code, r);
+    ast = transformAst(ast);
+    let names = analyzeHeronNames(ast);
+    outputScopeAnalysis(names.curScope);
+    let cb = heronToJs(ast);
+    //console.log(cb.toString());    
+}
+
+function testParseFile(f) {
+    testParseCode(fs.readFileSync(f, 'utf-8'));
+}
+
+function testParseExpr(code) {
+    return testParseCode(code, g.expr);
+}
+
+/*
+testParseExpr("2 + 3"); 
+testParseCode("2 + 3", g.additiveExpr);
+testParseCode("2 + 3", g.relationalExpr);
+testParseCode("2 + 3", g.equalityExpr);
+testParseCode("2 + 3", g.logicalAndExpr);
+testParseCode("2 + 3", g.logicalXOrExpr);
+testParseCode("2 + 3", g.logicalOrExpr);
+testParseCode("2 + 3", g.rangeExpr);
+testParseCode("2 + 3", g.conditionalExpr);
+testParseCode("2 + 3", g.assignmentExpr);
+*/
 
 //testParseFile('.\\tests\\seascape.heron');
 //testParseFile('.\\tests\\stdlib.heron');

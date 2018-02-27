@@ -1,132 +1,203 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+function analyzeHeronNames(ast) {
+    var scopes = new NameAnalyzer();
+    var visitor = new AstVisitor();
+    visitor.visitNode(ast, scopes);
+    return scopes;
+}
+exports.analyzeHeronNames = analyzeHeronNames;
+// A usage of a name. 
 var VarUsage = /** @class */ (function () {
-    function VarUsage() {
+    function VarUsage(name, scope, node, def) {
+        this.name = name;
+        this.scope = scope;
+        this.node = node;
+        this.def = def;
+        if (def)
+            def.usages.push(this);
     }
     return VarUsage;
 }());
+exports.VarUsage = VarUsage;
+// The definition of a variable
 var VarDef = /** @class */ (function () {
-    function VarDef() {
+    function VarDef(name, scope, node) {
+        this.name = name;
+        this.scope = scope;
+        this.node = node;
+        this.usages = [];
     }
+    Object.defineProperty(VarDef.prototype, "args", {
+        get: function () {
+            return (this.node.name === 'funcDef')
+                ? this.node.children[1].children
+                : [];
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(VarDef.prototype, "argTypes", {
+        get: function () {
+            return this.args.map(function (p) { return p.children.length == 2 ? p.children[1].allText : "Any"; });
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(VarDef.prototype, "decoratedName", {
+        get: function () {
+            if (this.args.length > 0)
+                return this.name + '$' + this.argTypes.join('$');
+            else
+                return this.name;
+        },
+        enumerable: true,
+        configurable: true
+    });
     return VarDef;
 }());
+exports.VarDef = VarDef;
+// A scope. Scopes create a tree. 
 var Scope = /** @class */ (function () {
     function Scope() {
+        this.id = 0;
+        this.usages = [];
+        this.defs = [];
         this.children = [];
     }
     Scope.prototype.findDef = function (name) {
-        if (name in this.defs)
-            return this.defs[name];
-        if (parent == null)
-            return null;
-        return this.parent.findDef(name);
+        for (var _i = 0, _a = this.defs; _i < _a.length; _i++) {
+            var d = _a[_i];
+            if (d.name === name)
+                return d;
+        }
+        return this.parent
+            ? this.parent.findDef(name)
+            : null;
     };
     return Scope;
 }());
-var State = /** @class */ (function () {
-    function State() {
+exports.Scope = Scope;
+// This is passed to the visitor and stores all scopes.  
+var NameAnalyzer = /** @class */ (function () {
+    function NameAnalyzer() {
+        this.curScope = new Scope();
+        this.scopes = [this.curScope];
+        this.unknownVars = [];
     }
-    State.prototype.pushScope = function (ast) {
+    NameAnalyzer.prototype.pushScope = function (ast) {
         var tmp = new Scope();
+        tmp.id = this.scopes.length;
+        this.scopes.push(tmp);
         this.curScope.children.push(tmp);
         tmp.parent = this.curScope;
         tmp.node = ast;
         this.curScope = tmp;
     };
-    State.prototype.popScope = function () {
+    NameAnalyzer.prototype.popScope = function () {
         this.curScope = this.curScope.parent;
     };
-    State.prototype.findDef = function (name) {
+    NameAnalyzer.prototype.findDef = function (name) {
         return this.curScope.findDef(name);
     };
-    State.prototype.addVarDef = function (name, node) {
-        if (name in this.curScope.defs)
-            throw new Error("Rdefining variable " + name);
-        this.curScope.defs[name];
+    NameAnalyzer.prototype.addVarDef = function (name, node) {
+        var vd = new VarDef(name, this.curScope, node);
+        this.curScope.defs.push(vd);
     };
-    State.prototype.addVarUsage = function (name, node) {
-        var usage = new VarUsage();
-        usage.name = name;
-        usage.node = node;
-        usage.def = this.findDef(name);
+    NameAnalyzer.prototype.addVarUsage = function (name, node) {
+        var usage = new VarUsage(name, this.curScope, node, this.findDef(name));
+        this.curScope.usages.push(usage);
     };
-    return State;
+    return NameAnalyzer;
 }());
-var HeronVisitor = /** @class */ (function () {
-    function HeronVisitor() {
+exports.NameAnalyzer = NameAnalyzer;
+// Used for visiting nodes in the Heron AST looking for name defintions, usages, and scopes.
+var AstVisitor = /** @class */ (function () {
+    function AstVisitor() {
     }
-    HeronVisitor.prototype.visitNode = function (ast, state) {
+    // Visitor helper functions
+    AstVisitor.prototype.visitNode = function (ast, state) {
         var fnName = 'visit_' + ast.name;
         if (fnName in this)
             this[fnName](ast, state);
         else
             this.visitChildren(ast, state);
     };
-    HeronVisitor.prototype.visitChildren = function (ast, state) {
+    AstVisitor.prototype.visitChildren = function (ast, state) {
         for (var _i = 0, _a = ast.children; _i < _a.length; _i++) {
             var child = _a[_i];
             this.visitNode(child, state);
         }
     };
-    HeronVisitor.prototype.visit_fieldSelect = function (ast, state) {
-        state.addVarUsage(ast.allText, state);
-        this.visitChildren(ast, state);
-    };
-    HeronVisitor.prototype.visit_funcDef = function (ast, state) {
-        state.pushScope();
+    // Particular node visitors 
+    AstVisitor.prototype.visit_compoundStatement = function (ast, state) {
+        state.pushScope(ast);
         this.visitChildren(ast, state);
         state.popScope();
     };
-    HeronVisitor.prototype.visit_funcName = function (ast, state) {
-        state.addVarDef(ast.allText, ast);
-        this.visitChildren(ast, state);
+    AstVisitor.prototype.visit_genericParam = function (ast, state) {
+        var paramName = ast.children[0].allText;
+        state.addVarDef(paramName, ast);
     };
-    HeronVisitor.prototype.visit_funcParam = function (ast, state) {
-        state.addVarDef(ast.allText, ast);
+    AstVisitor.prototype.visit_funcDef = function (ast, state) {
+        var funcName = ast.children[0];
+        state.addVarDef(funcName.allText, ast);
+        state.pushScope(ast);
         this.visitChildren(ast, state);
+        state.popScope();
     };
-    HeronVisitor.prototype.visit_identifier = function (ast, state) {
+    AstVisitor.prototype.visit_intriniscDef = function (ast, state) {
+        var funcName = ast.children[0];
+        state.addVarDef(funcName.allText, ast);
+        state.pushScope(ast);
+        this.visitChildren(ast, state);
+        state.popScope();
+    };
+    AstVisitor.prototype.visit_funcParamName = function (ast, state) {
+        state.addVarDef(ast.allText, ast);
+    };
+    AstVisitor.prototype.visit_typeName = function (ast, state) {
         state.addVarUsage(ast.allText, ast);
-        this.visitChildren(ast, state);
     };
-    HeronVisitor.prototype.visit_lambdaArg = function (ast, state) {
+    AstVisitor.prototype.visit_lambdaArg = function (ast, state) {
         // TODO: when types are introduced, we will have to update this
         state.addVarDef(ast.allText, ast);
         this.visitChildren(ast, state);
     };
-    HeronVisitor.prototype.visit_lambdaBody = function (ast, state) {
+    AstVisitor.prototype.visit_lambdaBody = function (ast, state) {
         state.pushScope(ast);
         this.visitChildren(ast, state);
         state.popScope();
     };
-    HeronVisitor.prototype.visit_lambdaExpr = function (ast, state) {
+    AstVisitor.prototype.visit_lambdaExpr = function (ast, state) {
         state.pushScope(ast);
         this.visitChildren(ast, state);
         state.popScope();
     };
-    HeronVisitor.prototype.visit_moduleName = function (ast, state) {
-        state.addVarDef(ast.allText, ast);
-        this.visitChildren(ast, state);
+    AstVisitor.prototype.visit_leafExpr = function (ast, state) {
+        var child = ast.children[0];
+        if (child.name === 'identifier')
+            state.addVarUsage(child.allText, ast);
     };
-    HeronVisitor.prototype.visit_recCompoundStatement = function (ast, state) {
+    AstVisitor.prototype.visit_module = function (ast, state) {
+        state.pushScope(ast);
+        this.visitChildren(ast, state);
+        state.popScope(ast);
+    };
+    AstVisitor.prototype.visit_recCompoundStatement = function (ast, state) {
         state.pushScope(ast);
         this.visitChildren(ast, state);
         state.popScope();
     };
-    HeronVisitor.prototype.visit_statement = function (ast, state) {
-        state.pushScope(ast);
-        this.visitChildren(ast, state);
-        state.popScope();
-    };
-    HeronVisitor.prototype.visit_topLevelStatement = function (ast, state) {
-        state.pushScope(ast);
-        this.visitChildren(ast, state);
-        state.popScope();
-    };
-    HeronVisitor.prototype.visit_varDecl = function (ast, state) {
+    AstVisitor.prototype.visit_varDecl = function (ast, state) {
         state.addVarDef(ast.children[0].allText, ast);
         this.visitChildren(ast, state);
     };
-    return HeronVisitor;
+    AstVisitor.prototype.visit_varExpr = function (ast, state) {
+        state.pushScope(ast);
+        this.visitChildren(ast, state);
+        state.popScope();
+    };
+    return AstVisitor;
 }());
 //# sourceMappingURL=heron-name-analysis.js.map
