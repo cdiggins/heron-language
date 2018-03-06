@@ -132,9 +132,10 @@ const g = new function() {
     this.recCompoundStatement = m.delay(() => _this.compoundStatement).ast;
     this.funcBodyStatement = this.recCompoundStatement.ast;
     this.funcBodyExpr = guardedWsDelimSeq('=', this.expr, ';').ast;
-    this.funcBody = m.choice(this.funcBodyStatement, this.funcBodyExpr).ast;
-    this.funcDef = guardedWsDelimSeq(m.keyword("function"), this.funcName, this.genericsParams, this.funcParams, this.funcBody).ast;
-    this.intrinsicDef = guardedWsDelimSeq(m.keyword("intrinsic"), this.funcName, this.genericsParams, this.funcParams, ';').ast;
+    this.funcBody = m.choice(this.funcBodyStatement, this.funcBodyExpr).ast; 
+    this.funcSig = guardedWsDelimSeq(this.funcName, this.genericsParams, this.funcParams).ast;
+    this.funcDef = guardedWsDelimSeq(m.keyword("function"), this.funcSig, this.funcBody).ast;
+    this.intrinsicDef = guardedWsDelimSeq(m.keyword("intrinsic"), this.funcSig, ';').ast;
 
     // Lambda expression 
     this.lambdaArg = this.identifier.then(this.funcParamType.opt).ast;

@@ -4,13 +4,31 @@ import * as Myna from "myna-parser";
 import { heronGrammar, parseHeron } from './heron-parser';
 import { heronToJs } from "./heron-to-js";
 import { transformAst } from "./heron-ast-rewrite";
-import { analyzeHeronNames, NameAnalyzer, Scope } from "./heron-name-analysis";
+import { analyzeHeronNames, NameAnalyzer, Scope, VarDef, VarUsage } from "./heron-name-analysis";
+import { heronToText } from "./heron-to-text";
 
 const m = Myna.Myna;
 const g = heronGrammar;
 
 declare var require;
 const assert = require('assert');
+
+// Assure that two ASTs have the same shape
+// For example if I generate some text, and re-parse it.
+function compareAst(a, b) {
+    if (!a && b || a && !b)
+        return false;
+    if (a.children.length != b.children.length)
+        return false;    
+    if (a.children.length === 0)
+        return a.allText === b.allText;
+    if (a.name !== b.name)
+        return false;
+    for (var i=0; i < a.children.length; ++i)
+        if (!compareAst(a.children[i], b.children[i]))
+            return false;
+    return true;
+}
 
 // Tests parsing an individual rule against the input input text, and returns an object 
 // representing the result of running the test 
@@ -89,24 +107,61 @@ function testParsingRules() {
 declare var require;
 const fs = require('fs');
 
-function outputScopeAnalysis(scope: Scope, indent = '')  
-{        
+// TODO: add parent pointers to each node, and an ID, and a reverse index lookup. 
+// after the rewrite phase
+
+function functionSigToString(node: Myna.AstNode) {
+    if (node.name === 'funcDef')
+        return "function " + node.children[0].allText;
+    if (node.name === 'intrinsicDef')
+        return "intrinsic " + node.children[0].allText;
+    throw new Error("Node has no signature" + node.name);
+}
+
+function isFunc(node: Myna.AstNode) {
+    return node && (node.name === "funcDef" || node.name === "intrinsicDef");
+}
+
+function defsToString(defs: VarDef[]) : string {
+    return '[' + defs.map(vd => vd.scope).join(', ') + ']';
+}
+
+function usagesToString(uses: VarUsage[]) : string {
+    return '[' + uses.join(', ') + ']';
+}
+
+function outputScopeAnalysis(scope: Scope, indent = '') {        
     const nodeName = scope.node ? scope.node.name : "";
     console.log(indent + "scope[" + scope.id + "] " + nodeName);
-    for (let def of scope.defs) {
-        console.log(indent + "- var " + def.name + " used " + def.usages.length);
+    if (isFunc(scope.node)) { 
+        console.log('-------------------------')   
+        console.log(scope.node.allText);
+        console.log('-------------------------')   
+        console.log(heronToText(scope.node));
+        console.log('-------------------------')   
     }
-    for (let child of scope.children) {
+    console.log(indent + 'definition')
+    for (let def of scope.defs) { 
+        console.log(indent + "- var " + def.name + " defined here is used " + usagesToString(def.usages));
+    }
+    console.log(indent + 'usages')
+    for (let use of scope.usages) {
+        console.log(indent + "- var " + use.toString() + " is defined at " + defsToString(use.defs));
+    }
+    for (let child of scope.children) 
         outputScopeAnalysis(child, indent + '  ');
-    }
+}
+
+function outputUsageByType(na: NameAnalyzer) {
+    // TODO:
 }
 
 function testParseCode(code, r = g.file) {
     let ast = parseHeron(code, r);
     ast = transformAst(ast);
     let names = analyzeHeronNames(ast);
-    outputScopeAnalysis(names.curScope);
-    let cb = heronToJs(ast);
+    outputScopeAnalysis(names.scope);
+    //let cb = heronToJs(ast);
     //console.log(cb.toString());    
 }
 

@@ -8,12 +8,12 @@ export function opSymbolToString(sym: string): string {
         case "<": return "lt";
         case ">": return "gt";
         case "=": return "eq";
-        case "+": return "pls";
-        case "-": return "min";
+        case "+": return "add";
+        case "-": return "sub";
         case "*": return "mul";
         case "/": return "div";
         case "%": return "mod";
-        case "^": return "car";
+        case "^": return "hat";
         case "|": return "bar";
         case "&": return "amp";
         case "$": return "dol";
@@ -38,6 +38,8 @@ export function isSymbolChar(c: string) : Boolean {
         !(code == 95)); // underscore
 }
 
+// An identifier might start with a "op" and be followed by funny symbols
+// to indicate the name of an operator (e.g. for function overloading) 
 export function identifierToString(id: string) {
     if (id.indexOf("op") == 0 && id.length > 2 && isSymbolChar(id[2]))
         return opToString(id.substr(2));
@@ -45,9 +47,15 @@ export function identifierToString(id: string) {
         return id;
 }
 
+// Applies a transform function to each member of the AST to create a new one
+export function mapAst(ast: Myna.AstNode, f: (_: Myna.AstNode) => Myna.AstNode): Myna.AstNode {
+    ast.children = ast.children.map(c => mapAst(c, f));
+    return f(ast);
+}
+
 // Creates a function call node given a function name, and some arguments 
 export function funCall(fxnName: string, ...args) : Myna.AstNode {
-    let fxn = g.identifier.node(fxnName);
+    let fxn = g.leafExpr.node('', g.identifier.node(fxnName));
     let fxnCall = g.funCall.node('', ...args);
     return g.postfixExpr.node('', fxn, fxnCall);
 }
@@ -57,11 +65,63 @@ export function opToFunCall(op: string, left: Myna.AstNode, right: Myna.AstNode)
     return funCall(opToString(op), left, right);
 }
 
-// Converts binary operators to function calls
-function binaryOpToFunction(ast: Myna.AstNode): Myna.AstNode {
-    // Apply to all children.
-    ast.children = ast.children.map(binaryOpToFunction);
+function isFunCall(ast: Myna.AstNode): boolean {
+    return ast && ast.name !== 'postfixExpr' && ast.children[1].name == 'funCall'; 
+}
 
+function isFieldSelect(ast: Myna.AstNode): boolean {
+    return ast && ast.name !== 'postfixExpr' && ast.children[1].name == 'fieldSelect'; 
+}
+
+function isMethodCall(ast: Myna.AstNode): boolean {
+    return isFunCall(ast) && isFieldSelect(ast.children[0]);
+}
+
+// Transform x.f(y) => f(x, y)
+function methodToFunction(ast: Myna.AstNode): Myna.AstNode {
+    if (ast.name === 'postfixExpr') {
+        if (ast.children.length != 2)
+            throw new Error("Expected the postfix expression to have exactly two children at this point: probably forgot to pre-process");
+        
+        if (ast.children[1].name === 'funCall') {
+            if (ast.children[0].name === 'postfixExpr') {
+                if (ast.children[0].children[1].name === 'fieldSelect') {
+                    let fn = ast.children[0].children[1].children[0].allText;
+                    let _this = ast.children[0].children[0];
+                    let args = ast.children[1].children;
+                    return funCall(fn, _this, ...args);                    
+                }
+            }
+        }
+    }
+    return ast;
+}
+
+// Converts x.a => a(x)
+function fieldSelectToFunction(ast: Myna.AstNode): Myna.AstNode {    
+    if (ast.name === 'postfixExpr') {
+        if (ast.children[1].name === 'fieldSelect') {
+            let fieldName = ast.children[1].children[0].allText;
+            return funCall(fieldName, ast.children[0]);
+        }
+    }
+    return ast;
+}
+
+// Converts array indexing to function calls
+// xs[i] = op_at(xs, i)
+function arrayIndexToFunction(ast: Myna.AstNode): Myna.AstNode {    
+    if (ast.name === 'postfixExpr') {
+        if (ast.children[1].name === 'arrayIndex') {
+            let arrayIndex = ast.children[1].children[0];
+            return funCall('op_at', ast.children[0], arrayIndex)
+        }
+    }
+    return ast;
+}
+    
+// Converts binary operators to function calls
+function opToFunction(ast: Myna.AstNode): Myna.AstNode {    
     // We are only going to handle certain cases
     switch (ast.name)
     {    
@@ -96,8 +156,6 @@ function binaryOpToFunction(ast: Myna.AstNode): Myna.AstNode {
 // (a op b) => (a op b)
 // (a) => a 
 function exprListToPair(ast: Myna.AstNode): Myna.AstNode {
-    ast.children = ast.children.map(exprListToPair);
-
     // We are only going to handle certain cases
     switch (ast.name)
     {    
@@ -169,18 +227,45 @@ function exprListToPair(ast: Myna.AstNode): Myna.AstNode {
     }
 }
 
+// Calls a function on every node in the AST passing the AST node and it's child
+function visitAstWithParent(ast: Myna.AstNode, parent: Myna.AstNode, f:((child:Myna.AstNode, parent:Myna.AstNode)=>void)) {    
+    ast.children.forEach(c => visitAstWithParent(c, ast, f));
+    f(ast, parent);
+}
+
+// Calls a function on every node in the AST passing the AST node and it's child
+function visitAst(ast: Myna.AstNode, f:((_:Myna.AstNode)=>void)) {    
+    ast.children.forEach(c => visitAst(c, f));
+    f(ast);
+}
+
+// Adds back pointers to AST nodes
+function createParentPointers(ast: Myna.AstNode) {
+    visitAstWithParent(ast, null, (c, p) => c['parent'] = p);
+}
+
+// Assigns unique ids to every AST node in the tree 
+function assignIds(ast: Myna.AstNode, idGen = { id: 0 }) {
+    visitAst(ast, node => node['id'] = idGen.id++);
+}
+
 // Performs some pre-processing of the AST to make it easier to work with
-// Binary operators are converted to function calls. 
-// Binary expression chains are converted to nodes with two children
+// Many expressions are converted into function calls.
+// Also parent back pointers are added along with ids to the nodes. 
 export function transformAst(ast: Myna.AstNode) {
-    //console.log("Before transform");
-    //console.log(ast.toString())    
-    ast = exprListToPair(ast);
-    
-    //console.log("After transform");
-    //console.log(ast.toString())
-    
-    //console.log("As function");
-    ast = binaryOpToFunction(ast);
+    // The order of transforms matters. Particularly we need to do 
+    // Method to function before doing fieldSelectToFunctions
+    ast = mapAst(ast, exprListToPair);
+    ast = mapAst(ast, methodToFunction);
+    ast = mapAst(ast, fieldSelectToFunction);
+    ast = mapAst(ast, arrayIndexToFunction);
+    ast = mapAst(ast, opToFunction);
+
+    // Some operations later on are easier if we have a parent point  
+    createParentPointers(ast);
+
+    // Assigns unique ids, for convenience and looks up. 
+    assignIds(ast);
+
     return ast;
 }

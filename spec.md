@@ -86,7 +86,7 @@ objectField <- seq(identifier,expr)
 opName <- opName
 parenExpr <- expr
 postDecOp <- postDecOp
-postIncOp <- postIncOp
+postIncOp <- postIncOp  
 postfixExpr <- seq(leafExpr,choice(funCall,arrayIndex,fieldSelect,postIncOp,postDecOp)[0,Infinity])
 prefixExpr <- seq(prefixOp[0,Infinity],postfixExpr)
 prefixOp <- prefixOp

@@ -1,6 +1,7 @@
 import { Myna } from "myna-parser/myna";
 import { transformAst, identifierToString } from "./heron-ast-rewrite";
 import { analyzeHeronNames, NameAnalyzer } from "./heron-name-analysis";
+import { CodeBuilder } from "./code-builder";
 
 //=====================================
 // Main entry function 
@@ -62,29 +63,6 @@ export function findAllNodesNamed(ast:Myna.AstNode, name: string) : Myna.AstNode
     return findAllNodes(ast, node => node.name === name);
 }
 
-//=====================================
-// Helper class for constructing code 
-
-class CodeBuilder {
-    lines: string[] = [];
-    indent: number = 0;
-    get indentString() {
-        let r = '';
-        for (let i=0; i < this.indent; ++i)
-            r += '  ';
-        return r;
-    }
-    pushLine(s: string = '') {
-        this.lines.push(s + '\n');
-        this.lines.push(this.indentString);
-    }
-    push(s: string) {
-        this.lines.push(s);
-    }
-    toString(): string {
-        return this.lines.join('');
-    }
-}
 
 //=====================================
 // A class for generating JavaScript code from a transformed Heron AST
@@ -209,7 +187,7 @@ class HeronToJs
         // Don't visit children for now. 
     }
     visit_genericParams(ast, state) {
-        // genericParam[0, Infinity]
+        // genericParam[0, In]
         this.visitChildren(ast, state);
     }
     visit_identifier(ast, state) {

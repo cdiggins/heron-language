@@ -3,11 +3,8 @@
 // - Usage 
 // - function calls
 
-import { Myna as m } from "myna-parser";
-
-import { heronGrammar, parseHeron } from './heron-parser';
-
-const g = heronGrammar;
+const m = require("myna-parser");
+const g = require('../build/heron-parser').heronGrammar;
 const grammarName = "heron";
 
 function createAstVisitorFunction(rule, lines) {
@@ -44,6 +41,4 @@ function createAstVisitor() {
 const output = createAstVisitor();
 console.log(output);
 
-
-declare const process;
 process.exit();

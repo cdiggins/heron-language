@@ -1,26 +1,23 @@
 {
-    // Use IntelliSense to learn about possible Node.js debug attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-    "version": "2.0.0",
-    "configurations": [
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "Launch Program",
-            "program": "${file}",
-            "cwd": "${workspaceRoot}",
-            "outFiles": ["${workspaceRoot}/build/**/*.js"],
-            "sourceMaps": true
-        },
-        {
-            "type": "node",
-            "request": "attach",
-            "name": "Attach to Process",
-            "port": 5858,
-            "outFiles": [],
-            "timeout": 30000,
-            "sourceMaps": true
-        }
-    ]
+	"version": "0.1.0",
+	
+	// The command is tsc.
+	"command": "tsc",
+
+	// Show the output window only if unrecognized errors occur. 
+	"showOutput": "always",
+	
+	// Under windows use tsc.exe. This ensures we don't need a shell.
+	"windows": {
+		"command": "tsc"
+	},
+	
+	// args is the program to compile.
+	"args": [],
+	
+	"isShellCommand": true,
+	
+	// use the standard tsc problem matcher to find compile problems
+	// in the output.
+	"problemMatcher": "$tsc"
 }

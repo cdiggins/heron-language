@@ -7,12 +7,12 @@ function opSymbolToString(sym) {
         case "<": return "lt";
         case ">": return "gt";
         case "=": return "eq";
-        case "+": return "pls";
-        case "-": return "min";
+        case "+": return "add";
+        case "-": return "sub";
         case "*": return "mul";
         case "/": return "div";
         case "%": return "mod";
-        case "^": return "car";
+        case "^": return "hat";
         case "|": return "bar";
         case "&": return "amp";
         case "$": return "dol";
@@ -39,6 +39,8 @@ function isSymbolChar(c) {
         !(code == 95)); // underscore
 }
 exports.isSymbolChar = isSymbolChar;
+// An identifier might start with a "op" and be followed by funny symbols
+// to indicate the name of an operator (e.g. for function overloading) 
 function identifierToString(id) {
     if (id.indexOf("op") == 0 && id.length > 2 && isSymbolChar(id[2]))
         return opToString(id.substr(2));
@@ -46,13 +48,19 @@ function identifierToString(id) {
         return id;
 }
 exports.identifierToString = identifierToString;
+// Applies a transform function to each member of the AST to create a new one
+function mapAst(ast, f) {
+    ast.children = ast.children.map(function (c) { return mapAst(c, f); });
+    return f(ast);
+}
+exports.mapAst = mapAst;
 // Creates a function call node given a function name, and some arguments 
 function funCall(fxnName) {
     var args = [];
     for (var _i = 1; _i < arguments.length; _i++) {
         args[_i - 1] = arguments[_i];
     }
-    var fxn = g.identifier.node(fxnName);
+    var fxn = g.leafExpr.node('', g.identifier.node(fxnName));
     var fxnCall = (_a = g.funCall).node.apply(_a, [''].concat(args));
     return g.postfixExpr.node('', fxn, fxnCall);
     var _a;
@@ -63,10 +71,56 @@ function opToFunCall(op, left, right) {
     return funCall(opToString(op), left, right);
 }
 exports.opToFunCall = opToFunCall;
+function isFunCall(ast) {
+    return ast && ast.name !== 'postfixExpr' && ast.children[1].name == 'funCall';
+}
+function isFieldSelect(ast) {
+    return ast && ast.name !== 'postfixExpr' && ast.children[1].name == 'fieldSelect';
+}
+function isMethodCall(ast) {
+    return isFunCall(ast) && isFieldSelect(ast.children[0]);
+}
+// Transform x.f(y) => f(x, y)
+function methodToFunction(ast) {
+    if (ast.name === 'postfixExpr') {
+        if (ast.children.length != 2)
+            throw new Error("Expected the postfix expression to have exactly two children at this point: probably forgot to pre-process");
+        if (ast.children[1].name === 'funCall') {
+            if (ast.children[0].name === 'postfixExpr') {
+                if (ast.children[0].children[1].name === 'fieldSelect') {
+                    var fn = ast.children[0].children[1].children[0].allText;
+                    var _this = ast.children[0].children[0];
+                    var args = ast.children[1].children;
+                    return funCall.apply(void 0, [fn, _this].concat(args));
+                }
+            }
+        }
+    }
+    return ast;
+}
+// Converts x.a => a(x)
+function fieldSelectToFunction(ast) {
+    if (ast.name === 'postfixExpr') {
+        if (ast.children[1].name === 'fieldSelect') {
+            var fieldName = ast.children[1].children[0].allText;
+            return funCall(fieldName, ast.children[0]);
+        }
+    }
+    return ast;
+}
+// Converts array indexing to function calls
+// xs[i] = op_at(xs, i)
+function arrayIndexToFunction(ast) {
+    if (ast.name === 'postfixExpr') {
+        if (ast.children[1].name === 'arrayIndex') {
+            var arrayIndex = ast.children[1].children[0];
+            return funCall('op_at', ast.children[0], arrayIndex);
+        }
+    }
+    return ast;
+}
 // Converts binary operators to function calls
-function binaryOpToFunction(ast) {
-    // Apply to all children.
-    ast.children = ast.children.map(binaryOpToFunction);
+function opToFunction(ast) {
     // We are only going to handle certain cases
     switch (ast.name) {
         case 'rangeExpr':
@@ -97,7 +151,6 @@ function binaryOpToFunction(ast) {
 // (a op b) => (a op b)
 // (a) => a 
 function exprListToPair(ast) {
-    ast.children = ast.children.map(exprListToPair);
     // We are only going to handle certain cases
     switch (ast.name) {
         case 'assignmentExprLeft':
@@ -161,17 +214,40 @@ function exprListToPair(ast) {
         return left;
     }
 }
+// Calls a function on every node in the AST passing the AST node and it's child
+function visitAstWithParent(ast, parent, f) {
+    ast.children.forEach(function (c) { return visitAstWithParent(c, ast, f); });
+    f(ast, parent);
+}
+// Calls a function on every node in the AST passing the AST node and it's child
+function visitAst(ast, f) {
+    ast.children.forEach(function (c) { return visitAst(c, f); });
+    f(ast);
+}
+// Adds back pointers to AST nodes
+function createParentPointers(ast) {
+    visitAstWithParent(ast, null, function (c, p) { return c['parent'] = p; });
+}
+// Assigns unique ids to every AST node in the tree 
+function assignIds(ast, idGen) {
+    if (idGen === void 0) { idGen = { id: 0 }; }
+    visitAst(ast, function (node) { return node['id'] = idGen.id++; });
+}
 // Performs some pre-processing of the AST to make it easier to work with
-// Binary operators are converted to function calls. 
-// Binary expression chains are converted to nodes with two children
+// Many expressions are converted into function calls.
+// Also parent back pointers are added along with ids to the nodes. 
 function transformAst(ast) {
-    //console.log("Before transform");
-    //console.log(ast.toString())    
-    ast = exprListToPair(ast);
-    //console.log("After transform");
-    //console.log(ast.toString())
-    //console.log("As function");
-    ast = binaryOpToFunction(ast);
+    // The order of transforms matters. Particularly we need to do 
+    // Method to function before doing fieldSelectToFunctions
+    ast = mapAst(ast, exprListToPair);
+    ast = mapAst(ast, methodToFunction);
+    ast = mapAst(ast, fieldSelectToFunction);
+    ast = mapAst(ast, arrayIndexToFunction);
+    ast = mapAst(ast, opToFunction);
+    // Some operations later on are easier if we have a parent point  
+    createParentPointers(ast);
+    // Assigns unique ids, for convenience and looks up. 
+    assignIds(ast);
     return ast;
 }
 exports.transformAst = transformAst;

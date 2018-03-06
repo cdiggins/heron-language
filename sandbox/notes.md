@@ -341,3 +341,28 @@ https://tour.golang.org/methods/16
     //==
 
     TODO: 
+Object-literal syntax for arrays and hashes
+Array slicing and other intelligent collection operators
+Perl 5 compatible regular expression literals
+Destructuring bind (e.g. x, y = returnTwoValues())
+Function literals and first-class, non-broken closures
+Standard OOP with classes, instances, interfaces, polymorphism, etc.
+Visibility quantifiers (public/private/protected)
+Iterators and generators
+List comprehensions
+Namespaces and packages
+Cross-platform GUI
+Operator overloading
+Keyword and rest parameters
+First-class parser and AST support
+Static typing and duck typing
+Type expressions and statically checkable semantics
+Solid string and collection libraries
+Strings and streams act like collections
+
+INTERESTING
+http://steve-yegge.blogspot.ca/2007/02/next-big-language.html
+
+//==
+
+Heron has no this 
