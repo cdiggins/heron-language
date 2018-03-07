@@ -30,6 +30,7 @@ export class VarUsage {
     { 
         if (!isValidNodeType(node.name))
             throw new Error("Not a valid node type: " + node.name);
+        node['varUsage'] = this;
     }
 
     toString(): string {
@@ -48,6 +49,7 @@ export class VarDef {
     { 
         if (!isValidNodeType(this.node.name))
             throw new Error("Invalid node type: " + this.node.name);
+        node['varDef'] = this;
     }
 
     usages: VarUsage[] = [];
@@ -72,18 +74,26 @@ export class VarDef {
             r += '$' + this.argTypes.join('$');
         return r;
     }
+
+    toString(): string {
+        return this.decoratedName;
+    }
 }
 
 // A scope contains unique name declarations. Scopes are arranaged in a tree. 
 export class Scope 
 {
     id: number = 0;
-    node: Myna.AstNode;
     usages: VarUsage[] = [];
     defs: VarDef[] = [];
     children: Scope[] = [];
     parent: Scope;
     
+    constructor(public readonly node: Myna.AstNode) {
+        if (node)
+            node['scope'] = this;
+    }
+
     // We can find multiple defs at the same level (e.g. functions)
     findDefs(name: string): VarDef[] {
         let r = [];
@@ -124,18 +134,17 @@ export class Scope
 
 // This is passed to the visitor and stores all scopes.  
 export class NameAnalyzer {
-    scope: Scope = new Scope();
+    scope: Scope = new Scope(null);
     scopes: Scope[] = [this.scope];
     usages: VarUsage[] = [];
     defs: VarDef[] = [];
 
     pushScope(ast) {
-        let tmp = new Scope();
+        let tmp = new Scope(ast);
         tmp.id = this.scopes.length;
         this.scopes.push(tmp);
         this.scope.children.push(tmp);
         tmp.parent = this.scope;
-        tmp.node = ast;
         this.scope = tmp;
     }
 
@@ -159,6 +168,7 @@ export class NameAnalyzer {
         this.usages.push(usage);
     }
 
+    // Find what possible definitions each var usage could have.
     resolveUsageDefs() {
         for (let u of this.usages) 
             u.defs = u.scope.findDefs(u.name);

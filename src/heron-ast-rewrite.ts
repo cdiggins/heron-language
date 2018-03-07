@@ -50,7 +50,11 @@ export function identifierToString(id: string) {
 // Applies a transform function to each member of the AST to create a new one
 export function mapAst(ast: Myna.AstNode, f: (_: Myna.AstNode) => Myna.AstNode): Myna.AstNode {
     ast.children = ast.children.map(c => mapAst(c, f));
-    return f(ast);
+    let r = f(ast);
+    // Store a back pointer to the original AST 
+    if (r != ast)
+        r['original'] = ast;
+    return r;
 }
 
 // Creates a function call node given a function name, and some arguments 
@@ -65,20 +69,50 @@ export function opToFunCall(op: string, left: Myna.AstNode, right: Myna.AstNode)
     return funCall(opToString(op), left, right);
 }
 
-function isFunCall(ast: Myna.AstNode): boolean {
+export function isFunCall(ast: Myna.AstNode): boolean {
     return ast && ast.name !== 'postfixExpr' && ast.children[1].name == 'funCall'; 
 }
 
-function isFieldSelect(ast: Myna.AstNode): boolean {
+export function isFieldSelect(ast: Myna.AstNode): boolean {
     return ast && ast.name !== 'postfixExpr' && ast.children[1].name == 'fieldSelect'; 
 }
 
-function isMethodCall(ast: Myna.AstNode): boolean {
+export function isMethodCall(ast: Myna.AstNode): boolean {
     return isFunCall(ast) && isFieldSelect(ast.children[0]);
 }
 
+export function isExpr(ast: Myna.AstNode): boolean {
+    switch (ast.name)
+    {
+    case "postfixExpr":
+    case "objectExpr":
+    case "lambdaExpr":
+    case "varExpr":
+    case "arrayExpr":
+    case "bool":
+    case "number":
+    case "string":
+    case "prefixExpr":
+    case "conditionalExpr":
+    case "literal":
+    case "leafExpr":
+    case "parenExpr":
+    case "expr":
+    case "recExpr":
+        return true;
+    case "multiplicativeExpr":
+    case "additiveExpr":
+    case "relationalExpr":
+    case "equalityExpr":
+    case "rangeExpr":            
+        throw new Error("Unsupported expression found: pre-processing was not performed: " + ast.name);
+    default:
+        return false;
+    }
+}
+
 // Transform x.f(y) => f(x, y)
-function methodToFunction(ast: Myna.AstNode): Myna.AstNode {
+export function methodToFunction(ast: Myna.AstNode): Myna.AstNode {
     if (ast.name === 'postfixExpr') {
         if (ast.children.length != 2)
             throw new Error("Expected the postfix expression to have exactly two children at this point: probably forgot to pre-process");
@@ -98,7 +132,7 @@ function methodToFunction(ast: Myna.AstNode): Myna.AstNode {
 }
 
 // Converts x.a => a(x)
-function fieldSelectToFunction(ast: Myna.AstNode): Myna.AstNode {    
+export function fieldSelectToFunction(ast: Myna.AstNode): Myna.AstNode {    
     if (ast.name === 'postfixExpr') {
         if (ast.children[1].name === 'fieldSelect') {
             let fieldName = ast.children[1].children[0].allText;
@@ -110,7 +144,7 @@ function fieldSelectToFunction(ast: Myna.AstNode): Myna.AstNode {
 
 // Converts array indexing to function calls
 // xs[i] = op_at(xs, i)
-function arrayIndexToFunction(ast: Myna.AstNode): Myna.AstNode {    
+export function arrayIndexToFunction(ast: Myna.AstNode): Myna.AstNode {    
     if (ast.name === 'postfixExpr') {
         if (ast.children[1].name === 'arrayIndex') {
             let arrayIndex = ast.children[1].children[0];
@@ -121,7 +155,7 @@ function arrayIndexToFunction(ast: Myna.AstNode): Myna.AstNode {
 }
     
 // Converts binary operators to function calls
-function opToFunction(ast: Myna.AstNode): Myna.AstNode {    
+export function opToFunction(ast: Myna.AstNode): Myna.AstNode {    
     // We are only going to handle certain cases
     switch (ast.name)
     {    
@@ -155,7 +189,7 @@ function opToFunction(ast: Myna.AstNode): Myna.AstNode {
 // (a op b op c op d) => (((a op b) op c) op d)
 // (a op b) => (a op b)
 // (a) => a 
-function exprListToPair(ast: Myna.AstNode): Myna.AstNode {
+export function exprListToPair(ast: Myna.AstNode): Myna.AstNode {
     // We are only going to handle certain cases
     switch (ast.name)
     {    
@@ -228,13 +262,13 @@ function exprListToPair(ast: Myna.AstNode): Myna.AstNode {
 }
 
 // Calls a function on every node in the AST passing the AST node and it's child
-function visitAstWithParent(ast: Myna.AstNode, parent: Myna.AstNode, f:((child:Myna.AstNode, parent:Myna.AstNode)=>void)) {    
+export function visitAstWithParent(ast: Myna.AstNode, parent: Myna.AstNode, f:((child:Myna.AstNode, parent:Myna.AstNode)=>void)) {    
     ast.children.forEach(c => visitAstWithParent(c, ast, f));
     f(ast, parent);
 }
 
 // Calls a function on every node in the AST passing the AST node and it's child
-function visitAst(ast: Myna.AstNode, f:((_:Myna.AstNode)=>void)) {    
+export function visitAst(ast: Myna.AstNode, f:((_:Myna.AstNode)=>void)) {    
     ast.children.forEach(c => visitAst(c, f));
     f(ast);
 }
@@ -252,7 +286,7 @@ function assignIds(ast: Myna.AstNode, idGen = { id: 0 }) {
 // Performs some pre-processing of the AST to make it easier to work with
 // Many expressions are converted into function calls.
 // Also parent back pointers are added along with ids to the nodes. 
-export function transformAst(ast: Myna.AstNode) {
+export function preprocessAst(ast: Myna.AstNode) {
     // The order of transforms matters. Particularly we need to do 
     // Method to function before doing fieldSelectToFunctions
     ast = mapAst(ast, exprListToPair);
@@ -260,8 +294,8 @@ export function transformAst(ast: Myna.AstNode) {
     ast = mapAst(ast, fieldSelectToFunction);
     ast = mapAst(ast, arrayIndexToFunction);
     ast = mapAst(ast, opToFunction);
-
-    // Some operations later on are easier if we have a parent point  
+ 
+    // Some operations later on are easier if we have a parent pointer  
     createParentPointers(ast);
 
     // Assigns unique ids, for convenience and looks up. 

@@ -51,7 +51,11 @@ exports.identifierToString = identifierToString;
 // Applies a transform function to each member of the AST to create a new one
 function mapAst(ast, f) {
     ast.children = ast.children.map(function (c) { return mapAst(c, f); });
-    return f(ast);
+    var r = f(ast);
+    // Store a back pointer to the original AST 
+    if (r != ast)
+        r['original'] = ast;
+    return r;
 }
 exports.mapAst = mapAst;
 // Creates a function call node given a function name, and some arguments 
@@ -74,12 +78,44 @@ exports.opToFunCall = opToFunCall;
 function isFunCall(ast) {
     return ast && ast.name !== 'postfixExpr' && ast.children[1].name == 'funCall';
 }
+exports.isFunCall = isFunCall;
 function isFieldSelect(ast) {
     return ast && ast.name !== 'postfixExpr' && ast.children[1].name == 'fieldSelect';
 }
+exports.isFieldSelect = isFieldSelect;
 function isMethodCall(ast) {
     return isFunCall(ast) && isFieldSelect(ast.children[0]);
 }
+exports.isMethodCall = isMethodCall;
+function isExpr(ast) {
+    switch (ast.name) {
+        case "postfixExpr":
+        case "objectExpr":
+        case "lambdaExpr":
+        case "varExpr":
+        case "arrayExpr":
+        case "bool":
+        case "number":
+        case "string":
+        case "prefixExpr":
+        case "conditionalExpr":
+        case "literal":
+        case "leafExpr":
+        case "parenExpr":
+        case "expr":
+        case "recExpr":
+            return true;
+        case "multiplicativeExpr":
+        case "additiveExpr":
+        case "relationalExpr":
+        case "equalityExpr":
+        case "rangeExpr":
+            throw new Error("Unsupported expression found: pre-processing was not performed: " + ast.name);
+        default:
+            return false;
+    }
+}
+exports.isExpr = isExpr;
 // Transform x.f(y) => f(x, y)
 function methodToFunction(ast) {
     if (ast.name === 'postfixExpr') {
@@ -98,6 +134,7 @@ function methodToFunction(ast) {
     }
     return ast;
 }
+exports.methodToFunction = methodToFunction;
 // Converts x.a => a(x)
 function fieldSelectToFunction(ast) {
     if (ast.name === 'postfixExpr') {
@@ -108,6 +145,7 @@ function fieldSelectToFunction(ast) {
     }
     return ast;
 }
+exports.fieldSelectToFunction = fieldSelectToFunction;
 // Converts array indexing to function calls
 // xs[i] = op_at(xs, i)
 function arrayIndexToFunction(ast) {
@@ -119,6 +157,7 @@ function arrayIndexToFunction(ast) {
     }
     return ast;
 }
+exports.arrayIndexToFunction = arrayIndexToFunction;
 // Converts binary operators to function calls
 function opToFunction(ast) {
     // We are only going to handle certain cases
@@ -144,6 +183,7 @@ function opToFunction(ast) {
     var op = right.children[0].allText;
     return opToFunCall(op, left, right.children[1]);
 }
+exports.opToFunction = opToFunction;
 // Some expressions are parsed as a list of expression. 
 // (a [op b].*) 
 // We want to make sure these expressions always have two children. 
@@ -214,16 +254,19 @@ function exprListToPair(ast) {
         return left;
     }
 }
+exports.exprListToPair = exprListToPair;
 // Calls a function on every node in the AST passing the AST node and it's child
 function visitAstWithParent(ast, parent, f) {
     ast.children.forEach(function (c) { return visitAstWithParent(c, ast, f); });
     f(ast, parent);
 }
+exports.visitAstWithParent = visitAstWithParent;
 // Calls a function on every node in the AST passing the AST node and it's child
 function visitAst(ast, f) {
     ast.children.forEach(function (c) { return visitAst(c, f); });
     f(ast);
 }
+exports.visitAst = visitAst;
 // Adds back pointers to AST nodes
 function createParentPointers(ast) {
     visitAstWithParent(ast, null, function (c, p) { return c['parent'] = p; });
@@ -236,7 +279,7 @@ function assignIds(ast, idGen) {
 // Performs some pre-processing of the AST to make it easier to work with
 // Many expressions are converted into function calls.
 // Also parent back pointers are added along with ids to the nodes. 
-function transformAst(ast) {
+function preprocessAst(ast) {
     // The order of transforms matters. Particularly we need to do 
     // Method to function before doing fieldSelectToFunctions
     ast = mapAst(ast, exprListToPair);
@@ -244,11 +287,11 @@ function transformAst(ast) {
     ast = mapAst(ast, fieldSelectToFunction);
     ast = mapAst(ast, arrayIndexToFunction);
     ast = mapAst(ast, opToFunction);
-    // Some operations later on are easier if we have a parent point  
+    // Some operations later on are easier if we have a parent pointer  
     createParentPointers(ast);
     // Assigns unique ids, for convenience and looks up. 
     assignIds(ast);
     return ast;
 }
-exports.transformAst = transformAst;
+exports.preprocessAst = preprocessAst;
 //# sourceMappingURL=heron-ast-rewrite.js.map

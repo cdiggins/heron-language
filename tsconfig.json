@@ -5,6 +5,7 @@
 		"module": "commonjs",
 		"sourceMap": true,
 		"outDir": "build",
+		"watch": true,
 	},
 	"include": [
 		"src/*.ts"

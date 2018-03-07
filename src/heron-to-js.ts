@@ -1,5 +1,5 @@
 import { Myna } from "myna-parser/myna";
-import { transformAst, identifierToString } from "./heron-ast-rewrite";
+import { preprocessAst, identifierToString } from "./heron-ast-rewrite";
 import { analyzeHeronNames, NameAnalyzer } from "./heron-name-analysis";
 import { CodeBuilder } from "./code-builder";
 

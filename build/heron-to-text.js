@@ -1,7 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var code_builder_1 = require("./code-builder");
-// Given an AST, will generate a text representation of the code
+var heron_ast_rewrite_1 = require("./heron-ast-rewrite");
+// Given an AST, will generate a text representation of the code as Heron code
+// that has been marked up with the analysis results. 
 function heronToText(ast) {
     var v = new HeronToTextVisitor();
     var cb = new code_builder_1.CodeBuilder();
@@ -9,10 +11,34 @@ function heronToText(ast) {
     return cb.lines.join('');
 }
 exports.heronToText = heronToText;
+function isFunc(node) {
+    return node && (node.name === "funcDef" || node.name === "intrinsicDef");
+}
+function varUsageDetails(varUsage) {
+    return '// var usage ' + varUsage + ' defined at ' + '[' + varUsage.defs.join(', ') + ']';
+}
+function outputDetails(node, state) {
+    if (node.scope) {
+        state.pushLine('// scope ' + node.scope.toString());
+        // TODO: push all of the variables used, push all of the defines made in the scope.
+        // I want it all man!
+    }
+    if (node.varUsage) {
+        state.pushLine(varUsageDetails(node.varUsage));
+    }
+    if (node.varDef) {
+        state.pushLine('// var definition ' + node.varDef.toString());
+    }
+    if (heron_ast_rewrite_1.isExpr(node)) {
+        //    state.push(' /* ' + node.name + ':' + (node.type || '?') + ' */ ');
+    }
+}
+// A visitor class for generating Heron code. 
 var HeronToTextVisitor = /** @class */ (function () {
     function HeronToTextVisitor() {
     }
     HeronToTextVisitor.prototype.visitNode = function (ast, state) {
+        outputDetails(ast, state);
         var fnName = 'visit_' + ast.name;
         if (fnName in this)
             this[fnName](ast, state);
@@ -189,6 +215,11 @@ var HeronToTextVisitor = /** @class */ (function () {
     };
     HeronToTextVisitor.prototype.visit_funcDef = function (ast, state) {
         // seq(funcSig,funcBody)
+        state.pushLine('');
+        state.pushLine('/**');
+        state.pushLine(ast.allText);
+        state.pushLine('*/');
+        outputDetails(ast, state);
         state.push('function ');
         this.visitChildren(ast, state);
     };

@@ -14,6 +14,13 @@ function createAstVisitorFunction(rule, lines) {
     lines.push("    }")
 }
 
+function createCaseStatement(rule, lines) {
+    lines.push("    case '" + rule.name + "': ");
+    lines.push("        // " + rule.astRuleDefn());
+    lines.push("        ast['property'] = somevalue;");
+    lines.push("        break;")
+}
+
 function createAstVisitor() {
     var lines = [
         "class " + grammarName + "Visitor",
@@ -38,7 +45,21 @@ function createAstVisitor() {
     return lines.join("\n");
 }
 
-const output = createAstVisitor();
+function createAstSwitch() {
+    var lines = [
+        "switch (ast.name) {"
+        ];
+    var rules = m.grammarAstRules(grammarName);
+    for (var r of rules)
+        createCaseStatement(r, lines);    
+    lines.push('    default:');
+    lines.push("}");
+
+    return lines.join("\n");
+}
+
+//const output = createAstVisitor();
+const output = createAstSwitch();
 console.log(output);
 
 process.exit();

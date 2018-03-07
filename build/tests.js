@@ -2,9 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var Myna = require("myna-parser");
 var heron_parser_1 = require("./heron-parser");
-var heron_ast_rewrite_1 = require("./heron-ast-rewrite");
-var heron_name_analysis_1 = require("./heron-name-analysis");
 var heron_to_text_1 = require("./heron-to-text");
+var heron_compiler_1 = require("./heron-compiler");
 var m = Myna.Myna;
 var g = heron_parser_1.heronGrammar;
 var assert = require('assert');
@@ -105,55 +104,16 @@ function functionSigToString(node) {
         return "intrinsic " + node.children[0].allText;
     throw new Error("Node has no signature" + node.name);
 }
-function isFunc(node) {
-    return node && (node.name === "funcDef" || node.name === "intrinsicDef");
-}
-function defsToString(defs) {
-    return '[' + defs.map(function (vd) { return vd.scope; }).join(', ') + ']';
-}
-function usagesToString(uses) {
-    return '[' + uses.join(', ') + ']';
-}
-function outputScopeAnalysis(scope, indent) {
-    if (indent === void 0) { indent = ''; }
-    var nodeName = scope.node ? scope.node.name : "";
-    console.log(indent + "scope[" + scope.id + "] " + nodeName);
-    if (isFunc(scope.node)) {
-        console.log('-------------------------');
-        console.log(scope.node.allText);
-        console.log('-------------------------');
-        console.log(heron_to_text_1.heronToText(scope.node));
-        console.log('-------------------------');
-    }
-    console.log(indent + 'definition');
-    for (var _i = 0, _a = scope.defs; _i < _a.length; _i++) {
-        var def = _a[_i];
-        console.log(indent + "- var " + def.name + " defined here is used " + usagesToString(def.usages));
-    }
-    console.log(indent + 'usages');
-    for (var _b = 0, _c = scope.usages; _b < _c.length; _b++) {
-        var use = _c[_b];
-        console.log(indent + "- var " + use.toString() + " is defined at " + defsToString(use.defs));
-    }
-    for (var _d = 0, _e = scope.children; _d < _e.length; _d++) {
-        var child = _e[_d];
-        outputScopeAnalysis(child, indent + '  ');
-    }
-}
-function outputUsageByType(na) {
-    // TODO:
-}
 function testParseCode(code, r) {
     if (r === void 0) { r = g.file; }
-    var ast = heron_parser_1.parseHeron(code, r);
-    ast = heron_ast_rewrite_1.transformAst(ast);
-    var names = heron_name_analysis_1.analyzeHeronNames(ast);
-    outputScopeAnalysis(names.scope);
-    //let cb = heronToJs(ast);
-    //console.log(cb.toString());    
+    var mynaAst = heron_parser_1.parseHeron(code, r);
+    var heronAst = heron_compiler_1.toHeronAst(mynaAst);
+    return heron_to_text_1.heronToText(heronAst);
 }
 function testParseFile(f) {
-    testParseCode(fs.readFileSync(f, 'utf-8'));
+    var result = testParseCode(fs.readFileSync(f, 'utf-8'));
+    var outputFile = f.substring(0, f.lastIndexOf('.')) + '.output.heron';
+    fs.writeFileSync(outputFile, result);
 }
 function testParseExpr(code) {
     return testParseCode(code, g.expr);

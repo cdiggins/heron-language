@@ -1,11 +1,11 @@
-"use strict";
-
 import * as Myna from "myna-parser";
 import { heronGrammar, parseHeron } from './heron-parser';
 import { heronToJs } from "./heron-to-js";
-import { transformAst } from "./heron-ast-rewrite";
+import { preprocessAst } from "./heron-ast-rewrite";
 import { analyzeHeronNames, NameAnalyzer, Scope, VarDef, VarUsage } from "./heron-name-analysis";
 import { heronToText } from "./heron-to-text";
+import { toHeronAst } from "./heron-compiler";
+
 
 const m = Myna.Myna;
 const g = heronGrammar;
@@ -118,55 +118,16 @@ function functionSigToString(node: Myna.AstNode) {
     throw new Error("Node has no signature" + node.name);
 }
 
-function isFunc(node: Myna.AstNode) {
-    return node && (node.name === "funcDef" || node.name === "intrinsicDef");
-}
-
-function defsToString(defs: VarDef[]) : string {
-    return '[' + defs.map(vd => vd.scope).join(', ') + ']';
-}
-
-function usagesToString(uses: VarUsage[]) : string {
-    return '[' + uses.join(', ') + ']';
-}
-
-function outputScopeAnalysis(scope: Scope, indent = '') {        
-    const nodeName = scope.node ? scope.node.name : "";
-    console.log(indent + "scope[" + scope.id + "] " + nodeName);
-    if (isFunc(scope.node)) { 
-        console.log('-------------------------')   
-        console.log(scope.node.allText);
-        console.log('-------------------------')   
-        console.log(heronToText(scope.node));
-        console.log('-------------------------')   
-    }
-    console.log(indent + 'definition')
-    for (let def of scope.defs) { 
-        console.log(indent + "- var " + def.name + " defined here is used " + usagesToString(def.usages));
-    }
-    console.log(indent + 'usages')
-    for (let use of scope.usages) {
-        console.log(indent + "- var " + use.toString() + " is defined at " + defsToString(use.defs));
-    }
-    for (let child of scope.children) 
-        outputScopeAnalysis(child, indent + '  ');
-}
-
-function outputUsageByType(na: NameAnalyzer) {
-    // TODO:
-}
-
 function testParseCode(code, r = g.file) {
-    let ast = parseHeron(code, r);
-    ast = transformAst(ast);
-    let names = analyzeHeronNames(ast);
-    outputScopeAnalysis(names.scope);
-    //let cb = heronToJs(ast);
-    //console.log(cb.toString());    
+    let mynaAst = parseHeron(code, r);
+    let heronAst = toHeronAst(mynaAst);
+    return heronToText(heronAst);
 }
 
-function testParseFile(f) {
-    testParseCode(fs.readFileSync(f, 'utf-8'));
+function testParseFile(f: string) {
+    let result = testParseCode(fs.readFileSync(f, 'utf-8'));
+    let outputFile = f.substring(0, f.lastIndexOf('.')) + '.output.heron';
+    fs.writeFileSync(outputFile, result);
 }
 
 function testParseExpr(code) {

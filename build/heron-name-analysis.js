@@ -32,6 +32,7 @@ var VarUsage = /** @class */ (function () {
         this.defs = [];
         if (!isValidNodeType(node.name))
             throw new Error("Not a valid node type: " + node.name);
+        node['varUsage'] = this;
     }
     VarUsage.prototype.toString = function () {
         return this.name + '_' + this.node['id'] + ':' + this.usageType.toString();
@@ -49,6 +50,7 @@ var VarDef = /** @class */ (function () {
         this.usages = [];
         if (!isValidNodeType(this.node.name))
             throw new Error("Invalid node type: " + this.node.name);
+        node['varDef'] = this;
     }
     Object.defineProperty(VarDef.prototype, "args", {
         get: function () {
@@ -83,16 +85,22 @@ var VarDef = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    VarDef.prototype.toString = function () {
+        return this.decoratedName;
+    };
     return VarDef;
 }());
 exports.VarDef = VarDef;
 // A scope contains unique name declarations. Scopes are arranaged in a tree. 
 var Scope = /** @class */ (function () {
-    function Scope() {
+    function Scope(node) {
+        this.node = node;
         this.id = 0;
         this.usages = [];
         this.defs = [];
         this.children = [];
+        if (node)
+            node['scope'] = this;
     }
     // We can find multiple defs at the same level (e.g. functions)
     Scope.prototype.findDefs = function (name) {
@@ -137,18 +145,17 @@ exports.Scope = Scope;
 // This is passed to the visitor and stores all scopes.  
 var NameAnalyzer = /** @class */ (function () {
     function NameAnalyzer() {
-        this.scope = new Scope();
+        this.scope = new Scope(null);
         this.scopes = [this.scope];
         this.usages = [];
         this.defs = [];
     }
     NameAnalyzer.prototype.pushScope = function (ast) {
-        var tmp = new Scope();
+        var tmp = new Scope(ast);
         tmp.id = this.scopes.length;
         this.scopes.push(tmp);
         this.scope.children.push(tmp);
         tmp.parent = this.scope;
-        tmp.node = ast;
         this.scope = tmp;
     };
     NameAnalyzer.prototype.popScope = function () {
@@ -167,6 +174,7 @@ var NameAnalyzer = /** @class */ (function () {
         this.scope.usages.push(usage);
         this.usages.push(usage);
     };
+    // Find what possible definitions each var usage could have.
     NameAnalyzer.prototype.resolveUsageDefs = function () {
         for (var _i = 0, _a = this.usages; _i < _a.length; _i++) {
             var u = _a[_i];
