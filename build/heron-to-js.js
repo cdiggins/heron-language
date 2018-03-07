@@ -1,18 +1,20 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var heron_ast_rewrite_1 = require("./heron-ast-rewrite");
-var heron_name_analysis_1 = require("./heron-name-analysis");
-var code_builder_1 = require("./code-builder");
 //=====================================
 // Main entry function 
 // It is assumed that the AST is transformed
 function heronToJs(ast) {
-    var na = heron_name_analysis_1.analyzeHeronNames(ast);
+    // TODO: finish 
+    /*
+    var na = analyzeHeronNames(ast);
     mergeMultipleDefs(ast, na);
-    var js = new HeronToJs();
-    var cb = new code_builder_1.CodeBuilder();
+    let js = new HeronToJs();
+    let cb = new CodeBuilder();
     js.visitNode(ast, cb);
     return cb;
+    */
+    throw new Error('Not implemented yet');
 }
 exports.heronToJs = heronToJs;
 //=====================================

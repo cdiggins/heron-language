@@ -1,4 +1,4 @@
-language heron:std:0:1;
+language heron:std:0.1;
 
 module heron:geometry.vector:0.1
 {

@@ -7,7 +7,9 @@ import { isExpr } from "./heron-ast-rewrite";
 // that has been marked up with the analysis results. 
 export function heronToText(ast: HeronAstNode): string {
     let v = new HeronToTextVisitor();
-    let cb = new CodeBuilder();
+    let cb = new CodeBuilder();    
+    let now = new Date();
+    cb.pushLine('// Generated on ' + now.toDateString() + ' ' + now.toTimeString());
     v.visitNode(ast, cb);
     return cb.lines.join('');
 }
@@ -16,8 +18,12 @@ function isFunc(node: HeronAstNode) {
     return node && (node.name === "funcDef" || node.name === "intrinsicDef");
 }
 
+function getType(node) {
+    return (node || {})['type'] || '?';
+}
+
 function varUsageDetails(varUsage: VarUsage): string {
-    return '// var usage ' + varUsage + ' defined at ' + '[' + varUsage.defs.join(', ') + ']';
+    return '// var usage ' + varUsage + ':' + getType(varUsage.node) + ' defined at ' + '[' + varUsage.defs.join(', ') + ']';
 }
 
 function outputDetails(node: HeronAstNode, state: CodeBuilder) {
@@ -505,6 +511,11 @@ class HeronToTextVisitor
         state.push('return ');
         this.visitChildren(ast, state);
         state.pushLine(';');
+    }
+    visit_returnType(ast: HeronAstNode, state: CodeBuilder) {
+        // TypeExpr
+        state.push(' : ');
+        this.visitChildren(ast, state);
     }
     visit_singleQuotedStringContents(ast: HeronAstNode, state: CodeBuilder) {
         // stringLiteralChar[0,Infinity]

@@ -7,6 +7,8 @@ var heron_ast_rewrite_1 = require("./heron-ast-rewrite");
 function heronToText(ast) {
     var v = new HeronToTextVisitor();
     var cb = new code_builder_1.CodeBuilder();
+    var now = new Date();
+    cb.pushLine('// Generated on ' + now.toDateString() + ' ' + now.toTimeString());
     v.visitNode(ast, cb);
     return cb.lines.join('');
 }
@@ -14,8 +16,11 @@ exports.heronToText = heronToText;
 function isFunc(node) {
     return node && (node.name === "funcDef" || node.name === "intrinsicDef");
 }
+function getType(node) {
+    return (node || {})['type'] || '?';
+}
 function varUsageDetails(varUsage) {
-    return '// var usage ' + varUsage + ' defined at ' + '[' + varUsage.defs.join(', ') + ']';
+    return '// var usage ' + varUsage + ':' + getType(varUsage.node) + ' defined at ' + '[' + varUsage.defs.join(', ') + ']';
 }
 function outputDetails(node, state) {
     if (node.scope) {
@@ -504,6 +509,11 @@ var HeronToTextVisitor = /** @class */ (function () {
         state.push('return ');
         this.visitChildren(ast, state);
         state.pushLine(';');
+    };
+    HeronToTextVisitor.prototype.visit_returnType = function (ast, state) {
+        // TypeExpr
+        state.push(' : ');
+        this.visitChildren(ast, state);
     };
     HeronToTextVisitor.prototype.visit_singleQuotedStringContents = function (ast, state) {
         // stringLiteralChar[0,Infinity]

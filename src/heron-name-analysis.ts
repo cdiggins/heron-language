@@ -4,17 +4,26 @@
 // - or maybe  
 
 import { Myna } from "myna-parser/myna";
-
-export function analyzeHeronNames(ast: Myna.AstNode): NameAnalyzer {
-    var analyzer = new NameAnalyzer();
-    var visitor = new AstVisitor();
-    visitor.visitNode(ast, analyzer);
-    analyzer.resolveUsageDefs();
-    return analyzer;
-}
+import { HeronAstNode } from "./heron-compiler";
 
 enum VarUsageType { 
     fun, var, type, arg, lvalue, rvalue
+}
+
+// Represents a module of Heron code  
+export class Module 
+{
+    imports: Module[] = [];
+
+    constructor(
+        public readonly name: string,
+        public readonly node: Myna.AstNode)
+    { 
+    }
+
+    get scope(): Scope {
+        return this.node['scope'];
+    }    
 }
 
 // A usage of a name. 
@@ -33,8 +42,21 @@ export class VarUsage {
         node['varUsage'] = this;
     }
 
+    get usageTypeString() {
+        switch (this.usageType)
+        {
+            case VarUsageType.arg: return 'arg';
+            case VarUsageType.fun: return 'fun';
+            case VarUsageType.lvalue: return 'lval';
+            case VarUsageType.rvalue: return 'rval';
+            case VarUsageType.type: return 'type';
+            case VarUsageType.var: return 'var';
+        }
+        return '';
+    }
+
     toString(): string {
-        return this.name + '_' + this.node['id'] + ':' + this.usageType.toString();
+        return this.name + '_' + this.node['id'] + ':' + this.node.name + ':' + this.usageTypeString;
     }
 }
 
@@ -132,12 +154,69 @@ export class Scope
     }
 }
 
-// This is passed to the visitor and stores all scopes.  
-export class NameAnalyzer {
+// Wraps a source file 
+export class SourceFile 
+{
+    constructor(
+        public readonly filePath: string,
+        public readonly node: Myna.AstNode
+    )
+    { }
+}
+
+// A package is a compiled system. It contains a set of modules. 
+// This is built incrementally by a visitor and stores all scopes, usages, and defs that are found. 
+export class Package 
+{
+    modules: Module[] = [];
     scope: Scope = new Scope(null);
     scopes: Scope[] = [this.scope];
     usages: VarUsage[] = [];
     defs: VarDef[] = [];
+    files: SourceFile[] = [];
+
+    // When done calling analyzeFile on all files, call "resolveLinks"
+    addFile(ast: Myna.AstNode, isBuiltIn: boolean, filePath: string) {
+        if (ast.name !== 'file') {
+            throw new Error('Not a file');
+        }
+        var visitor = new AstVisitor();
+        for (var node of ast.children) {
+            if (node.name !== 'module')
+                continue;
+            
+            // Built in modules have their names added to the global scope
+            if (!isBuiltIn) 
+                this.pushScope(ast);
+            const modName = ast.children[0].allText;
+            const module = new Module(modName, ast);
+            ast['module'] = module;
+            this.modules.push(module);
+            visitor.visitNode(ast, this);
+
+            // Built in modules have their names added to the global scope
+            if (!isBuiltIn) 
+                this.popScope();
+        }
+        this.files.push(new SourceFile(filePath, ast));
+    }
+
+    // Find what possible definitions each var usage could have.
+    resolveLinks() {
+        for (let u of this.usages) 
+            u.defs = u.scope.findDefs(u.name);
+    }
+
+    // Scans for modules
+    getModule(name: string) {
+        for (let m of this.modules)
+            if (m.name === name) 
+                return m;
+        throw new Error("Module not found " + name);
+    }
+    
+    //=============================================
+    // These functions are used by the visitor to incrementally build the package  
 
     pushScope(ast) {
         let tmp = new Scope(ast);
@@ -167,41 +246,35 @@ export class NameAnalyzer {
         this.scope.usages.push(usage);
         this.usages.push(usage);
     }
-
-    // Find what possible definitions each var usage could have.
-    resolveUsageDefs() {
-        for (let u of this.usages) 
-            u.defs = u.scope.findDefs(u.name);
-    }
 }
 
 // Used for visiting nodes in the Heron AST looking for name defintions, usages, and scopes.
 class AstVisitor
 {
     // Visitor helper functions
-    visitNode(ast: Myna.AstNode, state: NameAnalyzer) {
+    visitNode(ast: Myna.AstNode, state: Package) {
         const fnName = 'visit_' + ast.name;
         if (fnName in this)
             this[fnName](ast, state);
         else
             this.visitChildren(ast, state);
     }
-    visitChildren(ast: Myna.AstNode, state: NameAnalyzer) {
+    visitChildren(ast: Myna.AstNode, state: Package) {
         for (let child of ast.children)
             this.visitNode(child, state);
     }
 
     // Particular node visitors 
-    visit_compoundStatement(ast: Myna.AstNode, state: NameAnalyzer) {
+    visit_compoundStatement(ast: Myna.AstNode, state: Package) {
         state.pushScope(ast);
         this.visitChildren(ast, state);
         state.popScope();
     }
-    visit_genericParam(ast: Myna.AstNode, state: NameAnalyzer) {
+    visit_genericParam(ast: Myna.AstNode, state: Package) {
         let paramName = ast.children[0].allText;
         state.addVarDef(paramName, ast);        
     }
-    visit_funcDef(ast: Myna.AstNode, state: NameAnalyzer) {
+    visit_funcDef(ast: Myna.AstNode, state: Package) {
         let funcSig = ast.children[0];
         let funcName = funcSig.children[0];
         state.addVarDef(funcName.allText, ast);
@@ -209,7 +282,7 @@ class AstVisitor
         this.visitChildren(ast, state);
         state.popScope();
     }
-    visit_intriniscDef(ast: Myna.AstNode, state: NameAnalyzer) {
+    visit_intriniscDef(ast: Myna.AstNode, state: Package) {
         let funcSig = ast.children[0];
         let funcName = funcSig.children[0];
         state.addVarDef(funcName.allText, ast);
@@ -217,47 +290,45 @@ class AstVisitor
         this.visitChildren(ast, state);
         state.popScope();
     }
-    visit_funcParamName(ast: Myna.AstNode, state: NameAnalyzer) {
+    visit_funcParamName(ast: Myna.AstNode, state: Package) {
         state.addVarDef(ast.allText, ast);
     }
-    visit_typeName(ast: Myna.AstNode, state: NameAnalyzer) {
+    visit_typeName(ast: Myna.AstNode, state: Package) {
         state.addVarUsage(ast.allText, ast, VarUsageType.type);
     }
-    visit_lambdaArg(ast: Myna.AstNode, state: NameAnalyzer) {
+    visit_lambdaArg(ast: Myna.AstNode, state: Package) {
         state.addVarDef(ast.allText, ast);
         this.visitChildren(ast, state);
     }
-    visit_lambdaBody(ast: Myna.AstNode, state: NameAnalyzer) {
+    visit_lambdaBody(ast: Myna.AstNode, state: Package) {
         state.pushScope(ast);
         this.visitChildren(ast, state);
         state.popScope();
     }
-    visit_lambdaExpr(ast: Myna.AstNode, state: NameAnalyzer) {
+    visit_lambdaExpr(ast: Myna.AstNode, state: Package) {
         state.pushScope(ast);
         this.visitChildren(ast, state);
         state.popScope();
     }
-    visit_leafExpr(ast: Myna.AstNode, state: NameAnalyzer) {
+    visit_leafExpr(ast: Myna.AstNode, state: Package) {
         const child = ast.children[0];
         if (child.name === 'identifier') {
             state.addVarUsage(child.allText, ast, getUsageType(child));
         }
+        else {
+            this.visitChildren(ast, state);
+        }
     }
-    visit_module(ast: Myna.AstNode, state: NameAnalyzer) {
+    visit_recCompoundStatement(ast: Myna.AstNode, state: Package) {
         state.pushScope(ast);
         this.visitChildren(ast, state);
         state.popScope();
     }
-    visit_recCompoundStatement(ast: Myna.AstNode, state: NameAnalyzer) {
-        state.pushScope(ast);
-        this.visitChildren(ast, state);
-        state.popScope();
-    }
-    visit_varDecl(ast: Myna.AstNode, state: NameAnalyzer) {
+    visit_varDecl(ast: Myna.AstNode, state: Package) {
         state.addVarDef(ast.children[0].allText, ast);
         this.visitChildren(ast, state);
     }
-    visit_varExpr(ast: Myna.AstNode, state: NameAnalyzer) {
+    visit_varExpr(ast: Myna.AstNode, state: Package) {
         state.pushScope(ast);
         this.visitChildren(ast, state);
         state.popScope();

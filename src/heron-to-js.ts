@@ -1,6 +1,6 @@
 import { Myna } from "myna-parser/myna";
 import { preprocessAst, identifierToString } from "./heron-ast-rewrite";
-import { analyzeHeronNames, NameAnalyzer } from "./heron-name-analysis";
+import { Package } from "./heron-name-analysis";
 import { CodeBuilder } from "./code-builder";
 
 //=====================================
@@ -8,12 +8,16 @@ import { CodeBuilder } from "./code-builder";
 
 // It is assumed that the AST is transformed
 export function heronToJs(ast) {
+    // TODO: finish 
+    /*
     var na = analyzeHeronNames(ast);
     mergeMultipleDefs(ast, na);
     let js = new HeronToJs();
     let cb = new CodeBuilder();
     js.visitNode(ast, cb);
     return cb;
+    */
+    throw new Error('Not implemented yet');
 }
 
 //=====================================
@@ -39,7 +43,7 @@ export function sortyBy(xs, f) {
     return [...xs].sort(function(a,b) {return (f(a) > f(b)) ? 1 : ((f(b) > f(a)) ? -1 : 0);});
 }
 
-export function mergeMultipleDefs(ast, nameAnalysis: NameAnalyzer) {
+export function mergeMultipleDefs(ast, nameAnalysis: Package) {
     var funcDefs = [];
     for (var scope of nameAnalysis.scopes) 
         for (var def of scope.defs) 

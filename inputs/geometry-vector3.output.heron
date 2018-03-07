@@ -1,0 +1,152 @@
+// Generated on Wed Mar 07 2018 14:49:45 GMT-0500 (Eastern Standard Time)
+language heron:std:0.1;
+heron:geometry.vector:0.1{
+var origin = vector(0, 0, 0);
+var ones = vector(1, 1, 1);
+var xaxis = vector(1, 0, 0);
+var yaxis = vector(0, 1, 0);
+var zaxis = vector(0, 0, 1);
+
+/**
+function vector(x: Float, y: Float, z: Float) 
+        = float3(x, y, z);
+
+    
+*/
+function vector(x : Float, y : Float, z : Float)
+ = float3(x, y, z);
+
+/**
+function vector(x: Float)
+        = float(x, x, x);
+
+    
+*/
+function vector(x : Float)
+ = float(x, x, x);
+
+/**
+function vector(v)
+        = float(v.x, v.y, v.z);
+
+    
+*/
+function vector(v)
+ = float(x(v), y(v), z(v));
+
+/**
+function vector(xs: Array)
+        = vector(xs[0], xs[1], xs[2]);
+
+    
+*/
+function vector(xs : Array)
+ = vector(op_at(xs, 0), op_at(xs, 1), op_at(xs, 2));
+
+/**
+function array(v) 
+        = [v.x, v.y, v.z];
+
+    
+*/
+function array(v)
+ = [x(v), y(v), z(v)];
+
+/**
+function sum(v) 
+        = v.x + v.y + v.z;
+    
+    
+*/
+function sum(v)
+ = op_add(op_add(x(v), y(v)), z(v));
+
+/**
+function dot(a, b) 
+        = sum(a * b);    
+    
+    
+*/
+function dot(a, b)
+ = sum(op_mul(a, b));
+
+/**
+function length(v) 
+        = sqrt(v.length2);    
+    
+    
+*/
+function length(v)
+ = sqrt(length2(v));
+
+/**
+function length2(v) 
+        = v.dot(v);        
+
+    
+*/
+function length2(v)
+ = dot(v, v);
+
+/**
+function distance(a, b)
+        = (a - b).length;
+
+    
+*/
+function distance(a, b)
+ = length((op_sub(a, b)));
+
+/**
+function distance2(a, b)
+        = (a - b).length2;
+
+    
+*/
+function distance2(a, b)
+ = length2((op_sub(a, b)));
+
+/**
+function normal(v) 
+        = v / v.length;
+
+    
+*/
+function normal(v)
+ = op_div(v, length(v));
+
+/**
+function cross(a, b)
+        = vector3(a.y*b.z - a.z*b.y, a.z*b.x - a.x*b.z, a.x*b.y - a.y*b.x);
+
+    
+*/
+function cross(a, b)
+ = vector3(op_sub(op_mul(y(a), z(b)), op_mul(z(a), y(b))), op_sub(op_mul(z(a), x(b)), op_mul(x(a), z(b))), op_sub(op_mul(x(a), y(b)), op_mul(y(a), x(b))));
+
+/**
+function reflect(v, n)
+        = v - (n * dot(v, n) * 2.0);
+
+    
+*/
+function reflect(v, n)
+ = op_sub(v, (op_mul(op_mul(n, dot(v, n)), 2.0)));
+
+/**
+function lerp(a, b, x)
+        = a * (1.0 - x) + b * x;            
+
+    
+*/
+function lerp(a, b, x)
+ = op_add(op_mul(a, (op_sub(1.0, x))), op_mul(b, x));
+
+/**
+function negate(v)
+        = vector(-v.x, -v.y, -v.z);
+
+*/
+function negate(v)
+ = vector(-x(v), -y(v), -z(v));
+}

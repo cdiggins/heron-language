@@ -1,6 +1,6 @@
 {
   "name": "heron-lang",
-  "version": "1.0.0-alpha.2",
+  "version": "0.1",
   "description": "A cross-platform programming language that emphasizes simplicity, safety, and code reuse.",
   "main": "src/heron.js",
   "homepage": "https://github.com/cdiggins/heron-language",

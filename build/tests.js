@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var Myna = require("myna-parser");
 var heron_parser_1 = require("./heron-parser");
-var heron_to_text_1 = require("./heron-to-text");
 var heron_compiler_1 = require("./heron-compiler");
 var m = Myna.Myna;
 var g = heron_parser_1.heronGrammar;
@@ -104,19 +103,11 @@ function functionSigToString(node) {
         return "intrinsic " + node.children[0].allText;
     throw new Error("Node has no signature" + node.name);
 }
-function testParseCode(code, r) {
-    if (r === void 0) { r = g.file; }
-    var mynaAst = heron_parser_1.parseHeron(code, r);
-    var heronAst = heron_compiler_1.toHeronAst(mynaAst);
-    return heron_to_text_1.heronToText(heronAst);
-}
-function testParseFile(f) {
-    var result = testParseCode(fs.readFileSync(f, 'utf-8'));
-    var outputFile = f.substring(0, f.lastIndexOf('.')) + '.output.heron';
-    fs.writeFileSync(outputFile, result);
-}
-function testParseExpr(code) {
-    return testParseCode(code, g.expr);
+function tests() {
+    // TODO: eventually we need to pre-scan the files    
+    var inputs = ['geometry-vector3'];
+    var pkg = heron_compiler_1.createPackage(inputs);
+    console.log('Done');
 }
 /*
 testParseExpr("2 + 3");
@@ -132,6 +123,8 @@ testParseCode("2 + 3", g.assignmentExpr);
 */
 //testParseFile('.\\tests\\seascape.heron');
 //testParseFile('.\\tests\\stdlib.heron');
-testParseFile('.\\inputs\\geometry-vector3.heron');
+//testParseFile('.\\inputs\\geometry-vector3.heron');
+//testParseFile('.\\inputs\\intrinsics.heron');
+tests();
 process.exit();
 //# sourceMappingURL=tests.js.map

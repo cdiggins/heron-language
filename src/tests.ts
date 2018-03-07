@@ -2,10 +2,9 @@ import * as Myna from "myna-parser";
 import { heronGrammar, parseHeron } from './heron-parser';
 import { heronToJs } from "./heron-to-js";
 import { preprocessAst } from "./heron-ast-rewrite";
-import { analyzeHeronNames, NameAnalyzer, Scope, VarDef, VarUsage } from "./heron-name-analysis";
+import { Package, Scope, VarDef, VarUsage } from "./heron-name-analysis";
 import { heronToText } from "./heron-to-text";
-import { toHeronAst } from "./heron-compiler";
-
+import { toHeronAst, parseFile, parseModule, createPackage, HeronAstNode } from "./heron-compiler";
 
 const m = Myna.Myna;
 const g = heronGrammar;
@@ -118,20 +117,11 @@ function functionSigToString(node: Myna.AstNode) {
     throw new Error("Node has no signature" + node.name);
 }
 
-function testParseCode(code, r = g.file) {
-    let mynaAst = parseHeron(code, r);
-    let heronAst = toHeronAst(mynaAst);
-    return heronToText(heronAst);
-}
-
-function testParseFile(f: string) {
-    let result = testParseCode(fs.readFileSync(f, 'utf-8'));
-    let outputFile = f.substring(0, f.lastIndexOf('.')) + '.output.heron';
-    fs.writeFileSync(outputFile, result);
-}
-
-function testParseExpr(code) {
-    return testParseCode(code, g.expr);
+function tests() {
+    // TODO: eventually we need to pre-scan the files    
+    let inputs = ['geometry-vector3'];
+    let pkg = createPackage(inputs);
+    console.log('Done');
 }
 
 /*
@@ -149,7 +139,9 @@ testParseCode("2 + 3", g.assignmentExpr);
 
 //testParseFile('.\\tests\\seascape.heron');
 //testParseFile('.\\tests\\stdlib.heron');
-testParseFile('.\\inputs\\geometry-vector3.heron');
+//testParseFile('.\\inputs\\geometry-vector3.heron');
+//testParseFile('.\\inputs\\intrinsics.heron');
+tests();
 
 declare var process;
 process.exit();

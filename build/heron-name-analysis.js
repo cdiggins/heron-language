@@ -4,14 +4,6 @@
 // - adding tags to indicate whether the expression is a func arg etc. 
 // - or maybe  
 Object.defineProperty(exports, "__esModule", { value: true });
-function analyzeHeronNames(ast) {
-    var analyzer = new NameAnalyzer();
-    var visitor = new AstVisitor();
-    visitor.visitNode(ast, analyzer);
-    analyzer.resolveUsageDefs();
-    return analyzer;
-}
-exports.analyzeHeronNames = analyzeHeronNames;
 var VarUsageType;
 (function (VarUsageType) {
     VarUsageType[VarUsageType["fun"] = 0] = "fun";
@@ -21,6 +13,23 @@ var VarUsageType;
     VarUsageType[VarUsageType["lvalue"] = 4] = "lvalue";
     VarUsageType[VarUsageType["rvalue"] = 5] = "rvalue";
 })(VarUsageType || (VarUsageType = {}));
+// Represents a module of Heron code  
+var Module = /** @class */ (function () {
+    function Module(name, node) {
+        this.name = name;
+        this.node = node;
+        this.imports = [];
+    }
+    Object.defineProperty(Module.prototype, "scope", {
+        get: function () {
+            return this.node['scope'];
+        },
+        enumerable: true,
+        configurable: true
+    });
+    return Module;
+}());
+exports.Module = Module;
 // A usage of a name. 
 var VarUsage = /** @class */ (function () {
     function VarUsage(name, scope, node, usageType) {
@@ -34,8 +43,23 @@ var VarUsage = /** @class */ (function () {
             throw new Error("Not a valid node type: " + node.name);
         node['varUsage'] = this;
     }
+    Object.defineProperty(VarUsage.prototype, "usageTypeString", {
+        get: function () {
+            switch (this.usageType) {
+                case VarUsageType.arg: return 'arg';
+                case VarUsageType.fun: return 'fun';
+                case VarUsageType.lvalue: return 'lval';
+                case VarUsageType.rvalue: return 'rval';
+                case VarUsageType.type: return 'type';
+                case VarUsageType.var: return 'var';
+            }
+            return '';
+        },
+        enumerable: true,
+        configurable: true
+    });
     VarUsage.prototype.toString = function () {
-        return this.name + '_' + this.node['id'] + ':' + this.usageType.toString();
+        return this.name + '_' + this.node['id'] + ':' + this.node.name + ':' + this.usageTypeString;
     };
     return VarUsage;
 }());
@@ -142,15 +166,69 @@ var Scope = /** @class */ (function () {
     return Scope;
 }());
 exports.Scope = Scope;
-// This is passed to the visitor and stores all scopes.  
-var NameAnalyzer = /** @class */ (function () {
-    function NameAnalyzer() {
+// Wraps a source file 
+var SourceFile = /** @class */ (function () {
+    function SourceFile(filePath, node) {
+        this.filePath = filePath;
+        this.node = node;
+    }
+    return SourceFile;
+}());
+exports.SourceFile = SourceFile;
+// A package is a compiled system. It contains a set of modules. 
+// This is built incrementally by a visitor and stores all scopes, usages, and defs that are found. 
+var Package = /** @class */ (function () {
+    function Package() {
+        this.modules = [];
         this.scope = new Scope(null);
         this.scopes = [this.scope];
         this.usages = [];
         this.defs = [];
+        this.files = [];
     }
-    NameAnalyzer.prototype.pushScope = function (ast) {
+    // When done calling analyzeFile on all files, call "resolveLinks"
+    Package.prototype.addFile = function (ast, isBuiltIn, filePath) {
+        if (ast.name !== 'file') {
+            throw new Error('Not a file');
+        }
+        var visitor = new AstVisitor();
+        for (var _i = 0, _a = ast.children; _i < _a.length; _i++) {
+            var node = _a[_i];
+            if (node.name !== 'module')
+                continue;
+            // Built in modules have their names added to the global scope
+            if (!isBuiltIn)
+                this.pushScope(ast);
+            var modName = ast.children[0].allText;
+            var module = new Module(modName, ast);
+            ast['module'] = module;
+            this.modules.push(module);
+            visitor.visitNode(ast, this);
+            // Built in modules have their names added to the global scope
+            if (!isBuiltIn)
+                this.popScope();
+        }
+        this.files.push(new SourceFile(filePath, ast));
+    };
+    // Find what possible definitions each var usage could have.
+    Package.prototype.resolveLinks = function () {
+        for (var _i = 0, _a = this.usages; _i < _a.length; _i++) {
+            var u = _a[_i];
+            u.defs = u.scope.findDefs(u.name);
+        }
+    };
+    // Scans for modules
+    Package.prototype.getModule = function (name) {
+        for (var _i = 0, _a = this.modules; _i < _a.length; _i++) {
+            var m = _a[_i];
+            if (m.name === name)
+                return m;
+        }
+        throw new Error("Module not found " + name);
+    };
+    //=============================================
+    // These functions are used by the visitor to incrementally build the package  
+    Package.prototype.pushScope = function (ast) {
         var tmp = new Scope(ast);
         tmp.id = this.scopes.length;
         this.scopes.push(tmp);
@@ -158,32 +236,25 @@ var NameAnalyzer = /** @class */ (function () {
         tmp.parent = this.scope;
         this.scope = tmp;
     };
-    NameAnalyzer.prototype.popScope = function () {
+    Package.prototype.popScope = function () {
         this.scope = this.scope.parent;
     };
-    NameAnalyzer.prototype.findDefs = function (name) {
+    Package.prototype.findDefs = function (name) {
         return this.scope.findDefs(name);
     };
-    NameAnalyzer.prototype.addVarDef = function (name, node) {
+    Package.prototype.addVarDef = function (name, node) {
         var vd = new VarDef(name, this.scope, node);
         this.scope.defs.push(vd);
         this.defs.push(vd);
     };
-    NameAnalyzer.prototype.addVarUsage = function (name, node, usageType) {
+    Package.prototype.addVarUsage = function (name, node, usageType) {
         var usage = new VarUsage(name, this.scope, node, usageType);
         this.scope.usages.push(usage);
         this.usages.push(usage);
     };
-    // Find what possible definitions each var usage could have.
-    NameAnalyzer.prototype.resolveUsageDefs = function () {
-        for (var _i = 0, _a = this.usages; _i < _a.length; _i++) {
-            var u = _a[_i];
-            u.defs = u.scope.findDefs(u.name);
-        }
-    };
-    return NameAnalyzer;
+    return Package;
 }());
-exports.NameAnalyzer = NameAnalyzer;
+exports.Package = Package;
 // Used for visiting nodes in the Heron AST looking for name defintions, usages, and scopes.
 var AstVisitor = /** @class */ (function () {
     function AstVisitor() {
@@ -253,11 +324,9 @@ var AstVisitor = /** @class */ (function () {
         if (child.name === 'identifier') {
             state.addVarUsage(child.allText, ast, getUsageType(child));
         }
-    };
-    AstVisitor.prototype.visit_module = function (ast, state) {
-        state.pushScope(ast);
-        this.visitChildren(ast, state);
-        state.popScope();
+        else {
+            this.visitChildren(ast, state);
+        }
     };
     AstVisitor.prototype.visit_recCompoundStatement = function (ast, state) {
         state.pushScope(ast);

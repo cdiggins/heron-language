@@ -1,0 +1,96 @@
+// Generated on Wed Mar 07 2018 14:49:45 GMT-0500 (Eastern Standard Time)
+language heron:std:0.1;
+heron:intrinsics:0.1{
+var pi = 3.14159265358979323846;
+var e = 2.71828182845904523536;
+intrinsic float2(x : Float, y : Float) : Float2
+;
+intrinsic x(v : Float2) : Float
+;
+intrinsic y(v : Float2) : Float
+;
+intrinsic float3(x : Float, y : Float, z : Float) : Float3
+;
+intrinsic x(v : Float3) : Float
+;
+intrinsic y(v : Float3) : Float
+;
+intrinsic z(v : Float3) : Float
+;
+intrinsic float4(x : Float, y : Float, z : Float, w : Float) : Float4
+;
+intrinsic x(v : Float4) : Float
+;
+intrinsic y(v : Float4) : Float
+;
+intrinsic z(v : Float4) : Float
+;
+intrinsic w(v : Float4) : Float
+;
+intrinsic abs <T>T(x : T) : T
+;
+intrinsic acos <T>T(x : T) : T
+;
+intrinsic asin <T>T(x : T) : T
+;
+intrinsic atan <T>T(x : T) : T
+;
+intrinsic atan2 <T>T(y : T, x : T) : T
+;
+intrinsic ceil <T>T(x : T, y : T) : T
+;
+intrinsic ceil <T>T(x : T) : T
+;
+intrinsic clamp <T>T(x : T, min : T, max : T) : T
+;
+intrinsic cos <T>T(x : T) : T
+;
+intrinsic exp <T>T(x : T) : T
+;
+intrinsic floor <T>T(x : T) : T
+;
+intrinsic log <T>T(x : T) : T
+;
+intrinsic max <T>T(x : T, y : T) : T
+;
+intrinsic min <T>T(x : T, y : T) : T
+;
+intrinsic pow <T>T(x : T, y : T) : T
+;
+intrinsic round <T>T(x : T) : T
+;
+intrinsic sin <T>T(x : T) : T
+;
+intrinsic sign <T>T(x : T) : T
+;
+intrinsic sqrt <T>T(x : T) : T
+;
+intrinsic tan <T>T(x : T) : T
+;
+intrinsic op+ <T>T(x : T, y : T) : T
+;
+intrinsic op- <T>T(x : T, y : T) : T
+;
+intrinsic op* <T>T(x : T, y : T) : T
+;
+intrinsic op/ <T>T(x : T, y : T) : T
+;
+intrinsic op% <T>T(x : T, y : T) : T
+;
+intrinsic op> <T>T(x : T, y : T) : Bool
+;
+intrinsic op>= <T>T(x : T, y : T) : Bool
+;
+intrinsic op< <T>T(x : T, y : T) : Bool
+;
+intrinsic op<= <T>T(x : T, y : T) : Bool
+;
+intrinsic op!= <T>T(x : T, y : T) : Bool
+;
+intrinsic op== <T>T(x : T, y : T) : Bool
+;
+intrinsic op_at <T>T(x : Array, i : Num) : Any
+;
+intrinsic op_range <T>T(from : Num, to : Num) : Array
+;
+}

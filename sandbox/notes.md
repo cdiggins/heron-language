@@ -366,3 +366,24 @@ http://steve-yegge.blogspot.ca/2007/02/next-big-language.html
 //==
 
 Heron has no this 
+
+modName.children.map(c => c.allText);
+
+In Heron becomes:
+
+modName.children.map(allText);
+
+//==
+
+I need the intrinsic modules to be added to the global namespace ... 
+
+//==
+
+Todo:
+* Separate out the different function defs based on the number and types of arguments. 
+* figure out better difs
+* when finding the def, if it is a call. 
+* identify the symbols with too many names
+* identify the symbols with not enough names
+* why aren't the details showing when going to text
+* control what is drawn when converting to text  

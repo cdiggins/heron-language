@@ -120,7 +120,8 @@ var g = new function () {
     this.funcBodyStatement = this.recCompoundStatement.ast;
     this.funcBodyExpr = guardedWsDelimSeq('=', this.expr, ';').ast;
     this.funcBody = myna_parser_1.Myna.choice(this.funcBodyStatement, this.funcBodyExpr).ast;
-    this.funcSig = guardedWsDelimSeq(this.funcName, this.genericsParams, this.funcParams).ast;
+    this.returnType = guardedWsDelimSeq(':', this.typeExpr).ast;
+    this.funcSig = guardedWsDelimSeq(this.funcName, this.genericsParams, this.funcParams, this.returnType.opt).ast;
     this.funcDef = guardedWsDelimSeq(myna_parser_1.Myna.keyword("function"), this.funcSig, this.funcBody).ast;
     this.intrinsicDef = guardedWsDelimSeq(myna_parser_1.Myna.keyword("intrinsic"), this.funcSig, ';').ast;
     // Lambda expression 

@@ -1,8 +1,8 @@
-language heron:std:0:1;
+language heron:std:0.1;
 
 // An intrinsic is a function that has an implementation provided by the compiler.
 
-module heron:std:intrinsics:0.1
+module heron:intrinsics:0.1
 {
     // TODO: eventually allow things like this
     // type Num = Float | Float2 | Float3 | Float4;
@@ -25,37 +25,40 @@ module heron:std:intrinsics:0.1
     intrinsic z(v: Float4): Float;
     intrinsic w(v: Float4): Float;
 
-    intrinsic abs<T: Num>(x: T): T;
-    intrinsic acos<T: Num>(x: T): T;
-    intrinsic asin<T: Num>(x: T): T
-    intrinsic atan<T: Num>(x: T): T;
-    intrinsic atan2<T: Num>(y: T, x: T): T;
-    intrinsic ceil<T: Num>(x: T, y: T): T;
-    intrinsic ceil<T: Num>(x: T): T;
-    intrinsic clamp<T: Num>(x: T, min: T, max: T): T;
-    intrinsic cos<T: Num>(x: T): T;
-    intrinsic exp<T: Num>(x: T): T;
-    intrinsic floor<T: Num>(x: T): T;
-    intrinsic log<T: Num>(x: T): T;
-    intrinsic max<T: Num>(x: T, y: T): T;
-    intrinsic min<T: Num>(x: T, y: T): T;
-    intrinsic pow<T: Num>(x: T, y: T): T;
-    intrinsic round<T: Num>(x: T): T;
-    intrinsic sin<T: Num>(x: T): T;
-    intrinsic sign<T: Num>(x: T): T;
-    intrinsic sqrt<T: Num>(x: T): T;
-    intrinsic tan<T: Num>(x: T): T;    
+    intrinsic abs<T>(x: T): T;
+    intrinsic acos<T>(x: T): T;
+    intrinsic asin<T>(x: T): T;
+    intrinsic atan<T>(x: T): T;
+    intrinsic atan2<T>(y: T, x: T): T;
+    intrinsic ceil<T>(x: T, y: T): T;
+    intrinsic ceil<T>(x: T): T;
+    intrinsic clamp<T>(x: T, min: T, max: T): T;
+    intrinsic cos<T>(x: T): T;
+    intrinsic exp<T>(x: T): T;
+    intrinsic floor<T>(x: T): T;
+    intrinsic log<T>(x: T): T;
+    intrinsic max<T>(x: T, y: T): T;
+    intrinsic min<T>(x: T, y: T): T;
+    intrinsic pow<T>(x: T, y: T): T;
+    intrinsic round<T>(x: T): T;
+    intrinsic sin<T>(x: T): T;
+    intrinsic sign<T>(x: T): T;
+    intrinsic sqrt<T>(x: T): T;
+    intrinsic tan<T>(x: T): T;    
 
-    intrinsic op+ <T: Num>(x: T, y: T): T;
-    intrinsic op- <T: Num>(x: T, y: T): T;
-    intrinsic op* <T: Num>(x: T, y: T): T;
-    intrinsic op/ <T: Num>(x: T, y: T): T;
-    intrinsic op% <T: Num>(x: T, y: T): T;
+    intrinsic op+ <T>(x: T, y: T): T;
+    intrinsic op- <T>(x: T, y: T): T;
+    intrinsic op* <T>(x: T, y: T): T;
+    intrinsic op/ <T>(x: T, y: T): T;
+    intrinsic op% <T>(x: T, y: T): T;
 
-    intrinsic op>  <T: Num>(x: T, y: T): Bool;
-    intrinsic op>= <T: Num>(x: T, y: T): Bool;
-    intrinsic op<  <T: Num>(x: T, y: T): Bool;
-    intrinsic op<= <T: Num>(x: T, y: T): Bool;
-    intrinsic op!= <T: Num>(x: T, y: T): Bool;
-    intrinsic op== <T: Num>(x: T, y: T): Bool;
+    intrinsic op>  <T>(x: T, y: T): Bool;
+    intrinsic op>= <T>(x: T, y: T): Bool;
+    intrinsic op<  <T>(x: T, y: T): Bool;
+    intrinsic op<= <T>(x: T, y: T): Bool;
+    intrinsic op!= <T>(x: T, y: T): Bool;
+    intrinsic op== <T>(x: T, y: T): Bool;
+
+    intrinsic op_at <T>(x: Array, i: Num): Any;
+    intrinsic op_range <T>(from: Num, to: Num): Array;
 }
