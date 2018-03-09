@@ -2,7 +2,7 @@ import * as Myna from "myna-parser";
 import { heronGrammar, parseHeron } from './heron-parser';
 import { heronToJs } from "./heron-to-js";
 import { preprocessAst } from "./heron-ast-rewrite";
-import { Package, Scope, VarDef, VarUsage } from "./heron-name-analysis";
+import { Package, Scope } from "./heron-scope-analysis";
 import { heronToText } from "./heron-to-text";
 import { toHeronAst, parseFile, parseModule, createPackage, HeronAstNode } from "./heron-compiler";
 

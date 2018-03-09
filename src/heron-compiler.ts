@@ -1,10 +1,12 @@
 import { Myna } from "myna-parser/myna";
-import { Scope, Module, VarDef, Ref, Package, FunctionCall, FuncDef, FunctionParam } from "./heron-name-analysis";
+import { Scope, Package } from "./heron-name-analysis";
 import { Type } from "type-inference/type-system";
-import { preprocessAst } from "./heron-ast-rewrite";
-import { computeTypes } from "./heron-type-analysis";
+import { preprocessAst, visitAst } from "./heron-ast-rewrite";
 import { parseHeron, heronGrammar } from "./heron-parser";
 import { heronToText } from "./heron-to-text";
+import { Def, createDef } from "./heron-defs";
+import { Ref } from "./heron-refs";
+import { Expr, createExpr } from "./heron-expr";
 
 const g = heronGrammar;
 
@@ -35,10 +37,10 @@ export class HeronAstNode extends Myna.AstNode
     original?: Myna.AstNode;
 
     // If this node is a new name definition, the definition is stored here
-    varDef?: VarDef;
+    def?: Def;
 
     // If this node is a symbol, information about what variable it is stored here
-    varUsage?: Ref;
+    ref?: Ref;
 
     // If this node is the beginning of a scope, information about the scope is stored here. 
     scope?: Scope;
@@ -46,17 +48,8 @@ export class HeronAstNode extends Myna.AstNode
     // If this node has a type, it is stored here 
     type?: Type;
 
-    // If this node is a module, information about the module is stored here. 
-    module?: Module;
-
-    // If this node is an expression, representing a function call. This makes it easier to access the arguments
-    funCall?: FunctionCall;
-
-    // If this node is a parameter for a function or intrinsic definition this provides access to its information 
-    funcParam?: FunctionParam;
-
-    // If this node is a function definition, this provides access to key information. 
-    funcDef?: FuncDef;
+    // If this node is an expression, additional information is stored here.
+    expr?: Expr;
 }
 
 // Module resolution
@@ -116,11 +109,17 @@ export function toHeronAst(ast: Myna.AstNode, pkg: Package, builtIn: boolean, fi
     // Perform pre-processing
     ast = preprocessAst(ast);
 
-    // Adding the file to the package, does a name analysis.
+    // Creates name defintions and add them to the nodes. 
+    visitAst(ast, createDef);
+
+    // Adding the file to the package, does a name analysis and adds references. 
     pkg.addFile(ast, builtIn, filePath);
 
+    // We need to create expressions, and add them to the nodes
+    visitAst(ast, createExpr);
+
     // All expressions are assigned types (WIP)
-    computeTypes(ast); 
+    // computeTypes(ast); 
 
     // Type-cast the node.
     return ast as HeronAstNode;

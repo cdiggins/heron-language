@@ -16,7 +16,7 @@ export module Types
 
     // we create special names for objects. 
     let objectId = 0;
-    export function createObjectType(fields: string[]) : Type {
-        return typeArray([typeConstant('object' + objectId), ...fields.map(typeConstant)]);
+    export function createObjectType() : Type {
+        return typeConstant('object' + objectId++);
     }
 }

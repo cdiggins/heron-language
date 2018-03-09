@@ -153,7 +153,7 @@ export class Package
     }
 
     addVarUsage(name: string, node: Myna.AstNode, usageType: RefType) {
-        let usage = new Ref(name, this.scope, node, usageType);
+        let usage = new Ref(node, name, this.scope, usageType);
         this.scope.refs.push(usage);
         this.usages.push(usage);
     }
@@ -233,11 +233,6 @@ export function nodeId(ast: Myna.AstNode): string {
 }
 
 export const scopeType = ['funcDef', 'instrinsicDef', 'module', 'varExpr', 'compoundStatement'];
-export const nodeTypes = ['lambdaArg', 'funcDef', 'funcParamName', 'varDecl', 'typeDecl', 'intrinsicDef', 'genericParam', 'typeName', 'leafExpr', 'typeDef'];
-
-function isValidNodeType(s: string): boolean {
-    return nodeTypes.indexOf(s) >= 0;
-}
 
 function isValidScopeType(s: string): boolean {
     return scopeType.indexOf(s) >= 0;

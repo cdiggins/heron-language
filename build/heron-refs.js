@@ -12,9 +12,10 @@ var RefType;
 })(RefType = exports.RefType || (exports.RefType = {}));
 // A reference to one or more definitions.
 var Ref = /** @class */ (function () {
-    function Ref(name, node, usageType) {
-        this.name = name;
+    function Ref(node, name, scope, usageType) {
         this.node = node;
+        this.name = name;
+        this.scope = scope;
         this.usageType = usageType;
         // This value is set manually
         this.defs = [];
@@ -41,4 +42,9 @@ var Ref = /** @class */ (function () {
     return Ref;
 }());
 exports.Ref = Ref;
+// Creates references. This will require a scope analysis.
+function createRef(node) {
+    // TODO: 
+}
+exports.createRef = createRef;
 //# sourceMappingURL=heron-refs.js.map

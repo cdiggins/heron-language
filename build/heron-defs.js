@@ -11,12 +11,14 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var heron_ast_rewrite_1 = require("./heron-ast-rewrite");
+var heron_expr_1 = require("./heron-expr");
 // This is a definition of a name. It could be a function, variable, type
 var Def = /** @class */ (function () {
     function Def(node, name, type) {
         this.node = node;
         this.name = name;
         this.type = type;
+        node['def'] = this;
     }
     return Def;
 }());
@@ -101,10 +103,6 @@ var ModuleDef = /** @class */ (function (_super) {
 exports.ModuleDef = ModuleDef;
 //==========================================================================================
 // Exported functions
-function createDefs(ast) {
-    heron_ast_rewrite_1.visitAst(ast, createDef);
-}
-exports.createDefs = createDefs;
 function createDef(node) {
     // NOTE: typeParamDef and funcParamDef are created by the funcDef    
     switch (node.name) {
@@ -121,52 +119,44 @@ function createDef(node) {
 }
 exports.createDef = createDef;
 //==========================================================================================
-function validateNode(node) {
-    var names = [];
-    for (var _i = 1; _i < arguments.length; _i++) {
-        names[_i - 1] = arguments[_i];
-    }
-    if (names.indexOf(node.name) < 0)
-        throw new Error('Did not expect ' + node.name);
-    return node;
-}
-function addDef(node, def) {
-    node['def'] = def;
-    return def;
-}
 function createTypeParam(node) {
-    validateNode(node, 'genericParam');
+    heron_ast_rewrite_1.validateNode(node, 'genericParam');
     var name = node.children[0].allText;
     var constraint = node.children.length > 1 ? node.children[1] : null;
-    return addDef(node, new TypeParamDef(node, name, constraint));
+    return new TypeParamDef(node, name, constraint);
 }
+exports.createTypeParam = createTypeParam;
 function createFuncDef(node) {
-    validateNode(node, 'funcDef', 'intrinsicDef');
-    var sig = validateNode(node.children[0], 'funcSig');
+    heron_ast_rewrite_1.validateNode(node, 'funcDef', 'intrinsicDef');
+    var sig = heron_ast_rewrite_1.validateNode(node.children[0], 'funcSig');
     var name = sig.children[0].allText;
-    var genericParamsNodes = validateNode(sig.children[1], 'genericParams');
+    var genericParamsNodes = heron_ast_rewrite_1.validateNode(sig.children[1], 'genericParams');
     var genericParams = genericParamsNodes.children.map(createTypeParam);
-    var params = validateNode(sig.children[2], 'funcParams').children.map(createFuncParamDef);
+    var params = heron_ast_rewrite_1.validateNode(sig.children[2], 'funcParams').children.map(createFuncParamDef);
     var retType = (sig.children.length > 2) ? sig.children[3] : null;
-    return addDef(node, new FuncDef(node, name, retType, params, genericParams));
+    return new FuncDef(node, name, retType, params, genericParams);
 }
+exports.createFuncDef = createFuncDef;
 function createFuncParamDef(node) {
-    validateNode(node, 'funcParam');
+    heron_ast_rewrite_1.validateNode(node, 'funcParam');
     var name = node.children[0].allText;
     var type = (node.children.length > 1) ? node.children[1] : null;
-    return addDef(node, new FuncParamDef(node, name, type));
+    return new FuncParamDef(node, name, type);
 }
+exports.createFuncParamDef = createFuncParamDef;
 function createVarDef(node) {
-    validateNode(node, 'varDecl');
-    var name = validateNode(node.children[0], 'varNameDecl');
-    var init = validateNode(node.children[1], 'varInitialization');
-    return addDef(node, new VarDef(node, name.allText, init.children[0]));
+    heron_ast_rewrite_1.validateNode(node, 'varDecl');
+    var name = heron_ast_rewrite_1.validateNode(node.children[0], 'varNameDecl');
+    var init = heron_ast_rewrite_1.validateNode(node.children[1], 'varInitialization');
+    return new VarDef(node, name.allText, heron_expr_1.createExpr(init.children[0]));
 }
+exports.createVarDef = createVarDef;
 function createTypeDef(node) {
-    validateNode(node, 'typeDef');
+    heron_ast_rewrite_1.validateNode(node, 'typeDef');
     var name = node.children[0].allText;
-    return addDef(node, new TypeDef(node, name));
+    return new TypeDef(node, name);
 }
+exports.createTypeDef = createTypeDef;
 // STEP1: create the defs
 // STEP2: create the refs ... 
 // STEP3: figure out the expression ...

@@ -1,7 +1,8 @@
 import { CodeBuilder } from "./code-builder";
 import { HeronAstNode } from "./heron-compiler";
-import { Scope } from "./heron-name-analysis";
+import { Scope } from "./heron-scope-analysis";
 import { isExpr } from "./heron-ast-rewrite";
+import { Ref } from "./heron-refs";
 
 // Given an AST, will generate a text representation of the code as Heron code
 // that has been marked up with the analysis results. 
@@ -28,18 +29,22 @@ function outputDetails(node: HeronAstNode, state: CodeBuilder) {
         // TODO: push all of the variables used, push all of the defines made in the scope.
         // I want it all man!
     }
-    if (node.varUsage) {
-        state.pushLine(varUsageDetails(node.varUsage));
+    if (node.ref) {
+        state.pushLine(varUsageDetails(node.ref));
     }
-    if (node.varDef) {
-        state.pushLine('// var definition ' + node.varDef.toString());    
+    if (node.def) {
+        state.pushLine('// var definition ' + node.def.toString());    
     }
+    // TODO: deal with expressions
+    // TODO: deal with refs 
+    /*
     if (node.funCall) {
         state.pushLine('// function call with ' + node.funCall.args.length + ' arguments');
     }
     if (node.funcDef) {
         state.pushLine('// function definition ' + node.funcDef.name + ' with ' + node.funcDef.params.length + ' parameters');
     }
+    */
     if (isExpr(node)) {
         // state.push(' /* ' + node.name + ':' + (node.type || '?') + ' */ ');
     }

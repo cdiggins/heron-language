@@ -162,6 +162,29 @@ exports.arrayIndexToFunction = arrayIndexToFunction;
 function opToFunction(ast) {
     // We are only going to handle certain cases
     switch (ast.name) {
+        case 'prefixExpr': {
+            var r = ast.children[ast.children.length - 1];
+            for (var i = ast.children.length - 2; i >= 0; --i) {
+                var opName = '';
+                switch (ast.children[i].allText) {
+                    case '++':
+                        opName = 'op_preinc';
+                        break;
+                    case '--':
+                        opName = 'op_predec';
+                        break;
+                    case '-':
+                        opName = 'op_negate';
+                        break;
+                    case '!':
+                        opName = 'op_not';
+                        break;
+                    default: throw new Error('Unrecognized prefix operator ' + ast.children[i].allText);
+                }
+                r = funCall(opName, r);
+            }
+            return r;
+        }
         case 'rangeExpr':
         case 'logicalOrExpr':
         case 'logicalXOrExpr':
@@ -255,6 +278,17 @@ function exprListToPair(ast) {
     }
 }
 exports.exprListToPair = exprListToPair;
+// Checks that a node has a name 
+function validateNode(node) {
+    var names = [];
+    for (var _i = 1; _i < arguments.length; _i++) {
+        names[_i - 1] = arguments[_i];
+    }
+    if (names.indexOf(node.name) < 0)
+        throw new Error('Did not expect ' + node.name);
+    return node;
+}
+exports.validateNode = validateNode;
 // Calls a function on every node in the AST passing the AST node and it's child
 function visitAstWithParent(ast, parent, f) {
     ast.children.forEach(function (c) { return visitAstWithParent(c, ast, f); });
@@ -267,15 +301,6 @@ function visitAst(ast, f) {
     f(ast);
 }
 exports.visitAst = visitAst;
-// Adds back pointers to AST nodes
-function createParentPointers(ast) {
-    visitAstWithParent(ast, null, function (c, p) { return c['parent'] = p; });
-}
-// Assigns unique ids to every AST node in the tree 
-function assignIds(ast, idGen) {
-    if (idGen === void 0) { idGen = { id: 0 }; }
-    visitAst(ast, function (node) { return node['id'] = idGen.id++; });
-}
 // Performs some pre-processing of the AST to make it easier to work with
 // Many expressions are converted into function calls.
 // Also parent back pointers are added along with ids to the nodes. 
@@ -288,9 +313,10 @@ function preprocessAst(ast) {
     ast = mapAst(ast, arrayIndexToFunction);
     ast = mapAst(ast, opToFunction);
     // Some operations later on are easier if we have a parent pointer  
-    createParentPointers(ast);
-    // Assigns unique ids, for convenience and looks up. 
-    assignIds(ast);
+    visitAstWithParent(ast, null, function (c, p) { return c['parent'] = p; });
+    // Assign unique ids, for convenience and looks up. 
+    var id = 0;
+    visitAst(ast, function (node) { return node['id'] = id++; });
     return ast;
 }
 exports.preprocessAst = preprocessAst;

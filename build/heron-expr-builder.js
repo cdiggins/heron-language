@@ -24,11 +24,12 @@ function createExpr(node) {
                     throw new Error("Unrecognized postfix expression: " + node.name);
             }
         case "objectExpr":
-            return ObjectType;
+            return new heron_expr_1.ObjectLiteral(node, node.children.map(createObjectField));
         case "lambdaExpr":
             return LambdaType;
         case "varExpr":
-            return computeType(node.children[node.children.length - 1]);
+            return new heron_expr_1.Var();
+            computeType(node.children[node.children.length - 1]);
         case "arrayExpr":
             return ArrayType;
         case "bool":
@@ -66,17 +67,28 @@ function createExpr(node) {
     }
 }
 exports.createExpr = createExpr;
+function addExpr(node, expr) {
+    node['expr'] = expr;
+    return expr;
+}
+exports.addExpr = addExpr;
 function createFunCall(node) {
     if (node.name !== 'postfixExpr')
         throw new Error('Expected a postfix expr as an argument');
     if (node.children.length != 2)
         throw new Error('Expected two children of a postfix expression');
-    var func = node.children[0];
+    var func = createExpr(node.children[0]);
     if (node.children[1].name !== 'funCall')
         throw new Error('Expected a funCall as the right child, not ' + node.children[1].name);
     var args = node.children[1].children;
-    var r = new heron_expr_1.FunCall(node, null, func, args.map(createExpr));
-    node['funCall'] = this;
+    return addExpr(node, new heron_expr_1.FunCall(node, null, func, args.map(createExpr)));
 }
 exports.createFunCall = createFunCall;
+function createObjectField(node) {
+    heron_ast_rewrite_1.validateNode(node, "objectField");
+    var name = node.child[0].allText;
+    var expr = createExpr(node.child[1]);
+    return addExpr(node, new heron_expr_1.ObjectField(node, name, expr));
+}
+exports.createObjectField = createObjectField;
 //# sourceMappingURL=heron-expr-builder.js.map

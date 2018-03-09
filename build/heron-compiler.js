@@ -13,9 +13,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var myna_1 = require("myna-parser/myna");
 var heron_name_analysis_1 = require("./heron-name-analysis");
 var heron_ast_rewrite_1 = require("./heron-ast-rewrite");
-var heron_type_analysis_1 = require("./heron-type-analysis");
 var heron_parser_1 = require("./heron-parser");
 var heron_to_text_1 = require("./heron-to-text");
+var heron_defs_1 = require("./heron-defs");
+var heron_expr_1 = require("./heron-expr");
 var g = heron_parser_1.heronGrammar;
 var fs = require('fs');
 var path = require('path');
@@ -92,10 +93,14 @@ exports.parseFile = parseFile;
 function toHeronAst(ast, pkg, builtIn, filePath) {
     // Perform pre-processing
     ast = heron_ast_rewrite_1.preprocessAst(ast);
-    // Adding the file to the package, does a name analysis.
+    // Creates name defintions and add them to the nodes. 
+    heron_ast_rewrite_1.visitAst(ast, heron_defs_1.createDef);
+    // Adding the file to the package, does a name analysis and adds references. 
     pkg.addFile(ast, builtIn, filePath);
+    // We need to create expressions, and add them to the nodes
+    heron_ast_rewrite_1.visitAst(ast, heron_expr_1.createExpr);
     // All expressions are assigned types (WIP)
-    heron_type_analysis_1.computeTypes(ast);
+    // computeTypes(ast); 
     // Type-cast the node.
     return ast;
 }

@@ -1,4 +1,5 @@
 import { Myna } from "myna-parser/myna";
+import { createDef } from "./heron-defs";
 
 const g = Myna.grammars['heron'];
 
@@ -159,6 +160,21 @@ export function opToFunction(ast: Myna.AstNode): Myna.AstNode {
     // We are only going to handle certain cases
     switch (ast.name)
     {    
+        case 'prefixExpr': {
+            let r = ast.children[ast.children.length-1];
+            for (let i=ast.children.length-2; i >= 0; --i) {
+                let opName = '';
+                switch (ast.children[i].allText) {
+                    case '++': opName = 'op_preinc'; break;
+                    case '--': opName = 'op_predec'; break;
+                    case '-': opName = 'op_negate'; break;
+                    case '!': opName = 'op_not'; break;
+                    default: throw new Error('Unrecognized prefix operator ' + ast.children[i].allText);
+                }
+                r = funCall(opName, r);
+            }
+            return r;
+        }
         case 'rangeExpr':
         case 'logicalOrExpr':
         case 'logicalXOrExpr':
@@ -261,6 +277,13 @@ export function exprListToPair(ast: Myna.AstNode): Myna.AstNode {
     }
 }
 
+// Checks that a node has a name 
+export function validateNode(node: Myna.AstNode, ...names: string[]): Myna.AstNode {
+    if (names.indexOf(node.name) < 0)
+        throw new Error('Did not expect ' + node.name);
+    return node;
+}
+
 // Calls a function on every node in the AST passing the AST node and it's child
 export function visitAstWithParent(ast: Myna.AstNode, parent: Myna.AstNode, f:((child:Myna.AstNode, parent:Myna.AstNode)=>void)) {    
     ast.children.forEach(c => visitAstWithParent(c, ast, f));
@@ -273,20 +296,11 @@ export function visitAst(ast: Myna.AstNode, f:((_:Myna.AstNode)=>void)) {
     f(ast);
 }
 
-// Adds back pointers to AST nodes
-function createParentPointers(ast: Myna.AstNode) {
-    visitAstWithParent(ast, null, (c, p) => c['parent'] = p);
-}
-
-// Assigns unique ids to every AST node in the tree 
-function assignIds(ast: Myna.AstNode, idGen = { id: 0 }) {
-    visitAst(ast, node => node['id'] = idGen.id++);
-}
-
 // Performs some pre-processing of the AST to make it easier to work with
 // Many expressions are converted into function calls.
 // Also parent back pointers are added along with ids to the nodes. 
-export function preprocessAst(ast: Myna.AstNode) {
+export function preprocessAst(ast: Myna.AstNode) 
+{
     // The order of transforms matters. Particularly we need to do 
     // Method to function before doing fieldSelectToFunctions
     ast = mapAst(ast, exprListToPair);
@@ -296,10 +310,11 @@ export function preprocessAst(ast: Myna.AstNode) {
     ast = mapAst(ast, opToFunction);
  
     // Some operations later on are easier if we have a parent pointer  
-    createParentPointers(ast);
+    visitAstWithParent(ast, null, (c, p) => c['parent'] = p);
 
-    // Assigns unique ids, for convenience and looks up. 
-    assignIds(ast);
+    // Assign unique ids, for convenience and looks up. 
+    let id = 0;
+    visitAst(ast, node => node['id'] = id++);
 
     return ast;
 }

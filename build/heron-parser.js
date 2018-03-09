@@ -48,10 +48,11 @@ var g = new function () {
     }).setName("heron", "recStatement");
     // Literals
     this.fraction = myna_parser_1.Myna.seq(".", myna_parser_1.Myna.not("."), myna_parser_1.Myna.digit.zeroOrMore);
-    this.plusOrMinus = myna_parser_1.Myna.char("+-");
     this.exponent = myna_parser_1.Myna.seq(myna_parser_1.Myna.char("eE"), this.plusOrMinus.opt, myna_parser_1.Myna.digits);
     this.bool = myna_parser_1.Myna.keywords("true", "false").ast;
-    this.number = myna_parser_1.Myna.seq(this.plusOrMinus.opt, myna_parser_1.Myna.integer, this.fraction.opt, this.exponent.opt).ast;
+    this.integer = myna_parser_1.Myna.integer.ast;
+    this.float = myna_parser_1.Myna.seq(myna_parser_1.Myna.integer, this.fraction.opt, this.exponent.opt, myna_parser_1.Myna.opt("f")).ast;
+    this.number = myna_parser_1.Myna.choice(this.integer, this.float).ast;
     // Strings rules
     this.escapeChar = myna_parser_1.Myna.char('\'"\\bfnrtv');
     this.escapedLiteralChar = myna_parser_1.Myna.char('\\').then(this.escapeChar);
@@ -127,9 +128,9 @@ var g = new function () {
     // Lambda expression 
     this.lambdaArg = this.identifier.then(this.funcParamType.opt).ast;
     this.lambdaBody = this.recCompoundStatement.or(this.expr).ast;
-    this.lambdaArgsNoParen = this.identifier.ast;
-    this.lambdaArgsWithParen = myna_parser_1.Myna.seq("(", this.ws, commaDelimited(this.lambdaArg), ")", this.ws).ast;
-    this.lambdaArgs = myna_parser_1.Myna.choice(this.lambdaArgsNoParen, this.lambdaArgsWithParen).ast;
+    this.lambdaArgsNoParen = this.identifier;
+    this.lambdaArgsWithParen = myna_parser_1.Myna.seq("(", this.ws, commaDelimited(this.lambdaArg), ")", this.ws);
+    this.lambdaArgs = myna_parser_1.Myna.choice(this.lambdaArgsNoParen, this.lambdaArgsWithParen);
     this.lambdaExpr = myna_parser_1.Myna.seq(this.lambdaArgs, guardedWsDelimSeq("=>", this.lambdaBody)).ast;
     // Leaf expressions (unary expressions)
     this.leafExpr = myna_parser_1.Myna.choice(this.varExpr, this.objectExpr, this.lambdaExpr, this.parenExpr, this.arrayExpr, this.literal, this.identifier).then(this.ws).ast;

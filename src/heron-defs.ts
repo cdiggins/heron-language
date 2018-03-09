@@ -1,6 +1,6 @@
 import { Myna } from "myna-parser/myna";
-import { visitAst } from "./heron-ast-rewrite";
-import { Expr } from "./heron-expr";
+import { visitAst, validateNode } from "./heron-ast-rewrite";
+import { Expr, createExpr } from "./heron-expr";
 
 // Temporary: the type of something is one of these things.  
 type TypeRef = Myna.AstNode | string | Expr;
@@ -12,7 +12,7 @@ export class Def {
         public readonly name: string, 
         public readonly type: TypeRef,
     )
-    { }
+    { node['def'] = this; }
 }
 
 // Represents the definition of a function 
@@ -84,10 +84,6 @@ export class ModuleDef extends Def
 //==========================================================================================
 // Exported functions
 
-export function createDefs(ast: Myna.AstNode) {
-    visitAst(ast, createDef);
-}
-
 export function createDef(node: Myna.AstNode): Def {
     // NOTE: typeParamDef and funcParamDef are created by the funcDef    
     switch (node.name) {
@@ -105,25 +101,14 @@ export function createDef(node: Myna.AstNode): Def {
 
 //==========================================================================================
 
-function validateNode(node: Myna.AstNode, ...names: string[]): Myna.AstNode {
-    if (names.indexOf(node.name) < 0)
-        throw new Error('Did not expect ' + node.name);
-    return node;
-}
-
-function addDef<T extends Def>(node: Myna.AstNode, def: T): T {
-    node['def'] = def;
-    return def;
-}
-
-function createTypeParam(node: Myna.AstNode): TypeParamDef {
+export function createTypeParam(node: Myna.AstNode): TypeParamDef {
     validateNode(node, 'genericParam');
     let name = node.children[0].allText;
     let constraint = node.children.length > 1 ? node.children[1] : null;
-    return addDef(node, new TypeParamDef(node, name, constraint));
+    return new TypeParamDef(node, name, constraint);
 }
 
-function createFuncDef(node: Myna.AstNode): FuncDef {
+export function createFuncDef(node: Myna.AstNode): FuncDef {
     validateNode(node, 'funcDef', 'intrinsicDef');
     let sig = validateNode(node.children[0], 'funcSig');
     let name = sig.children[0].allText;
@@ -131,27 +116,27 @@ function createFuncDef(node: Myna.AstNode): FuncDef {
     let genericParams = genericParamsNodes.children.map(createTypeParam);
     let params = validateNode(sig.children[2], 'funcParams').children.map(createFuncParamDef);
     let retType = (sig.children.length > 2) ? sig.children[3] : null;
-    return addDef(node, new FuncDef(node, name, retType, params, genericParams));
+    return new FuncDef(node, name, retType, params, genericParams);
 }
 
-function createFuncParamDef(node: Myna.AstNode): FuncParamDef {
+export function createFuncParamDef(node: Myna.AstNode): FuncParamDef {
     validateNode(node, 'funcParam');
     let name = node.children[0].allText;
     let type =  (node.children.length > 1) ? node.children[1] : null;
-    return addDef(node, new FuncParamDef(node, name, type));
+    return new FuncParamDef(node, name, type);
 }
 
-function createVarDef(node: Myna.AstNode) {
+export function createVarDef(node: Myna.AstNode) {
     validateNode(node, 'varDecl');
     let name = validateNode(node.children[0], 'varNameDecl');
     let init = validateNode(node.children[1], 'varInitialization');
-    return addDef(node, new VarDef(node, name.allText, init.children[0]));
+    return new VarDef(node, name.allText, createExpr(init.children[0]));
 }
 
-function createTypeDef(node: Myna.AstNode) {
+export function createTypeDef(node: Myna.AstNode) {
     validateNode(node, 'typeDef');
     let name = node.children[0].allText;
-    return addDef(node, new TypeDef(node, name));
+    return new TypeDef(node, name);
 }
 
 // STEP1: create the defs

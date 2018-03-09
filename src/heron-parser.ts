@@ -50,11 +50,12 @@ const g = new function() {
     }).setName("heron", "recStatement");
 
     // Literals
-    this.fraction       = m.seq(".", m.not("."),  m.digit.zeroOrMore);    
-    this.plusOrMinus    = m.char("+-");
+    this.fraction       = m.seq(".", m.not("."), m.digit.zeroOrMore);    
     this.exponent       = m.seq(m.char("eE"), this.plusOrMinus.opt, m.digits); 
     this.bool           = m.keywords("true", "false").ast;
-    this.number         = m.seq(this.plusOrMinus.opt, m.integer, this.fraction.opt, this.exponent.opt).ast;   
+    this.integer        = m.integer.ast;
+    this.float          = m.seq(m.integer, this.fraction.opt, this.exponent.opt, m.opt("f")).ast;   
+    this.number         = m.choice(this.integer, this.float).ast;
 
     // Strings rules
     this.escapeChar = m.char('\'"\\bfnrtv');    
@@ -141,9 +142,9 @@ const g = new function() {
     // Lambda expression 
     this.lambdaArg = this.identifier.then(this.funcParamType.opt).ast;
     this.lambdaBody = this.recCompoundStatement.or(this.expr).ast;
-    this.lambdaArgsNoParen = this.identifier.ast;
-    this.lambdaArgsWithParen = m.seq("(", this.ws, commaDelimited(this.lambdaArg), ")", this.ws).ast;
-    this.lambdaArgs = m.choice(this.lambdaArgsNoParen, this.lambdaArgsWithParen).ast;
+    this.lambdaArgsNoParen = this.identifier;
+    this.lambdaArgsWithParen = m.seq("(", this.ws, commaDelimited(this.lambdaArg), ")", this.ws);
+    this.lambdaArgs = m.choice(this.lambdaArgsNoParen, this.lambdaArgsWithParen);
     this.lambdaExpr = m.seq(this.lambdaArgs, guardedWsDelimSeq("=>", this.lambdaBody)).ast;
      
     // Leaf expressions (unary expressions)

@@ -16,8 +16,8 @@ var Types;
     Types.TypeType = type_system_1.typeConstant('Type');
     // we create special names for objects. 
     var objectId = 0;
-    function createObjectType(fields) {
-        return type_system_1.typeArray([type_system_1.typeConstant('object' + objectId)].concat(fields.map(type_system_1.typeConstant)));
+    function createObjectType() {
+        return type_system_1.typeConstant('object' + objectId++);
     }
     Types.createObjectType = createObjectType;
 })(Types = exports.Types || (exports.Types = {}));

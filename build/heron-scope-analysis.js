@@ -225,10 +225,6 @@ function nodeId(ast) {
 }
 exports.nodeId = nodeId;
 exports.scopeType = ['funcDef', 'instrinsicDef', 'module', 'varExpr', 'compoundStatement'];
-exports.nodeTypes = ['lambdaArg', 'funcDef', 'funcParamName', 'varDecl', 'typeDecl', 'intrinsicDef', 'genericParam', 'typeName', 'leafExpr', 'typeDef'];
-function isValidNodeType(s) {
-    return exports.nodeTypes.indexOf(s) >= 0;
-}
 function isValidScopeType(s) {
     return exports.scopeType.indexOf(s) >= 0;
 }
@@ -293,4 +289,4 @@ function getFunArgs(ast) {
         throw new Error("Postfix expressions should be pre-processed to only have two children");
     var r = ast.children[1].children;
 }
-//# sourceMappingURL=heron-name-analysis.js.map
+//# sourceMappingURL=heron-scope-analysis.js.map

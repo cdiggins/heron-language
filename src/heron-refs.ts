@@ -1,5 +1,6 @@
 import { Def } from "./heron-defs";
 import { Myna } from "myna-parser/myna";
+import { Scope } from "./heron-scope-analysis";
 
 // The kind of the reference
 export enum RefType { 
@@ -13,8 +14,9 @@ export class Ref
     defs: Def[] = []; 
     
     constructor(
-        public name: string,
         public node: Myna.AstNode,
+        public name: string,
+        public scope: Scope,
         public usageType: RefType)
     { 
         node['ref'] = this;
@@ -38,3 +40,7 @@ export class Ref
     }
 }
 
+// Creates references. This will require a scope analysis.
+export function createRef(node: Myna.AstNode) {
+    // TODO: 
+}
