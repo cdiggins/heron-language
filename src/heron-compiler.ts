@@ -1,5 +1,5 @@
 import { Myna } from "myna-parser/myna";
-import { Scope, Module, VarDef, VarUsage, Package } from "./heron-name-analysis";
+import { Scope, Module, VarDef, Ref, Package, FunctionCall, FuncDef, FunctionParam } from "./heron-name-analysis";
 import { Type } from "type-inference/type-system";
 import { preprocessAst } from "./heron-ast-rewrite";
 import { computeTypes } from "./heron-type-analysis";
@@ -22,17 +22,23 @@ let ext = '.heron';
 // This is not a JavaScript class: you don't have a typeof.
 export class HeronAstNode extends Myna.AstNode 
 {
-    // After any transform, the previous version of the node is stored here
-    original?: Myna.AstNode;
+    // Used to uniquely identify each node 
+    id: number;
+
+    // The children are also of type HeronAstNode. 
+    children: HeronAstNode[];
 
     // A pointer to the parent node 
     parent?: Myna.AstNode;
+
+    // After any transform, the previous version of the node is stored here
+    original?: Myna.AstNode;
 
     // If this node is a new name definition, the definition is stored here
     varDef?: VarDef;
 
     // If this node is a symbol, information about what variable it is stored here
-    varUsage?: VarUsage;
+    varUsage?: Ref;
 
     // If this node is the beginning of a scope, information about the scope is stored here. 
     scope?: Scope;
@@ -40,14 +46,17 @@ export class HeronAstNode extends Myna.AstNode
     // If this node has a type, it is stored here 
     type?: Type;
 
-    // The nodes named "module" have an instance of a Module class 
+    // If this node is a module, information about the module is stored here. 
     module?: Module;
 
-    // Used to uniquely identify each node 
-    id: number;
+    // If this node is an expression, representing a function call. This makes it easier to access the arguments
+    funCall?: FunctionCall;
 
-    // The children are also of type HeronAstNode
-    children: HeronAstNode[];
+    // If this node is a parameter for a function or intrinsic definition this provides access to its information 
+    funcParam?: FunctionParam;
+
+    // If this node is a function definition, this provides access to key information. 
+    funcDef?: FuncDef;
 }
 
 // Module resolution
@@ -63,7 +72,12 @@ export function createPackage(moduleNames: string[]): Package {
     loadDefaultModules(pkg);
     for (let m of moduleNames) 
         parseModule(m, false, pkg);
-    pkg.resolveLinks();        
+    pkg.resolveLinks();    
+    for (let sf of pkg.files) {
+        let outputPath = sf.filePath.substr(0, sf.filePath.lastIndexOf('.')) + '.output.heron';
+        let text = heronToText(sf.node as HeronAstNode);
+        fs.writeFileSync(outputPath, text);
+    }
     return pkg;
 }
 

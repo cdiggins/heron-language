@@ -115,14 +115,8 @@ var HeronToJs = /** @class */ (function () {
     };
     HeronToJs.prototype.visit_compoundStatement = function (ast, state) {
         // recStatement[0,Infinity]
-        state.indent++;
         state.pushLine('{');
         this.visitChildren(ast, state);
-        state.indent--;
-        if (state.lines[state.lines.length - 1].trim() === '') {
-            state.lines.pop();
-            state.pushLine();
-        }
         state.pushLine('}');
     };
     HeronToJs.prototype.visit_continueStatement = function (ast, state) {

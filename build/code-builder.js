@@ -3,6 +3,9 @@
 // Helper class for constructing pretty printerd code 
 // this is passed as a "state" object to visitors
 Object.defineProperty(exports, "__esModule", { value: true });
+function count(s, sub) {
+    return s.split(sub).length - 1;
+}
 var CodeBuilder = /** @class */ (function () {
     function CodeBuilder() {
         this.lines = [];
@@ -24,6 +27,7 @@ var CodeBuilder = /** @class */ (function () {
         this.lines.push(this.indentString);
     };
     CodeBuilder.prototype.push = function (s) {
+        this.indent += count(s, '{') - count(s, '}');
         this.lines.push(s);
     };
     CodeBuilder.prototype.toString = function () {

@@ -3,9 +3,15 @@ language heron:std:0.1;
 // An intrinsic is a function that has an implementation provided by the compiler.
 
 module heron:intrinsics:0.1
-{
-    // TODO: eventually allow things like this
-    // type Num = Float | Float2 | Float3 | Float4;
+{    
+    type Float;
+    type Float2; // = { x:Float, y:Float }
+    type Float3; // = { x:Float, y:Float, z:Float }
+    type Float4; // = { x:Float, y:Float, z:Float, w:Float }
+    type Bool; 
+    type Num; // 
+    type String;
+    type Array; // = { count:Int, at:Func<Int, T> }
 
     var pi = 3.14159265358979323846;
     var e = 2.71828182845904523536;

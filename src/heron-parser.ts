@@ -198,9 +198,7 @@ const g = new function() {
     this.continueStatement = guardedWsDelimSeq(m.keyword("continue"), this.eos).ast;
     this.returnStatement = guardedWsDelimSeq(m.keyword("return"), this.expr.opt, this.eos).ast;
     this.emptyStatement = this.eos.ast;
-
-    //this.typeDef = guardedWsDelimSeq('=', this.typeExpr);
-    //this.typeDecl = guardedWsDelimSeq(m.keyword("type"), this.identifier, this.typeDef.opt).ast;
+    this.typeDef = guardedWsDelimSeq(m.keyword("type"), this.identifier, this.eos).ast;
 
     this.statement = m.choice(
         this.emptyStatement,
@@ -214,7 +212,8 @@ const g = new function() {
         this.whileLoop, 
         this.varDeclStatement,
         this.funcDef,
-        this.intrinsicDef,    
+        this.intrinsicDef,
+        this.typeDef,    
         this.exprStatement,
     ).then(this.ws).ast;
 
@@ -228,7 +227,7 @@ const g = new function() {
     // Tope level declarations
     this.langDecl = guardedWsDelimSeq(m.keyword("language"), this.langVer, this.eos).ast;
     this.moduleBody = this.statement.zeroOrMore.ast;
-    this.module = guardedWsDelimSeq(m.keyword('module'), this.moduleName, '{', this.moduleBody, '}');
+    this.module = guardedWsDelimSeq(m.keyword('module'), this.moduleName, '{', this.moduleBody, '}').ast;
     this.file = this.langDecl.opt.then(this.module).ast;
 };
 

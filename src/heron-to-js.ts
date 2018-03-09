@@ -108,14 +108,8 @@ class HeronToJs
     }
     visit_compoundStatement(ast, state) {
         // recStatement[0,Infinity]
-        state.indent++;
         state.pushLine('{');
         this.visitChildren(ast, state);
-        state.indent--;
-        if (state.lines[state.lines.length-1].trim() === '') {
-            state.lines.pop();
-            state.pushLine();
-        }
         state.pushLine('}');
     }
     visit_continueStatement(ast, state) {

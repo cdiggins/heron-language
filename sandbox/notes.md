@@ -386,4 +386,27 @@ Todo:
 * identify the symbols with too many names
 * identify the symbols with not enough names
 * why aren't the details showing when going to text
-* control what is drawn when converting to text  
+* control what is drawn when converting to text 
+* identify the symbols that are ambiguous 
+* provide more information in the scopes (maybe)
+
+//==
+
+I need to figure out if something is part of a function call, which function it is probably calling, if there is 
+ambiguity. This can be done based on how it is used. 
+
+* I could possible use 'HeronAstNode` class instances earlier.
+* The VarUsage is not correctly typed? 
+    * of course not: var usage type is determined by the definition.
+* Some expressions are typed (literals)
+* Definitions are typed. 
+* Every expression has dependencies. This creates a graph. There is a graph of "possible dependencies" also, because
+    we don't know for sure what function is what. That said, if we can narrow things down early, maybe it will 
+    help, BUT, it won't be enough. I say that we 
+* When walking the graph of possibilities, there is going to be one which is "self" (e.g. multiple constructors). 
+    That one will have to be eliminated 
+* What data types should I use for the expression dependency graph? 
+
+* Expressions are either: named functions, anonymous functions, function calls, variables, or literals.
+
+* So let's do that! 

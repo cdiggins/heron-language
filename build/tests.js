@@ -103,6 +103,14 @@ function functionSigToString(node) {
         return "intrinsic " + node.children[0].allText;
     throw new Error("Node has no signature" + node.name);
 }
+function outputPackageStats(pkg) {
+    console.log("Files: ");
+    console.log(pkg.files);
+    console.log("# Modules  : " + pkg.modules.length);
+    console.log("# Scopes   : " + pkg.scopes.length);
+    console.log("# Defs     : " + pkg.defs.length);
+    console.log("# Usages   : " + pkg.usages.length);
+}
 function tests() {
     // TODO: eventually we need to pre-scan the files    
     var inputs = ['geometry-vector3'];

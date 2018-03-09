@@ -16,11 +16,8 @@ exports.heronToText = heronToText;
 function isFunc(node) {
     return node && (node.name === "funcDef" || node.name === "intrinsicDef");
 }
-function getType(node) {
-    return (node || {})['type'] || '?';
-}
 function varUsageDetails(varUsage) {
-    return '// var usage ' + varUsage + ':' + getType(varUsage.node) + ' defined at ' + '[' + varUsage.defs.join(', ') + ']';
+    return '// var usage ' + varUsage + ' defined at ' + '[' + varUsage.defs.join(', ') + ']';
 }
 function outputDetails(node, state) {
     if (node.scope) {
@@ -34,8 +31,14 @@ function outputDetails(node, state) {
     if (node.varDef) {
         state.pushLine('// var definition ' + node.varDef.toString());
     }
+    if (node.funCall) {
+        state.pushLine('// function call with ' + node.funCall.args.length + ' arguments');
+    }
+    if (node.funcDef) {
+        state.pushLine('// function definition ' + node.funcDef.name + ' with ' + node.funcDef.params.length + ' parameters');
+    }
     if (heron_ast_rewrite_1.isExpr(node)) {
-        //    state.push(' /* ' + node.name + ':' + (node.type || '?') + ' */ ');
+        // state.push(' /* ' + node.name + ':' + (node.type || '?') + ' */ ');
     }
 }
 // A visitor class for generating Heron code. 

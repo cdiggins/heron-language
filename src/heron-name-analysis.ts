@@ -5,109 +5,21 @@
 
 import { Myna } from "myna-parser/myna";
 import { HeronAstNode } from "./heron-compiler";
+import { isExpr } from "./heron-ast-rewrite";
+import { Type } from "type-inference/type-system";
+import { ModuleDef, Def } from "./heron-defs";
+import { Ref, RefType } from "./heron-refs";
 
-enum VarUsageType { 
-    fun, var, type, arg, lvalue, rvalue
-}
-
-// Represents a module of Heron code  
-export class Module 
-{
-    imports: Module[] = [];
-
-    constructor(
-        public readonly name: string,
-        public readonly node: Myna.AstNode)
-    { 
-    }
-
-    get scope(): Scope {
-        return this.node['scope'];
-    }    
-}
-
-// A usage of a name. 
-export class VarUsage {
-    // This value is set manually
-    defs: VarDef[] = []; 
-    
-    constructor(
-        public name: string,
-        public scope: Scope,
-        public node: Myna.AstNode,
-        public usageType: VarUsageType)
-    { 
-        if (!isValidNodeType(node.name))
-            throw new Error("Not a valid node type: " + node.name);
-        node['varUsage'] = this;
-    }
-
-    get usageTypeString() {
-        switch (this.usageType)
-        {
-            case VarUsageType.arg: return 'arg';
-            case VarUsageType.fun: return 'fun';
-            case VarUsageType.lvalue: return 'lval';
-            case VarUsageType.rvalue: return 'rval';
-            case VarUsageType.type: return 'type';
-            case VarUsageType.var: return 'var';
-        }
-        return '';
-    }
-
-    toString(): string {
-        return this.name + '_' + this.node['id'] + ':' + this.node.name + ':' + this.usageTypeString;
-    }
-}
-
-interface VarDefByType { [nodeType:string]: VarDef };
-
-// The definition of a variable
-export class VarDef {
-    constructor(
-        public name: string,
-        public scope: Scope,
-        public node: Myna.AstNode)
-    { 
-        if (!isValidNodeType(this.node.name))
-            throw new Error("Invalid node type: " + this.node.name);
-        node['varDef'] = this;
-    }
-
-    usages: VarUsage[] = [];
-
-    get args(): Myna.AstNode[] {
-        return (this.node.name === 'funcDef')
-            ? this.node.children[1].children
-            : [];        
-    }
-
-    get argTypes(): string[] {
-        return this.args.map(p => p.children.length == 2 ? p.children[1].allText : "Any");
-    }
-
-    get scopedName(): string {
-        return this.name + '_' + this.scope.id;
-    }
-
-    get decoratedName(): string {
-        let r = this.scopedName;
-        if (this.args.length > 0) 
-            r += '$' + this.argTypes.join('$');
-        return r;
-    }
-
-    toString(): string {
-        return this.decoratedName;
-    }
+export function typeToString(node: Myna.AstNode) {
+    return node ? node.allText : 'Any';
 }
 
 // A scope contains unique name declarations. Scopes are arranaged in a tree. 
 export class Scope 
 {
     id: number = 0;
-    usages: VarUsage[] = [];
-    defs: VarDef[] = [];
+    refs: Ref[] = [];
+    defs: Def[] = [];
     children: Scope[] = [];
     parent: Scope;
     
@@ -117,7 +29,7 @@ export class Scope
     }
 
     // We can find multiple defs at the same level (e.g. functions)
-    findDefs(name: string): VarDef[] {
+    findDefs(name: string): Def[] {
         let r = [];
         for (var d of this.defs)
             if (d.name === name)
@@ -129,15 +41,15 @@ export class Scope
             : [];
     }
 
-    allDefs(r: VarDef[] = []): VarDef[] {
+    allDefs(r: Def[] = []): Def[] {
         r.push(...this.defs);
         this.children.forEach(c => c.allDefs(r));
         return r;
     }
 
-    allUsages(r: VarUsage[] = []): VarUsage[] {
-        r.push(...this.usages);
-        this.children.forEach(c => c.allUsages(r));
+    allRefs(r: Ref[] = []): Ref[] {
+        r.push(...this.refs);
+        this.children.forEach(c => c.allRefs(r));
         return r;
     }
 
@@ -168,11 +80,11 @@ export class SourceFile
 // This is built incrementally by a visitor and stores all scopes, usages, and defs that are found. 
 export class Package 
 {
-    modules: Module[] = [];
+    modules: ModuleDef[] = [];
     scope: Scope = new Scope(null);
     scopes: Scope[] = [this.scope];
-    usages: VarUsage[] = [];
-    defs: VarDef[] = [];
+    usages: Ref[] = [];
+    defs: Def[] = [];
     files: SourceFile[] = [];
 
     // When done calling analyzeFile on all files, call "resolveLinks"
@@ -189,7 +101,7 @@ export class Package
             if (!isBuiltIn) 
                 this.pushScope(ast);
             const modName = ast.children[0].allText;
-            const module = new Module(modName, ast);
+            const module = new ModuleDef(ast, modName);
             ast['module'] = module;
             this.modules.push(module);
             visitor.visitNode(ast, this);
@@ -231,19 +143,18 @@ export class Package
         this.scope = this.scope.parent;
     }
 
-    findDefs(name: string): VarDef[] {
+    findDefs(name: string): Def[] {
         return this.scope.findDefs(name);
     }
 
-    addVarDef(name: string, node: Myna.AstNode) {
-        let vd = new VarDef(name, this.scope, node);
-        this.scope.defs.push(vd);
-        this.defs.push(vd);
+    addDef(def: Def) {
+        this.scope.defs.push(def);
+        this.defs.push(def);
     }
 
-    addVarUsage(name: string, node: Myna.AstNode, usageType: VarUsageType) {
-        let usage = new VarUsage(name, this.scope, node, usageType);
-        this.scope.usages.push(usage);
+    addVarUsage(name: string, node: Myna.AstNode, usageType: RefType) {
+        let usage = new Ref(name, this.scope, node, usageType);
+        this.scope.refs.push(usage);
         this.usages.push(usage);
     }
 }
@@ -270,34 +181,20 @@ class AstVisitor
         this.visitChildren(ast, state);
         state.popScope();
     }
-    visit_genericParam(ast: Myna.AstNode, state: Package) {
-        let paramName = ast.children[0].allText;
-        state.addVarDef(paramName, ast);        
-    }
     visit_funcDef(ast: Myna.AstNode, state: Package) {
-        let funcSig = ast.children[0];
-        let funcName = funcSig.children[0];
-        state.addVarDef(funcName.allText, ast);
         state.pushScope(ast);
         this.visitChildren(ast, state);
         state.popScope();
     }
-    visit_intriniscDef(ast: Myna.AstNode, state: Package) {
-        let funcSig = ast.children[0];
-        let funcName = funcSig.children[0];
-        state.addVarDef(funcName.allText, ast);
+    visit_intrinsicDef(ast: Myna.AstNode, state: Package) {
         state.pushScope(ast);
         this.visitChildren(ast, state);
         state.popScope();
-    }
-    visit_funcParamName(ast: Myna.AstNode, state: Package) {
-        state.addVarDef(ast.allText, ast);
     }
     visit_typeName(ast: Myna.AstNode, state: Package) {
-        state.addVarUsage(ast.allText, ast, VarUsageType.type);
+        state.addVarUsage(ast.allText, ast, RefType.type);
     }
     visit_lambdaArg(ast: Myna.AstNode, state: Package) {
-        state.addVarDef(ast.allText, ast);
         this.visitChildren(ast, state);
     }
     visit_lambdaBody(ast: Myna.AstNode, state: Package) {
@@ -324,10 +221,6 @@ class AstVisitor
         this.visitChildren(ast, state);
         state.popScope();
     }
-    visit_varDecl(ast: Myna.AstNode, state: Package) {
-        state.addVarDef(ast.children[0].allText, ast);
-        this.visitChildren(ast, state);
-    }
     visit_varExpr(ast: Myna.AstNode, state: Package) {
         state.pushScope(ast);
         this.visitChildren(ast, state);
@@ -340,7 +233,7 @@ export function nodeId(ast: Myna.AstNode): string {
 }
 
 export const scopeType = ['funcDef', 'instrinsicDef', 'module', 'varExpr', 'compoundStatement'];
-export const nodeTypes = ['lambdaArg', 'funcDef', 'funcParamName', 'varDecl', 'typeDecl', 'intrinsicDef', 'genericParam', 'typeName', 'leafExpr'];
+export const nodeTypes = ['lambdaArg', 'funcDef', 'funcParamName', 'varDecl', 'typeDecl', 'intrinsicDef', 'genericParam', 'typeName', 'leafExpr', 'typeDef'];
 
 function isValidNodeType(s: string): boolean {
     return nodeTypes.indexOf(s) >= 0;
@@ -350,34 +243,23 @@ function isValidScopeType(s: string): boolean {
     return scopeType.indexOf(s) >= 0;
 }
 
-function varDefByType(vds: VarDef[]) : VarDefByType { 
-    let r = {};
-    for (var vd of vds) {
-        const type = vd.node.name;
-        if (!isValidNodeType(type))
-            throw new Error("Not a valid node type " + type);
-        (r[type] || (r[type] = [])).push(vd);
-    }
-    return r;
-}
-
 // Returns true if the identifier is used as a function call. 
 // A variable could still be a function, only a proper type analysis will tell.
-function getUsageType(ast: Myna.AstNode): VarUsageType {
+function getUsageType(ast: Myna.AstNode): RefType {
     if (!ast || ast.name !== 'identifier') throw new Error("Expected an identifier");
     let expr = identExpr(ast);
     if (isFun(expr)) 
-        return VarUsageType.fun;
+        return RefType.fun;
     if (isFunArg(expr))
-        return VarUsageType.arg;
+        return RefType.arg;
     let p = expr['parent']
     if (p.name == 'assignmentExpr') {
         if (p.children.length !== 2)
             throw new Error("Assignment expressions should have exactly two children");
         if (p.children[0] === p)
-            return VarUsageType.lvalue;
+            return RefType.lvalue;
         if (p.children[1] === p)
-            return VarUsageType.rvalue;
+            return RefType.rvalue;
         throw new Error("Node is not a child of its parent");
     }
     throw new Error("Identifier used in an unrecognized expression context: " + p.name + " " + p.allText);

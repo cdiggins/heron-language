@@ -15,6 +15,7 @@ var heron_name_analysis_1 = require("./heron-name-analysis");
 var heron_ast_rewrite_1 = require("./heron-ast-rewrite");
 var heron_type_analysis_1 = require("./heron-type-analysis");
 var heron_parser_1 = require("./heron-parser");
+var heron_to_text_1 = require("./heron-to-text");
 var g = heron_parser_1.heronGrammar;
 var fs = require('fs');
 var path = require('path');
@@ -47,6 +48,12 @@ function createPackage(moduleNames) {
         parseModule(m, false, pkg);
     }
     pkg.resolveLinks();
+    for (var _a = 0, _b = pkg.files; _a < _b.length; _a++) {
+        var sf = _b[_a];
+        var outputPath = sf.filePath.substr(0, sf.filePath.lastIndexOf('.')) + '.output.heron';
+        var text = heron_to_text_1.heronToText(sf.node);
+        fs.writeFileSync(outputPath, text);
+    }
     return pkg;
 }
 exports.createPackage = createPackage;

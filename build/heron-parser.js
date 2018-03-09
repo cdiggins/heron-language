@@ -181,9 +181,8 @@ var g = new function () {
     this.continueStatement = guardedWsDelimSeq(myna_parser_1.Myna.keyword("continue"), this.eos).ast;
     this.returnStatement = guardedWsDelimSeq(myna_parser_1.Myna.keyword("return"), this.expr.opt, this.eos).ast;
     this.emptyStatement = this.eos.ast;
-    //this.typeDef = guardedWsDelimSeq('=', this.typeExpr);
-    //this.typeDecl = guardedWsDelimSeq(m.keyword("type"), this.identifier, this.typeDef.opt).ast;
-    this.statement = myna_parser_1.Myna.choice(this.emptyStatement, this.compoundStatement, this.ifStatement, this.returnStatement, this.continueStatement, this.breakStatement, this.forLoop, this.doLoop, this.whileLoop, this.varDeclStatement, this.funcDef, this.intrinsicDef, this.exprStatement).then(this.ws).ast;
+    this.typeDef = guardedWsDelimSeq(myna_parser_1.Myna.keyword("type"), this.identifier, this.eos).ast;
+    this.statement = myna_parser_1.Myna.choice(this.emptyStatement, this.compoundStatement, this.ifStatement, this.returnStatement, this.continueStatement, this.breakStatement, this.forLoop, this.doLoop, this.whileLoop, this.varDeclStatement, this.funcDef, this.intrinsicDef, this.typeDef, this.exprStatement).then(this.ws).ast;
     // Urns are used for the language definition and the module name 
     this.urnPart = myna_parser_1.Myna.alphaNumeric.or(myna_parser_1.Myna.char('.-')).zeroOrMore.ast;
     this.urnDiv = myna_parser_1.Myna.choice(':');
@@ -193,7 +192,7 @@ var g = new function () {
     // Tope level declarations
     this.langDecl = guardedWsDelimSeq(myna_parser_1.Myna.keyword("language"), this.langVer, this.eos).ast;
     this.moduleBody = this.statement.zeroOrMore.ast;
-    this.module = guardedWsDelimSeq(myna_parser_1.Myna.keyword('module'), this.moduleName, '{', this.moduleBody, '}');
+    this.module = guardedWsDelimSeq(myna_parser_1.Myna.keyword('module'), this.moduleName, '{', this.moduleBody, '}').ast;
     this.file = this.langDecl.opt.then(this.module).ast;
 };
 // Register the grammar, providing a name and the default parse rule

@@ -4,123 +4,18 @@
 // - adding tags to indicate whether the expression is a func arg etc. 
 // - or maybe  
 Object.defineProperty(exports, "__esModule", { value: true });
-var VarUsageType;
-(function (VarUsageType) {
-    VarUsageType[VarUsageType["fun"] = 0] = "fun";
-    VarUsageType[VarUsageType["var"] = 1] = "var";
-    VarUsageType[VarUsageType["type"] = 2] = "type";
-    VarUsageType[VarUsageType["arg"] = 3] = "arg";
-    VarUsageType[VarUsageType["lvalue"] = 4] = "lvalue";
-    VarUsageType[VarUsageType["rvalue"] = 5] = "rvalue";
-})(VarUsageType || (VarUsageType = {}));
-// Represents a module of Heron code  
-var Module = /** @class */ (function () {
-    function Module(name, node) {
-        this.name = name;
-        this.node = node;
-        this.imports = [];
-    }
-    Object.defineProperty(Module.prototype, "scope", {
-        get: function () {
-            return this.node['scope'];
-        },
-        enumerable: true,
-        configurable: true
-    });
-    return Module;
-}());
-exports.Module = Module;
-// A usage of a name. 
-var VarUsage = /** @class */ (function () {
-    function VarUsage(name, scope, node, usageType) {
-        this.name = name;
-        this.scope = scope;
-        this.node = node;
-        this.usageType = usageType;
-        // This value is set manually
-        this.defs = [];
-        if (!isValidNodeType(node.name))
-            throw new Error("Not a valid node type: " + node.name);
-        node['varUsage'] = this;
-    }
-    Object.defineProperty(VarUsage.prototype, "usageTypeString", {
-        get: function () {
-            switch (this.usageType) {
-                case VarUsageType.arg: return 'arg';
-                case VarUsageType.fun: return 'fun';
-                case VarUsageType.lvalue: return 'lval';
-                case VarUsageType.rvalue: return 'rval';
-                case VarUsageType.type: return 'type';
-                case VarUsageType.var: return 'var';
-            }
-            return '';
-        },
-        enumerable: true,
-        configurable: true
-    });
-    VarUsage.prototype.toString = function () {
-        return this.name + '_' + this.node['id'] + ':' + this.node.name + ':' + this.usageTypeString;
-    };
-    return VarUsage;
-}());
-exports.VarUsage = VarUsage;
-;
-// The definition of a variable
-var VarDef = /** @class */ (function () {
-    function VarDef(name, scope, node) {
-        this.name = name;
-        this.scope = scope;
-        this.node = node;
-        this.usages = [];
-        if (!isValidNodeType(this.node.name))
-            throw new Error("Invalid node type: " + this.node.name);
-        node['varDef'] = this;
-    }
-    Object.defineProperty(VarDef.prototype, "args", {
-        get: function () {
-            return (this.node.name === 'funcDef')
-                ? this.node.children[1].children
-                : [];
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(VarDef.prototype, "argTypes", {
-        get: function () {
-            return this.args.map(function (p) { return p.children.length == 2 ? p.children[1].allText : "Any"; });
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(VarDef.prototype, "scopedName", {
-        get: function () {
-            return this.name + '_' + this.scope.id;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(VarDef.prototype, "decoratedName", {
-        get: function () {
-            var r = this.scopedName;
-            if (this.args.length > 0)
-                r += '$' + this.argTypes.join('$');
-            return r;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    VarDef.prototype.toString = function () {
-        return this.decoratedName;
-    };
-    return VarDef;
-}());
-exports.VarDef = VarDef;
+var heron_defs_1 = require("./heron-defs");
+var heron_refs_1 = require("./heron-refs");
+function typeToString(node) {
+    return node ? node.allText : 'Any';
+}
+exports.typeToString = typeToString;
 // A scope contains unique name declarations. Scopes are arranaged in a tree. 
 var Scope = /** @class */ (function () {
     function Scope(node) {
         this.node = node;
         this.id = 0;
-        this.usages = [];
+        this.refs = [];
         this.defs = [];
         this.children = [];
         if (node)
@@ -146,10 +41,10 @@ var Scope = /** @class */ (function () {
         this.children.forEach(function (c) { return c.allDefs(r); });
         return r;
     };
-    Scope.prototype.allUsages = function (r) {
+    Scope.prototype.allRefs = function (r) {
         if (r === void 0) { r = []; }
-        r.push.apply(r, this.usages);
-        this.children.forEach(function (c) { return c.allUsages(r); });
+        r.push.apply(r, this.refs);
+        this.children.forEach(function (c) { return c.allRefs(r); });
         return r;
     };
     Scope.prototype.allScopes = function (r) {
@@ -200,7 +95,7 @@ var Package = /** @class */ (function () {
             if (!isBuiltIn)
                 this.pushScope(ast);
             var modName = ast.children[0].allText;
-            var module = new Module(modName, ast);
+            var module = new heron_defs_1.ModuleDef(ast, modName);
             ast['module'] = module;
             this.modules.push(module);
             visitor.visitNode(ast, this);
@@ -242,14 +137,13 @@ var Package = /** @class */ (function () {
     Package.prototype.findDefs = function (name) {
         return this.scope.findDefs(name);
     };
-    Package.prototype.addVarDef = function (name, node) {
-        var vd = new VarDef(name, this.scope, node);
-        this.scope.defs.push(vd);
-        this.defs.push(vd);
+    Package.prototype.addDef = function (def) {
+        this.scope.defs.push(def);
+        this.defs.push(def);
     };
     Package.prototype.addVarUsage = function (name, node, usageType) {
-        var usage = new VarUsage(name, this.scope, node, usageType);
-        this.scope.usages.push(usage);
+        var usage = new heron_refs_1.Ref(name, this.scope, node, usageType);
+        this.scope.refs.push(usage);
         this.usages.push(usage);
     };
     return Package;
@@ -279,34 +173,20 @@ var AstVisitor = /** @class */ (function () {
         this.visitChildren(ast, state);
         state.popScope();
     };
-    AstVisitor.prototype.visit_genericParam = function (ast, state) {
-        var paramName = ast.children[0].allText;
-        state.addVarDef(paramName, ast);
-    };
     AstVisitor.prototype.visit_funcDef = function (ast, state) {
-        var funcSig = ast.children[0];
-        var funcName = funcSig.children[0];
-        state.addVarDef(funcName.allText, ast);
         state.pushScope(ast);
         this.visitChildren(ast, state);
         state.popScope();
     };
-    AstVisitor.prototype.visit_intriniscDef = function (ast, state) {
-        var funcSig = ast.children[0];
-        var funcName = funcSig.children[0];
-        state.addVarDef(funcName.allText, ast);
+    AstVisitor.prototype.visit_intrinsicDef = function (ast, state) {
         state.pushScope(ast);
         this.visitChildren(ast, state);
         state.popScope();
-    };
-    AstVisitor.prototype.visit_funcParamName = function (ast, state) {
-        state.addVarDef(ast.allText, ast);
     };
     AstVisitor.prototype.visit_typeName = function (ast, state) {
-        state.addVarUsage(ast.allText, ast, VarUsageType.type);
+        state.addVarUsage(ast.allText, ast, heron_refs_1.RefType.type);
     };
     AstVisitor.prototype.visit_lambdaArg = function (ast, state) {
-        state.addVarDef(ast.allText, ast);
         this.visitChildren(ast, state);
     };
     AstVisitor.prototype.visit_lambdaBody = function (ast, state) {
@@ -333,10 +213,6 @@ var AstVisitor = /** @class */ (function () {
         this.visitChildren(ast, state);
         state.popScope();
     };
-    AstVisitor.prototype.visit_varDecl = function (ast, state) {
-        state.addVarDef(ast.children[0].allText, ast);
-        this.visitChildren(ast, state);
-    };
     AstVisitor.prototype.visit_varExpr = function (ast, state) {
         state.pushScope(ast);
         this.visitChildren(ast, state);
@@ -349,23 +225,12 @@ function nodeId(ast) {
 }
 exports.nodeId = nodeId;
 exports.scopeType = ['funcDef', 'instrinsicDef', 'module', 'varExpr', 'compoundStatement'];
-exports.nodeTypes = ['lambdaArg', 'funcDef', 'funcParamName', 'varDecl', 'typeDecl', 'intrinsicDef', 'genericParam', 'typeName', 'leafExpr'];
+exports.nodeTypes = ['lambdaArg', 'funcDef', 'funcParamName', 'varDecl', 'typeDecl', 'intrinsicDef', 'genericParam', 'typeName', 'leafExpr', 'typeDef'];
 function isValidNodeType(s) {
     return exports.nodeTypes.indexOf(s) >= 0;
 }
 function isValidScopeType(s) {
     return exports.scopeType.indexOf(s) >= 0;
-}
-function varDefByType(vds) {
-    var r = {};
-    for (var _i = 0, vds_1 = vds; _i < vds_1.length; _i++) {
-        var vd = vds_1[_i];
-        var type = vd.node.name;
-        if (!isValidNodeType(type))
-            throw new Error("Not a valid node type " + type);
-        (r[type] || (r[type] = [])).push(vd);
-    }
-    return r;
 }
 // Returns true if the identifier is used as a function call. 
 // A variable could still be a function, only a proper type analysis will tell.
@@ -374,17 +239,17 @@ function getUsageType(ast) {
         throw new Error("Expected an identifier");
     var expr = identExpr(ast);
     if (isFun(expr))
-        return VarUsageType.fun;
+        return heron_refs_1.RefType.fun;
     if (isFunArg(expr))
-        return VarUsageType.arg;
+        return heron_refs_1.RefType.arg;
     var p = expr['parent'];
     if (p.name == 'assignmentExpr') {
         if (p.children.length !== 2)
             throw new Error("Assignment expressions should have exactly two children");
         if (p.children[0] === p)
-            return VarUsageType.lvalue;
+            return heron_refs_1.RefType.lvalue;
         if (p.children[1] === p)
-            return VarUsageType.rvalue;
+            return heron_refs_1.RefType.rvalue;
         throw new Error("Node is not a child of its parent");
     }
     throw new Error("Identifier used in an unrecognized expression context: " + p.name + " " + p.allText);

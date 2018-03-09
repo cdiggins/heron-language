@@ -1,6 +1,6 @@
 import { CodeBuilder } from "./code-builder";
 import { HeronAstNode } from "./heron-compiler";
-import { Scope, VarDef, VarUsage } from "./heron-name-analysis";
+import { Scope } from "./heron-name-analysis";
 import { isExpr } from "./heron-ast-rewrite";
 
 // Given an AST, will generate a text representation of the code as Heron code
@@ -18,12 +18,8 @@ function isFunc(node: HeronAstNode) {
     return node && (node.name === "funcDef" || node.name === "intrinsicDef");
 }
 
-function getType(node) {
-    return (node || {})['type'] || '?';
-}
-
-function varUsageDetails(varUsage: VarUsage): string {
-    return '// var usage ' + varUsage + ':' + getType(varUsage.node) + ' defined at ' + '[' + varUsage.defs.join(', ') + ']';
+function varUsageDetails(varUsage: Ref): string {
+    return '// var usage ' + varUsage + ' defined at ' + '[' + varUsage.defs.join(', ') + ']';
 }
 
 function outputDetails(node: HeronAstNode, state: CodeBuilder) {
@@ -38,8 +34,14 @@ function outputDetails(node: HeronAstNode, state: CodeBuilder) {
     if (node.varDef) {
         state.pushLine('// var definition ' + node.varDef.toString());    
     }
+    if (node.funCall) {
+        state.pushLine('// function call with ' + node.funCall.args.length + ' arguments');
+    }
+    if (node.funcDef) {
+        state.pushLine('// function definition ' + node.funcDef.name + ' with ' + node.funcDef.params.length + ' parameters');
+    }
     if (isExpr(node)) {
-    //    state.push(' /* ' + node.name + ':' + (node.type || '?') + ' */ ');
+        // state.push(' /* ' + node.name + ':' + (node.type || '?') + ' */ ');
     }
 }
 

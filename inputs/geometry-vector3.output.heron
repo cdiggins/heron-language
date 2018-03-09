@@ -1,11 +1,25 @@
-// Generated on Wed Mar 07 2018 14:49:45 GMT-0500 (Eastern Standard Time)
+// Generated on Wed Mar 07 2018 22:17:34 GMT-0500 (Eastern Standard Time)
+// scope file_714
 language heron:std:0.1;
 heron:geometry.vector:0.1{
-var origin = vector(0, 0, 0);
-var ones = vector(1, 1, 1);
-var xaxis = vector(1, 0, 0);
-var yaxis = vector(0, 1, 0);
-var zaxis = vector(0, 0, 1);
+var // var definition origin
+origin = // var usage vector_14:leafExpr:fun:Void defined at [vector#3(Float,Float,Float), vector#1(Float), vector#1(Any), vector#1(Array)]
+vector(0, 0, 0);
+var // var definition ones
+ones = // var usage vector_31:leafExpr:fun:Void defined at [vector#3(Float,Float,Float), vector#1(Float), vector#1(Any), vector#1(Array)]
+vector(1, 1, 1);
+var // var definition xaxis
+xaxis = // var usage vector_48:leafExpr:fun:Void defined at [vector#3(Float,Float,Float), vector#1(Float), vector#1(Any), vector#1(Array)]
+vector(1, 0, 0);
+var // var definition yaxis
+yaxis = // var usage vector_65:leafExpr:fun:Void defined at [vector#3(Float,Float,Float), vector#1(Float), vector#1(Any), vector#1(Array)]
+vector(0, 1, 0);
+var // var definition zaxis
+zaxis = // var usage vector_82:leafExpr:fun:Void defined at [vector#3(Float,Float,Float), vector#1(Float), vector#1(Any), vector#1(Array)]
+vector(0, 0, 1);
+// scope funcDef_131
+// var definition vector#3(Float,Float,Float)
+// function definition vector with 3 parameters
 
 /**
 function vector(x: Float, y: Float, z: Float) 
@@ -13,8 +27,24 @@ function vector(x: Float, y: Float, z: Float)
 
     
 */
-function vector(x : Float, y : Float, z : Float)
- = float3(x, y, z);
+// scope funcDef_131
+// var definition vector#3(Float,Float,Float)
+// function definition vector with 3 parameters
+function vector(// var definition x
+x : // var usage Float_102:typeName:type:? defined at [Float]
+Float, // var definition y
+y : // var usage Float_108:typeName:type:? defined at [Float]
+Float, // var definition z
+z : // var usage Float_114:typeName:type:? defined at [Float]
+Float)
+ = // var usage float3_120:leafExpr:fun:Void defined at [float3#3(Float,Float,Float)]
+float3(// var usage x_122:leafExpr:arg:Void defined at [x]
+x, // var usage y_124:leafExpr:arg:Void defined at [y]
+y, // var usage z_126:leafExpr:arg:Void defined at [z]
+z);
+// scope funcDef_156
+// var definition vector#1(Float)
+// function definition vector with 1 parameters
 
 /**
 function vector(x: Float)
@@ -22,8 +52,20 @@ function vector(x: Float)
 
     
 */
-function vector(x : Float)
- = float(x, x, x);
+// scope funcDef_156
+// var definition vector#1(Float)
+// function definition vector with 1 parameters
+function vector(// var definition x
+x : // var usage Float_139:typeName:type:? defined at [Float]
+Float)
+ = // var usage float_145:leafExpr:fun:Void defined at []
+float(// var usage x_147:leafExpr:arg:Void defined at [x]
+x, // var usage x_149:leafExpr:arg:Void defined at [x]
+x, // var usage x_151:leafExpr:arg:Void defined at [x]
+x);
+// scope funcDef_190
+// var definition vector#1(Any)
+// function definition vector with 1 parameters
 
 /**
 function vector(v)
@@ -31,8 +73,22 @@ function vector(v)
 
     
 */
-function vector(v)
- = float(x(v), y(v), z(v));
+// scope funcDef_190
+// var definition vector#1(Any)
+// function definition vector with 1 parameters
+function vector(// var definition v
+v)
+ = // var usage float_167:leafExpr:fun:Void defined at []
+float(// var usage x_169:leafExpr:fun:Void defined at [x#1(Float2), x#1(Float3), x#1(Float4)]
+x(// var usage v_171:leafExpr:arg:Void defined at [v]
+v), // var usage y_175:leafExpr:fun:Void defined at [y#1(Float2), y#1(Float3), y#1(Float4)]
+y(// var usage v_177:leafExpr:arg:Void defined at [v]
+v), // var usage z_181:leafExpr:fun:Void defined at [z#1(Float3), z#1(Float4)]
+z(// var usage v_183:leafExpr:arg:Void defined at [v]
+v));
+// scope funcDef_233
+// var definition vector#1(Array)
+// function definition vector with 1 parameters
 
 /**
 function vector(xs: Array)
@@ -40,8 +96,23 @@ function vector(xs: Array)
 
     
 */
-function vector(xs : Array)
- = vector(op_at(xs, 0), op_at(xs, 1), op_at(xs, 2));
+// scope funcDef_233
+// var definition vector#1(Array)
+// function definition vector with 1 parameters
+function vector(// var definition xs
+xs : // var usage Array_198:typeName:type:? defined at [Array]
+Array)
+ = // var usage vector_204:leafExpr:fun:Void defined at [vector#3(Float,Float,Float), vector#1(Float), vector#1(Any), vector#1(Array)]
+vector(// var usage op_at_206:leafExpr:fun:Void defined at [op_at#2(Array,Num)]
+op_at(// var usage xs_208:leafExpr:arg:Void defined at [xs]
+xs, 0), // var usage op_at_214:leafExpr:fun:Void defined at [op_at#2(Array,Num)]
+op_at(// var usage xs_216:leafExpr:arg:Void defined at [xs]
+xs, 1), // var usage op_at_222:leafExpr:fun:Void defined at [op_at#2(Array,Num)]
+op_at(// var usage xs_224:leafExpr:arg:Void defined at [xs]
+xs, 2));
+// scope funcDef_265
+// var definition array#1(Any)
+// function definition array with 1 parameters
 
 /**
 function array(v) 
@@ -49,8 +120,21 @@ function array(v)
 
     
 */
-function array(v)
- = [x(v), y(v), z(v)];
+// scope funcDef_265
+// var definition array#1(Any)
+// function definition array with 1 parameters
+function array(// var definition v
+v)
+ = [// var usage x_244:leafExpr:fun:Void defined at [x#1(Float2), x#1(Float3), x#1(Float4)]
+x(// var usage v_246:leafExpr:arg:Void defined at [v]
+v), // var usage y_250:leafExpr:fun:Void defined at [y#1(Float2), y#1(Float3), y#1(Float4)]
+y(// var usage v_252:leafExpr:arg:Void defined at [v]
+v), // var usage z_256:leafExpr:fun:Void defined at [z#1(Float3), z#1(Float4)]
+z(// var usage v_258:leafExpr:arg:Void defined at [v]
+v)];
+// scope funcDef_303
+// var definition sum#1(Any)
+// function definition sum with 1 parameters
 
 /**
 function sum(v) 
@@ -58,8 +142,23 @@ function sum(v)
     
     
 */
-function sum(v)
- = op_add(op_add(x(v), y(v)), z(v));
+// scope funcDef_303
+// var definition sum#1(Any)
+// function definition sum with 1 parameters
+function sum(// var definition v
+v)
+ = // var usage op_add_276:leafExpr:fun:Void defined at []
+op_add(// var usage op_add_278:leafExpr:fun:Void defined at []
+op_add(// var usage x_280:leafExpr:fun:Void defined at [x#1(Float2), x#1(Float3), x#1(Float4)]
+x(// var usage v_282:leafExpr:arg:Void defined at [v]
+v), // var usage y_286:leafExpr:fun:Void defined at [y#1(Float2), y#1(Float3), y#1(Float4)]
+y(// var usage v_288:leafExpr:arg:Void defined at [v]
+v)), // var usage z_294:leafExpr:fun:Void defined at [z#1(Float3), z#1(Float4)]
+z(// var usage v_296:leafExpr:arg:Void defined at [v]
+v));
+// scope funcDef_330
+// var definition dot#2(Any,Any)
+// function definition dot with 2 parameters
 
 /**
 function dot(a, b) 
@@ -67,8 +166,20 @@ function dot(a, b)
     
     
 */
-function dot(a, b)
- = sum(op_mul(a, b));
+// scope funcDef_330
+// var definition dot#2(Any,Any)
+// function definition dot with 2 parameters
+function dot(// var definition a
+a, // var definition b
+b)
+ = // var usage sum_317:leafExpr:fun:Void defined at [sum#1(Any)]
+sum(// var usage op_mul_319:leafExpr:fun:Void defined at []
+op_mul(// var usage a_321:leafExpr:arg:Void defined at [a]
+a, // var usage b_323:leafExpr:arg:Void defined at [b]
+b));
+// scope funcDef_352
+// var definition length#1(Any)
+// function definition length with 1 parameters
 
 /**
 function length(v) 
@@ -76,8 +187,18 @@ function length(v)
     
     
 */
-function length(v)
- = sqrt(length2(v));
+// scope funcDef_352
+// var definition length#1(Any)
+// function definition length with 1 parameters
+function length(// var definition v
+v)
+ = // var usage sqrt_341:leafExpr:fun:Void defined at [sqrt#1(T)]
+sqrt(// var usage length2_343:leafExpr:fun:Void defined at [length2#1(Any)]
+length2(// var usage v_345:leafExpr:arg:Void defined at [v]
+v));
+// scope funcDef_372
+// var definition length2#1(Any)
+// function definition length2 with 1 parameters
 
 /**
 function length2(v) 
@@ -85,8 +206,18 @@ function length2(v)
 
     
 */
-function length2(v)
- = dot(v, v);
+// scope funcDef_372
+// var definition length2#1(Any)
+// function definition length2 with 1 parameters
+function length2(// var definition v
+v)
+ = // var usage dot_363:leafExpr:fun:Void defined at [dot#2(Any,Any)]
+dot(// var usage v_365:leafExpr:arg:Void defined at [v]
+v, // var usage v_367:leafExpr:arg:Void defined at [v]
+v);
+// scope funcDef_401
+// var definition distance#2(Any,Any)
+// function definition distance with 2 parameters
 
 /**
 function distance(a, b)
@@ -94,8 +225,20 @@ function distance(a, b)
 
     
 */
-function distance(a, b)
- = length((op_sub(a, b)));
+// scope funcDef_401
+// var definition distance#2(Any,Any)
+// function definition distance with 2 parameters
+function distance(// var definition a
+a, // var definition b
+b)
+ = // var usage length_386:leafExpr:fun:Void defined at [length#1(Any)]
+length((// var usage op_sub_388:leafExpr:fun:Void defined at []
+op_sub(// var usage a_390:leafExpr:arg:Void defined at [a]
+a, // var usage b_392:leafExpr:arg:Void defined at [b]
+b)));
+// scope funcDef_430
+// var definition distance2#2(Any,Any)
+// function definition distance2 with 2 parameters
 
 /**
 function distance2(a, b)
@@ -103,8 +246,20 @@ function distance2(a, b)
 
     
 */
-function distance2(a, b)
- = length2((op_sub(a, b)));
+// scope funcDef_430
+// var definition distance2#2(Any,Any)
+// function definition distance2 with 2 parameters
+function distance2(// var definition a
+a, // var definition b
+b)
+ = // var usage length2_415:leafExpr:fun:Void defined at [length2#1(Any)]
+length2((// var usage op_sub_417:leafExpr:fun:Void defined at []
+op_sub(// var usage a_419:leafExpr:arg:Void defined at [a]
+a, // var usage b_421:leafExpr:arg:Void defined at [b]
+b)));
+// scope funcDef_454
+// var definition normal#1(Any)
+// function definition normal with 1 parameters
 
 /**
 function normal(v) 
@@ -112,8 +267,19 @@ function normal(v)
 
     
 */
-function normal(v)
- = op_div(v, length(v));
+// scope funcDef_454
+// var definition normal#1(Any)
+// function definition normal with 1 parameters
+function normal(// var definition v
+v)
+ = // var usage op_div_441:leafExpr:fun:Void defined at []
+op_div(// var usage v_443:leafExpr:arg:Void defined at [v]
+v, // var usage length_445:leafExpr:fun:Void defined at [length#1(Any)]
+length(// var usage v_447:leafExpr:arg:Void defined at [v]
+v));
+// scope funcDef_581
+// var definition cross#2(Any,Any)
+// function definition cross with 2 parameters
 
 /**
 function cross(a, b)
@@ -121,8 +287,50 @@ function cross(a, b)
 
     
 */
-function cross(a, b)
- = vector3(op_sub(op_mul(y(a), z(b)), op_mul(z(a), y(b))), op_sub(op_mul(z(a), x(b)), op_mul(x(a), z(b))), op_sub(op_mul(x(a), y(b)), op_mul(y(a), x(b))));
+// scope funcDef_581
+// var definition cross#2(Any,Any)
+// function definition cross with 2 parameters
+function cross(// var definition a
+a, // var definition b
+b)
+ = // var usage vector3_468:leafExpr:fun:Void defined at []
+vector3(// var usage op_sub_470:leafExpr:fun:Void defined at []
+op_sub(// var usage op_mul_472:leafExpr:fun:Void defined at []
+op_mul(// var usage y_474:leafExpr:fun:Void defined at [y#1(Float2), y#1(Float3), y#1(Float4)]
+y(// var usage a_476:leafExpr:arg:Void defined at [a]
+a), // var usage z_480:leafExpr:fun:Void defined at [z#1(Float3), z#1(Float4)]
+z(// var usage b_482:leafExpr:arg:Void defined at [b]
+b)), // var usage op_mul_488:leafExpr:fun:Void defined at []
+op_mul(// var usage z_490:leafExpr:fun:Void defined at [z#1(Float3), z#1(Float4)]
+z(// var usage a_492:leafExpr:arg:Void defined at [a]
+a), // var usage y_496:leafExpr:fun:Void defined at [y#1(Float2), y#1(Float3), y#1(Float4)]
+y(// var usage b_498:leafExpr:arg:Void defined at [b]
+b))), // var usage op_sub_506:leafExpr:fun:Void defined at []
+op_sub(// var usage op_mul_508:leafExpr:fun:Void defined at []
+op_mul(// var usage z_510:leafExpr:fun:Void defined at [z#1(Float3), z#1(Float4)]
+z(// var usage a_512:leafExpr:arg:Void defined at [a]
+a), // var usage x_516:leafExpr:fun:Void defined at [x#1(Float2), x#1(Float3), x#1(Float4)]
+x(// var usage b_518:leafExpr:arg:Void defined at [b]
+b)), // var usage op_mul_524:leafExpr:fun:Void defined at []
+op_mul(// var usage x_526:leafExpr:fun:Void defined at [x#1(Float2), x#1(Float3), x#1(Float4)]
+x(// var usage a_528:leafExpr:arg:Void defined at [a]
+a), // var usage z_532:leafExpr:fun:Void defined at [z#1(Float3), z#1(Float4)]
+z(// var usage b_534:leafExpr:arg:Void defined at [b]
+b))), // var usage op_sub_542:leafExpr:fun:Void defined at []
+op_sub(// var usage op_mul_544:leafExpr:fun:Void defined at []
+op_mul(// var usage x_546:leafExpr:fun:Void defined at [x#1(Float2), x#1(Float3), x#1(Float4)]
+x(// var usage a_548:leafExpr:arg:Void defined at [a]
+a), // var usage y_552:leafExpr:fun:Void defined at [y#1(Float2), y#1(Float3), y#1(Float4)]
+y(// var usage b_554:leafExpr:arg:Void defined at [b]
+b)), // var usage op_mul_560:leafExpr:fun:Void defined at []
+op_mul(// var usage y_562:leafExpr:fun:Void defined at [y#1(Float2), y#1(Float3), y#1(Float4)]
+y(// var usage a_564:leafExpr:arg:Void defined at [a]
+a), // var usage x_568:leafExpr:fun:Void defined at [x#1(Float2), x#1(Float3), x#1(Float4)]
+x(// var usage b_570:leafExpr:arg:Void defined at [b]
+b))));
+// scope funcDef_624
+// var definition reflect#2(Any,Any)
+// function definition reflect with 2 parameters
 
 /**
 function reflect(v, n)
@@ -130,8 +338,24 @@ function reflect(v, n)
 
     
 */
-function reflect(v, n)
- = op_sub(v, (op_mul(op_mul(n, dot(v, n)), 2.0)));
+// scope funcDef_624
+// var definition reflect#2(Any,Any)
+// function definition reflect with 2 parameters
+function reflect(// var definition v
+v, // var definition n
+n)
+ = // var usage op_sub_595:leafExpr:fun:Void defined at []
+op_sub(// var usage v_597:leafExpr:arg:Void defined at [v]
+v, (// var usage op_mul_599:leafExpr:fun:Void defined at []
+op_mul(// var usage op_mul_601:leafExpr:fun:Void defined at []
+op_mul(// var usage n_603:leafExpr:arg:Void defined at [n]
+n, // var usage dot_605:leafExpr:fun:Void defined at [dot#2(Any,Any)]
+dot(// var usage v_607:leafExpr:arg:Void defined at [v]
+v, // var usage n_609:leafExpr:arg:Void defined at [n]
+n)), 2.0)));
+// scope funcDef_670
+// var definition lerp#3(Any,Any,Any)
+// function definition lerp with 3 parameters
 
 /**
 function lerp(a, b, x)
@@ -139,14 +363,42 @@ function lerp(a, b, x)
 
     
 */
-function lerp(a, b, x)
- = op_add(op_mul(a, (op_sub(1.0, x))), op_mul(b, x));
+// scope funcDef_670
+// var definition lerp#3(Any,Any,Any)
+// function definition lerp with 3 parameters
+function lerp(// var definition a
+a, // var definition b
+b, // var definition x
+x)
+ = // var usage op_add_641:leafExpr:fun:Void defined at []
+op_add(// var usage op_mul_643:leafExpr:fun:Void defined at []
+op_mul(// var usage a_645:leafExpr:arg:Void defined at [a]
+a, (// var usage op_sub_647:leafExpr:fun:Void defined at []
+op_sub(1.0, // var usage x_651:leafExpr:arg:Void defined at [x]
+x))), // var usage op_mul_659:leafExpr:fun:Void defined at []
+op_mul(// var usage b_661:leafExpr:arg:Void defined at [b]
+b, // var usage x_663:leafExpr:arg:Void defined at [x]
+x));
+// scope funcDef_710
+// var definition negate#1(Any)
+// function definition negate with 1 parameters
 
 /**
 function negate(v)
         = vector(-v.x, -v.y, -v.z);
 
 */
-function negate(v)
- = vector(-x(v), -y(v), -z(v));
+// scope funcDef_710
+// var definition negate#1(Any)
+// function definition negate with 1 parameters
+function negate(// var definition v
+v)
+ = // var usage vector_681:leafExpr:fun:Void defined at [vector#3(Float,Float,Float), vector#1(Float), vector#1(Any), vector#1(Array)]
+vector(-// var usage x_684:leafExpr:fun:Void defined at [x#1(Float2), x#1(Float3), x#1(Float4)]
+x(// var usage v_686:leafExpr:arg:Void defined at [v]
+v), -// var usage y_692:leafExpr:fun:Void defined at [y#1(Float2), y#1(Float3), y#1(Float4)]
+y(// var usage v_694:leafExpr:arg:Void defined at [v]
+v), -// var usage z_700:leafExpr:fun:Void defined at [z#1(Float3), z#1(Float4)]
+z(// var usage v_702:leafExpr:arg:Void defined at [v]
+v));
 }
