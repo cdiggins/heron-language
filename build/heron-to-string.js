@@ -187,7 +187,7 @@ var HeronToTextVisitor = /** @class */ (function () {
         this.visitChildren(ast, state);
     };
     HeronToTextVisitor.prototype.visit_funcSig = function (ast, state) {
-        // seq(funcName,genericsParams,funcParams)
+        // seq(funcName,genericsParam,funcParams)
         this.visitChildren(ast, state);
     };
     HeronToTextVisitor.prototype.visit_genericConstraint = function (ast, state) {
@@ -198,7 +198,7 @@ var HeronToTextVisitor = /** @class */ (function () {
         // seq(identifier,genericConstraint[0,1])
         this.visitChildren(ast, state);
     };
-    HeronToTextVisitor.prototype.visit_genericsParams = function (ast, state) {
+    HeronToTextVisitor.prototype.visit_genericParams = function (ast, state) {
         // seq(genericParam,genericParam[0,Infinity])[0,1][0,1]
         this.visitChildren(ast, state);
     };

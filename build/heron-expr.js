@@ -20,6 +20,9 @@ var Expr = /** @class */ (function () {
         this.node = node;
         node['expr'] = this;
     }
+    Expr.prototype.toString = function () {
+        return 'expr' + this.node['id'];
+    };
     return Expr;
 }());
 exports.Expr = Expr;
@@ -33,35 +36,44 @@ var FuncSet = /** @class */ (function (_super) {
         _this.defs = defs;
         return _this;
     }
+    FuncSet.prototype.toString = function () {
+        return 'funcSet' + this.node['id'] + '(' + this.defs.join(',') + ')';
+    };
     return FuncSet;
 }(Expr));
 exports.FuncSet = FuncSet;
 // An anonymous function, also known as a lambda.
-var AnonFunc = /** @class */ (function (_super) {
-    __extends(AnonFunc, _super);
-    function AnonFunc(node, params, body) {
+var Lambda = /** @class */ (function (_super) {
+    __extends(Lambda, _super);
+    function Lambda(node, params, body) {
         var _this = _super.call(this, node) || this;
         _this.node = node;
         _this.params = params;
         _this.body = body;
         return _this;
     }
-    return AnonFunc;
+    Lambda.prototype.toString = function () {
+        return 'lambda' + this.node['id'] + '(' + this.params.join(',') + ')' + this.body;
+    };
+    return Lambda;
 }(Expr));
-exports.AnonFunc = AnonFunc;
-// A variable is a name  
-var Var = /** @class */ (function (_super) {
-    __extends(Var, _super);
-    function Var(node, name, def) {
+exports.Lambda = Lambda;
+// The name of a variable
+var VarName = /** @class */ (function (_super) {
+    __extends(VarName, _super);
+    function VarName(node, name, defs) {
         var _this = _super.call(this, node) || this;
         _this.node = node;
         _this.name = name;
-        _this.def = def;
+        _this.defs = defs;
         return _this;
-    } // TODO: work out the type
-    return Var;
+    }
+    VarName.prototype.toString = function () {
+        return this.name + '[' + this.defs.join(',') + ']';
+    };
+    return VarName;
 }(Expr));
-exports.Var = Var;
+exports.VarName = VarName;
 // The different kinds of literals like boolean, number, ints, arrays, objects, and more. 
 var Literal = /** @class */ (function (_super) {
     __extends(Literal, _super);
@@ -71,6 +83,9 @@ var Literal = /** @class */ (function (_super) {
         _this.value = value;
         return _this;
     }
+    Literal.prototype.toString = function () {
+        return this.value.toString();
+    };
     return Literal;
 }(Expr));
 exports.Literal = Literal;
@@ -83,6 +98,9 @@ var ArrayLiteral = /** @class */ (function (_super) {
         _this.vals = vals;
         return _this;
     }
+    ArrayLiteral.prototype.toString = function () {
+        return '[' + this.vals.join(',') + ']';
+    };
     return ArrayLiteral;
 }(Expr));
 exports.ArrayLiteral = ArrayLiteral;
@@ -95,6 +113,9 @@ var ObjectField = /** @class */ (function (_super) {
         _this.expr = expr;
         return _this;
     }
+    ObjectField.prototype.toString = function () {
+        return this.name + '=' + this.expr;
+    };
     return ObjectField;
 }(Expr));
 exports.ObjectField = ObjectField;
@@ -107,6 +128,9 @@ var ObjectLiteral = /** @class */ (function (_super) {
         _this.fields = fields;
         return _this;
     }
+    ObjectLiteral.prototype.toString = function () {
+        return '{ ' + this.fields.join(';') + ' }';
+    };
     return ObjectLiteral;
 }(Expr));
 exports.ObjectLiteral = ObjectLiteral;
@@ -119,6 +143,9 @@ var TypeExpr = /** @class */ (function (_super) {
         _this.def = def;
         return _this;
     }
+    TypeExpr.prototype.toString = function () {
+        return this.node.allText;
+    };
     return TypeExpr;
 }(Expr));
 exports.TypeExpr = TypeExpr;
@@ -132,6 +159,9 @@ var FunCall = /** @class */ (function (_super) {
         _this.args = args;
         return _this;
     }
+    FunCall.prototype.toString = function () {
+        return this.func + '(' + this.args.join(',') + ')';
+    };
     return FunCall;
 }(Expr));
 exports.FunCall = FunCall;
@@ -146,6 +176,9 @@ var ConditionalExpr = /** @class */ (function (_super) {
         _this.onFalse = onFalse;
         return _this;
     }
+    ConditionalExpr.prototype.toString = function () {
+        return this.cond + ' ? ' + this.onTrue + ' : ' + this.onFalse;
+    };
     return ConditionalExpr;
 }(Expr));
 exports.ConditionalExpr = ConditionalExpr;
@@ -165,17 +198,17 @@ function createExpr(node) {
         case "postfixExpr":
             switch (node.children[1].name) {
                 case "fieldSelect":
-                    throw new Error("Field selects should be transformed into function calls");
+                    heron_ast_rewrite_1.throwError(node, "Field selects should be transformed into function calls");
                 case "arrayIndex":
-                    throw new Error("Array indexing should be transformed into function calls");
+                    heron_ast_rewrite_1.throwError(node, "Array indexing should be transformed into function calls");
                 case "postIncOp":
                 case "postDecOp":
-                    throw new Error("Not supported yet, postInc and postDec should be converted to assignment expressions");
+                    heron_ast_rewrite_1.throwError(node, "Not supported yet, postInc and postDec should be converted to assignment expressions");
                 case "funCall":
                     // TODO: find the correct function based on the number and types of the arguments
                     return createFunCall(node);
                 default:
-                    throw new Error("Unrecognized postfix expression: " + node.name);
+                    heron_ast_rewrite_1.throwError(node, "Unrecognized postfix expression: " + node.name);
             }
         case "objectExpr":
             return createObjectLiteral(node);
@@ -192,38 +225,37 @@ function createExpr(node) {
         case "string":
             return createStrExpr(node);
         case "prefixExpr":
-            throw new Error("Prefix expr should be converted into function calls");
+            heron_ast_rewrite_1.throwError(node, "Prefix expr should be converted into function calls");
         case "typeExpr":
             return createTypeExpr(node);
         case "conditionalExpr":
             return createConditionalExpr(node);
-        case "literal":
-        case "leafExpr":
+        case "varName":
+            return createVarNameExpr(node);
         case "parenExpr":
-        case "expr":
-        case "recExpr":
             return addExpr(node, createExpr(node.children[0]));
         case "multiplicativeExpr":
         case "additiveExpr":
         case "relationalExpr":
         case "equalityExpr":
         case "rangeExpr":
-            throw new Error("Unsupported expression found: pre-processing was not performed: " + node.name);
-        default:
-            throw new Error("Not a recognized expression: " + node.name);
+        case "literal":
+        case "leafExpr":
+        case "recExpr":
+        case "expr":
+            heron_ast_rewrite_1.throwError(node, "Unsupported expression found: pre-processing was not performed: " + node.name);
     }
 }
 exports.createExpr = createExpr;
 function createFunCall(node) {
-    if (node.name !== 'postfixExpr')
-        throw new Error('Expected a postfix expr as an argument');
+    heron_ast_rewrite_1.validateNode(node, 'postfixExpr');
     if (node.children.length != 2)
-        throw new Error('Expected two children of a postfix expression');
+        heron_ast_rewrite_1.throwError(node, 'Expected two children of a postfix expression');
     var func = createExpr(node.children[0]);
-    if (node.children[1].name !== 'funCall')
-        throw new Error('Expected a funCall as the right child, not ' + node.children[1].name);
-    var args = node.children[1].children;
-    return new FunCall(node, func, args.map(createExpr));
+    if (!func)
+        heron_ast_rewrite_1.throwError(node, 'Missing function');
+    var funCall = heron_ast_rewrite_1.validateNode(node.children[1], 'funCall');
+    return new FunCall(node, func, funCall.children.map(createExpr));
 }
 exports.createFunCall = createFunCall;
 function createObjectField(node) {
@@ -234,41 +266,52 @@ function createObjectField(node) {
 }
 exports.createObjectField = createObjectField;
 function createObjectLiteral(node) {
-    return new ObjectLiteral(node, node.children.map(createObjectField));
+    return new ObjectLiteral(heron_ast_rewrite_1.validateNode(node, 'objectExpr'), node.children.map(createObjectField));
 }
 exports.createObjectLiteral = createObjectLiteral;
 function createArrayExpr(node) {
-    return new ArrayLiteral(node, node.children.map(createExpr));
+    return new ArrayLiteral(heron_ast_rewrite_1.validateNode(node, 'arrayExpr'), node.children.map(createExpr));
 }
 exports.createArrayExpr = createArrayExpr;
 function createBoolExpr(node) {
     var value = node.allText === 'true' ? true : false;
-    return new Literal(node, value);
+    return new Literal(heron_ast_rewrite_1.validateNode(node, 'boolean'), value);
 }
 exports.createBoolExpr = createBoolExpr;
 function createConditionalExpr(node) {
-    return new ConditionalExpr(node, createExpr(node.children[0]), createExpr(node.children[1]), createExpr(node.children[2]));
+    return new ConditionalExpr(heron_ast_rewrite_1.validateNode(node, 'conditionalExpr'), createExpr(node.children[0]), createExpr(node.children[1]), createExpr(node.children[2]));
 }
 exports.createConditionalExpr = createConditionalExpr;
 // TODO: the fact that I am calling a lambda body an expression is a problem.
 function createLambdaExpr(node) {
-    return new AnonFunc(node, node.children[0].children.map(heron_defs_1.createFuncParamDef), createExpr(node.children[1]));
+    return new Lambda(heron_ast_rewrite_1.validateNode(node, 'lambdaExpr'), node.children[0].children.map(function (c) { return heron_defs_1.getDef(c, 'FuncParamDef'); }), createExpr(node.children[1]));
 }
 exports.createLambdaExpr = createLambdaExpr;
 function createNumExpr(node) {
     var value = parseFloat(node.allText);
-    return new Literal(node, value);
+    return new Literal(heron_ast_rewrite_1.validateNode(node, 'number'), value);
 }
 exports.createNumExpr = createNumExpr;
 function createStrExpr(node) {
-    return new Literal(node, node.allText);
+    return new Literal(heron_ast_rewrite_1.validateNode(node, 'string'), node.allText);
 }
 exports.createStrExpr = createStrExpr;
 function createTypeExpr(node) {
-    return new TypeExpr(node, node['def']);
+    var typeName = heron_ast_rewrite_1.validateNode(node.children[0], 'typeName');
+    var ref = typeName['ref'];
+    if (!ref)
+        heron_ast_rewrite_1.throwError(typeName, "expected a reference");
+    if (ref.defs.length !== 1)
+        throw new Error("Expected exactly one definition not " + ref.defs.length);
+    var def = ref.defs[0];
+    return new TypeExpr(heron_ast_rewrite_1.validateNode(node, 'typeExpr'), def);
 }
 exports.createTypeExpr = createTypeExpr;
-function createVarExpr(node) {
+function createVarNameExpr(node) {
+    var ref = node['ref'];
+    if (!ref)
+        heron_ast_rewrite_1.throwError(node, "expected a reference");
+    return new VarName(heron_ast_rewrite_1.validateNode(node, 'varName'), node.allText, ref.defs);
 }
-exports.createVarExpr = createVarExpr;
+exports.createVarNameExpr = createVarNameExpr;
 //# sourceMappingURL=heron-expr.js.map

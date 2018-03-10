@@ -3,6 +3,29 @@ import { createDef } from "./heron-defs";
 
 const g = Myna.grammars['heron'];
 
+interface HasNode { node: Myna.AstNode };
+
+export function throwError(node: Myna.AstNode, msg:string = '') {    
+    throw new Error(msg + (msg ? "\n" : "") + parseLocation(node));
+}
+
+export function getFile(node: Myna.AstNode): string {
+    if (!node) return '';
+    return node['file'] ? node['file'] : getFile(node['parent']);
+}
+
+export function parseLocation(node: Myna.AstNode | HasNode ): string {
+    if (node['node'])
+        return parseLocation(node['node']);
+    if (node['original'])
+        return parseLocation(node['original']);
+    if (node instanceof Myna.AstNode) {
+        let loc = new Myna.ParseLocation(node.input, node.start);
+        return loc.toString() + '\n' + 'in file ' + getFile(node);
+    }
+    throw new Error('Unexpected node: ' + node);
+}
+
 export function opSymbolToString(sym: string): string {
     switch (sym)
     {
@@ -23,6 +46,7 @@ export function opSymbolToString(sym: string): string {
         default: throw new Error("Not a symbol: " + sym);
     }
 }
+
 export function opToString(op: string) {
     let r = "op";
     for (let i=0; i < op.length; ++i)
@@ -60,14 +84,14 @@ export function mapAst(ast: Myna.AstNode, f: (_: Myna.AstNode) => Myna.AstNode):
 
 // Creates a function call node given a function name, and some arguments 
 export function funCall(fxnName: string, ...args) : Myna.AstNode {
-    let fxn = g.leafExpr.node('', g.identifier.node(fxnName));
-    let fxnCall = g.funCall.node('', ...args);
-    return g.postfixExpr.node('', fxn, fxnCall);
+    let fxn = g.varName.node(fxnName);
+    let fxnCallArgs = g.funCall.node('', ...args);
+    return g.postfixExpr.node('', fxn, fxnCallArgs);
 }
 
 // Given a binary operator, a left operand and a right operand, creates a new AstNode 
 export function opToFunCall(op: string, left: Myna.AstNode, right: Myna.AstNode) {
-    return funCall(opToString(op), left, right);
+    return funCall("op" + op, left, right);
 }
 
 export function isFunCall(ast: Myna.AstNode): boolean {
@@ -92,11 +116,12 @@ export function isExpr(ast: Myna.AstNode): boolean {
     case "arrayExpr":
     case "bool":
     case "number":
-    case "string":
+    case "string":  
     case "prefixExpr":
     case "conditionalExpr":
     case "literal":
     case "leafExpr":
+    case "varName":
     case "parenExpr":
     case "expr":
     case "recExpr":
@@ -218,7 +243,11 @@ export function exprListToPair(ast: Myna.AstNode): Myna.AstNode {
         case 'equalityExprLeft':
         case 'relationalExprLeft':
         case 'additiveExprLeft':
-        case 'multiplicativeExprLeft':        
+        case 'multiplicativeExprLeft':
+        case 'literal':
+        case 'recExpr':
+        case 'leafExpr':
+        case 'expr':        
             {
                 if (ast.children.length != 1)
                     throw new Error("Exepcted exactly one child");
@@ -280,7 +309,7 @@ export function exprListToPair(ast: Myna.AstNode): Myna.AstNode {
 // Checks that a node has a name 
 export function validateNode(node: Myna.AstNode, ...names: string[]): Myna.AstNode {
     if (names.indexOf(node.name) < 0)
-        throw new Error('Did not expect ' + node.name);
+        throwError(node, 'Did not expect ' + node.name);
     return node;
 }
 

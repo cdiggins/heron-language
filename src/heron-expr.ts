@@ -1,6 +1,7 @@
 import { Myna } from "myna-parser/myna";
-import { FuncDef, TypeDef, VarDef, FuncParamDef, createFuncParamDef } from "./heron-defs";
-import { validateNode, visitAst } from "./heron-ast-rewrite";
+import { FuncDef, TypeDef, VarDef, FuncParamDef, createFuncParamDef, getDef, Def } from "./heron-defs";
+import { validateNode, visitAst, throwError } from "./heron-ast-rewrite";
+import { Ref } from "./heron-refs";
 
 // Expressions are either: named function sets, anonymous functions, function calls, variables, or literals.
 // In order to work out the type we need to work out the type of the things it depends on first. 
@@ -10,6 +11,10 @@ export class Expr {
         public readonly node: Myna.AstNode,
     )
     { node['expr'] = this; }
+
+    toString(): string {
+        return 'expr' + this.node['id'];        
+    }
 }
 
 // A named reference to a function can resolve to multiple functions, so we talk in terms of function sets.
@@ -20,26 +25,38 @@ export class FuncSet extends Expr {
         public readonly defs: FuncDef[],
     )
     { super(node); }
+
+    toString(): string {
+        return 'funcSet' + this.node['id'] + '(' + this.defs.join(',') + ')';        
+    }
 }
 
 // An anonymous function, also known as a lambda.
-export class AnonFunc extends Expr {
+export class Lambda extends Expr {
     constructor(
         public readonly node: Myna.AstNode,
         public readonly params: FuncParamDef[],
         public readonly body: Expr,
     )
     { super(node); }
+
+    toString(): string {
+        return 'lambda' + this.node['id'] + '(' + this.params.join(',') + ')' + this.body;
+    }
 }
 
-// A variable is a name  
-export class Var extends Expr {    
+// The name of a variable
+export class VarName extends Expr {    
     constructor(
         public readonly node: Myna.AstNode,
         public readonly name: string,
-        public readonly def: VarDef,
+        public readonly defs: Def[],
     )
-    { super(node); } // TODO: work out the type
+    { super(node); } 
+
+    toString(): string {
+        return this.name + '[' + this.defs.join(',') + ']';
+    }
 }
 
 // The different kinds of literals like boolean, number, ints, arrays, objects, and more. 
@@ -49,6 +66,10 @@ export class Literal<T> extends Expr {
         public readonly value: T,
     )
     { super(node); }
+
+    toString(): string {
+        return this.value.toString();
+    }
 }
 
 // An array literal expression
@@ -58,6 +79,10 @@ export class ArrayLiteral extends Expr {
         public readonly vals: Expr[],
     )
     { super(node); }    
+
+    toString(): string {
+        return '[' + this.vals.join(',') + ']';
+    }
 }
 
 export class ObjectField extends Expr {
@@ -66,6 +91,10 @@ export class ObjectField extends Expr {
         public readonly name: string,
         public readonly expr: Expr)
     { super(node); }
+
+    toString(): string {
+        return this.name + '=' + this.expr;
+    }
 }
 
 // An object literal expression
@@ -74,16 +103,24 @@ export class ObjectLiteral extends Expr {
         public readonly node: Myna.AstNode,
         public readonly fields: ObjectField[]
     )
-    { super(node); }    
+    { super(node); }
+    
+    toString(): string {
+        return '{ ' + this.fields.join(';') + ' }';
+    }
 }
 
 // Type expressions 
 export class TypeExpr extends Expr {    
     constructor(
         public readonly node: Myna.AstNode,
-        public readonly def: TypeDef, 
+        public readonly def: Def, 
     )
     { super(node); }
+
+    toString(): string {
+        return this.node.allText;
+    }
 }
 
 // Function call expressions
@@ -94,6 +131,10 @@ export class FunCall extends Expr {
         public readonly args: Expr[],
         )
     { super(node); }
+
+    toString(): string {
+        return this.func + '(' + this.args.join(',') + ')';
+    }    
 }
 
 // Conditional (ternary operator) expressions. 
@@ -105,6 +146,10 @@ export class ConditionalExpr extends Expr {
         public readonly onFalse: Expr,
         )
     { super(node); }
+
+    toString(): string {
+        return this.cond + ' ? ' + this.onTrue + ' : ' + this.onFalse;
+    }
 }
 
 //==========================================================================================
@@ -125,17 +170,17 @@ export function createExpr(node: Myna.AstNode): Expr {
             switch (node.children[1].name)
             {
                 case "fieldSelect":
-                    throw new Error("Field selects should be transformed into function calls");
+                    throwError(node, "Field selects should be transformed into function calls");
                 case "arrayIndex":
-                    throw new Error("Array indexing should be transformed into function calls");
+                    throwError(node, "Array indexing should be transformed into function calls");
                 case "postIncOp":
                 case "postDecOp":
-                    throw new Error("Not supported yet, postInc and postDec should be converted to assignment expressions");
+                    throwError(node, "Not supported yet, postInc and postDec should be converted to assignment expressions");
                 case "funCall":
                     // TODO: find the correct function based on the number and types of the arguments
                     return createFunCall(node);
                 default:
-                    throw new Error("Unrecognized postfix expression: " + node.name);
+                    throwError(node, "Unrecognized postfix expression: " + node.name);
             }
         case "objectExpr":
             return createObjectLiteral(node);
@@ -152,39 +197,38 @@ export function createExpr(node: Myna.AstNode): Expr {
         case "string":
             return createStrExpr(node);
         case "prefixExpr":
-            throw new Error("Prefix expr should be converted into function calls");
+            throwError(node, "Prefix expr should be converted into function calls");
         case "typeExpr":
             return createTypeExpr(node);
         case "conditionalExpr":
             return createConditionalExpr(node);
-        case "literal":
-        case "leafExpr":
+        case "varName":
+            return createVarNameExpr(node);
         case "parenExpr":
-        case "expr":
-        case "recExpr":
             return addExpr(node, createExpr(node.children[0]));            
         case "multiplicativeExpr":
         case "additiveExpr":
         case "relationalExpr":
         case "equalityExpr":
         case "rangeExpr":            
-            throw new Error("Unsupported expression found: pre-processing was not performed: " + node.name);
-        default:
-            throw new Error("Not a recognized expression: " + node.name)
+        case "literal":
+        case "leafExpr":
+        case "recExpr":
+        case "expr":
+            throwError(node, "Unsupported expression found: pre-processing was not performed: " + node.name);
     }
 }
 
 export function createFunCall(node: Myna.AstNode): FunCall
 { 
-    if (node.name !== 'postfixExpr')
-        throw new Error('Expected a postfix expr as an argument');
+    validateNode(node, 'postfixExpr');
     if (node.children.length != 2)
-        throw new Error('Expected two children of a postfix expression');
+        throwError(node, 'Expected two children of a postfix expression');
     let func = createExpr(node.children[0]);
-    if (node.children[1].name !== 'funCall')
-        throw new Error('Expected a funCall as the right child, not ' + node.children[1].name)
-    let args = node.children[1].children;
-    return new FunCall(node, func, args.map(createExpr));
+    if (!func)
+        throwError(node, 'Missing function');
+    let funCall = validateNode(node.children[1], 'funCall');
+    return new FunCall(node, func, funCall.children.map(createExpr));
 }
 
 export function createObjectField(node: Myna.AstNode): ObjectField {
@@ -195,48 +239,48 @@ export function createObjectField(node: Myna.AstNode): ObjectField {
 }
 
 export function createObjectLiteral(node: Myna.AstNode): ObjectLiteral {
-    return new ObjectLiteral(node, node.children.map(createObjectField));
+    return new ObjectLiteral(validateNode(node, 'objectExpr'), node.children.map(createObjectField));
 }
 
 export function createArrayExpr(node: Myna.AstNode): ArrayLiteral {
-    return new ArrayLiteral(node, node.children.map(createExpr));
+    return new ArrayLiteral(validateNode(node, 'arrayExpr'), node.children.map(createExpr));
 }
 
 export function createBoolExpr(node: Myna.AstNode): Literal<boolean> {
     let value = node.allText === 'true' ? true : false;
-    return new Literal<boolean>(node, value);
+    return new Literal<boolean>(validateNode(node, 'boolean'), value);
 }
 
 export function createConditionalExpr(node: Myna.AstNode): ConditionalExpr {
-    return new ConditionalExpr(node, createExpr(node.children[0]), createExpr(node.children[1]), createExpr(node.children[2]));
+    return new ConditionalExpr(validateNode(node, 'conditionalExpr'), createExpr(node.children[0]), createExpr(node.children[1]), createExpr(node.children[2]));
 }
 
 // TODO: the fact that I am calling a lambda body an expression is a problem.
-export function createLambdaExpr(node: Myna.AstNode): AnonFunc {
-    return new AnonFunc(node, node.children[0].children.map(createFuncParamDef), createExpr(node.children[1]));
+export function createLambdaExpr(node: Myna.AstNode): Lambda {
+    return new Lambda(validateNode(node, 'lambdaExpr'), node.children[0].children.map(c => getDef<FuncParamDef>(c, 'FuncParamDef')), createExpr(node.children[1]));
 }
 
 export function createNumExpr(node: Myna.AstNode): Literal<number> {
     let value = parseFloat(node.allText);
-    return new Literal<number>(node, value);
+    return new Literal<number>(validateNode(node, 'number'), value);
 }
 
 export function createStrExpr(node: Myna.AstNode): Literal<string> {
-    return new Literal<string>(node, node.allText);
+    return new Literal<string>(validateNode(node, 'string'), node.allText);
 }
 
 export function createTypeExpr(node: Myna.AstNode): TypeExpr {
-    return new TypeExpr(node, node['def'] as TypeDef);
+    let typeName = validateNode(node.children[0], 'typeName');
+    let ref:Ref = typeName['ref'];
+    if (!ref) throwError(typeName, "expected a reference");
+    if (ref.defs.length !== 1)
+        throw new Error("Expected exactly one definition not " + ref.defs.length);
+    let def = ref.defs[0];
+    return new TypeExpr(validateNode(node, 'typeExpr'), def);
 }
 
-export function createVarExpr(node: Myna.AstNode) {
+export function createVarNameExpr(node: Myna.AstNode): VarName {
+    let ref:Ref = node['ref'];
+    if (!ref) throwError(node, "expected a reference");
+    return new VarName(validateNode(node, 'varName'), node.allText, ref.defs);
 }
-
-
-
-
-
-
-
-
-

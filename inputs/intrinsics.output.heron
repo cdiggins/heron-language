@@ -1,494 +1,582 @@
-// Generated on Wed Mar 07 2018 22:17:34 GMT-0500 (Eastern Standard Time)
-language heron:std:0.1;
+// Generated on Fri Mar 09 2018 21:37:41 GMT-0500 (Eastern Standard Time)
+// definition heron:intrinsics:0.1_ModuleDef1025
 heron:intrinsics:0.1{
-// var definition Float
-Float// var definition Float2
-Float2// var definition Float3
-Float3// var definition Float4
-Float4// var definition Bool
-Bool// var definition Num
-Num// var definition String
-String// var definition Array
-Arrayvar // var definition pi
-pi = 3.14159265358979323846;
-var // var definition e
-e = 2.71828182845904523536;
-// scope intrinsicDef_74
-// var definition float2#2(Float,Float)
-// function definition float2 with 2 parameters
-intrinsic float2(// var definition x
-x : // var usage Float_59:typeName:type:? defined at [Float]
-Float, // var definition y
-y : // var usage Float_65:typeName:type:? defined at [Float]
-Float) : // var usage Float2_70:typeName:type:? defined at [Float2]
+// definition Any_TypeDef12
+Any// definition Float_TypeDef14
+Float// definition Float2_TypeDef16
+Float2// definition Float3_TypeDef18
+Float3// definition Float4_TypeDef20
+Float4// definition Bool_TypeDef22
+Bool// definition Num_TypeDef24
+Num// definition String_TypeDef26
+String// definition Array_TypeDef28
+Arrayvar // definition pi_VarDef33
+pi = // expression Literal 3.141592653589793
+3.14159265358979323846;
+var // definition e_VarDef40
+e = // expression Literal 2.718281828459045
+2.71828182845904523536;
+// scope intrinsicDef_64
+// definition float2_FuncDef64
+intrinsic float2(// definition x_FuncParamDef51
+x : // expression TypeExpr Float
+// reference Float_49:typeName:type[Float_TypeDef14]
+Float, // definition y_FuncParamDef57
+y : // expression TypeExpr Float
+// reference Float_55:typeName:type[Float_TypeDef14]
+Float) : // expression TypeExpr Float2
+// reference Float2_60:typeName:type[Float2_TypeDef16]
 Float2
 ;
-// scope intrinsicDef_91
-// var definition x#1(Float2)
-// function definition x with 1 parameters
-intrinsic x(// var definition v
-v : // var usage Float2_82:typeName:type:? defined at [Float2]
-Float2) : // var usage Float_87:typeName:type:? defined at [Float]
+// scope intrinsicDef_80
+// definition x_FuncDef80
+intrinsic x(// definition v_FuncParamDef73
+v : // expression TypeExpr Float2
+// reference Float2_71:typeName:type[Float2_TypeDef16]
+Float2) : // expression TypeExpr Float
+// reference Float_76:typeName:type[Float_TypeDef14]
 Float
 ;
-// scope intrinsicDef_108
-// var definition y#1(Float2)
-// function definition y with 1 parameters
-intrinsic y(// var definition v
-v : // var usage Float2_99:typeName:type:? defined at [Float2]
-Float2) : // var usage Float_104:typeName:type:? defined at [Float]
+// scope intrinsicDef_96
+// definition y_FuncDef96
+intrinsic y(// definition v_FuncParamDef89
+v : // expression TypeExpr Float2
+// reference Float2_87:typeName:type[Float2_TypeDef16]
+Float2) : // expression TypeExpr Float
+// reference Float_92:typeName:type[Float_TypeDef14]
 Float
 ;
-// scope intrinsicDef_137
-// var definition float3#3(Float,Float,Float)
-// function definition float3 with 3 parameters
-intrinsic float3(// var definition x
-x : // var usage Float_116:typeName:type:? defined at [Float]
-Float, // var definition y
-y : // var usage Float_122:typeName:type:? defined at [Float]
-Float, // var definition z
-z : // var usage Float_128:typeName:type:? defined at [Float]
-Float) : // var usage Float3_133:typeName:type:? defined at [Float3]
+// scope intrinsicDef_124
+// definition float3_FuncDef124
+intrinsic float3(// definition x_FuncParamDef105
+x : // expression TypeExpr Float
+// reference Float_103:typeName:type[Float_TypeDef14]
+Float, // definition y_FuncParamDef111
+y : // expression TypeExpr Float
+// reference Float_109:typeName:type[Float_TypeDef14]
+Float, // definition z_FuncParamDef117
+z : // expression TypeExpr Float
+// reference Float_115:typeName:type[Float_TypeDef14]
+Float) : // expression TypeExpr Float3
+// reference Float3_120:typeName:type[Float3_TypeDef18]
 Float3
 ;
-// scope intrinsicDef_154
-// var definition x#1(Float3)
-// function definition x with 1 parameters
-intrinsic x(// var definition v
-v : // var usage Float3_145:typeName:type:? defined at [Float3]
-Float3) : // var usage Float_150:typeName:type:? defined at [Float]
+// scope intrinsicDef_140
+// definition x_FuncDef140
+intrinsic x(// definition v_FuncParamDef133
+v : // expression TypeExpr Float3
+// reference Float3_131:typeName:type[Float3_TypeDef18]
+Float3) : // expression TypeExpr Float
+// reference Float_136:typeName:type[Float_TypeDef14]
 Float
 ;
-// scope intrinsicDef_171
-// var definition y#1(Float3)
-// function definition y with 1 parameters
-intrinsic y(// var definition v
-v : // var usage Float3_162:typeName:type:? defined at [Float3]
-Float3) : // var usage Float_167:typeName:type:? defined at [Float]
+// scope intrinsicDef_156
+// definition y_FuncDef156
+intrinsic y(// definition v_FuncParamDef149
+v : // expression TypeExpr Float3
+// reference Float3_147:typeName:type[Float3_TypeDef18]
+Float3) : // expression TypeExpr Float
+// reference Float_152:typeName:type[Float_TypeDef14]
 Float
 ;
-// scope intrinsicDef_188
-// var definition z#1(Float3)
-// function definition z with 1 parameters
-intrinsic z(// var definition v
-v : // var usage Float3_179:typeName:type:? defined at [Float3]
-Float3) : // var usage Float_184:typeName:type:? defined at [Float]
+// scope intrinsicDef_172
+// definition z_FuncDef172
+intrinsic z(// definition v_FuncParamDef165
+v : // expression TypeExpr Float3
+// reference Float3_163:typeName:type[Float3_TypeDef18]
+Float3) : // expression TypeExpr Float
+// reference Float_168:typeName:type[Float_TypeDef14]
 Float
 ;
-// scope intrinsicDef_223
-// var definition float4#4(Float,Float,Float,Float)
-// function definition float4 with 4 parameters
-intrinsic float4(// var definition x
-x : // var usage Float_196:typeName:type:? defined at [Float]
-Float, // var definition y
-y : // var usage Float_202:typeName:type:? defined at [Float]
-Float, // var definition z
-z : // var usage Float_208:typeName:type:? defined at [Float]
-Float, // var definition w
-w : // var usage Float_214:typeName:type:? defined at [Float]
-Float) : // var usage Float4_219:typeName:type:? defined at [Float4]
+// scope intrinsicDef_206
+// definition float4_FuncDef206
+intrinsic float4(// definition x_FuncParamDef181
+x : // expression TypeExpr Float
+// reference Float_179:typeName:type[Float_TypeDef14]
+Float, // definition y_FuncParamDef187
+y : // expression TypeExpr Float
+// reference Float_185:typeName:type[Float_TypeDef14]
+Float, // definition z_FuncParamDef193
+z : // expression TypeExpr Float
+// reference Float_191:typeName:type[Float_TypeDef14]
+Float, // definition w_FuncParamDef199
+w : // expression TypeExpr Float
+// reference Float_197:typeName:type[Float_TypeDef14]
+Float) : // expression TypeExpr Float4
+// reference Float4_202:typeName:type[Float4_TypeDef20]
 Float4
 ;
-// scope intrinsicDef_240
-// var definition x#1(Float4)
-// function definition x with 1 parameters
-intrinsic x(// var definition v
-v : // var usage Float4_231:typeName:type:? defined at [Float4]
-Float4) : // var usage Float_236:typeName:type:? defined at [Float]
+// scope intrinsicDef_222
+// definition x_FuncDef222
+intrinsic x(// definition v_FuncParamDef215
+v : // expression TypeExpr Float4
+// reference Float4_213:typeName:type[Float4_TypeDef20]
+Float4) : // expression TypeExpr Float
+// reference Float_218:typeName:type[Float_TypeDef14]
 Float
 ;
-// scope intrinsicDef_257
-// var definition y#1(Float4)
-// function definition y with 1 parameters
-intrinsic y(// var definition v
-v : // var usage Float4_248:typeName:type:? defined at [Float4]
-Float4) : // var usage Float_253:typeName:type:? defined at [Float]
+// scope intrinsicDef_238
+// definition y_FuncDef238
+intrinsic y(// definition v_FuncParamDef231
+v : // expression TypeExpr Float4
+// reference Float4_229:typeName:type[Float4_TypeDef20]
+Float4) : // expression TypeExpr Float
+// reference Float_234:typeName:type[Float_TypeDef14]
 Float
 ;
-// scope intrinsicDef_274
-// var definition z#1(Float4)
-// function definition z with 1 parameters
-intrinsic z(// var definition v
-v : // var usage Float4_265:typeName:type:? defined at [Float4]
-Float4) : // var usage Float_270:typeName:type:? defined at [Float]
+// scope intrinsicDef_254
+// definition z_FuncDef254
+intrinsic z(// definition v_FuncParamDef247
+v : // expression TypeExpr Float4
+// reference Float4_245:typeName:type[Float4_TypeDef20]
+Float4) : // expression TypeExpr Float
+// reference Float_250:typeName:type[Float_TypeDef14]
 Float
 ;
-// scope intrinsicDef_291
-// var definition w#1(Float4)
-// function definition w with 1 parameters
-intrinsic w(// var definition v
-v : // var usage Float4_282:typeName:type:? defined at [Float4]
-Float4) : // var usage Float_287:typeName:type:? defined at [Float]
+// scope intrinsicDef_270
+// definition w_FuncDef270
+intrinsic w(// definition v_FuncParamDef263
+v : // expression TypeExpr Float4
+// reference Float4_261:typeName:type[Float4_TypeDef20]
+Float4) : // expression TypeExpr Float
+// reference Float_266:typeName:type[Float_TypeDef14]
 Float
 ;
-// scope intrinsicDef_310
-// var definition abs#1(T)
-// function definition abs with 1 parameters
-intrinsic abs <// var definition T
-T>// var definition T
-T(// var definition x
-x : // var usage T_301:typeName:type:? defined at [T]
-T) : // var usage T_306:typeName:type:? defined at [T]
+// scope intrinsicDef_288
+// definition abs_FuncDef288
+intrinsic abs <// definition T_TypeParamDef274
+T>// definition T_TypeParamDef274
+T(// definition x_FuncParamDef281
+x : // expression TypeExpr T
+// reference T_279:typeName:type[T_TypeParamDef274]
+T) : // expression TypeExpr T
+// reference T_284:typeName:type[T_TypeParamDef274]
 T
 ;
-// scope intrinsicDef_329
-// var definition acos#1(T)
-// function definition acos with 1 parameters
-intrinsic acos <// var definition T
-T>// var definition T
-T(// var definition x
-x : // var usage T_320:typeName:type:? defined at [T]
-T) : // var usage T_325:typeName:type:? defined at [T]
+// scope intrinsicDef_306
+// definition acos_FuncDef306
+intrinsic acos <// definition T_TypeParamDef292
+T>// definition T_TypeParamDef292
+T(// definition x_FuncParamDef299
+x : // expression TypeExpr T
+// reference T_297:typeName:type[T_TypeParamDef292]
+T) : // expression TypeExpr T
+// reference T_302:typeName:type[T_TypeParamDef292]
 T
 ;
-// scope intrinsicDef_348
-// var definition asin#1(T)
-// function definition asin with 1 parameters
-intrinsic asin <// var definition T
-T>// var definition T
-T(// var definition x
-x : // var usage T_339:typeName:type:? defined at [T]
-T) : // var usage T_344:typeName:type:? defined at [T]
+// scope intrinsicDef_324
+// definition asin_FuncDef324
+intrinsic asin <// definition T_TypeParamDef310
+T>// definition T_TypeParamDef310
+T(// definition x_FuncParamDef317
+x : // expression TypeExpr T
+// reference T_315:typeName:type[T_TypeParamDef310]
+T) : // expression TypeExpr T
+// reference T_320:typeName:type[T_TypeParamDef310]
 T
 ;
-// scope intrinsicDef_367
-// var definition atan#1(T)
-// function definition atan with 1 parameters
-intrinsic atan <// var definition T
-T>// var definition T
-T(// var definition x
-x : // var usage T_358:typeName:type:? defined at [T]
-T) : // var usage T_363:typeName:type:? defined at [T]
+// scope intrinsicDef_342
+// definition atan_FuncDef342
+intrinsic atan <// definition T_TypeParamDef328
+T>// definition T_TypeParamDef328
+T(// definition x_FuncParamDef335
+x : // expression TypeExpr T
+// reference T_333:typeName:type[T_TypeParamDef328]
+T) : // expression TypeExpr T
+// reference T_338:typeName:type[T_TypeParamDef328]
 T
 ;
-// scope intrinsicDef_392
-// var definition atan2#2(T,T)
-// function definition atan2 with 2 parameters
-intrinsic atan2 <// var definition T
-T>// var definition T
-T(// var definition y
-y : // var usage T_377:typeName:type:? defined at [T]
-T, // var definition x
-x : // var usage T_383:typeName:type:? defined at [T]
-T) : // var usage T_388:typeName:type:? defined at [T]
+// scope intrinsicDef_366
+// definition atan2_FuncDef366
+intrinsic atan2 <// definition T_TypeParamDef346
+T>// definition T_TypeParamDef346
+T(// definition y_FuncParamDef353
+y : // expression TypeExpr T
+// reference T_351:typeName:type[T_TypeParamDef346]
+T, // definition x_FuncParamDef359
+x : // expression TypeExpr T
+// reference T_357:typeName:type[T_TypeParamDef346]
+T) : // expression TypeExpr T
+// reference T_362:typeName:type[T_TypeParamDef346]
 T
 ;
-// scope intrinsicDef_417
-// var definition ceil#2(T,T)
-// function definition ceil with 2 parameters
-intrinsic ceil <// var definition T
-T>// var definition T
-T(// var definition x
-x : // var usage T_402:typeName:type:? defined at [T]
-T, // var definition y
-y : // var usage T_408:typeName:type:? defined at [T]
-T) : // var usage T_413:typeName:type:? defined at [T]
+// scope intrinsicDef_390
+// definition ceil_FuncDef390
+intrinsic ceil <// definition T_TypeParamDef370
+T>// definition T_TypeParamDef370
+T(// definition x_FuncParamDef377
+x : // expression TypeExpr T
+// reference T_375:typeName:type[T_TypeParamDef370]
+T, // definition y_FuncParamDef383
+y : // expression TypeExpr T
+// reference T_381:typeName:type[T_TypeParamDef370]
+T) : // expression TypeExpr T
+// reference T_386:typeName:type[T_TypeParamDef370]
 T
 ;
-// scope intrinsicDef_436
-// var definition ceil#1(T)
-// function definition ceil with 1 parameters
-intrinsic ceil <// var definition T
-T>// var definition T
-T(// var definition x
-x : // var usage T_427:typeName:type:? defined at [T]
-T) : // var usage T_432:typeName:type:? defined at [T]
+// scope intrinsicDef_408
+// definition ceil_FuncDef408
+intrinsic ceil <// definition T_TypeParamDef394
+T>// definition T_TypeParamDef394
+T(// definition x_FuncParamDef401
+x : // expression TypeExpr T
+// reference T_399:typeName:type[T_TypeParamDef394]
+T) : // expression TypeExpr T
+// reference T_404:typeName:type[T_TypeParamDef394]
 T
 ;
-// scope intrinsicDef_467
-// var definition clamp#3(T,T,T)
-// function definition clamp with 3 parameters
-intrinsic clamp <// var definition T
-T>// var definition T
-T(// var definition x
-x : // var usage T_446:typeName:type:? defined at [T]
-T, // var definition min
-min : // var usage T_452:typeName:type:? defined at [T]
-T, // var definition max
-max : // var usage T_458:typeName:type:? defined at [T]
-T) : // var usage T_463:typeName:type:? defined at [T]
+// scope intrinsicDef_438
+// definition clamp_FuncDef438
+intrinsic clamp <// definition T_TypeParamDef412
+T>// definition T_TypeParamDef412
+T(// definition x_FuncParamDef419
+x : // expression TypeExpr T
+// reference T_417:typeName:type[T_TypeParamDef412]
+T, // definition min_FuncParamDef425
+min : // expression TypeExpr T
+// reference T_423:typeName:type[T_TypeParamDef412]
+T, // definition max_FuncParamDef431
+max : // expression TypeExpr T
+// reference T_429:typeName:type[T_TypeParamDef412]
+T) : // expression TypeExpr T
+// reference T_434:typeName:type[T_TypeParamDef412]
 T
 ;
-// scope intrinsicDef_486
-// var definition cos#1(T)
-// function definition cos with 1 parameters
-intrinsic cos <// var definition T
-T>// var definition T
-T(// var definition x
-x : // var usage T_477:typeName:type:? defined at [T]
-T) : // var usage T_482:typeName:type:? defined at [T]
+// scope intrinsicDef_456
+// definition cos_FuncDef456
+intrinsic cos <// definition T_TypeParamDef442
+T>// definition T_TypeParamDef442
+T(// definition x_FuncParamDef449
+x : // expression TypeExpr T
+// reference T_447:typeName:type[T_TypeParamDef442]
+T) : // expression TypeExpr T
+// reference T_452:typeName:type[T_TypeParamDef442]
 T
 ;
-// scope intrinsicDef_505
-// var definition exp#1(T)
-// function definition exp with 1 parameters
-intrinsic exp <// var definition T
-T>// var definition T
-T(// var definition x
-x : // var usage T_496:typeName:type:? defined at [T]
-T) : // var usage T_501:typeName:type:? defined at [T]
+// scope intrinsicDef_474
+// definition exp_FuncDef474
+intrinsic exp <// definition T_TypeParamDef460
+T>// definition T_TypeParamDef460
+T(// definition x_FuncParamDef467
+x : // expression TypeExpr T
+// reference T_465:typeName:type[T_TypeParamDef460]
+T) : // expression TypeExpr T
+// reference T_470:typeName:type[T_TypeParamDef460]
 T
 ;
-// scope intrinsicDef_524
-// var definition floor#1(T)
-// function definition floor with 1 parameters
-intrinsic floor <// var definition T
-T>// var definition T
-T(// var definition x
-x : // var usage T_515:typeName:type:? defined at [T]
-T) : // var usage T_520:typeName:type:? defined at [T]
+// scope intrinsicDef_492
+// definition floor_FuncDef492
+intrinsic floor <// definition T_TypeParamDef478
+T>// definition T_TypeParamDef478
+T(// definition x_FuncParamDef485
+x : // expression TypeExpr T
+// reference T_483:typeName:type[T_TypeParamDef478]
+T) : // expression TypeExpr T
+// reference T_488:typeName:type[T_TypeParamDef478]
 T
 ;
-// scope intrinsicDef_543
-// var definition log#1(T)
-// function definition log with 1 parameters
-intrinsic log <// var definition T
-T>// var definition T
-T(// var definition x
-x : // var usage T_534:typeName:type:? defined at [T]
-T) : // var usage T_539:typeName:type:? defined at [T]
+// scope intrinsicDef_510
+// definition log_FuncDef510
+intrinsic log <// definition T_TypeParamDef496
+T>// definition T_TypeParamDef496
+T(// definition x_FuncParamDef503
+x : // expression TypeExpr T
+// reference T_501:typeName:type[T_TypeParamDef496]
+T) : // expression TypeExpr T
+// reference T_506:typeName:type[T_TypeParamDef496]
 T
 ;
-// scope intrinsicDef_568
-// var definition max#2(T,T)
-// function definition max with 2 parameters
-intrinsic max <// var definition T
-T>// var definition T
-T(// var definition x
-x : // var usage T_553:typeName:type:? defined at [T]
-T, // var definition y
-y : // var usage T_559:typeName:type:? defined at [T]
-T) : // var usage T_564:typeName:type:? defined at [T]
+// scope intrinsicDef_534
+// definition max_FuncDef534
+intrinsic max <// definition T_TypeParamDef514
+T>// definition T_TypeParamDef514
+T(// definition x_FuncParamDef521
+x : // expression TypeExpr T
+// reference T_519:typeName:type[T_TypeParamDef514]
+T, // definition y_FuncParamDef527
+y : // expression TypeExpr T
+// reference T_525:typeName:type[T_TypeParamDef514]
+T) : // expression TypeExpr T
+// reference T_530:typeName:type[T_TypeParamDef514]
 T
 ;
-// scope intrinsicDef_593
-// var definition min#2(T,T)
-// function definition min with 2 parameters
-intrinsic min <// var definition T
-T>// var definition T
-T(// var definition x
-x : // var usage T_578:typeName:type:? defined at [T]
-T, // var definition y
-y : // var usage T_584:typeName:type:? defined at [T]
-T) : // var usage T_589:typeName:type:? defined at [T]
+// scope intrinsicDef_558
+// definition min_FuncDef558
+intrinsic min <// definition T_TypeParamDef538
+T>// definition T_TypeParamDef538
+T(// definition x_FuncParamDef545
+x : // expression TypeExpr T
+// reference T_543:typeName:type[T_TypeParamDef538]
+T, // definition y_FuncParamDef551
+y : // expression TypeExpr T
+// reference T_549:typeName:type[T_TypeParamDef538]
+T) : // expression TypeExpr T
+// reference T_554:typeName:type[T_TypeParamDef538]
+T
+;
+// scope intrinsicDef_582
+// definition pow_FuncDef582
+intrinsic pow <// definition T_TypeParamDef562
+T>// definition T_TypeParamDef562
+T(// definition x_FuncParamDef569
+x : // expression TypeExpr T
+// reference T_567:typeName:type[T_TypeParamDef562]
+T, // definition y_FuncParamDef575
+y : // expression TypeExpr T
+// reference T_573:typeName:type[T_TypeParamDef562]
+T) : // expression TypeExpr T
+// reference T_578:typeName:type[T_TypeParamDef562]
+T
+;
+// scope intrinsicDef_600
+// definition round_FuncDef600
+intrinsic round <// definition T_TypeParamDef586
+T>// definition T_TypeParamDef586
+T(// definition x_FuncParamDef593
+x : // expression TypeExpr T
+// reference T_591:typeName:type[T_TypeParamDef586]
+T) : // expression TypeExpr T
+// reference T_596:typeName:type[T_TypeParamDef586]
 T
 ;
 // scope intrinsicDef_618
-// var definition pow#2(T,T)
-// function definition pow with 2 parameters
-intrinsic pow <// var definition T
-T>// var definition T
-T(// var definition x
-x : // var usage T_603:typeName:type:? defined at [T]
-T, // var definition y
-y : // var usage T_609:typeName:type:? defined at [T]
-T) : // var usage T_614:typeName:type:? defined at [T]
+// definition sin_FuncDef618
+intrinsic sin <// definition T_TypeParamDef604
+T>// definition T_TypeParamDef604
+T(// definition x_FuncParamDef611
+x : // expression TypeExpr T
+// reference T_609:typeName:type[T_TypeParamDef604]
+T) : // expression TypeExpr T
+// reference T_614:typeName:type[T_TypeParamDef604]
 T
 ;
-// scope intrinsicDef_637
-// var definition round#1(T)
-// function definition round with 1 parameters
-intrinsic round <// var definition T
-T>// var definition T
-T(// var definition x
-x : // var usage T_628:typeName:type:? defined at [T]
-T) : // var usage T_633:typeName:type:? defined at [T]
+// scope intrinsicDef_636
+// definition sign_FuncDef636
+intrinsic sign <// definition T_TypeParamDef622
+T>// definition T_TypeParamDef622
+T(// definition x_FuncParamDef629
+x : // expression TypeExpr T
+// reference T_627:typeName:type[T_TypeParamDef622]
+T) : // expression TypeExpr T
+// reference T_632:typeName:type[T_TypeParamDef622]
 T
 ;
-// scope intrinsicDef_656
-// var definition sin#1(T)
-// function definition sin with 1 parameters
-intrinsic sin <// var definition T
-T>// var definition T
-T(// var definition x
-x : // var usage T_647:typeName:type:? defined at [T]
-T) : // var usage T_652:typeName:type:? defined at [T]
+// scope intrinsicDef_654
+// definition sqrt_FuncDef654
+intrinsic sqrt <// definition T_TypeParamDef640
+T>// definition T_TypeParamDef640
+T(// definition x_FuncParamDef647
+x : // expression TypeExpr T
+// reference T_645:typeName:type[T_TypeParamDef640]
+T) : // expression TypeExpr T
+// reference T_650:typeName:type[T_TypeParamDef640]
 T
 ;
-// scope intrinsicDef_675
-// var definition sign#1(T)
-// function definition sign with 1 parameters
-intrinsic sign <// var definition T
-T>// var definition T
-T(// var definition x
-x : // var usage T_666:typeName:type:? defined at [T]
-T) : // var usage T_671:typeName:type:? defined at [T]
+// scope intrinsicDef_672
+// definition tan_FuncDef672
+intrinsic tan <// definition T_TypeParamDef658
+T>// definition T_TypeParamDef658
+T(// definition x_FuncParamDef665
+x : // expression TypeExpr T
+// reference T_663:typeName:type[T_TypeParamDef658]
+T) : // expression TypeExpr T
+// reference T_668:typeName:type[T_TypeParamDef658]
 T
 ;
-// scope intrinsicDef_694
-// var definition sqrt#1(T)
-// function definition sqrt with 1 parameters
-intrinsic sqrt <// var definition T
-T>// var definition T
-T(// var definition x
-x : // var usage T_685:typeName:type:? defined at [T]
-T) : // var usage T_690:typeName:type:? defined at [T]
+// scope intrinsicDef_697
+// definition op+_FuncDef697
+intrinsic op+ <// definition T_TypeParamDef677
+T>// definition T_TypeParamDef677
+T(// definition x_FuncParamDef684
+x : // expression TypeExpr T
+// reference T_682:typeName:type[T_TypeParamDef677]
+T, // definition y_FuncParamDef690
+y : // expression TypeExpr T
+// reference T_688:typeName:type[T_TypeParamDef677]
+T) : // expression TypeExpr T
+// reference T_693:typeName:type[T_TypeParamDef677]
 T
 ;
-// scope intrinsicDef_713
-// var definition tan#1(T)
-// function definition tan with 1 parameters
-intrinsic tan <// var definition T
-T>// var definition T
-T(// var definition x
-x : // var usage T_704:typeName:type:? defined at [T]
-T) : // var usage T_709:typeName:type:? defined at [T]
+// scope intrinsicDef_722
+// definition op-_FuncDef722
+intrinsic op- <// definition T_TypeParamDef702
+T>// definition T_TypeParamDef702
+T(// definition x_FuncParamDef709
+x : // expression TypeExpr T
+// reference T_707:typeName:type[T_TypeParamDef702]
+T, // definition y_FuncParamDef715
+y : // expression TypeExpr T
+// reference T_713:typeName:type[T_TypeParamDef702]
+T) : // expression TypeExpr T
+// reference T_718:typeName:type[T_TypeParamDef702]
 T
 ;
-// scope intrinsicDef_739
-// var definition op+#2(T,T)
-// function definition op+ with 2 parameters
-intrinsic op+ <// var definition T
-T>// var definition T
-T(// var definition x
-x : // var usage T_724:typeName:type:? defined at [T]
-T, // var definition y
-y : // var usage T_730:typeName:type:? defined at [T]
-T) : // var usage T_735:typeName:type:? defined at [T]
+// scope intrinsicDef_747
+// definition op*_FuncDef747
+intrinsic op* <// definition T_TypeParamDef727
+T>// definition T_TypeParamDef727
+T(// definition x_FuncParamDef734
+x : // expression TypeExpr T
+// reference T_732:typeName:type[T_TypeParamDef727]
+T, // definition y_FuncParamDef740
+y : // expression TypeExpr T
+// reference T_738:typeName:type[T_TypeParamDef727]
+T) : // expression TypeExpr T
+// reference T_743:typeName:type[T_TypeParamDef727]
 T
 ;
-// scope intrinsicDef_765
-// var definition op-#2(T,T)
-// function definition op- with 2 parameters
-intrinsic op- <// var definition T
-T>// var definition T
-T(// var definition x
-x : // var usage T_750:typeName:type:? defined at [T]
-T, // var definition y
-y : // var usage T_756:typeName:type:? defined at [T]
-T) : // var usage T_761:typeName:type:? defined at [T]
+// scope intrinsicDef_772
+// definition op/_FuncDef772
+intrinsic op/ <// definition T_TypeParamDef752
+T>// definition T_TypeParamDef752
+T(// definition x_FuncParamDef759
+x : // expression TypeExpr T
+// reference T_757:typeName:type[T_TypeParamDef752]
+T, // definition y_FuncParamDef765
+y : // expression TypeExpr T
+// reference T_763:typeName:type[T_TypeParamDef752]
+T) : // expression TypeExpr T
+// reference T_768:typeName:type[T_TypeParamDef752]
 T
 ;
-// scope intrinsicDef_791
-// var definition op*#2(T,T)
-// function definition op* with 2 parameters
-intrinsic op* <// var definition T
-T>// var definition T
-T(// var definition x
-x : // var usage T_776:typeName:type:? defined at [T]
-T, // var definition y
-y : // var usage T_782:typeName:type:? defined at [T]
-T) : // var usage T_787:typeName:type:? defined at [T]
+// scope intrinsicDef_797
+// definition op%_FuncDef797
+intrinsic op% <// definition T_TypeParamDef777
+T>// definition T_TypeParamDef777
+T(// definition x_FuncParamDef784
+x : // expression TypeExpr T
+// reference T_782:typeName:type[T_TypeParamDef777]
+T, // definition y_FuncParamDef790
+y : // expression TypeExpr T
+// reference T_788:typeName:type[T_TypeParamDef777]
+T) : // expression TypeExpr T
+// reference T_793:typeName:type[T_TypeParamDef777]
 T
 ;
-// scope intrinsicDef_817
-// var definition op/#2(T,T)
-// function definition op/ with 2 parameters
-intrinsic op/ <// var definition T
-T>// var definition T
-T(// var definition x
-x : // var usage T_802:typeName:type:? defined at [T]
-T, // var definition y
-y : // var usage T_808:typeName:type:? defined at [T]
-T) : // var usage T_813:typeName:type:? defined at [T]
-T
-;
-// scope intrinsicDef_843
-// var definition op%#2(T,T)
-// function definition op% with 2 parameters
-intrinsic op% <// var definition T
-T>// var definition T
-T(// var definition x
-x : // var usage T_828:typeName:type:? defined at [T]
-T, // var definition y
-y : // var usage T_834:typeName:type:? defined at [T]
-T) : // var usage T_839:typeName:type:? defined at [T]
-T
-;
-// scope intrinsicDef_869
-// var definition op>#2(T,T)
-// function definition op> with 2 parameters
-intrinsic op> <// var definition T
-T>// var definition T
-T(// var definition x
-x : // var usage T_854:typeName:type:? defined at [T]
-T, // var definition y
-y : // var usage T_860:typeName:type:? defined at [T]
-T) : // var usage Bool_865:typeName:type:? defined at [Bool]
+// scope intrinsicDef_822
+// definition op>_FuncDef822
+intrinsic op> <// definition T_TypeParamDef802
+T>// definition T_TypeParamDef802
+T(// definition x_FuncParamDef809
+x : // expression TypeExpr T
+// reference T_807:typeName:type[T_TypeParamDef802]
+T, // definition y_FuncParamDef815
+y : // expression TypeExpr T
+// reference T_813:typeName:type[T_TypeParamDef802]
+T) : // expression TypeExpr Bool
+// reference Bool_818:typeName:type[Bool_TypeDef22]
 Bool
 ;
-// scope intrinsicDef_895
-// var definition op>=#2(T,T)
-// function definition op>= with 2 parameters
-intrinsic op>= <// var definition T
-T>// var definition T
-T(// var definition x
-x : // var usage T_880:typeName:type:? defined at [T]
-T, // var definition y
-y : // var usage T_886:typeName:type:? defined at [T]
-T) : // var usage Bool_891:typeName:type:? defined at [Bool]
+// scope intrinsicDef_847
+// definition op>=_FuncDef847
+intrinsic op>= <// definition T_TypeParamDef827
+T>// definition T_TypeParamDef827
+T(// definition x_FuncParamDef834
+x : // expression TypeExpr T
+// reference T_832:typeName:type[T_TypeParamDef827]
+T, // definition y_FuncParamDef840
+y : // expression TypeExpr T
+// reference T_838:typeName:type[T_TypeParamDef827]
+T) : // expression TypeExpr Bool
+// reference Bool_843:typeName:type[Bool_TypeDef22]
 Bool
 ;
-// scope intrinsicDef_921
-// var definition op<#2(T,T)
-// function definition op< with 2 parameters
-intrinsic op< <// var definition T
-T>// var definition T
-T(// var definition x
-x : // var usage T_906:typeName:type:? defined at [T]
-T, // var definition y
-y : // var usage T_912:typeName:type:? defined at [T]
-T) : // var usage Bool_917:typeName:type:? defined at [Bool]
+// scope intrinsicDef_872
+// definition op<_FuncDef872
+intrinsic op< <// definition T_TypeParamDef852
+T>// definition T_TypeParamDef852
+T(// definition x_FuncParamDef859
+x : // expression TypeExpr T
+// reference T_857:typeName:type[T_TypeParamDef852]
+T, // definition y_FuncParamDef865
+y : // expression TypeExpr T
+// reference T_863:typeName:type[T_TypeParamDef852]
+T) : // expression TypeExpr Bool
+// reference Bool_868:typeName:type[Bool_TypeDef22]
+Bool
+;
+// scope intrinsicDef_897
+// definition op<=_FuncDef897
+intrinsic op<= <// definition T_TypeParamDef877
+T>// definition T_TypeParamDef877
+T(// definition x_FuncParamDef884
+x : // expression TypeExpr T
+// reference T_882:typeName:type[T_TypeParamDef877]
+T, // definition y_FuncParamDef890
+y : // expression TypeExpr T
+// reference T_888:typeName:type[T_TypeParamDef877]
+T) : // expression TypeExpr Bool
+// reference Bool_893:typeName:type[Bool_TypeDef22]
+Bool
+;
+// scope intrinsicDef_922
+// definition op!=_FuncDef922
+intrinsic op!= <// definition T_TypeParamDef902
+T>// definition T_TypeParamDef902
+T(// definition x_FuncParamDef909
+x : // expression TypeExpr T
+// reference T_907:typeName:type[T_TypeParamDef902]
+T, // definition y_FuncParamDef915
+y : // expression TypeExpr T
+// reference T_913:typeName:type[T_TypeParamDef902]
+T) : // expression TypeExpr Bool
+// reference Bool_918:typeName:type[Bool_TypeDef22]
 Bool
 ;
 // scope intrinsicDef_947
-// var definition op<=#2(T,T)
-// function definition op<= with 2 parameters
-intrinsic op<= <// var definition T
-T>// var definition T
-T(// var definition x
-x : // var usage T_932:typeName:type:? defined at [T]
-T, // var definition y
-y : // var usage T_938:typeName:type:? defined at [T]
-T) : // var usage Bool_943:typeName:type:? defined at [Bool]
+// definition op==_FuncDef947
+intrinsic op== <// definition T_TypeParamDef927
+T>// definition T_TypeParamDef927
+T(// definition x_FuncParamDef934
+x : // expression TypeExpr T
+// reference T_932:typeName:type[T_TypeParamDef927]
+T, // definition y_FuncParamDef940
+y : // expression TypeExpr T
+// reference T_938:typeName:type[T_TypeParamDef927]
+T) : // expression TypeExpr Bool
+// reference Bool_943:typeName:type[Bool_TypeDef22]
 Bool
 ;
-// scope intrinsicDef_973
-// var definition op!=#2(T,T)
-// function definition op!= with 2 parameters
-intrinsic op!= <// var definition T
-T>// var definition T
-T(// var definition x
-x : // var usage T_958:typeName:type:? defined at [T]
-T, // var definition y
-y : // var usage T_964:typeName:type:? defined at [T]
-T) : // var usage Bool_969:typeName:type:? defined at [Bool]
-Bool
-;
-// scope intrinsicDef_999
-// var definition op==#2(T,T)
-// function definition op== with 2 parameters
-intrinsic op== <// var definition T
-T>// var definition T
-T(// var definition x
-x : // var usage T_984:typeName:type:? defined at [T]
-T, // var definition y
-y : // var usage T_990:typeName:type:? defined at [T]
-T) : // var usage Bool_995:typeName:type:? defined at [Bool]
-Bool
-;
-// scope intrinsicDef_1024
-// var definition op_at#2(Array,Num)
-// function definition op_at with 2 parameters
-intrinsic op_at <// var definition T
-T>// var definition T
-T(// var definition x
-x : // var usage Array_1009:typeName:type:? defined at [Array]
-Array, // var definition i
-i : // var usage Num_1015:typeName:type:? defined at [Num]
-Num) : // var usage Any_1020:typeName:type:? defined at []
+// scope intrinsicDef_969
+// definition op_at_FuncDef969
+intrinsic op_at(// definition x_FuncParamDef956
+x : // expression TypeExpr Array
+// reference Array_954:typeName:type[Array_TypeDef28]
+Array, // definition i_FuncParamDef962
+i : // expression TypeExpr Num
+// reference Num_960:typeName:type[Num_TypeDef24]
+Num) : // expression TypeExpr Any
+// reference Any_965:typeName:type[Any_TypeDef12]
 Any
 ;
-// scope intrinsicDef_1049
-// var definition op_range#2(Num,Num)
-// function definition op_range with 2 parameters
-intrinsic op_range <// var definition T
-T>// var definition T
-T(// var definition from
-from : // var usage Num_1034:typeName:type:? defined at [Num]
-Num, // var definition to
-to : // var usage Num_1040:typeName:type:? defined at [Num]
-Num) : // var usage Array_1045:typeName:type:? defined at [Array]
+// scope intrinsicDef_991
+// definition op_range_FuncDef991
+intrinsic op_range(// definition from_FuncParamDef978
+from : // expression TypeExpr Num
+// reference Num_976:typeName:type[Num_TypeDef24]
+Num, // definition to_FuncParamDef984
+to : // expression TypeExpr Num
+// reference Num_982:typeName:type[Num_TypeDef24]
+Num) : // expression TypeExpr Array
+// reference Array_987:typeName:type[Array_TypeDef28]
 Array
+;
+// scope intrinsicDef_1007
+// definition op_not_FuncDef1007
+intrinsic op_not(// definition x_FuncParamDef1000
+x : // expression TypeExpr Bool
+// reference Bool_998:typeName:type[Bool_TypeDef22]
+Bool) : // expression TypeExpr Bool
+// reference Bool_1003:typeName:type[Bool_TypeDef22]
+Bool
+;
+// scope intrinsicDef_1023
+// definition op_negate_FuncDef1023
+intrinsic op_negate(// definition x_FuncParamDef1016
+x : // expression TypeExpr Num
+// reference Num_1014:typeName:type[Num_TypeDef24]
+Num) : // expression TypeExpr Num
+// reference Num_1019:typeName:type[Num_TypeDef24]
+Num
 ;
 }

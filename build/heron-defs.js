@@ -1,4 +1,6 @@
 "use strict";
+// This module provides support for dealing with definitions.  
+// A definition could be a function definition, parameter definition, variable definition, type definition. 
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -11,7 +13,6 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var heron_ast_rewrite_1 = require("./heron-ast-rewrite");
-var heron_expr_1 = require("./heron-expr");
 // This is a definition of a name. It could be a function, variable, type
 var Def = /** @class */ (function () {
     function Def(node, name, type) {
@@ -20,6 +21,9 @@ var Def = /** @class */ (function () {
         this.type = type;
         node['def'] = this;
     }
+    Def.prototype.toString = function () {
+        return this.name + '_' + this.constructor['name'] + this.node['id'];
+    };
     return Def;
 }());
 exports.Def = Def;
@@ -51,11 +55,12 @@ var FuncParamDef = /** @class */ (function (_super) {
     return FuncParamDef;
 }(Def));
 exports.FuncParamDef = FuncParamDef;
-// Represents the definition of a variable
+// Represents the definition of a variable. 
+// The type is not known, until the type of the expression is figured out.
 var VarDef = /** @class */ (function (_super) {
     __extends(VarDef, _super);
     function VarDef(node, name, expr) {
-        var _this = _super.call(this, node, name, expr) || this;
+        var _this = _super.call(this, node, name, null) || this;
         _this.node = node;
         _this.name = name;
         _this.expr = expr;
@@ -148,7 +153,7 @@ function createVarDef(node) {
     heron_ast_rewrite_1.validateNode(node, 'varDecl');
     var name = heron_ast_rewrite_1.validateNode(node.children[0], 'varNameDecl');
     var init = heron_ast_rewrite_1.validateNode(node.children[1], 'varInitialization');
-    return new VarDef(node, name.allText, heron_expr_1.createExpr(init.children[0]));
+    return new VarDef(node, name.allText, init.children[0]);
 }
 exports.createVarDef = createVarDef;
 function createTypeDef(node) {
@@ -157,6 +162,17 @@ function createTypeDef(node) {
     return new TypeDef(node, name);
 }
 exports.createTypeDef = createTypeDef;
+function getDef(node, typeName) {
+    if (!node)
+        throw new Error("Node is missing");
+    var def = node['def'];
+    if (!def)
+        heron_ast_rewrite_1.throwError(node, "No definition associated with node");
+    if (def.constructor['name'] !== typeName)
+        heron_ast_rewrite_1.throwError(node, "Incorrect definition type, expected " + typeName + " was " + def.constructor['name']);
+    return def;
+}
+exports.getDef = getDef;
 // STEP1: create the defs
 // STEP2: create the refs ... 
 // STEP3: figure out the expression ...

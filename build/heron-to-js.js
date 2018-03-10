@@ -241,10 +241,6 @@ var HeronToJs = /** @class */ (function () {
         this.visitChildren(ast, state);
         state.pushLine(';');
     };
-    HeronToJs.prototype.visit_statement = function (ast, state) {
-        // choice(emptyStatement,compoundStatement,ifStatement,returnStatement,continueStatement,breakStatement,forLoop,doLoop,whileLoop,varDecl,exprStatement,funcDef)
-        this.visitChildren(ast, state);
-    };
     HeronToJs.prototype.visit_varDecl = function (ast, state) {
         // seq(identifier,varInitialization)
         state.push("let ");

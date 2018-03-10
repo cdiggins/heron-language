@@ -1,25 +1,49 @@
-// Generated on Wed Mar 07 2018 22:17:34 GMT-0500 (Eastern Standard Time)
-// scope file_714
-language heron:std:0.1;
+// Generated on Fri Mar 09 2018 21:37:41 GMT-0500 (Eastern Standard Time)
+// scope module_550
+// definition heron:geometry.vector:0.1_ModuleDef550
 heron:geometry.vector:0.1{
-var // var definition origin
-origin = // var usage vector_14:leafExpr:fun:Void defined at [vector#3(Float,Float,Float), vector#1(Float), vector#1(Any), vector#1(Array)]
-vector(0, 0, 0);
-var // var definition ones
-ones = // var usage vector_31:leafExpr:fun:Void defined at [vector#3(Float,Float,Float), vector#1(Float), vector#1(Any), vector#1(Array)]
-vector(1, 1, 1);
-var // var definition xaxis
-xaxis = // var usage vector_48:leafExpr:fun:Void defined at [vector#3(Float,Float,Float), vector#1(Float), vector#1(Any), vector#1(Array)]
-vector(1, 0, 0);
-var // var definition yaxis
-yaxis = // var usage vector_65:leafExpr:fun:Void defined at [vector#3(Float,Float,Float), vector#1(Float), vector#1(Any), vector#1(Array)]
-vector(0, 1, 0);
-var // var definition zaxis
-zaxis = // var usage vector_82:leafExpr:fun:Void defined at [vector#3(Float,Float,Float), vector#1(Float), vector#1(Any), vector#1(Array)]
-vector(0, 0, 1);
-// scope funcDef_131
-// var definition vector#3(Float,Float,Float)
-// function definition vector with 3 parameters
+var // definition origin_VarDef20
+origin = // expression FunCall vector[vector_FuncDef102,vector_FuncDef122,vector_FuncDef148,vector_FuncDef180](0,0,0)
+// reference vector_13:varName:var[vector_FuncDef102, vector_FuncDef122, vector_FuncDef148, vector_FuncDef180]
+// expression VarName vector[vector_FuncDef102,vector_FuncDef122,vector_FuncDef148,vector_FuncDef180]
+vector(// expression Literal 0
+0, // expression Literal 0
+0, // expression Literal 0
+0);
+var // definition ones_VarDef32
+ones = // expression FunCall vector[vector_FuncDef102,vector_FuncDef122,vector_FuncDef148,vector_FuncDef180](1,1,1)
+// reference vector_25:varName:var[vector_FuncDef102, vector_FuncDef122, vector_FuncDef148, vector_FuncDef180]
+// expression VarName vector[vector_FuncDef102,vector_FuncDef122,vector_FuncDef148,vector_FuncDef180]
+vector(// expression Literal 1
+1, // expression Literal 1
+1, // expression Literal 1
+1);
+var // definition xaxis_VarDef44
+xaxis = // expression FunCall vector[vector_FuncDef102,vector_FuncDef122,vector_FuncDef148,vector_FuncDef180](1,0,0)
+// reference vector_37:varName:var[vector_FuncDef102, vector_FuncDef122, vector_FuncDef148, vector_FuncDef180]
+// expression VarName vector[vector_FuncDef102,vector_FuncDef122,vector_FuncDef148,vector_FuncDef180]
+vector(// expression Literal 1
+1, // expression Literal 0
+0, // expression Literal 0
+0);
+var // definition yaxis_VarDef56
+yaxis = // expression FunCall vector[vector_FuncDef102,vector_FuncDef122,vector_FuncDef148,vector_FuncDef180](0,1,0)
+// reference vector_49:varName:var[vector_FuncDef102, vector_FuncDef122, vector_FuncDef148, vector_FuncDef180]
+// expression VarName vector[vector_FuncDef102,vector_FuncDef122,vector_FuncDef148,vector_FuncDef180]
+vector(// expression Literal 0
+0, // expression Literal 1
+1, // expression Literal 0
+0);
+var // definition zaxis_VarDef68
+zaxis = // expression FunCall vector[vector_FuncDef102,vector_FuncDef122,vector_FuncDef148,vector_FuncDef180](0,0,1)
+// reference vector_61:varName:var[vector_FuncDef102, vector_FuncDef122, vector_FuncDef148, vector_FuncDef180]
+// expression VarName vector[vector_FuncDef102,vector_FuncDef122,vector_FuncDef148,vector_FuncDef180]
+vector(// expression Literal 0
+0, // expression Literal 0
+0, // expression Literal 1
+1);
+// scope funcDef_102
+// definition vector_FuncDef102
 
 /**
 function vector(x: Float, y: Float, z: Float) 
@@ -27,68 +51,87 @@ function vector(x: Float, y: Float, z: Float)
 
     
 */
-// scope funcDef_131
-// var definition vector#3(Float,Float,Float)
-// function definition vector with 3 parameters
-function vector(// var definition x
-x : // var usage Float_102:typeName:type:? defined at [Float]
-Float, // var definition y
-y : // var usage Float_108:typeName:type:? defined at [Float]
-Float, // var definition z
-z : // var usage Float_114:typeName:type:? defined at [Float]
+// scope funcDef_102
+// definition vector_FuncDef102
+function vector(// definition x_FuncParamDef79
+x : // expression TypeExpr Float
+// reference Float_77:typeName:type[Float_TypeDef14]
+Float, // definition y_FuncParamDef85
+y : // expression TypeExpr Float
+// reference Float_83:typeName:type[Float_TypeDef14]
+Float, // definition z_FuncParamDef91
+z : // expression TypeExpr Float
+// reference Float_89:typeName:type[Float_TypeDef14]
 Float)
- = // var usage float3_120:leafExpr:fun:Void defined at [float3#3(Float,Float,Float)]
-float3(// var usage x_122:leafExpr:arg:Void defined at [x]
-x, // var usage y_124:leafExpr:arg:Void defined at [y]
-y, // var usage z_126:leafExpr:arg:Void defined at [z]
+ = // expression FunCall float3[float3_FuncDef124](x[x_FuncParamDef79],y[y_FuncParamDef85],z[z_FuncParamDef91])
+// reference float3_94:varName:var[float3_FuncDef124]
+// expression VarName float3[float3_FuncDef124]
+float3(// reference x_95:varName:var[x_FuncParamDef79]
+// expression VarName x[x_FuncParamDef79]
+x, // reference y_96:varName:var[y_FuncParamDef85]
+// expression VarName y[y_FuncParamDef85]
+y, // reference z_97:varName:var[z_FuncParamDef91]
+// expression VarName z[z_FuncParamDef91]
 z);
-// scope funcDef_156
-// var definition vector#1(Float)
-// function definition vector with 1 parameters
+// scope funcDef_122
+// definition vector_FuncDef122
 
 /**
 function vector(x: Float)
-        = float(x, x, x);
+        = vector(x, x, x);
 
     
 */
-// scope funcDef_156
-// var definition vector#1(Float)
-// function definition vector with 1 parameters
-function vector(// var definition x
-x : // var usage Float_139:typeName:type:? defined at [Float]
+// scope funcDef_122
+// definition vector_FuncDef122
+function vector(// definition x_FuncParamDef111
+x : // expression TypeExpr Float
+// reference Float_109:typeName:type[Float_TypeDef14]
 Float)
- = // var usage float_145:leafExpr:fun:Void defined at []
-float(// var usage x_147:leafExpr:arg:Void defined at [x]
-x, // var usage x_149:leafExpr:arg:Void defined at [x]
-x, // var usage x_151:leafExpr:arg:Void defined at [x]
+ = // expression FunCall vector[vector_FuncDef102,vector_FuncDef122,vector_FuncDef148,vector_FuncDef180](x[x_FuncParamDef111],x[x_FuncParamDef111],x[x_FuncParamDef111])
+// reference vector_114:varName:var[vector_FuncDef102, vector_FuncDef122, vector_FuncDef148, vector_FuncDef180]
+// expression VarName vector[vector_FuncDef102,vector_FuncDef122,vector_FuncDef148,vector_FuncDef180]
+vector(// reference x_115:varName:var[x_FuncParamDef111]
+// expression VarName x[x_FuncParamDef111]
+x, // reference x_116:varName:var[x_FuncParamDef111]
+// expression VarName x[x_FuncParamDef111]
+x, // reference x_117:varName:var[x_FuncParamDef111]
+// expression VarName x[x_FuncParamDef111]
 x);
-// scope funcDef_190
-// var definition vector#1(Any)
-// function definition vector with 1 parameters
+// scope funcDef_148
+// definition vector_FuncDef148
 
 /**
 function vector(v)
-        = float(v.x, v.y, v.z);
+        = vector(v.x, v.y, v.z);
 
     
 */
-// scope funcDef_190
-// var definition vector#1(Any)
-// function definition vector with 1 parameters
-function vector(// var definition v
+// scope funcDef_148
+// definition vector_FuncDef148
+function vector(// definition v_FuncParamDef128
 v)
- = // var usage float_167:leafExpr:fun:Void defined at []
-float(// var usage x_169:leafExpr:fun:Void defined at [x#1(Float2), x#1(Float3), x#1(Float4)]
-x(// var usage v_171:leafExpr:arg:Void defined at [v]
-v), // var usage y_175:leafExpr:fun:Void defined at [y#1(Float2), y#1(Float3), y#1(Float4)]
-y(// var usage v_177:leafExpr:arg:Void defined at [v]
-v), // var usage z_181:leafExpr:fun:Void defined at [z#1(Float3), z#1(Float4)]
-z(// var usage v_183:leafExpr:arg:Void defined at [v]
+ = // expression FunCall vector[vector_FuncDef102,vector_FuncDef122,vector_FuncDef148,vector_FuncDef180](x[x_FuncDef80,x_FuncDef140,x_FuncDef222](v[v_FuncParamDef128]),y[y_FuncDef96,y_FuncDef156,y_FuncDef238](v[v_FuncParamDef128]),z[z_FuncDef172,z_FuncDef254](v[v_FuncParamDef128]))
+// reference vector_131:varName:var[vector_FuncDef102, vector_FuncDef122, vector_FuncDef148, vector_FuncDef180]
+// expression VarName vector[vector_FuncDef102,vector_FuncDef122,vector_FuncDef148,vector_FuncDef180]
+vector(// expression FunCall x[x_FuncDef80,x_FuncDef140,x_FuncDef222](v[v_FuncParamDef128])
+// reference x_132:varName:var[x_FuncDef80, x_FuncDef140, x_FuncDef222]
+// expression VarName x[x_FuncDef80,x_FuncDef140,x_FuncDef222]
+x(// reference v_133:varName:var[v_FuncParamDef128]
+// expression VarName v[v_FuncParamDef128]
+v), // expression FunCall y[y_FuncDef96,y_FuncDef156,y_FuncDef238](v[v_FuncParamDef128])
+// reference y_136:varName:var[y_FuncDef96, y_FuncDef156, y_FuncDef238]
+// expression VarName y[y_FuncDef96,y_FuncDef156,y_FuncDef238]
+y(// reference v_137:varName:var[v_FuncParamDef128]
+// expression VarName v[v_FuncParamDef128]
+v), // expression FunCall z[z_FuncDef172,z_FuncDef254](v[v_FuncParamDef128])
+// reference z_140:varName:var[z_FuncDef172, z_FuncDef254]
+// expression VarName z[z_FuncDef172,z_FuncDef254]
+z(// reference v_141:varName:var[v_FuncParamDef128]
+// expression VarName v[v_FuncParamDef128]
 v));
-// scope funcDef_233
-// var definition vector#1(Array)
-// function definition vector with 1 parameters
+// scope funcDef_180
+// definition vector_FuncDef180
 
 /**
 function vector(xs: Array)
@@ -96,23 +139,36 @@ function vector(xs: Array)
 
     
 */
-// scope funcDef_233
-// var definition vector#1(Array)
-// function definition vector with 1 parameters
-function vector(// var definition xs
-xs : // var usage Array_198:typeName:type:? defined at [Array]
+// scope funcDef_180
+// definition vector_FuncDef180
+function vector(// definition xs_FuncParamDef157
+xs : // expression TypeExpr Array
+// reference Array_155:typeName:type[Array_TypeDef28]
 Array)
- = // var usage vector_204:leafExpr:fun:Void defined at [vector#3(Float,Float,Float), vector#1(Float), vector#1(Any), vector#1(Array)]
-vector(// var usage op_at_206:leafExpr:fun:Void defined at [op_at#2(Array,Num)]
-op_at(// var usage xs_208:leafExpr:arg:Void defined at [xs]
-xs, 0), // var usage op_at_214:leafExpr:fun:Void defined at [op_at#2(Array,Num)]
-op_at(// var usage xs_216:leafExpr:arg:Void defined at [xs]
-xs, 1), // var usage op_at_222:leafExpr:fun:Void defined at [op_at#2(Array,Num)]
-op_at(// var usage xs_224:leafExpr:arg:Void defined at [xs]
-xs, 2));
-// scope funcDef_265
-// var definition array#1(Any)
-// function definition array with 1 parameters
+ = // expression FunCall vector[vector_FuncDef102,vector_FuncDef122,vector_FuncDef148,vector_FuncDef180](op_at[op_at_FuncDef969](xs[xs_FuncParamDef157],0),op_at[op_at_FuncDef969](xs[xs_FuncParamDef157],1),op_at[op_at_FuncDef969](xs[xs_FuncParamDef157],2))
+// reference vector_160:varName:var[vector_FuncDef102, vector_FuncDef122, vector_FuncDef148, vector_FuncDef180]
+// expression VarName vector[vector_FuncDef102,vector_FuncDef122,vector_FuncDef148,vector_FuncDef180]
+vector(// expression FunCall op_at[op_at_FuncDef969](xs[xs_FuncParamDef157],0)
+// reference op_at_161:varName:var[op_at_FuncDef969]
+// expression VarName op_at[op_at_FuncDef969]
+op_at(// reference xs_162:varName:var[xs_FuncParamDef157]
+// expression VarName xs[xs_FuncParamDef157]
+xs, // expression Literal 0
+0), // expression FunCall op_at[op_at_FuncDef969](xs[xs_FuncParamDef157],1)
+// reference op_at_166:varName:var[op_at_FuncDef969]
+// expression VarName op_at[op_at_FuncDef969]
+op_at(// reference xs_167:varName:var[xs_FuncParamDef157]
+// expression VarName xs[xs_FuncParamDef157]
+xs, // expression Literal 1
+1), // expression FunCall op_at[op_at_FuncDef969](xs[xs_FuncParamDef157],2)
+// reference op_at_171:varName:var[op_at_FuncDef969]
+// expression VarName op_at[op_at_FuncDef969]
+op_at(// reference xs_172:varName:var[xs_FuncParamDef157]
+// expression VarName xs[xs_FuncParamDef157]
+xs, // expression Literal 2
+2));
+// scope funcDef_204
+// definition array_FuncDef204
 
 /**
 function array(v) 
@@ -120,21 +176,29 @@ function array(v)
 
     
 */
-// scope funcDef_265
-// var definition array#1(Any)
-// function definition array with 1 parameters
-function array(// var definition v
+// scope funcDef_204
+// definition array_FuncDef204
+function array(// definition v_FuncParamDef186
 v)
- = [// var usage x_244:leafExpr:fun:Void defined at [x#1(Float2), x#1(Float3), x#1(Float4)]
-x(// var usage v_246:leafExpr:arg:Void defined at [v]
-v), // var usage y_250:leafExpr:fun:Void defined at [y#1(Float2), y#1(Float3), y#1(Float4)]
-y(// var usage v_252:leafExpr:arg:Void defined at [v]
-v), // var usage z_256:leafExpr:fun:Void defined at [z#1(Float3), z#1(Float4)]
-z(// var usage v_258:leafExpr:arg:Void defined at [v]
+ = // expression ArrayLiteral [x[x_FuncDef80,x_FuncDef140,x_FuncDef222](v[v_FuncParamDef186]),y[y_FuncDef96,y_FuncDef156,y_FuncDef238](v[v_FuncParamDef186]),z[z_FuncDef172,z_FuncDef254](v[v_FuncParamDef186])]
+[// expression FunCall x[x_FuncDef80,x_FuncDef140,x_FuncDef222](v[v_FuncParamDef186])
+// reference x_189:varName:var[x_FuncDef80, x_FuncDef140, x_FuncDef222]
+// expression VarName x[x_FuncDef80,x_FuncDef140,x_FuncDef222]
+x(// reference v_190:varName:var[v_FuncParamDef186]
+// expression VarName v[v_FuncParamDef186]
+v), // expression FunCall y[y_FuncDef96,y_FuncDef156,y_FuncDef238](v[v_FuncParamDef186])
+// reference y_193:varName:var[y_FuncDef96, y_FuncDef156, y_FuncDef238]
+// expression VarName y[y_FuncDef96,y_FuncDef156,y_FuncDef238]
+y(// reference v_194:varName:var[v_FuncParamDef186]
+// expression VarName v[v_FuncParamDef186]
+v), // expression FunCall z[z_FuncDef172,z_FuncDef254](v[v_FuncParamDef186])
+// reference z_197:varName:var[z_FuncDef172, z_FuncDef254]
+// expression VarName z[z_FuncDef172,z_FuncDef254]
+z(// reference v_198:varName:var[v_FuncParamDef186]
+// expression VarName v[v_FuncParamDef186]
 v)];
-// scope funcDef_303
-// var definition sum#1(Any)
-// function definition sum with 1 parameters
+// scope funcDef_233
+// definition sum_FuncDef233
 
 /**
 function sum(v) 
@@ -142,23 +206,34 @@ function sum(v)
     
     
 */
-// scope funcDef_303
-// var definition sum#1(Any)
-// function definition sum with 1 parameters
-function sum(// var definition v
+// scope funcDef_233
+// definition sum_FuncDef233
+function sum(// definition v_FuncParamDef210
 v)
- = // var usage op_add_276:leafExpr:fun:Void defined at []
-op_add(// var usage op_add_278:leafExpr:fun:Void defined at []
-op_add(// var usage x_280:leafExpr:fun:Void defined at [x#1(Float2), x#1(Float3), x#1(Float4)]
-x(// var usage v_282:leafExpr:arg:Void defined at [v]
-v), // var usage y_286:leafExpr:fun:Void defined at [y#1(Float2), y#1(Float3), y#1(Float4)]
-y(// var usage v_288:leafExpr:arg:Void defined at [v]
-v)), // var usage z_294:leafExpr:fun:Void defined at [z#1(Float3), z#1(Float4)]
-z(// var usage v_296:leafExpr:arg:Void defined at [v]
+ = // expression FunCall op+[op+_FuncDef697](op+[op+_FuncDef697](x[x_FuncDef80,x_FuncDef140,x_FuncDef222](v[v_FuncParamDef210]),y[y_FuncDef96,y_FuncDef156,y_FuncDef238](v[v_FuncParamDef210])),z[z_FuncDef172,z_FuncDef254](v[v_FuncParamDef210]))
+// reference op+_213:varName:var[op+_FuncDef697]
+// expression VarName op+[op+_FuncDef697]
+op+(// expression FunCall op+[op+_FuncDef697](x[x_FuncDef80,x_FuncDef140,x_FuncDef222](v[v_FuncParamDef210]),y[y_FuncDef96,y_FuncDef156,y_FuncDef238](v[v_FuncParamDef210]))
+// reference op+_214:varName:var[op+_FuncDef697]
+// expression VarName op+[op+_FuncDef697]
+op+(// expression FunCall x[x_FuncDef80,x_FuncDef140,x_FuncDef222](v[v_FuncParamDef210])
+// reference x_215:varName:var[x_FuncDef80, x_FuncDef140, x_FuncDef222]
+// expression VarName x[x_FuncDef80,x_FuncDef140,x_FuncDef222]
+x(// reference v_216:varName:var[v_FuncParamDef210]
+// expression VarName v[v_FuncParamDef210]
+v), // expression FunCall y[y_FuncDef96,y_FuncDef156,y_FuncDef238](v[v_FuncParamDef210])
+// reference y_219:varName:var[y_FuncDef96, y_FuncDef156, y_FuncDef238]
+// expression VarName y[y_FuncDef96,y_FuncDef156,y_FuncDef238]
+y(// reference v_220:varName:var[v_FuncParamDef210]
+// expression VarName v[v_FuncParamDef210]
+v)), // expression FunCall z[z_FuncDef172,z_FuncDef254](v[v_FuncParamDef210])
+// reference z_225:varName:var[z_FuncDef172, z_FuncDef254]
+// expression VarName z[z_FuncDef172,z_FuncDef254]
+z(// reference v_226:varName:var[v_FuncParamDef210]
+// expression VarName v[v_FuncParamDef210]
 v));
-// scope funcDef_330
-// var definition dot#2(Any,Any)
-// function definition dot with 2 parameters
+// scope funcDef_255
+// definition dot_FuncDef255
 
 /**
 function dot(a, b) 
@@ -166,20 +241,24 @@ function dot(a, b)
     
     
 */
-// scope funcDef_330
-// var definition dot#2(Any,Any)
-// function definition dot with 2 parameters
-function dot(// var definition a
-a, // var definition b
+// scope funcDef_255
+// definition dot_FuncDef255
+function dot(// definition a_FuncParamDef239
+a, // definition b_FuncParamDef242
 b)
- = // var usage sum_317:leafExpr:fun:Void defined at [sum#1(Any)]
-sum(// var usage op_mul_319:leafExpr:fun:Void defined at []
-op_mul(// var usage a_321:leafExpr:arg:Void defined at [a]
-a, // var usage b_323:leafExpr:arg:Void defined at [b]
+ = // expression FunCall sum[sum_FuncDef233](op*[op*_FuncDef747](a[a_FuncParamDef239],b[b_FuncParamDef242]))
+// reference sum_245:varName:var[sum_FuncDef233]
+// expression VarName sum[sum_FuncDef233]
+sum(// expression FunCall op*[op*_FuncDef747](a[a_FuncParamDef239],b[b_FuncParamDef242])
+// reference op*_246:varName:var[op*_FuncDef747]
+// expression VarName op*[op*_FuncDef747]
+op*(// reference a_247:varName:var[a_FuncParamDef239]
+// expression VarName a[a_FuncParamDef239]
+a, // reference b_248:varName:var[b_FuncParamDef242]
+// expression VarName b[b_FuncParamDef242]
 b));
-// scope funcDef_352
-// var definition length#1(Any)
-// function definition length with 1 parameters
+// scope funcDef_273
+// definition length_FuncDef273
 
 /**
 function length(v) 
@@ -187,18 +266,21 @@ function length(v)
     
     
 */
-// scope funcDef_352
-// var definition length#1(Any)
-// function definition length with 1 parameters
-function length(// var definition v
+// scope funcDef_273
+// definition length_FuncDef273
+function length(// definition v_FuncParamDef261
 v)
- = // var usage sqrt_341:leafExpr:fun:Void defined at [sqrt#1(T)]
-sqrt(// var usage length2_343:leafExpr:fun:Void defined at [length2#1(Any)]
-length2(// var usage v_345:leafExpr:arg:Void defined at [v]
+ = // expression FunCall sqrt[sqrt_FuncDef654](length2[length2_FuncDef289](v[v_FuncParamDef261]))
+// reference sqrt_264:varName:var[sqrt_FuncDef654]
+// expression VarName sqrt[sqrt_FuncDef654]
+sqrt(// expression FunCall length2[length2_FuncDef289](v[v_FuncParamDef261])
+// reference length2_265:varName:var[length2_FuncDef289]
+// expression VarName length2[length2_FuncDef289]
+length2(// reference v_266:varName:var[v_FuncParamDef261]
+// expression VarName v[v_FuncParamDef261]
 v));
-// scope funcDef_372
-// var definition length2#1(Any)
-// function definition length2 with 1 parameters
+// scope funcDef_289
+// definition length2_FuncDef289
 
 /**
 function length2(v) 
@@ -206,18 +288,20 @@ function length2(v)
 
     
 */
-// scope funcDef_372
-// var definition length2#1(Any)
-// function definition length2 with 1 parameters
-function length2(// var definition v
+// scope funcDef_289
+// definition length2_FuncDef289
+function length2(// definition v_FuncParamDef279
 v)
- = // var usage dot_363:leafExpr:fun:Void defined at [dot#2(Any,Any)]
-dot(// var usage v_365:leafExpr:arg:Void defined at [v]
-v, // var usage v_367:leafExpr:arg:Void defined at [v]
+ = // expression FunCall dot[dot_FuncDef255](v[v_FuncParamDef279],v[v_FuncParamDef279])
+// reference dot_282:varName:var[dot_FuncDef255]
+// expression VarName dot[dot_FuncDef255]
+dot(// reference v_283:varName:var[v_FuncParamDef279]
+// expression VarName v[v_FuncParamDef279]
+v, // reference v_284:varName:var[v_FuncParamDef279]
+// expression VarName v[v_FuncParamDef279]
 v);
-// scope funcDef_401
-// var definition distance#2(Any,Any)
-// function definition distance with 2 parameters
+// scope funcDef_312
+// definition distance_FuncDef312
 
 /**
 function distance(a, b)
@@ -225,20 +309,25 @@ function distance(a, b)
 
     
 */
-// scope funcDef_401
-// var definition distance#2(Any,Any)
-// function definition distance with 2 parameters
-function distance(// var definition a
-a, // var definition b
+// scope funcDef_312
+// definition distance_FuncDef312
+function distance(// definition a_FuncParamDef295
+a, // definition b_FuncParamDef298
 b)
- = // var usage length_386:leafExpr:fun:Void defined at [length#1(Any)]
-length((// var usage op_sub_388:leafExpr:fun:Void defined at []
-op_sub(// var usage a_390:leafExpr:arg:Void defined at [a]
-a, // var usage b_392:leafExpr:arg:Void defined at [b]
+ = // expression FunCall length[length_FuncDef273](op-[op-_FuncDef722](a[a_FuncParamDef295],b[b_FuncParamDef298]))
+// reference length_301:varName:var[length_FuncDef273]
+// expression VarName length[length_FuncDef273]
+length(// expression FunCall op-[op-_FuncDef722](a[a_FuncParamDef295],b[b_FuncParamDef298])
+(// expression FunCall op-[op-_FuncDef722](a[a_FuncParamDef295],b[b_FuncParamDef298])
+// reference op-_302:varName:var[op-_FuncDef722]
+// expression VarName op-[op-_FuncDef722]
+op-(// reference a_303:varName:var[a_FuncParamDef295]
+// expression VarName a[a_FuncParamDef295]
+a, // reference b_304:varName:var[b_FuncParamDef298]
+// expression VarName b[b_FuncParamDef298]
 b)));
-// scope funcDef_430
-// var definition distance2#2(Any,Any)
-// function definition distance2 with 2 parameters
+// scope funcDef_335
+// definition distance2_FuncDef335
 
 /**
 function distance2(a, b)
@@ -246,20 +335,25 @@ function distance2(a, b)
 
     
 */
-// scope funcDef_430
-// var definition distance2#2(Any,Any)
-// function definition distance2 with 2 parameters
-function distance2(// var definition a
-a, // var definition b
+// scope funcDef_335
+// definition distance2_FuncDef335
+function distance2(// definition a_FuncParamDef318
+a, // definition b_FuncParamDef321
 b)
- = // var usage length2_415:leafExpr:fun:Void defined at [length2#1(Any)]
-length2((// var usage op_sub_417:leafExpr:fun:Void defined at []
-op_sub(// var usage a_419:leafExpr:arg:Void defined at [a]
-a, // var usage b_421:leafExpr:arg:Void defined at [b]
+ = // expression FunCall length2[length2_FuncDef289](op-[op-_FuncDef722](a[a_FuncParamDef318],b[b_FuncParamDef321]))
+// reference length2_324:varName:var[length2_FuncDef289]
+// expression VarName length2[length2_FuncDef289]
+length2(// expression FunCall op-[op-_FuncDef722](a[a_FuncParamDef318],b[b_FuncParamDef321])
+(// expression FunCall op-[op-_FuncDef722](a[a_FuncParamDef318],b[b_FuncParamDef321])
+// reference op-_325:varName:var[op-_FuncDef722]
+// expression VarName op-[op-_FuncDef722]
+op-(// reference a_326:varName:var[a_FuncParamDef318]
+// expression VarName a[a_FuncParamDef318]
+a, // reference b_327:varName:var[b_FuncParamDef321]
+// expression VarName b[b_FuncParamDef321]
 b)));
-// scope funcDef_454
-// var definition normal#1(Any)
-// function definition normal with 1 parameters
+// scope funcDef_354
+// definition normal_FuncDef354
 
 /**
 function normal(v) 
@@ -267,70 +361,128 @@ function normal(v)
 
     
 */
-// scope funcDef_454
-// var definition normal#1(Any)
-// function definition normal with 1 parameters
-function normal(// var definition v
+// scope funcDef_354
+// definition normal_FuncDef354
+function normal(// definition v_FuncParamDef341
 v)
- = // var usage op_div_441:leafExpr:fun:Void defined at []
-op_div(// var usage v_443:leafExpr:arg:Void defined at [v]
-v, // var usage length_445:leafExpr:fun:Void defined at [length#1(Any)]
-length(// var usage v_447:leafExpr:arg:Void defined at [v]
+ = // expression FunCall op/[op/_FuncDef772](v[v_FuncParamDef341],length[length_FuncDef273](v[v_FuncParamDef341]))
+// reference op/_344:varName:var[op/_FuncDef772]
+// expression VarName op/[op/_FuncDef772]
+op/(// reference v_345:varName:var[v_FuncParamDef341]
+// expression VarName v[v_FuncParamDef341]
+v, // expression FunCall length[length_FuncDef273](v[v_FuncParamDef341])
+// reference length_346:varName:var[length_FuncDef273]
+// expression VarName length[length_FuncDef273]
+length(// reference v_347:varName:var[v_FuncParamDef341]
+// expression VarName v[v_FuncParamDef341]
 v));
-// scope funcDef_581
-// var definition cross#2(Any,Any)
-// function definition cross with 2 parameters
+// scope funcDef_446
+// definition cross_FuncDef446
 
 /**
 function cross(a, b)
-        = vector3(a.y*b.z - a.z*b.y, a.z*b.x - a.x*b.z, a.x*b.y - a.y*b.x);
+        = vector(a.y*b.z - a.z*b.y, a.z*b.x - a.x*b.z, a.x*b.y - a.y*b.x);
 
     
 */
-// scope funcDef_581
-// var definition cross#2(Any,Any)
-// function definition cross with 2 parameters
-function cross(// var definition a
-a, // var definition b
+// scope funcDef_446
+// definition cross_FuncDef446
+function cross(// definition a_FuncParamDef360
+a, // definition b_FuncParamDef363
 b)
- = // var usage vector3_468:leafExpr:fun:Void defined at []
-vector3(// var usage op_sub_470:leafExpr:fun:Void defined at []
-op_sub(// var usage op_mul_472:leafExpr:fun:Void defined at []
-op_mul(// var usage y_474:leafExpr:fun:Void defined at [y#1(Float2), y#1(Float3), y#1(Float4)]
-y(// var usage a_476:leafExpr:arg:Void defined at [a]
-a), // var usage z_480:leafExpr:fun:Void defined at [z#1(Float3), z#1(Float4)]
-z(// var usage b_482:leafExpr:arg:Void defined at [b]
-b)), // var usage op_mul_488:leafExpr:fun:Void defined at []
-op_mul(// var usage z_490:leafExpr:fun:Void defined at [z#1(Float3), z#1(Float4)]
-z(// var usage a_492:leafExpr:arg:Void defined at [a]
-a), // var usage y_496:leafExpr:fun:Void defined at [y#1(Float2), y#1(Float3), y#1(Float4)]
-y(// var usage b_498:leafExpr:arg:Void defined at [b]
-b))), // var usage op_sub_506:leafExpr:fun:Void defined at []
-op_sub(// var usage op_mul_508:leafExpr:fun:Void defined at []
-op_mul(// var usage z_510:leafExpr:fun:Void defined at [z#1(Float3), z#1(Float4)]
-z(// var usage a_512:leafExpr:arg:Void defined at [a]
-a), // var usage x_516:leafExpr:fun:Void defined at [x#1(Float2), x#1(Float3), x#1(Float4)]
-x(// var usage b_518:leafExpr:arg:Void defined at [b]
-b)), // var usage op_mul_524:leafExpr:fun:Void defined at []
-op_mul(// var usage x_526:leafExpr:fun:Void defined at [x#1(Float2), x#1(Float3), x#1(Float4)]
-x(// var usage a_528:leafExpr:arg:Void defined at [a]
-a), // var usage z_532:leafExpr:fun:Void defined at [z#1(Float3), z#1(Float4)]
-z(// var usage b_534:leafExpr:arg:Void defined at [b]
-b))), // var usage op_sub_542:leafExpr:fun:Void defined at []
-op_sub(// var usage op_mul_544:leafExpr:fun:Void defined at []
-op_mul(// var usage x_546:leafExpr:fun:Void defined at [x#1(Float2), x#1(Float3), x#1(Float4)]
-x(// var usage a_548:leafExpr:arg:Void defined at [a]
-a), // var usage y_552:leafExpr:fun:Void defined at [y#1(Float2), y#1(Float3), y#1(Float4)]
-y(// var usage b_554:leafExpr:arg:Void defined at [b]
-b)), // var usage op_mul_560:leafExpr:fun:Void defined at []
-op_mul(// var usage y_562:leafExpr:fun:Void defined at [y#1(Float2), y#1(Float3), y#1(Float4)]
-y(// var usage a_564:leafExpr:arg:Void defined at [a]
-a), // var usage x_568:leafExpr:fun:Void defined at [x#1(Float2), x#1(Float3), x#1(Float4)]
-x(// var usage b_570:leafExpr:arg:Void defined at [b]
+ = // expression FunCall vector[vector_FuncDef102,vector_FuncDef122,vector_FuncDef148,vector_FuncDef180](op-[op-_FuncDef722](op*[op*_FuncDef747](y[y_FuncDef96,y_FuncDef156,y_FuncDef238](a[a_FuncParamDef360]),z[z_FuncDef172,z_FuncDef254](b[b_FuncParamDef363])),op*[op*_FuncDef747](z[z_FuncDef172,z_FuncDef254](a[a_FuncParamDef360]),y[y_FuncDef96,y_FuncDef156,y_FuncDef238](b[b_FuncParamDef363]))),op-[op-_FuncDef722](op*[op*_FuncDef747](z[z_FuncDef172,z_FuncDef254](a[a_FuncParamDef360]),x[x_FuncDef80,x_FuncDef140,x_FuncDef222](b[b_FuncParamDef363])),op*[op*_FuncDef747](x[x_FuncDef80,x_FuncDef140,x_FuncDef222](a[a_FuncParamDef360]),z[z_FuncDef172,z_FuncDef254](b[b_FuncParamDef363]))),op-[op-_FuncDef722](op*[op*_FuncDef747](x[x_FuncDef80,x_FuncDef140,x_FuncDef222](a[a_FuncParamDef360]),y[y_FuncDef96,y_FuncDef156,y_FuncDef238](b[b_FuncParamDef363])),op*[op*_FuncDef747](y[y_FuncDef96,y_FuncDef156,y_FuncDef238](a[a_FuncParamDef360]),x[x_FuncDef80,x_FuncDef140,x_FuncDef222](b[b_FuncParamDef363]))))
+// reference vector_366:varName:var[vector_FuncDef102, vector_FuncDef122, vector_FuncDef148, vector_FuncDef180]
+// expression VarName vector[vector_FuncDef102,vector_FuncDef122,vector_FuncDef148,vector_FuncDef180]
+vector(// expression FunCall op-[op-_FuncDef722](op*[op*_FuncDef747](y[y_FuncDef96,y_FuncDef156,y_FuncDef238](a[a_FuncParamDef360]),z[z_FuncDef172,z_FuncDef254](b[b_FuncParamDef363])),op*[op*_FuncDef747](z[z_FuncDef172,z_FuncDef254](a[a_FuncParamDef360]),y[y_FuncDef96,y_FuncDef156,y_FuncDef238](b[b_FuncParamDef363])))
+// reference op-_367:varName:var[op-_FuncDef722]
+// expression VarName op-[op-_FuncDef722]
+op-(// expression FunCall op*[op*_FuncDef747](y[y_FuncDef96,y_FuncDef156,y_FuncDef238](a[a_FuncParamDef360]),z[z_FuncDef172,z_FuncDef254](b[b_FuncParamDef363]))
+// reference op*_368:varName:var[op*_FuncDef747]
+// expression VarName op*[op*_FuncDef747]
+op*(// expression FunCall y[y_FuncDef96,y_FuncDef156,y_FuncDef238](a[a_FuncParamDef360])
+// reference y_369:varName:var[y_FuncDef96, y_FuncDef156, y_FuncDef238]
+// expression VarName y[y_FuncDef96,y_FuncDef156,y_FuncDef238]
+y(// reference a_370:varName:var[a_FuncParamDef360]
+// expression VarName a[a_FuncParamDef360]
+a), // expression FunCall z[z_FuncDef172,z_FuncDef254](b[b_FuncParamDef363])
+// reference z_373:varName:var[z_FuncDef172, z_FuncDef254]
+// expression VarName z[z_FuncDef172,z_FuncDef254]
+z(// reference b_374:varName:var[b_FuncParamDef363]
+// expression VarName b[b_FuncParamDef363]
+b)), // expression FunCall op*[op*_FuncDef747](z[z_FuncDef172,z_FuncDef254](a[a_FuncParamDef360]),y[y_FuncDef96,y_FuncDef156,y_FuncDef238](b[b_FuncParamDef363]))
+// reference op*_379:varName:var[op*_FuncDef747]
+// expression VarName op*[op*_FuncDef747]
+op*(// expression FunCall z[z_FuncDef172,z_FuncDef254](a[a_FuncParamDef360])
+// reference z_380:varName:var[z_FuncDef172, z_FuncDef254]
+// expression VarName z[z_FuncDef172,z_FuncDef254]
+z(// reference a_381:varName:var[a_FuncParamDef360]
+// expression VarName a[a_FuncParamDef360]
+a), // expression FunCall y[y_FuncDef96,y_FuncDef156,y_FuncDef238](b[b_FuncParamDef363])
+// reference y_384:varName:var[y_FuncDef96, y_FuncDef156, y_FuncDef238]
+// expression VarName y[y_FuncDef96,y_FuncDef156,y_FuncDef238]
+y(// reference b_385:varName:var[b_FuncParamDef363]
+// expression VarName b[b_FuncParamDef363]
+b))), // expression FunCall op-[op-_FuncDef722](op*[op*_FuncDef747](z[z_FuncDef172,z_FuncDef254](a[a_FuncParamDef360]),x[x_FuncDef80,x_FuncDef140,x_FuncDef222](b[b_FuncParamDef363])),op*[op*_FuncDef747](x[x_FuncDef80,x_FuncDef140,x_FuncDef222](a[a_FuncParamDef360]),z[z_FuncDef172,z_FuncDef254](b[b_FuncParamDef363])))
+// reference op-_392:varName:var[op-_FuncDef722]
+// expression VarName op-[op-_FuncDef722]
+op-(// expression FunCall op*[op*_FuncDef747](z[z_FuncDef172,z_FuncDef254](a[a_FuncParamDef360]),x[x_FuncDef80,x_FuncDef140,x_FuncDef222](b[b_FuncParamDef363]))
+// reference op*_393:varName:var[op*_FuncDef747]
+// expression VarName op*[op*_FuncDef747]
+op*(// expression FunCall z[z_FuncDef172,z_FuncDef254](a[a_FuncParamDef360])
+// reference z_394:varName:var[z_FuncDef172, z_FuncDef254]
+// expression VarName z[z_FuncDef172,z_FuncDef254]
+z(// reference a_395:varName:var[a_FuncParamDef360]
+// expression VarName a[a_FuncParamDef360]
+a), // expression FunCall x[x_FuncDef80,x_FuncDef140,x_FuncDef222](b[b_FuncParamDef363])
+// reference x_398:varName:var[x_FuncDef80, x_FuncDef140, x_FuncDef222]
+// expression VarName x[x_FuncDef80,x_FuncDef140,x_FuncDef222]
+x(// reference b_399:varName:var[b_FuncParamDef363]
+// expression VarName b[b_FuncParamDef363]
+b)), // expression FunCall op*[op*_FuncDef747](x[x_FuncDef80,x_FuncDef140,x_FuncDef222](a[a_FuncParamDef360]),z[z_FuncDef172,z_FuncDef254](b[b_FuncParamDef363]))
+// reference op*_404:varName:var[op*_FuncDef747]
+// expression VarName op*[op*_FuncDef747]
+op*(// expression FunCall x[x_FuncDef80,x_FuncDef140,x_FuncDef222](a[a_FuncParamDef360])
+// reference x_405:varName:var[x_FuncDef80, x_FuncDef140, x_FuncDef222]
+// expression VarName x[x_FuncDef80,x_FuncDef140,x_FuncDef222]
+x(// reference a_406:varName:var[a_FuncParamDef360]
+// expression VarName a[a_FuncParamDef360]
+a), // expression FunCall z[z_FuncDef172,z_FuncDef254](b[b_FuncParamDef363])
+// reference z_409:varName:var[z_FuncDef172, z_FuncDef254]
+// expression VarName z[z_FuncDef172,z_FuncDef254]
+z(// reference b_410:varName:var[b_FuncParamDef363]
+// expression VarName b[b_FuncParamDef363]
+b))), // expression FunCall op-[op-_FuncDef722](op*[op*_FuncDef747](x[x_FuncDef80,x_FuncDef140,x_FuncDef222](a[a_FuncParamDef360]),y[y_FuncDef96,y_FuncDef156,y_FuncDef238](b[b_FuncParamDef363])),op*[op*_FuncDef747](y[y_FuncDef96,y_FuncDef156,y_FuncDef238](a[a_FuncParamDef360]),x[x_FuncDef80,x_FuncDef140,x_FuncDef222](b[b_FuncParamDef363])))
+// reference op-_417:varName:var[op-_FuncDef722]
+// expression VarName op-[op-_FuncDef722]
+op-(// expression FunCall op*[op*_FuncDef747](x[x_FuncDef80,x_FuncDef140,x_FuncDef222](a[a_FuncParamDef360]),y[y_FuncDef96,y_FuncDef156,y_FuncDef238](b[b_FuncParamDef363]))
+// reference op*_418:varName:var[op*_FuncDef747]
+// expression VarName op*[op*_FuncDef747]
+op*(// expression FunCall x[x_FuncDef80,x_FuncDef140,x_FuncDef222](a[a_FuncParamDef360])
+// reference x_419:varName:var[x_FuncDef80, x_FuncDef140, x_FuncDef222]
+// expression VarName x[x_FuncDef80,x_FuncDef140,x_FuncDef222]
+x(// reference a_420:varName:var[a_FuncParamDef360]
+// expression VarName a[a_FuncParamDef360]
+a), // expression FunCall y[y_FuncDef96,y_FuncDef156,y_FuncDef238](b[b_FuncParamDef363])
+// reference y_423:varName:var[y_FuncDef96, y_FuncDef156, y_FuncDef238]
+// expression VarName y[y_FuncDef96,y_FuncDef156,y_FuncDef238]
+y(// reference b_424:varName:var[b_FuncParamDef363]
+// expression VarName b[b_FuncParamDef363]
+b)), // expression FunCall op*[op*_FuncDef747](y[y_FuncDef96,y_FuncDef156,y_FuncDef238](a[a_FuncParamDef360]),x[x_FuncDef80,x_FuncDef140,x_FuncDef222](b[b_FuncParamDef363]))
+// reference op*_429:varName:var[op*_FuncDef747]
+// expression VarName op*[op*_FuncDef747]
+op*(// expression FunCall y[y_FuncDef96,y_FuncDef156,y_FuncDef238](a[a_FuncParamDef360])
+// reference y_430:varName:var[y_FuncDef96, y_FuncDef156, y_FuncDef238]
+// expression VarName y[y_FuncDef96,y_FuncDef156,y_FuncDef238]
+y(// reference a_431:varName:var[a_FuncParamDef360]
+// expression VarName a[a_FuncParamDef360]
+a), // expression FunCall x[x_FuncDef80,x_FuncDef140,x_FuncDef222](b[b_FuncParamDef363])
+// reference x_434:varName:var[x_FuncDef80, x_FuncDef140, x_FuncDef222]
+// expression VarName x[x_FuncDef80,x_FuncDef140,x_FuncDef222]
+x(// reference b_435:varName:var[b_FuncParamDef363]
+// expression VarName b[b_FuncParamDef363]
 b))));
-// scope funcDef_624
-// var definition reflect#2(Any,Any)
-// function definition reflect with 2 parameters
+// scope funcDef_478
+// definition reflect_FuncDef478
 
 /**
 function reflect(v, n)
@@ -338,24 +490,36 @@ function reflect(v, n)
 
     
 */
-// scope funcDef_624
-// var definition reflect#2(Any,Any)
-// function definition reflect with 2 parameters
-function reflect(// var definition v
-v, // var definition n
+// scope funcDef_478
+// definition reflect_FuncDef478
+function reflect(// definition v_FuncParamDef452
+v, // definition n_FuncParamDef455
 n)
- = // var usage op_sub_595:leafExpr:fun:Void defined at []
-op_sub(// var usage v_597:leafExpr:arg:Void defined at [v]
-v, (// var usage op_mul_599:leafExpr:fun:Void defined at []
-op_mul(// var usage op_mul_601:leafExpr:fun:Void defined at []
-op_mul(// var usage n_603:leafExpr:arg:Void defined at [n]
-n, // var usage dot_605:leafExpr:fun:Void defined at [dot#2(Any,Any)]
-dot(// var usage v_607:leafExpr:arg:Void defined at [v]
-v, // var usage n_609:leafExpr:arg:Void defined at [n]
-n)), 2.0)));
-// scope funcDef_670
-// var definition lerp#3(Any,Any,Any)
-// function definition lerp with 3 parameters
+ = // expression FunCall op-[op-_FuncDef722](v[v_FuncParamDef452],op*[op*_FuncDef747](op*[op*_FuncDef747](n[n_FuncParamDef455],dot[dot_FuncDef255](v[v_FuncParamDef452],n[n_FuncParamDef455])),2))
+// reference op-_458:varName:var[op-_FuncDef722]
+// expression VarName op-[op-_FuncDef722]
+op-(// reference v_459:varName:var[v_FuncParamDef452]
+// expression VarName v[v_FuncParamDef452]
+v, // expression FunCall op*[op*_FuncDef747](op*[op*_FuncDef747](n[n_FuncParamDef455],dot[dot_FuncDef255](v[v_FuncParamDef452],n[n_FuncParamDef455])),2)
+(// expression FunCall op*[op*_FuncDef747](op*[op*_FuncDef747](n[n_FuncParamDef455],dot[dot_FuncDef255](v[v_FuncParamDef452],n[n_FuncParamDef455])),2)
+// reference op*_460:varName:var[op*_FuncDef747]
+// expression VarName op*[op*_FuncDef747]
+op*(// expression FunCall op*[op*_FuncDef747](n[n_FuncParamDef455],dot[dot_FuncDef255](v[v_FuncParamDef452],n[n_FuncParamDef455]))
+// reference op*_461:varName:var[op*_FuncDef747]
+// expression VarName op*[op*_FuncDef747]
+op*(// reference n_462:varName:var[n_FuncParamDef455]
+// expression VarName n[n_FuncParamDef455]
+n, // expression FunCall dot[dot_FuncDef255](v[v_FuncParamDef452],n[n_FuncParamDef455])
+// reference dot_463:varName:var[dot_FuncDef255]
+// expression VarName dot[dot_FuncDef255]
+dot(// reference v_464:varName:var[v_FuncParamDef452]
+// expression VarName v[v_FuncParamDef452]
+v, // reference n_465:varName:var[n_FuncParamDef455]
+// expression VarName n[n_FuncParamDef455]
+n)), // expression Literal 2
+2.0)));
+// scope funcDef_513
+// definition lerp_FuncDef513
 
 /**
 function lerp(a, b, x)
@@ -363,42 +527,73 @@ function lerp(a, b, x)
 
     
 */
-// scope funcDef_670
-// var definition lerp#3(Any,Any,Any)
-// function definition lerp with 3 parameters
-function lerp(// var definition a
-a, // var definition b
-b, // var definition x
+// scope funcDef_513
+// definition lerp_FuncDef513
+function lerp(// definition a_FuncParamDef484
+a, // definition b_FuncParamDef487
+b, // definition x_FuncParamDef490
 x)
- = // var usage op_add_641:leafExpr:fun:Void defined at []
-op_add(// var usage op_mul_643:leafExpr:fun:Void defined at []
-op_mul(// var usage a_645:leafExpr:arg:Void defined at [a]
-a, (// var usage op_sub_647:leafExpr:fun:Void defined at []
-op_sub(1.0, // var usage x_651:leafExpr:arg:Void defined at [x]
-x))), // var usage op_mul_659:leafExpr:fun:Void defined at []
-op_mul(// var usage b_661:leafExpr:arg:Void defined at [b]
-b, // var usage x_663:leafExpr:arg:Void defined at [x]
+ = // expression FunCall op+[op+_FuncDef697](op*[op*_FuncDef747](a[a_FuncParamDef484],op-[op-_FuncDef722](1,x[x_FuncParamDef490])),op*[op*_FuncDef747](b[b_FuncParamDef487],x[x_FuncParamDef490]))
+// reference op+_493:varName:var[op+_FuncDef697]
+// expression VarName op+[op+_FuncDef697]
+op+(// expression FunCall op*[op*_FuncDef747](a[a_FuncParamDef484],op-[op-_FuncDef722](1,x[x_FuncParamDef490]))
+// reference op*_494:varName:var[op*_FuncDef747]
+// expression VarName op*[op*_FuncDef747]
+op*(// reference a_495:varName:var[a_FuncParamDef484]
+// expression VarName a[a_FuncParamDef484]
+a, // expression FunCall op-[op-_FuncDef722](1,x[x_FuncParamDef490])
+(// expression FunCall op-[op-_FuncDef722](1,x[x_FuncParamDef490])
+// reference op-_496:varName:var[op-_FuncDef722]
+// expression VarName op-[op-_FuncDef722]
+op-(// expression Literal 1
+1.0, // reference x_498:varName:var[x_FuncParamDef490]
+// expression VarName x[x_FuncParamDef490]
+x))), // expression FunCall op*[op*_FuncDef747](b[b_FuncParamDef487],x[x_FuncParamDef490])
+// reference op*_504:varName:var[op*_FuncDef747]
+// expression VarName op*[op*_FuncDef747]
+op*(// reference b_505:varName:var[b_FuncParamDef487]
+// expression VarName b[b_FuncParamDef487]
+b, // reference x_506:varName:var[x_FuncParamDef490]
+// expression VarName x[x_FuncParamDef490]
 x));
-// scope funcDef_710
-// var definition negate#1(Any)
-// function definition negate with 1 parameters
+// scope funcDef_548
+// definition negate_FuncDef548
 
 /**
 function negate(v)
         = vector(-v.x, -v.y, -v.z);
 
 */
-// scope funcDef_710
-// var definition negate#1(Any)
-// function definition negate with 1 parameters
-function negate(// var definition v
+// scope funcDef_548
+// definition negate_FuncDef548
+function negate(// definition v_FuncParamDef519
 v)
- = // var usage vector_681:leafExpr:fun:Void defined at [vector#3(Float,Float,Float), vector#1(Float), vector#1(Any), vector#1(Array)]
-vector(-// var usage x_684:leafExpr:fun:Void defined at [x#1(Float2), x#1(Float3), x#1(Float4)]
-x(// var usage v_686:leafExpr:arg:Void defined at [v]
-v), -// var usage y_692:leafExpr:fun:Void defined at [y#1(Float2), y#1(Float3), y#1(Float4)]
-y(// var usage v_694:leafExpr:arg:Void defined at [v]
-v), -// var usage z_700:leafExpr:fun:Void defined at [z#1(Float3), z#1(Float4)]
-z(// var usage v_702:leafExpr:arg:Void defined at [v]
-v));
+ = // expression FunCall vector[vector_FuncDef102,vector_FuncDef122,vector_FuncDef148,vector_FuncDef180](op_negate[op_negate_FuncDef1023](x[x_FuncDef80,x_FuncDef140,x_FuncDef222](v[v_FuncParamDef519])),op_negate[op_negate_FuncDef1023](y[y_FuncDef96,y_FuncDef156,y_FuncDef238](v[v_FuncParamDef519])),op_negate[op_negate_FuncDef1023](z[z_FuncDef172,z_FuncDef254](v[v_FuncParamDef519])))
+// reference vector_522:varName:var[vector_FuncDef102, vector_FuncDef122, vector_FuncDef148, vector_FuncDef180]
+// expression VarName vector[vector_FuncDef102,vector_FuncDef122,vector_FuncDef148,vector_FuncDef180]
+vector(// expression FunCall op_negate[op_negate_FuncDef1023](x[x_FuncDef80,x_FuncDef140,x_FuncDef222](v[v_FuncParamDef519]))
+// reference op_negate_523:varName:var[op_negate_FuncDef1023]
+// expression VarName op_negate[op_negate_FuncDef1023]
+op_negate(// expression FunCall x[x_FuncDef80,x_FuncDef140,x_FuncDef222](v[v_FuncParamDef519])
+// reference x_524:varName:var[x_FuncDef80, x_FuncDef140, x_FuncDef222]
+// expression VarName x[x_FuncDef80,x_FuncDef140,x_FuncDef222]
+x(// reference v_525:varName:var[v_FuncParamDef519]
+// expression VarName v[v_FuncParamDef519]
+v)), // expression FunCall op_negate[op_negate_FuncDef1023](y[y_FuncDef96,y_FuncDef156,y_FuncDef238](v[v_FuncParamDef519]))
+// reference op_negate_530:varName:var[op_negate_FuncDef1023]
+// expression VarName op_negate[op_negate_FuncDef1023]
+op_negate(// expression FunCall y[y_FuncDef96,y_FuncDef156,y_FuncDef238](v[v_FuncParamDef519])
+// reference y_531:varName:var[y_FuncDef96, y_FuncDef156, y_FuncDef238]
+// expression VarName y[y_FuncDef96,y_FuncDef156,y_FuncDef238]
+y(// reference v_532:varName:var[v_FuncParamDef519]
+// expression VarName v[v_FuncParamDef519]
+v)), // expression FunCall op_negate[op_negate_FuncDef1023](z[z_FuncDef172,z_FuncDef254](v[v_FuncParamDef519]))
+// reference op_negate_537:varName:var[op_negate_FuncDef1023]
+// expression VarName op_negate[op_negate_FuncDef1023]
+op_negate(// expression FunCall z[z_FuncDef172,z_FuncDef254](v[v_FuncParamDef519])
+// reference z_538:varName:var[z_FuncDef172, z_FuncDef254]
+// expression VarName z[z_FuncDef172,z_FuncDef254]
+z(// reference v_539:varName:var[v_FuncParamDef519]
+// expression VarName v[v_FuncParamDef519]
+v)));
 }

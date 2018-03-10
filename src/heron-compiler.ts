@@ -1,5 +1,5 @@
 import { Myna } from "myna-parser/myna";
-import { Scope, Package } from "./heron-name-analysis";
+import { Scope, Package } from "./heron-scope-analysis";
 import { Type } from "type-inference/type-system";
 import { preprocessAst, visitAst } from "./heron-ast-rewrite";
 import { parseHeron, heronGrammar } from "./heron-parser";
@@ -65,7 +65,6 @@ export function createPackage(moduleNames: string[]): Package {
     loadDefaultModules(pkg);
     for (let m of moduleNames) 
         parseModule(m, false, pkg);
-    pkg.resolveLinks();    
     for (let sf of pkg.files) {
         let outputPath = sf.filePath.substr(0, sf.filePath.lastIndexOf('.')) + '.output.heron';
         let text = heronToText(sf.node as HeronAstNode);

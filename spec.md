@@ -40,18 +40,18 @@ funCall <- seq(expr,expr[0,Infinity])[0,1]
 funcBody <- choice(funcBodyStatement,funcBodyExpr)
 funcBodyExpr <- expr
 funcBodyStatement <- recCompoundStatement
-funcDef <- seq(funcName,genericsParams,funcParams,funcBody)
+funcDef <- seq(funcName,genericParams,funcParams,funcBody)
 funcName <- identifier
 funcParam <- seq(funcParamName,typeExpr[0,1])
 funcParamName <- identifier
 funcParams <- seq(funcParam,funcParam[0,Infinity])[0,1]
 genericConstraint <- typeExpr
 genericParam <- seq(identifier,genericConstraint[0,1])
-genericsParams <- seq(genericParam,genericParam[0,Infinity])[0,1][0,1]
+genericParams <- seq(genericParam,genericParam[0,Infinity])[0,1][0,1]
 identifier <- opName
 ifCond <- expr
 ifStatement <- seq(ifCond,recStatement,elseStatement[0,Infinity])
-intrinsicDef <- seq(funcName,genericsParams,funcParams)
+intrinsicDef <- seq(funcName,genericParams,funcParams)
 lambdaArg <- seq(identifier,typeExpr[0,1])
 lambdaArgs <- choice(lambdaArgsNoParen,lambdaArgsWithParen)
 lambdaArgsNoParen <- identifier
@@ -167,7 +167,7 @@ heron.funCall <- AstRule((heron.ws ("(" (heron.ws (((heron.expr ("," (heron.ws h
 heron.funcBody <- AstRule((heron.funcBodyStatement / heron.funcBodyExpr))
 heron.funcBodyExpr <- AstRule((heron.ws ("=" (heron.ws (heron.expr (heron.ws ((";" / <predicate>) heron.ws)))))))
 heron.funcBodyStatement <- AstRule(heron.recCompoundStatement)
-heron.funcDef <- AstRule((heron.ws (("function" !core.identifierNext) (heron.ws ((heron.funcName / <predicate>) (heron.ws ((heron.genericsParams / <predicate>) (heron.ws ((heron.funcParams / <predicate>) (heron.ws ((heron.funcBody / <predicate>) heron.ws)))))))))))
+heron.funcDef <- AstRule((heron.ws (("function" !core.identifierNext) (heron.ws ((heron.funcName / <predicate>) (heron.ws ((heron.genericParams / <predicate>) (heron.ws ((heron.funcParams / <predicate>) (heron.ws ((heron.funcBody / <predicate>) heron.ws)))))))))))
 heron.funcName <- AstRule(heron.identifier)
 heron.funcParam <- AstRule((heron.funcParamName heron.funcParamType?))
 heron.funcParamName <- AstRule(heron.identifier)
@@ -175,11 +175,11 @@ heron.funcParamType <- (heron.ws (":" (heron.ws ((heron.typeExpr / <predicate>) 
 heron.funcParams <- AstRule((heron.ws ("(" (heron.ws (((heron.funcParam ("," (heron.ws heron.funcParam))*)? / <predicate>) (heron.ws ((")" / <predicate>) heron.ws)))))))
 heron.genericConstraint <- AstRule((heron.ws (":" (heron.ws ((heron.typeExpr / <predicate>) heron.ws)))))
 heron.genericParam <- AstRule((heron.identifier heron.genericConstraint?))
-heron.genericsParams <- AstRule((heron.ws ("<" (heron.ws (((heron.genericParam ("," (heron.ws heron.genericParam))*)? / <predicate>) (heron.ws ((">" / <predicate>) heron.ws))))))?)
+heron.genericParams <- AstRule((heron.ws ("<" (heron.ws (((heron.genericParam ("," (heron.ws heron.genericParam))*)? / <predicate>) (heron.ws ((">" / <predicate>) heron.ws))))))?)
 heron.identifier <- AstRule((heron.opName / core.identifier))
 heron.ifCond <- AstRule((heron.ws ("(" (heron.ws (heron.expr (heron.ws ((")" / <predicate>) heron.ws)))))))
 heron.ifStatement <- AstRule((heron.ws (("if" !core.identifierNext) (heron.ws ((heron.ifCond / <predicate>) (heron.ws (heron.recStatement (heron.ws ((heron.elseStatement* / <predicate>) heron.ws)))))))))
-heron.intrinsicDef <- AstRule((heron.ws (("intrinsic" !core.identifierNext) (heron.ws ((heron.funcName / <predicate>) (heron.ws ((heron.genericsParams / <predicate>) (heron.ws ((heron.funcParams / <predicate>) (heron.ws ((";" / <predicate>) heron.ws)))))))))))
+heron.intrinsicDef <- AstRule((heron.ws (("intrinsic" !core.identifierNext) (heron.ws ((heron.funcName / <predicate>) (heron.ws ((heron.genericParams / <predicate>) (heron.ws ((heron.funcParams / <predicate>) (heron.ws ((";" / <predicate>) heron.ws)))))))))))
 heron.lambdaArg <- AstRule((heron.identifier heron.funcParamType?))
 heron.lambdaArgs <- AstRule((heron.lambdaArgsNoParen / heron.lambdaArgsWithParen))
 heron.lambdaArgsNoParen <- AstRule(heron.identifier)

@@ -50,12 +50,11 @@ const g = new function() {
     }).setName("heron", "recStatement");
 
     // Literals
-    this.fraction       = m.seq(".", m.not("."), m.digit.zeroOrMore);    
+    this.fraction       = m.seq(".", m.not("."),  m.digit.zeroOrMore);    
+    this.plusOrMinus    = m.char("+-");
     this.exponent       = m.seq(m.char("eE"), this.plusOrMinus.opt, m.digits); 
     this.bool           = m.keywords("true", "false").ast;
-    this.integer        = m.integer.ast;
-    this.float          = m.seq(m.integer, this.fraction.opt, this.exponent.opt, m.opt("f")).ast;   
-    this.number         = m.choice(this.integer, this.float).ast;
+    this.number         = m.seq(m.integer, this.fraction.opt, this.exponent.opt, m.opt("f")).ast;   
 
     // Strings rules
     this.escapeChar = m.char('\'"\\bfnrtv');    
@@ -73,7 +72,7 @@ const g = new function() {
     // Operators 
     this.relationalOp       = m.choice(..."<= >= < >".split(" ")).ast;
     this.equalityOp         = m.choice(..."== !=".split(" ")).ast;
-    this.prefixOp           = m.choice(..."++ -- + - !".split(" ")).thenNot('=').ast;
+    this.prefixOp           = m.choice(..."++ -- - !".split(" ")).thenNot('=').ast;
     this.postIncOp          = m.text('++').ast;
     this.postDecOp          = m.text('--').ast;
     this.assignmentOp       = m.choice(..."+= -= *= /= %= =".split(" ")).thenNot('=').ast;
@@ -106,11 +105,12 @@ const g = new function() {
     this.asType = guardedWsDelimSeq(m.keyword("as"), this.typeExpr);
     this.postfixOp = m.choice(this.funCall, this.arrayIndex, this.fieldSelect, this.postIncOp, this.postDecOp).then(this.ws);
 
-    // Expressions of different precedences 
+    // Some of the leaf expressions 
     this.arrayExpr = guardedWsDelimSeq("[", commaDelimited(this.expr), "]").ast;
     this.parenExpr = guardedWsDelimSeq("(", this.expr, ")").ast;
     this.objectField = guardedWsDelimSeq(this.identifier, "=", this.expr, ";").ast;
     this.objectExpr = guardedWsDelimSeq("{", this.objectField.zeroOrMore, "}").ast;
+    this.varName = m.identifier.ast;
 
     // The "var x = y in x * x" expression form or also part of "varDeclStatement"
     this.varNameDecl = this.identifier.ast;
@@ -122,7 +122,7 @@ const g = new function() {
     // Generic parameters 
     this.genericConstraint = guardedWsDelimSeq(':', this.typeExpr).ast;
     this.genericParam = this.identifier.then(this.genericConstraint.opt).ast;
-    this.genericsParams = guardedWsDelimSeq('<', commaDelimited(this.genericParam), '>').opt.ast;
+    this.genericParams = guardedWsDelimSeq('<', commaDelimited(this.genericParam), '>').opt.ast;
 
     // Function definition
     this.funcName = this.identifier.ast;
@@ -135,20 +135,20 @@ const g = new function() {
     this.funcBodyExpr = guardedWsDelimSeq('=', this.expr, ';').ast;
     this.funcBody = m.choice(this.funcBodyStatement, this.funcBodyExpr).ast; 
     this.returnType = guardedWsDelimSeq(':', this.typeExpr).ast;
-    this.funcSig = guardedWsDelimSeq(this.funcName, this.genericsParams, this.funcParams, this.returnType.opt).ast;
+    this.funcSig = guardedWsDelimSeq(this.funcName, this.genericParams, this.funcParams, this.returnType.opt).ast;
     this.funcDef = guardedWsDelimSeq(m.keyword("function"), this.funcSig, this.funcBody).ast;
     this.intrinsicDef = guardedWsDelimSeq(m.keyword("intrinsic"), this.funcSig, ';').ast;
 
     // Lambda expression 
     this.lambdaArg = this.identifier.then(this.funcParamType.opt).ast;
     this.lambdaBody = this.recCompoundStatement.or(this.expr).ast;
-    this.lambdaArgsNoParen = this.identifier;
+    this.lambdaArgsNoParen = this.identifier.ast;
     this.lambdaArgsWithParen = m.seq("(", this.ws, commaDelimited(this.lambdaArg), ")", this.ws);
     this.lambdaArgs = m.choice(this.lambdaArgsNoParen, this.lambdaArgsWithParen);
     this.lambdaExpr = m.seq(this.lambdaArgs, guardedWsDelimSeq("=>", this.lambdaBody)).ast;
      
     // Leaf expressions (unary expressions)
-    this.leafExpr = m.choice(this.varExpr, this.objectExpr, this.lambdaExpr, this.parenExpr, this.arrayExpr, this.literal, this.identifier).then(this.ws).ast;
+    this.leafExpr = m.choice(this.varExpr, this.objectExpr, this.lambdaExpr, this.parenExpr, this.arrayExpr, this.literal, this.varName).then(this.ws).ast;
     
     // Binary expressions 
     this.postfixExpr = this.leafExpr.then(this.postfixOp.zeroOrMore).ast
@@ -216,7 +216,7 @@ const g = new function() {
         this.intrinsicDef,
         this.typeDef,    
         this.exprStatement,
-    ).then(this.ws).ast;
+    ).then(this.ws);
 
     // Urns are used for the language definition and the module name 
     this.urnPart = m.alphaNumeric.or(m.char('.-')).zeroOrMore.ast;

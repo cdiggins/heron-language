@@ -109,7 +109,7 @@ var g = new function () {
     // Generic parameters 
     this.genericConstraint = guardedWsDelimSeq(':', this.typeExpr).ast;
     this.genericParam = this.identifier.then(this.genericConstraint.opt).ast;
-    this.genericsParams = guardedWsDelimSeq('<', commaDelimited(this.genericParam), '>').opt.ast;
+    this.genericParams = guardedWsDelimSeq('<', commaDelimited(this.genericParam), '>').opt.ast;
     // Function definition
     this.funcName = this.identifier.ast;
     this.funcParamName = this.identifier.ast;
@@ -120,7 +120,7 @@ var g = new function () {
     this.funcBodyStatement = this.recCompoundStatement.ast;
     this.funcBodyExpr = guardedWsDelimSeq('=', this.expr, ';').ast;
     this.funcBody = myna_parser_1.Myna.choice(this.funcBodyStatement, this.funcBodyExpr).ast;
-    this.funcSig = guardedWsDelimSeq(this.funcName, this.genericsParams, this.funcParams).ast;
+    this.funcSig = guardedWsDelimSeq(this.funcName, this.genericParams, this.funcParams).ast;
     this.funcDef = guardedWsDelimSeq(myna_parser_1.Myna.keyword("function"), this.funcSig, this.funcBody).ast;
     this.intrinsicDef = guardedWsDelimSeq(myna_parser_1.Myna.keyword("intrinsic"), this.funcSig, ';').ast;
     // Lambda expression 

@@ -4,6 +4,7 @@ language heron:std:0.1;
 
 module heron:intrinsics:0.1
 {    
+    type Any;
     type Float;
     type Float2; // = { x:Float, y:Float }
     type Float3; // = { x:Float, y:Float, z:Float }
@@ -65,6 +66,9 @@ module heron:intrinsics:0.1
     intrinsic op!= <T>(x: T, y: T): Bool;
     intrinsic op== <T>(x: T, y: T): Bool;
 
-    intrinsic op_at <T>(x: Array, i: Num): Any;
-    intrinsic op_range <T>(from: Num, to: Num): Array;
+    // Special operators that have identifier names 
+    intrinsic op_at(x: Array, i: Num): Any;
+    intrinsic op_range(from: Num, to: Num): Array;
+    intrinsic op_not(x: Bool): Bool;
+    intrinsic op_negate(x: Num): Num;
 }

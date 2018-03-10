@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var myna_1 = require("myna-parser/myna");
-var heron_name_analysis_1 = require("./heron-name-analysis");
+var heron_scope_analysis_1 = require("./heron-scope-analysis");
 var heron_ast_rewrite_1 = require("./heron-ast-rewrite");
 var heron_parser_1 = require("./heron-parser");
 var heron_to_text_1 = require("./heron-to-text");
@@ -42,13 +42,12 @@ exports.modules = [];
 //================================================================
 // Main functions 
 function createPackage(moduleNames) {
-    var pkg = new heron_name_analysis_1.Package();
+    var pkg = new heron_scope_analysis_1.Package();
     loadDefaultModules(pkg);
     for (var _i = 0, moduleNames_1 = moduleNames; _i < moduleNames_1.length; _i++) {
         var m = moduleNames_1[_i];
         parseModule(m, false, pkg);
     }
-    pkg.resolveLinks();
     for (var _a = 0, _b = pkg.files; _a < _b.length; _a++) {
         var sf = _b[_a];
         var outputPath = sf.filePath.substr(0, sf.filePath.lastIndexOf('.')) + '.output.heron';

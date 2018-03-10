@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var Myna = require("myna-parser");
 var heron_parser_1 = require("./heron-parser");
+var heron_ast_rewrite_1 = require("./heron-ast-rewrite");
 var heron_compiler_1 = require("./heron-compiler");
 var m = Myna.Myna;
 var g = heron_parser_1.heronGrammar;
@@ -103,18 +104,30 @@ function functionSigToString(node) {
         return "intrinsic " + node.children[0].allText;
     throw new Error("Node has no signature" + node.name);
 }
+function refDetails(ref) {
+    return "Ref Details\n" + heron_ast_rewrite_1.parseLocation(ref.node) + "\n    ref = " + ref.toString() + "\n    name = " + ref.name + "\n    node = " + ref.node['id'] + "    \n    refType = " + ref.refTypeString + "\n    expr = " + ref.node['expr'] + "\n    " + ref.defs;
+}
 function outputPackageStats(pkg) {
     console.log("Files: ");
     console.log(pkg.files);
     console.log("# Modules  : " + pkg.modules.length);
     console.log("# Scopes   : " + pkg.scopes.length);
     console.log("# Defs     : " + pkg.defs.length);
-    console.log("# Usages   : " + pkg.usages.length);
+    console.log("# Usages   : " + pkg.refs.length);
+    var multiDefs = pkg.refs.filter(function (r) { return r.defs.length > 1; });
+    var zeroDefs = pkg.refs.filter(function (r) { return r.defs.length == 0; });
+    console.log('# Refs with multiple defs : ' + multiDefs.length);
+    console.log('# Refs with zero defs : ' + zeroDefs.length);
+    for (var _i = 0, multiDefs_1 = multiDefs; _i < multiDefs_1.length; _i++) {
+        var d = multiDefs_1[_i];
+        console.log(refDetails(d));
+    }
 }
 function tests() {
     // TODO: eventually we need to pre-scan the files    
     var inputs = ['geometry-vector3'];
     var pkg = heron_compiler_1.createPackage(inputs);
+    outputPackageStats(pkg);
     console.log('Done');
 }
 /*

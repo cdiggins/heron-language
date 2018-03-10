@@ -1,10 +1,11 @@
 import * as Myna from "myna-parser";
 import { heronGrammar, parseHeron } from './heron-parser';
 import { heronToJs } from "./heron-to-js";
-import { preprocessAst } from "./heron-ast-rewrite";
+import { preprocessAst, parseLocation } from "./heron-ast-rewrite";
 import { Package, Scope } from "./heron-scope-analysis";
 import { heronToText } from "./heron-to-text";
 import { toHeronAst, parseFile, parseModule, createPackage, HeronAstNode } from "./heron-compiler";
+import { Ref } from "./heron-refs";
 
 const m = Myna.Myna;
 const g = heronGrammar;
@@ -117,19 +118,39 @@ function functionSigToString(node: Myna.AstNode) {
     throw new Error("Node has no signature" + node.name);
 }
 
+function refDetails(ref: Ref): string {
+    return `Ref Details
+${parseLocation(ref.node)}
+    ref = ${ref.toString()}
+    name = ${ref.name}
+    node = ${ref.node['id']}    
+    refType = ${ref.refTypeString}
+    expr = ${ref.node['expr']}
+    ${ref.defs}`;
+}
+
 function outputPackageStats(pkg: Package) {
     console.log("Files: ");
     console.log(pkg.files);
     console.log("# Modules  : " + pkg.modules.length);
     console.log("# Scopes   : " + pkg.scopes.length);
     console.log("# Defs     : " + pkg.defs.length);
-    console.log("# Usages   : " + pkg.usages.length);        
+    console.log("# Usages   : " + pkg.refs.length);        
+
+    let multiDefs = pkg.refs.filter(r => r.defs.length > 1);
+    let zeroDefs = pkg.refs.filter(r => r.defs.length == 0);
+    console.log('# Refs with multiple defs : ' + multiDefs.length)
+    console.log('# Refs with zero defs : ' + zeroDefs.length)
+
+    for (var d of multiDefs)
+        console.log(refDetails(d));
 }
 
 function tests() {
     // TODO: eventually we need to pre-scan the files    
     let inputs = ['geometry-vector3'];
     let pkg = createPackage(inputs);
+    outputPackageStats(pkg);
     console.log('Done');
 }
 

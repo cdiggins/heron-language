@@ -15,39 +15,15 @@ export function heronToText(ast: HeronAstNode): string {
     return cb.lines.join('');
 }
 
-function isFunc(node: HeronAstNode) {
-    return node && (node.name === "funcDef" || node.name === "intrinsicDef");
-}
-
-function varUsageDetails(varUsage: Ref): string {
-    return '// var usage ' + varUsage + ' defined at ' + '[' + varUsage.defs.join(', ') + ']';
-}
-
 function outputDetails(node: HeronAstNode, state: CodeBuilder) {
-    if (node.scope) {
-        state.pushLine('// scope ' + node.scope.toString());
-        // TODO: push all of the variables used, push all of the defines made in the scope.
-        // I want it all man!
-    }
-    if (node.ref) {
-        state.pushLine(varUsageDetails(node.ref));
-    }
-    if (node.def) {
-        state.pushLine('// var definition ' + node.def.toString());    
-    }
-    // TODO: deal with expressions
-    // TODO: deal with refs 
-    /*
-    if (node.funCall) {
-        state.pushLine('// function call with ' + node.funCall.args.length + ' arguments');
-    }
-    if (node.funcDef) {
-        state.pushLine('// function definition ' + node.funcDef.name + ' with ' + node.funcDef.params.length + ' parameters');
-    }
-    */
-    if (isExpr(node)) {
-        // state.push(' /* ' + node.name + ':' + (node.type || '?') + ' */ ');
-    }
+    if (node.scope) 
+        state.pushLine('// scope ' + node.scope);
+    if (node.ref) 
+        state.pushLine('// reference ' + node.ref);
+    if (node.def) 
+        state.pushLine('// definition ' + node.def);    
+    if (node.expr) 
+        state.pushLine('// expression ' + node.expr.constructor['name'] + ' ' + node.expr);
 }
 
 // A visitor class for generating Heron code. 
@@ -72,18 +48,6 @@ class HeronToTextVisitor
             this.visitNode(ast.children[i], state);
         }
     }
-    visit_additiveExpr(ast: HeronAstNode, state: CodeBuilder) {
-        // seq(additiveExprLeft,additiveExprRight[0,Infinity])
-        this.visitChildren(ast, state);
-    }
-    visit_additiveExprLeft(ast: HeronAstNode, state: CodeBuilder) {
-        // multiplicativeExpr
-        this.visitChildren(ast, state);
-    }
-    visit_additiveExprRight(ast: HeronAstNode, state: CodeBuilder) {
-        // seq(additiveOp,additiveExprLeft)
-        this.visitChildren(ast, state);
-    }
     visit_additiveOp(ast: HeronAstNode, state: CodeBuilder) {
         // additiveOp
         state.push(" " + ast.allText + " ");
@@ -99,18 +63,6 @@ class HeronToTextVisitor
         state.push('[');
         this.visitChildren(ast, state);
         state.push(']');
-    }
-    visit_assignmentExpr(ast: HeronAstNode, state: CodeBuilder) {
-        // seq(assignmentExprLeft,assignmentExprRight[0,Infinity])
-        this.visitChildren(ast, state);
-    }
-    visit_assignmentExprLeft(ast: HeronAstNode, state: CodeBuilder) {
-        // conditionalExpr
-        this.visitChildren(ast, state);
-    }
-    visit_assignmentExprRight(ast: HeronAstNode, state: CodeBuilder) {
-        // seq(assignmentOp,assignmentExprLeft)
-        this.visitChildren(ast, state);
     }
     visit_assignmentOp(ast: HeronAstNode, state: CodeBuilder) {
         // assignmentOp
@@ -129,14 +81,6 @@ class HeronToTextVisitor
         state.pushLine("{");
         this.visitChildren(ast, state);
         state.pushLine("}");
-    }
-    visit_conditionalExpr(ast: HeronAstNode, state: CodeBuilder) {
-        // seq(conditionalExprLeft,conditionalExprRight[0,Infinity])
-        this.visitChildren(ast, state);
-    }
-    visit_conditionalExprLeft(ast: HeronAstNode, state: CodeBuilder) {
-        // rangeExpr
-        this.visitChildren(ast, state);
     }
     visit_conditionalExprRight(ast: HeronAstNode, state: CodeBuilder) {
         // seq(conditionalExprLeft,conditionalExprLeft)
@@ -260,7 +204,7 @@ class HeronToTextVisitor
         state.push(')');
     }
     visit_funcSig(ast: HeronAstNode, state: CodeBuilder) {
-        // seq(funcName,genericsParams,funcParams)
+        // seq(funcName,genericParams,funcParams)
         this.visitChildren(ast, state);
         state.pushLine('');
     }
@@ -273,7 +217,7 @@ class HeronToTextVisitor
         // seq(identifier,genericConstraint[0,1])
         this.visitChildren(ast, state);
     }
-    visit_genericsParams(ast: HeronAstNode, state: CodeBuilder) {
+    visit_genericParams(ast: HeronAstNode, state: CodeBuilder) {
         // seq(genericParam,genericParam[0,Infinity])[0,1][0,1]
         if (ast.children.length > 0) {
             // Put a space in case of 'op' 
@@ -344,53 +288,13 @@ class HeronToTextVisitor
         // urn
         state.push(ast.allText);
     }
-    visit_leafExpr(ast: HeronAstNode, state: CodeBuilder) {
-        // choice(varExpr,objectExpr,lambdaExpr,parenExpr,arrayExpr,number,bool,string,identifier)
-        this.visitChildren(ast, state);
-    }
-    visit_logicalAndExpr(ast: HeronAstNode, state: CodeBuilder) {
-        // seq(logicalAndExprLeft,logicalAndExprRight[0,Infinity])
-        this.visitChildren(ast, state);
-    }
-    visit_logicalAndExprLeft(ast: HeronAstNode, state: CodeBuilder) {
-        // equalityExpr
-        this.visitChildren(ast, state);
-    }
-    visit_logicalAndExprRight(ast: HeronAstNode, state: CodeBuilder) {
-        // seq(logicalAndOp,logicalAndExprLeft)
-        this.visitChildren(ast, state);
-    }
     visit_logicalAndOp(ast: HeronAstNode, state: CodeBuilder) {
         // logicalAndOp
         state.push(' ' + ast.allText + ' ');
     }
-    visit_logicalOrExpr(ast: HeronAstNode, state: CodeBuilder) {
-        // seq(logicalOrExprLeft,logicalOrExprRight[0,Infinity])
-        this.visitChildren(ast, state);
-    }
-    visit_logicalOrExprLeft(ast: HeronAstNode, state: CodeBuilder) {
-        // logicalXOrExpr
-        this.visitChildren(ast, state);
-    }
-    visit_logicalOrExprRight(ast: HeronAstNode, state: CodeBuilder) {
-        // seq(logicalOrOp,logicalOrExprLeft)
-        this.visitChildren(ast, state);
-    }
     visit_logicalOrOp(ast: HeronAstNode, state: CodeBuilder) {
         // logicalOrOp
         state.push(' ' + ast.allText + ' ');
-    }
-    visit_logicalXOrExpr(ast: HeronAstNode, state: CodeBuilder) {
-        // seq(logicalXOrExprLeft,logicalXOrExprRight[0,Infinity])
-        this.visitChildren(ast, state);
-    }
-    visit_logicalXOrExprLeft(ast: HeronAstNode, state: CodeBuilder) {
-        // logicalAndExpr
-        this.visitChildren(ast, state);
-    }
-    visit_logicalXOrExprRight(ast: HeronAstNode, state: CodeBuilder) {
-        // seq(logicalXOrOp,logicalXOrExprLeft)
-        this.visitChildren(ast, state);
     }
     visit_logicalXOrOp(ast: HeronAstNode, state: CodeBuilder) {
         // logicalXOrOp
@@ -464,14 +368,6 @@ class HeronToTextVisitor
         this.visitChildren(ast, state);
         state.push('++')
     }
-    visit_postfixExpr(ast: HeronAstNode, state: CodeBuilder) {
-        // seq(leafExpr,choice(funCall,arrayIndex,fieldSelect,postIncOp,postDecOp)[0,Infinity])
-        this.visitChildren(ast, state);
-    }
-    visit_prefixExpr(ast: HeronAstNode, state: CodeBuilder) {
-        // seq(prefixOp[0,Infinity],postfixExpr)
-        this.visitChildren(ast, state);
-    }
     visit_prefixOp(ast: HeronAstNode, state: CodeBuilder) {
         // prefixOp
         state.push(ast.allText);
@@ -484,30 +380,10 @@ class HeronToTextVisitor
             this.visitNode(ast.children[0], state);
         }
     }
-    visit_rangeExprLeft(ast: HeronAstNode, state: CodeBuilder) {
-        // logicalOrExpr
-        this.visitChildren(ast, state);
-    }
-    visit_rangeExprRight(ast: HeronAstNode, state: CodeBuilder) {
-        // rangeExprLeft
-        this.visitChildren(ast, state);
-    }
     visit_recCompoundStatement(ast: HeronAstNode, state: CodeBuilder) {
         state.pushLine('{');
         this.visitChildren(ast, state);
         state.pushLine('}');
-    }
-    visit_relationalExpr(ast: HeronAstNode, state: CodeBuilder) {
-        // seq(relationalExprLeft,relationalExprRight[0,Infinity])
-        this.visitChildren(ast, state);
-    }
-    visit_relationalExprLeft(ast: HeronAstNode, state: CodeBuilder) {
-        // additiveExpr
-        this.visitChildren(ast, state);
-    }
-    visit_relationalExprRight(ast: HeronAstNode, state: CodeBuilder) {
-        // seq(relationalOp,relationalExprLeft)
-        this.visitChildren(ast, state);
     }
     visit_relationalOp(ast: HeronAstNode, state: CodeBuilder) {
         // relationalOp
@@ -528,29 +404,9 @@ class HeronToTextVisitor
         // stringLiteralChar[0,Infinity]
         state.push("'" + ast.allText + "'");
     }
-    visit_statement(ast: HeronAstNode, state: CodeBuilder) {
-        // choice(emptyStatement,compoundStatement,ifStatement,returnStatement,continueStatement,breakStatement,forLoop,doLoop,whileLoop,varDeclStatement,funcDef,intrinsicDef,exprStatement)
-        this.visitChildren(ast, state);
-    }
-    visit_string(ast: HeronAstNode, state: CodeBuilder) {
-        // choice(doubleQuotedStringContents,singleQuotedStringContents)
-        this.visitChildren(ast, state);
-    }
-    visit_stringLiteralChar(ast: HeronAstNode, state: CodeBuilder) {
-        // stringLiteralChar
-        this.visitChildren(ast, state);
-    }
-    visit_typeExpr(ast: HeronAstNode, state: CodeBuilder) {
-        // seq(typeName,typeParamList[0,1])
-        this.visitChildren(ast, state);
-    }
     visit_typeName(ast: HeronAstNode, state: CodeBuilder) {
         // identifier
         state.push(ast.allText);
-    }
-    visit_typeParam(ast: HeronAstNode, state: CodeBuilder) {
-        // recType
-        this.visitChildren(ast, state);
     }
     visit_typeParamList(ast: HeronAstNode, state: CodeBuilder) {
         // seq(typeParam,typeParam[0,Infinity])[0,1]
@@ -567,9 +423,8 @@ class HeronToTextVisitor
         // urnPart
         state.push(ast.allText);
     }
-    visit_varDecl(ast: HeronAstNode, state: CodeBuilder) {
-        // seq(varNameDecl,varInitialization)
-        this.visitChildren(ast, state);
+    visit_varName(ast: HeronAstNode, state: CodeBuilder) {
+        state.push(ast.allText);
     }
     visit_varDeclStatement(ast: HeronAstNode, state: CodeBuilder) {
         // varDecls
@@ -577,25 +432,17 @@ class HeronToTextVisitor
         this.visitChildren(ast, state);
         state.pushLine(';');
     }
-    visit_varDecls(ast: HeronAstNode, state: CodeBuilder) {
-        // seq(varDecl,varDecl[0,Infinity])
-        this.visitChildren(ast, state);
-    }
-    visit_varExpr(ast: HeronAstNode, state: CodeBuilder) {
-        // seq(varDecls,expr)
-        this.visitChildren(ast, state);
-    }
     visit_varInitialization(ast: HeronAstNode, state: CodeBuilder) {
         // expr
         state.push(' = ');
         this.visitChildren(ast, state);
     }
-    visit_varNameDecl(ast: HeronAstNode, state: CodeBuilder) {
-        // identifier
-        this.visitChildren(ast, state);
-    }
     visit_whileLoop(ast: HeronAstNode, state: CodeBuilder) {
         // seq(loopCond,recStatement)
+        state.push('while (');
+        this.visitNode(ast.children[0], state);
+        state.pushLine(')')
         this.visitChildren(ast, state);
+        this.visitNode(ast.children[1], state);
     }
 }

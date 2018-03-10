@@ -2,6 +2,30 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var myna_1 = require("myna-parser/myna");
 var g = myna_1.Myna.grammars['heron'];
+;
+function throwError(node, msg) {
+    if (msg === void 0) { msg = ''; }
+    throw new Error(msg + (msg ? "\n" : "") + parseLocation(node));
+}
+exports.throwError = throwError;
+function getFile(node) {
+    if (!node)
+        return '';
+    return node['file'] ? node['file'] : getFile(node['parent']);
+}
+exports.getFile = getFile;
+function parseLocation(node) {
+    if (node['node'])
+        return parseLocation(node['node']);
+    if (node['original'])
+        return parseLocation(node['original']);
+    if (node instanceof myna_1.Myna.AstNode) {
+        var loc = new myna_1.Myna.ParseLocation(node.input, node.start);
+        return loc.toString() + '\n' + 'in file ' + getFile(node);
+    }
+    throw new Error('Unexpected node: ' + node);
+}
+exports.parseLocation = parseLocation;
 function opSymbolToString(sym) {
     switch (sym) {
         case "<": return "lt";
@@ -64,15 +88,15 @@ function funCall(fxnName) {
     for (var _i = 1; _i < arguments.length; _i++) {
         args[_i - 1] = arguments[_i];
     }
-    var fxn = g.leafExpr.node('', g.identifier.node(fxnName));
-    var fxnCall = (_a = g.funCall).node.apply(_a, [''].concat(args));
-    return g.postfixExpr.node('', fxn, fxnCall);
+    var fxn = g.varName.node(fxnName);
+    var fxnCallArgs = (_a = g.funCall).node.apply(_a, [''].concat(args));
+    return g.postfixExpr.node('', fxn, fxnCallArgs);
     var _a;
 }
 exports.funCall = funCall;
 // Given a binary operator, a left operand and a right operand, creates a new AstNode 
 function opToFunCall(op, left, right) {
-    return funCall(opToString(op), left, right);
+    return funCall("op" + op, left, right);
 }
 exports.opToFunCall = opToFunCall;
 function isFunCall(ast) {
@@ -101,6 +125,7 @@ function isExpr(ast) {
         case "conditionalExpr":
         case "literal":
         case "leafExpr":
+        case "varName":
         case "parenExpr":
         case "expr":
         case "recExpr":
@@ -226,6 +251,10 @@ function exprListToPair(ast) {
         case 'relationalExprLeft':
         case 'additiveExprLeft':
         case 'multiplicativeExprLeft':
+        case 'literal':
+        case 'recExpr':
+        case 'leafExpr':
+        case 'expr':
             {
                 if (ast.children.length != 1)
                     throw new Error("Exepcted exactly one child");
@@ -285,7 +314,7 @@ function validateNode(node) {
         names[_i - 1] = arguments[_i];
     }
     if (names.indexOf(node.name) < 0)
-        throw new Error('Did not expect ' + node.name);
+        throwError(node, 'Did not expect ' + node.name);
     return node;
 }
 exports.validateNode = validateNode;

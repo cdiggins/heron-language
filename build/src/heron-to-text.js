@@ -215,7 +215,7 @@ var HeronToTextVisitor = /** @class */ (function () {
         state.push(')');
     };
     HeronToTextVisitor.prototype.visit_funcSig = function (ast, state) {
-        // seq(funcName,genericsParams,funcParams)
+        // seq(funcName,genericParams,funcParams)
         this.visitChildren(ast, state);
         state.pushLine('');
     };
@@ -228,7 +228,7 @@ var HeronToTextVisitor = /** @class */ (function () {
         // seq(identifier,genericConstraint[0,1])
         this.visitChildren(ast, state);
     };
-    HeronToTextVisitor.prototype.visit_genericsParams = function (ast, state) {
+    HeronToTextVisitor.prototype.visit_genericParams = function (ast, state) {
         // seq(genericParam,genericParam[0,Infinity])[0,1][0,1]
         if (ast.children.length > 0) {
             // Put a space in case of 'op' 

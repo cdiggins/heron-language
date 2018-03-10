@@ -1,6 +1,6 @@
 import { Myna } from "myna-parser/myna";
 import { preprocessAst, identifierToString } from "./heron-ast-rewrite";
-import { Package } from "./heron-name-analysis";
+import { Package } from "./heron-scope-analysis";
 import { CodeBuilder } from "./code-builder";
 
 //=====================================
@@ -233,10 +233,6 @@ class HeronToJs
         state.push('return ');
         this.visitChildren(ast, state);
         state.pushLine(';');
-    }
-    visit_statement(ast, state) {
-        // choice(emptyStatement,compoundStatement,ifStatement,returnStatement,continueStatement,breakStatement,forLoop,doLoop,whileLoop,varDecl,exprStatement,funcDef)
-        this.visitChildren(ast, state);
     }
     visit_varDecl(ast, state) {
         // seq(identifier,varInitialization)

@@ -1,9 +1,13 @@
+// This module provides support for dealing with definitions.  
+// A definition could be a function definition, parameter definition, variable definition, type definition. 
+ 
 import { Myna } from "myna-parser/myna";
-import { visitAst, validateNode } from "./heron-ast-rewrite";
+import { visitAst, validateNode, throwError } from "./heron-ast-rewrite";
 import { Expr, createExpr } from "./heron-expr";
 
 // Temporary: the type of something is one of these things.  
-type TypeRef = Myna.AstNode | string | Expr;
+type TypeRef = Myna.AstNode | string;
+
 
 // This is a definition of a name. It could be a function, variable, type
 export class Def {    
@@ -13,6 +17,10 @@ export class Def {
         public readonly type: TypeRef,
     )
     { node['def'] = this; }
+
+    toString() {
+        return this.name + '_' + this.constructor['name'] + this.node['id'];
+    }
 }
 
 // Represents the definition of a function 
@@ -39,15 +47,16 @@ export class FuncParamDef extends Def
     { super(node, name, type); }
 }
 
-// Represents the definition of a variable
+// Represents the definition of a variable. 
+// The type is not known, until the type of the expression is figured out.
 export class VarDef extends Def
 {
     constructor(
         public readonly node: Myna.AstNode,
         public readonly name: string, 
-        public readonly expr: Expr
+        public readonly expr: Myna.AstNode
     )
-    { super(node, name, expr); }    
+    { super(node, name, null); }    
 }
 
 // Represents the definition of a type 
@@ -130,13 +139,22 @@ export function createVarDef(node: Myna.AstNode) {
     validateNode(node, 'varDecl');
     let name = validateNode(node.children[0], 'varNameDecl');
     let init = validateNode(node.children[1], 'varInitialization');
-    return new VarDef(node, name.allText, createExpr(init.children[0]));
+    return new VarDef(node, name.allText, init.children[0]);
 }
 
 export function createTypeDef(node: Myna.AstNode) {
     validateNode(node, 'typeDef');
     let name = node.children[0].allText;
     return new TypeDef(node, name);
+}
+
+export function getDef<T extends Def>(node: Myna.AstNode, typeName: string): T {
+    if (!node) throw new Error("Node is missing");
+    let def = node['def'];
+    if (!def) throwError(node, "No definition associated with node");
+    if (def.constructor['name'] !== typeName) 
+        throwError(node, "Incorrect definition type, expected " + typeName + " was " + def.constructor['name']);
+    return def as T;
 }
 
 // STEP1: create the defs

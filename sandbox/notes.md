@@ -410,3 +410,20 @@ ambiguity. This can be done based on how it is used.
 * Expressions are either: named functions, anonymous functions, function calls, variables, or literals.
 
 * So let's do that! 
+
+//==
+
+Is my code any good.
+
+1. How many imported modules
+1. Module import graph (is it a mess)
+1. How long are the functions? 
+1. Are symbols used? 
+1. How long are files?
+1. How nested are files? 
+1. Do they pass basic ESLint tests? 
+1. Do they pass advanced ESLint tests? 
+1. How many comments are there? 
+1. How much code redundancy is there? 
+1. Quality of a repo? 
+1. Is it tested?
