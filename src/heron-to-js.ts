@@ -1,5 +1,5 @@
 import { Myna } from "myna-parser/myna";
-import { preprocessAst, identifierToString } from "./heron-ast-rewrite";
+import { preprocessAst, identifierToString, HeronAstNode } from "./heron-ast-rewrite";
 import { Package } from "./heron-scope-analysis";
 import { CodeBuilder } from "./code-builder";
 
@@ -56,14 +56,14 @@ export function mergeMultipleDefs(ast, nameAnalysis: Package) {
     }
 }
 
-export function findAllNodes(ast:Myna.AstNode, f:(_:Myna.AstNode)=>boolean, r:Myna.AstNode[]=[]): Myna.AstNode[] {
+export function findAllNodes(ast:HeronAstNode, f:(_:HeronAstNode)=>boolean, r:HeronAstNode[]=[]): HeronAstNode[] {
     if (f(ast))
         r.push(ast);
     ast.children.forEach(c => findAllNodes(c, f, r));
     return r;
 }
 
-export function findAllNodesNamed(ast:Myna.AstNode, name: string) : Myna.AstNode[] {
+export function findAllNodesNamed(ast:HeronAstNode, name: string) : HeronAstNode[] {
     return findAllNodes(ast, node => node.name === name);
 }
 

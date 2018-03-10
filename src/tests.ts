@@ -1,10 +1,10 @@
 import * as Myna from "myna-parser";
 import { heronGrammar, parseHeron } from './heron-parser';
 import { heronToJs } from "./heron-to-js";
-import { preprocessAst, parseLocation } from "./heron-ast-rewrite";
+import { HeronAstNode, preprocessAst, parseLocation } from "./heron-ast-rewrite";
 import { Package, Scope } from "./heron-scope-analysis";
 import { heronToText } from "./heron-to-text";
-import { toHeronAst, parseFile, parseModule, createPackage, HeronAstNode } from "./heron-compiler";
+import { toHeronAst, parseFile, parseModule, createPackage } from "./heron-compiler";
 import { Ref } from "./heron-refs";
 
 const m = Myna.Myna;
@@ -110,7 +110,7 @@ const fs = require('fs');
 // TODO: add parent pointers to each node, and an ID, and a reverse index lookup. 
 // after the rewrite phase
 
-function functionSigToString(node: Myna.AstNode) {
+function functionSigToString(node: HeronAstNode) {
     if (node.name === 'funcDef')
         return "function " + node.children[0].allText;
     if (node.name === 'intrinsicDef')

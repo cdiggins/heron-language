@@ -4,8 +4,7 @@
 // entire set of compiled source code. 
 
 import { Myna } from "myna-parser/myna";
-import { HeronAstNode } from "./heron-compiler";
-import { isExpr, validateNode, throwError } from "./heron-ast-rewrite";
+import { HeronAstNode, isExpr, validateNode, throwError } from "./heron-ast-rewrite";
 import { Type } from "type-inference/type-system";
 import { ModuleDef, Def } from "./heron-defs";
 import { Ref, RefType } from "./heron-refs";
@@ -19,7 +18,7 @@ export class Scope
     children: Scope[] = [];
     parent: Scope;
     
-    constructor(public readonly node: Myna.AstNode) {
+    constructor(public readonly node: HeronAstNode) {
         if (node)
             node['scope'] = this;
     }
@@ -67,7 +66,7 @@ export class SourceFile
 {
     constructor(
         public readonly filePath: string,
-        public readonly node: Myna.AstNode
+        public readonly node: HeronAstNode
     )
     { }
 }
@@ -85,7 +84,7 @@ export class Package
     files: SourceFile[] = [];
 
     // When done calling analyzeFile on all files, call "resolveLinks"
-    addFile(node: Myna.AstNode, isBuiltIn: boolean, filePath: string) {
+    addFile(node: HeronAstNode, isBuiltIn: boolean, filePath: string) {
         if (node.name !== 'file')
             throwError(node, 'Not a file');
         node['file'] = filePath;
@@ -151,7 +150,7 @@ export class Package
         }
     }
 
-    addRef(name: string, node: Myna.AstNode, refType: RefType) {
+    addRef(name: string, node: HeronAstNode, refType: RefType) {
         let ref = new Ref(node, name, this.scope, refType, this.findDefs(name));
         this.scope.refs.push(ref);
         this.refs.push(ref);
@@ -162,7 +161,7 @@ export class Package
 class AstVisitor
 {
     // Visitor helper functions
-    visitNode(node: Myna.AstNode, state: Package) {
+    visitNode(node: HeronAstNode, state: Package) {
         if (node['def'])
             state.addDef(node['def']);
         const fnName = 'visit_' + node.name;
@@ -171,63 +170,63 @@ class AstVisitor
         else 
             this.visitChildren(node, state);        
     }
-    visitChildren(node: Myna.AstNode, state: Package) {
+    visitChildren(node: HeronAstNode, state: Package) {
         for (let child of node.children)
             this.visitNode(child, state);
     }
 
     // Particular node visitors 
-    visit_compoundStatement(node: Myna.AstNode, state: Package) {
+    visit_compoundStatement(node: HeronAstNode, state: Package) {
         state.pushScope(node);
         this.visitChildren(node, state);
         state.popScope();
     }
-    visit_funcDef(node: Myna.AstNode, state: Package) {
+    visit_funcDef(node: HeronAstNode, state: Package) {
         state.pushScope(node);
         this.visitChildren(node, state);
         state.popScope();
     }
-    visit_intrinsicDef(node: Myna.AstNode, state: Package) {
+    visit_intrinsicDef(node: HeronAstNode, state: Package) {
         state.pushScope(node);
         this.visitChildren(node, state);
         state.popScope();
     }
-    visit_typeName(node: Myna.AstNode, state: Package) {
+    visit_typeName(node: HeronAstNode, state: Package) {
         state.addRef(node.allText, node, RefType.type);
     }
-    visit_lambdaBody(node: Myna.AstNode, state: Package) {
+    visit_lambdaBody(node: HeronAstNode, state: Package) {
         state.pushScope(node);
         this.visitChildren(node, state);
         state.popScope();
     }
-    visit_lambdaExpr(node: Myna.AstNode, state: Package) {
+    visit_lambdaExpr(node: HeronAstNode, state: Package) {
         state.pushScope(node);
         this.visitChildren(node, state);
         state.popScope();
     }
-    visit_module(node: Myna.AstNode, state: Package) {
+    visit_module(node: HeronAstNode, state: Package) {
         // All definitions at the module level, are available to all others.
         for (let c of node.children[1].children)
             if (c['def'])
                 state.addDef(c['def']);
         this.visitChildren(node, state);
     }
-    visit_recCompoundStatement(node: Myna.AstNode, state: Package) {
+    visit_recCompoundStatement(node: HeronAstNode, state: Package) {
         state.pushScope(node);
         this.visitChildren(node, state);
         state.popScope();
     }
-    visit_varExpr(node: Myna.AstNode, state: Package) {
+    visit_varExpr(node: HeronAstNode, state: Package) {
         state.pushScope(node);
         this.visitChildren(node, state);
         state.popScope();
     }
-    visit_varName(node: Myna.AstNode, state: Package) {
+    visit_varName(node: HeronAstNode, state: Package) {
         state.addRef(node.allText, node, RefType.var);
     }
 }
 
-export function nodeId(node: Myna.AstNode): string {    
+export function nodeId(node: HeronAstNode): string {    
     return node ? node.name + '_' + node['id'] : '';
 }
 

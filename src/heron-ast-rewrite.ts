@@ -1,20 +1,57 @@
 import { Myna } from "myna-parser/myna";
-import { createDef } from "./heron-defs";
+import { createDef, Def } from "./heron-defs";
+import { Ref } from "./heron-refs";
+import { Scope } from "./heron-scope-analysis";
+import { Type } from "type-inference/type-system";
+import { Expr } from "./heron-expr";
+
+// After processing and transforming the nodes in the AST tree they 
+// are extended with the following new properties. 
+// This is not a JavaScript class: you don't have a typeof.
+export class HeronAstNode extends Myna.AstNode 
+{
+    // Used to uniquely identify each node 
+    id: number;
+
+    // The children are also of type HeronAstNode. 
+    children: HeronAstNode[];
+
+    // A pointer to the parent node 
+    parent?: HeronAstNode;
+
+    // After any transform, the previous version of the node is stored here
+    original?: HeronAstNode;
+
+    // If this node is a new name definition, the definition is stored here
+    def?: Def;
+
+    // If this node is a symbol, information about what variable it is stored here
+    ref?: Ref;
+
+    // If this node is the beginning of a scope, information about the scope is stored here. 
+    scope?: Scope;
+
+    // If this node has a type, it is stored here 
+    type?: Type;
+
+    // If this node is an expression, additional information is stored here.
+    expr?: Expr;
+}
 
 const g = Myna.grammars['heron'];
 
-interface HasNode { node: Myna.AstNode };
+interface HasNode { node: HeronAstNode };
 
-export function throwError(node: Myna.AstNode, msg:string = '') {    
+export function throwError(node: HeronAstNode, msg:string = '') {    
     throw new Error(msg + (msg ? "\n" : "") + parseLocation(node));
 }
 
-export function getFile(node: Myna.AstNode): string {
+export function getFile(node: HeronAstNode): string {
     if (!node) return '';
     return node['file'] ? node['file'] : getFile(node['parent']);
 }
 
-export function parseLocation(node: Myna.AstNode | HasNode ): string {
+export function parseLocation(node: HeronAstNode | HasNode ): string {
     if (node['node'])
         return parseLocation(node['node']);
     if (node['original'])
@@ -73,7 +110,7 @@ export function identifierToString(id: string) {
 }
 
 // Applies a transform function to each member of the AST to create a new one
-export function mapAst(ast: Myna.AstNode, f: (_: Myna.AstNode) => Myna.AstNode): Myna.AstNode {
+export function mapAst(ast: HeronAstNode, f: (_: HeronAstNode) => HeronAstNode): HeronAstNode {
     ast.children = ast.children.map(c => mapAst(c, f));
     let r = f(ast);
     // Store a back pointer to the original AST 
@@ -83,30 +120,30 @@ export function mapAst(ast: Myna.AstNode, f: (_: Myna.AstNode) => Myna.AstNode):
 }
 
 // Creates a function call node given a function name, and some arguments 
-export function funCall(fxnName: string, ...args) : Myna.AstNode {
+export function funCall(fxnName: string, ...args) : HeronAstNode {
     let fxn = g.varName.node(fxnName);
     let fxnCallArgs = g.funCall.node('', ...args);
     return g.postfixExpr.node('', fxn, fxnCallArgs);
 }
 
 // Given a binary operator, a left operand and a right operand, creates a new AstNode 
-export function opToFunCall(op: string, left: Myna.AstNode, right: Myna.AstNode) {
+export function opToFunCall(op: string, left: HeronAstNode, right: HeronAstNode) {
     return funCall("op" + op, left, right);
 }
 
-export function isFunCall(ast: Myna.AstNode): boolean {
+export function isFunCall(ast: HeronAstNode): boolean {
     return ast && ast.name !== 'postfixExpr' && ast.children[1].name == 'funCall'; 
 }
 
-export function isFieldSelect(ast: Myna.AstNode): boolean {
+export function isFieldSelect(ast: HeronAstNode): boolean {
     return ast && ast.name !== 'postfixExpr' && ast.children[1].name == 'fieldSelect'; 
 }
 
-export function isMethodCall(ast: Myna.AstNode): boolean {
+export function isMethodCall(ast: HeronAstNode): boolean {
     return isFunCall(ast) && isFieldSelect(ast.children[0]);
 }
 
-export function isExpr(ast: Myna.AstNode): boolean {
+export function isExpr(ast: HeronAstNode): boolean {
     switch (ast.name)
     {
     case "postfixExpr":
@@ -138,7 +175,7 @@ export function isExpr(ast: Myna.AstNode): boolean {
 }
 
 // Transform x.f(y) => f(x, y)
-export function methodToFunction(ast: Myna.AstNode): Myna.AstNode {
+export function methodToFunction(ast: HeronAstNode): HeronAstNode {
     if (ast.name === 'postfixExpr') {
         if (ast.children.length != 2)
             throw new Error("Expected the postfix expression to have exactly two children at this point: probably forgot to pre-process");
@@ -158,7 +195,7 @@ export function methodToFunction(ast: Myna.AstNode): Myna.AstNode {
 }
 
 // Converts x.a => a(x)
-export function fieldSelectToFunction(ast: Myna.AstNode): Myna.AstNode {    
+export function fieldSelectToFunction(ast: HeronAstNode): HeronAstNode {    
     if (ast.name === 'postfixExpr') {
         if (ast.children[1].name === 'fieldSelect') {
             let fieldName = ast.children[1].children[0].allText;
@@ -170,7 +207,7 @@ export function fieldSelectToFunction(ast: Myna.AstNode): Myna.AstNode {
 
 // Converts array indexing to function calls
 // xs[i] = op_at(xs, i)
-export function arrayIndexToFunction(ast: Myna.AstNode): Myna.AstNode {    
+export function arrayIndexToFunction(ast: HeronAstNode): HeronAstNode {    
     if (ast.name === 'postfixExpr') {
         if (ast.children[1].name === 'arrayIndex') {
             let arrayIndex = ast.children[1].children[0];
@@ -181,7 +218,7 @@ export function arrayIndexToFunction(ast: Myna.AstNode): Myna.AstNode {
 }
     
 // Converts binary operators to function calls
-export function opToFunction(ast: Myna.AstNode): Myna.AstNode {    
+export function opToFunction(ast: HeronAstNode): HeronAstNode {    
     // We are only going to handle certain cases
     switch (ast.name)
     {    
@@ -230,7 +267,7 @@ export function opToFunction(ast: Myna.AstNode): Myna.AstNode {
 // (a op b op c op d) => (((a op b) op c) op d)
 // (a op b) => (a op b)
 // (a) => a 
-export function exprListToPair(ast: Myna.AstNode): Myna.AstNode {
+export function exprListToPair(ast: HeronAstNode): HeronAstNode {
     // We are only going to handle certain cases
     switch (ast.name)
     {    
@@ -290,7 +327,7 @@ export function exprListToPair(ast: Myna.AstNode): Myna.AstNode {
         for (let i=ast.children.length-2; i >= 0; --i)
         {   
             let left = ast.children[i];
-            right = ast.rule.node('', left, right);
+            right = ast.rule.node('', left, right) as HeronAstNode;
         }
         return right;
     }
@@ -300,27 +337,27 @@ export function exprListToPair(ast: Myna.AstNode): Myna.AstNode {
         for (let i=1; i < ast.children.length; ++i)
         {   
             let right = ast.children[i];
-            left = ast.rule.node('', left, right);
+            left = ast.rule.node('', left, right) as HeronAstNode;
         }
         return left;
     }
 }
 
 // Checks that a node has a name 
-export function validateNode(node: Myna.AstNode, ...names: string[]): Myna.AstNode {
+export function validateNode(node: HeronAstNode, ...names: string[]): HeronAstNode {
     if (names.indexOf(node.name) < 0)
         throwError(node, 'Did not expect ' + node.name);
     return node;
 }
 
 // Calls a function on every node in the AST passing the AST node and it's child
-export function visitAstWithParent(ast: Myna.AstNode, parent: Myna.AstNode, f:((child:Myna.AstNode, parent:Myna.AstNode)=>void)) {    
+export function visitAstWithParent(ast: HeronAstNode, parent: HeronAstNode, f:((child:HeronAstNode, parent:HeronAstNode)=>void)) {    
     ast.children.forEach(c => visitAstWithParent(c, ast, f));
     f(ast, parent);
 }
 
 // Calls a function on every node in the AST passing the AST node and it's child
-export function visitAst(ast: Myna.AstNode, f:((_:Myna.AstNode)=>void)) {    
+export function visitAst(ast: HeronAstNode, f:((_:HeronAstNode)=>void)) {    
     ast.children.forEach(c => visitAst(c, f));
     f(ast);
 }
@@ -328,7 +365,7 @@ export function visitAst(ast: Myna.AstNode, f:((_:Myna.AstNode)=>void)) {
 // Performs some pre-processing of the AST to make it easier to work with
 // Many expressions are converted into function calls.
 // Also parent back pointers are added along with ids to the nodes. 
-export function preprocessAst(ast: Myna.AstNode) 
+export function preprocessAst(ast: HeronAstNode) 
 {
     // The order of transforms matters. Particularly we need to do 
     // Method to function before doing fieldSelectToFunctions

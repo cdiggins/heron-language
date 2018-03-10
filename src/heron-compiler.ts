@@ -1,7 +1,7 @@
 import { Myna } from "myna-parser/myna";
 import { Scope, Package } from "./heron-scope-analysis";
 import { Type } from "type-inference/type-system";
-import { preprocessAst, visitAst } from "./heron-ast-rewrite";
+import { preprocessAst, visitAst, HeronAstNode } from "./heron-ast-rewrite";
 import { parseHeron, heronGrammar } from "./heron-parser";
 import { heronToText } from "./heron-to-text";
 import { Def, createDef } from "./heron-defs";
@@ -18,39 +18,6 @@ let nodePackage = JSON.parse(fs.readFileSync('package.json','utf8'));
 let ver = nodePackage.version; 
 let flavor = 'std';
 let ext = '.heron';
-
-// After processing and transforming the nodes in the AST tree they 
-// are extended with the following new properties. 
-// This is not a JavaScript class: you don't have a typeof.
-export class HeronAstNode extends Myna.AstNode 
-{
-    // Used to uniquely identify each node 
-    id: number;
-
-    // The children are also of type HeronAstNode. 
-    children: HeronAstNode[];
-
-    // A pointer to the parent node 
-    parent?: Myna.AstNode;
-
-    // After any transform, the previous version of the node is stored here
-    original?: Myna.AstNode;
-
-    // If this node is a new name definition, the definition is stored here
-    def?: Def;
-
-    // If this node is a symbol, information about what variable it is stored here
-    ref?: Ref;
-
-    // If this node is the beginning of a scope, information about the scope is stored here. 
-    scope?: Scope;
-
-    // If this node has a type, it is stored here 
-    type?: Type;
-
-    // If this node is an expression, additional information is stored here.
-    expr?: Expr;
-}
 
 // Module resolution
 export const moduleFolder = path.join('.', 'inputs');
@@ -104,7 +71,7 @@ export function parseFile(f: string, builtIn: boolean, pkg: Package): HeronAstNo
 }
 
 // Convert a generic Myna AST tree into a proper Heron AST. 
-export function toHeronAst(ast: Myna.AstNode, pkg: Package, builtIn: boolean, filePath: string): HeronAstNode {
+export function toHeronAst(ast: HeronAstNode, pkg: Package, builtIn: boolean, filePath: string): HeronAstNode {
     // Perform pre-processing
     ast = preprocessAst(ast);
 

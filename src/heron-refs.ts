@@ -5,7 +5,7 @@
 import { Myna } from "myna-parser/myna";
 import { Def } from "./heron-defs";
 import { Scope } from "./heron-scope-analysis";
-import { throwError } from "./heron-ast-rewrite";
+import { throwError, HeronAstNode } from "./heron-ast-rewrite";
 
 // The kind of the reference
 export enum RefType { 
@@ -16,7 +16,7 @@ export enum RefType {
 export class Ref 
 {
     constructor(
-        public readonly node: Myna.AstNode,
+        public readonly node: HeronAstNode,
         public readonly name: string,
         public readonly scope: Scope,
         public readonly refType: RefType,

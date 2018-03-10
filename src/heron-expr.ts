@@ -1,6 +1,6 @@
 import { Myna } from "myna-parser/myna";
 import { FuncDef, TypeDef, VarDef, FuncParamDef, createFuncParamDef, getDef, Def } from "./heron-defs";
-import { validateNode, visitAst, throwError } from "./heron-ast-rewrite";
+import { validateNode, visitAst, throwError, HeronAstNode } from "./heron-ast-rewrite";
 import { Ref } from "./heron-refs";
 
 // Expressions are either: named function sets, anonymous functions, function calls, variables, or literals.
@@ -8,7 +8,7 @@ import { Ref } from "./heron-refs";
 // This can be done by creating a graph, OR by simply computing type by pulling on the thread. 
 export class Expr {
     constructor(
-        public readonly node: Myna.AstNode,
+        public readonly node: HeronAstNode,
     )
     { node['expr'] = this; }
 
@@ -21,7 +21,7 @@ export class Expr {
 // The type of a function set is the union of the types of each function definition it has  
 export class FuncSet extends Expr {    
     constructor(
-        public readonly node: Myna.AstNode,
+        public readonly node: HeronAstNode,
         public readonly defs: FuncDef[],
     )
     { super(node); }
@@ -34,7 +34,7 @@ export class FuncSet extends Expr {
 // An anonymous function, also known as a lambda.
 export class Lambda extends Expr {
     constructor(
-        public readonly node: Myna.AstNode,
+        public readonly node: HeronAstNode,
         public readonly params: FuncParamDef[],
         public readonly body: Expr,
     )
@@ -48,7 +48,7 @@ export class Lambda extends Expr {
 // The name of a variable
 export class VarName extends Expr {    
     constructor(
-        public readonly node: Myna.AstNode,
+        public readonly node: HeronAstNode,
         public readonly name: string,
         public readonly defs: Def[],
     )
@@ -62,7 +62,7 @@ export class VarName extends Expr {
 // The different kinds of literals like boolean, number, ints, arrays, objects, and more. 
 export class Literal<T> extends Expr {    
     constructor(
-        public readonly node: Myna.AstNode,
+        public readonly node: HeronAstNode,
         public readonly value: T,
     )
     { super(node); }
@@ -75,7 +75,7 @@ export class Literal<T> extends Expr {
 // An array literal expression
 export class ArrayLiteral extends Expr {
     constructor(
-        public readonly node: Myna.AstNode,
+        public readonly node: HeronAstNode,
         public readonly vals: Expr[],
     )
     { super(node); }    
@@ -87,7 +87,7 @@ export class ArrayLiteral extends Expr {
 
 export class ObjectField extends Expr {
     constructor(
-        public readonly node: Myna.AstNode,
+        public readonly node: HeronAstNode,
         public readonly name: string,
         public readonly expr: Expr)
     { super(node); }
@@ -100,7 +100,7 @@ export class ObjectField extends Expr {
 // An object literal expression
 export class ObjectLiteral extends Expr {
     constructor(
-        public readonly node: Myna.AstNode,
+        public readonly node: HeronAstNode,
         public readonly fields: ObjectField[]
     )
     { super(node); }
@@ -113,7 +113,7 @@ export class ObjectLiteral extends Expr {
 // Type expressions 
 export class TypeExpr extends Expr {    
     constructor(
-        public readonly node: Myna.AstNode,
+        public readonly node: HeronAstNode,
         public readonly def: Def, 
     )
     { super(node); }
@@ -126,7 +126,7 @@ export class TypeExpr extends Expr {
 // Function call expressions
 export class FunCall extends Expr {
     constructor(
-        public readonly node: Myna.AstNode,
+        public readonly node: HeronAstNode,
         public readonly func: Expr,
         public readonly args: Expr[],
         )
@@ -140,7 +140,7 @@ export class FunCall extends Expr {
 // Conditional (ternary operator) expressions. 
 export class ConditionalExpr extends Expr {
     constructor(
-        public readonly node: Myna.AstNode,
+        public readonly node: HeronAstNode,
         public readonly cond: Expr,
         public readonly onTrue: Expr,
         public readonly onFalse: Expr,
@@ -155,16 +155,16 @@ export class ConditionalExpr extends Expr {
 //==========================================================================================
 // Expressions
 
-export function addExpr<T extends Expr>(node: Myna.AstNode, expr: T): T {
+export function addExpr<T extends Expr>(node: HeronAstNode, expr: T): T {
     node['expr'] = expr;
     return expr;
 }
 
-export function computeExprs(ast: Myna.AstNode) {
+export function computeExprs(ast: HeronAstNode) {
     visitAst(ast, createExpr);
 }
 
-export function createExpr(node: Myna.AstNode): Expr {
+export function createExpr(node: HeronAstNode): Expr {
     switch (node.name) {
         case "postfixExpr":
             switch (node.children[1].name)
@@ -219,7 +219,7 @@ export function createExpr(node: Myna.AstNode): Expr {
     }
 }
 
-export function createFunCall(node: Myna.AstNode): FunCall
+export function createFunCall(node: HeronAstNode): FunCall
 { 
     validateNode(node, 'postfixExpr');
     if (node.children.length != 2)
@@ -231,45 +231,45 @@ export function createFunCall(node: Myna.AstNode): FunCall
     return new FunCall(node, func, funCall.children.map(createExpr));
 }
 
-export function createObjectField(node: Myna.AstNode): ObjectField {
+export function createObjectField(node: HeronAstNode): ObjectField {
     validateNode(node, "objectField");
     let name = node.child[0].allText;
     let expr = createExpr(node.child[1]);
     return new ObjectField(node, name, expr);
 }
 
-export function createObjectLiteral(node: Myna.AstNode): ObjectLiteral {
+export function createObjectLiteral(node: HeronAstNode): ObjectLiteral {
     return new ObjectLiteral(validateNode(node, 'objectExpr'), node.children.map(createObjectField));
 }
 
-export function createArrayExpr(node: Myna.AstNode): ArrayLiteral {
+export function createArrayExpr(node: HeronAstNode): ArrayLiteral {
     return new ArrayLiteral(validateNode(node, 'arrayExpr'), node.children.map(createExpr));
 }
 
-export function createBoolExpr(node: Myna.AstNode): Literal<boolean> {
+export function createBoolExpr(node: HeronAstNode): Literal<boolean> {
     let value = node.allText === 'true' ? true : false;
     return new Literal<boolean>(validateNode(node, 'boolean'), value);
 }
 
-export function createConditionalExpr(node: Myna.AstNode): ConditionalExpr {
+export function createConditionalExpr(node: HeronAstNode): ConditionalExpr {
     return new ConditionalExpr(validateNode(node, 'conditionalExpr'), createExpr(node.children[0]), createExpr(node.children[1]), createExpr(node.children[2]));
 }
 
 // TODO: the fact that I am calling a lambda body an expression is a problem.
-export function createLambdaExpr(node: Myna.AstNode): Lambda {
+export function createLambdaExpr(node: HeronAstNode): Lambda {
     return new Lambda(validateNode(node, 'lambdaExpr'), node.children[0].children.map(c => getDef<FuncParamDef>(c, 'FuncParamDef')), createExpr(node.children[1]));
 }
 
-export function createNumExpr(node: Myna.AstNode): Literal<number> {
+export function createNumExpr(node: HeronAstNode): Literal<number> {
     let value = parseFloat(node.allText);
     return new Literal<number>(validateNode(node, 'number'), value);
 }
 
-export function createStrExpr(node: Myna.AstNode): Literal<string> {
+export function createStrExpr(node: HeronAstNode): Literal<string> {
     return new Literal<string>(validateNode(node, 'string'), node.allText);
 }
 
-export function createTypeExpr(node: Myna.AstNode): TypeExpr {
+export function createTypeExpr(node: HeronAstNode): TypeExpr {
     let typeName = validateNode(node.children[0], 'typeName');
     let ref:Ref = typeName['ref'];
     if (!ref) throwError(typeName, "expected a reference");
@@ -279,7 +279,7 @@ export function createTypeExpr(node: Myna.AstNode): TypeExpr {
     return new TypeExpr(validateNode(node, 'typeExpr'), def);
 }
 
-export function createVarNameExpr(node: Myna.AstNode): VarName {
+export function createVarNameExpr(node: HeronAstNode): VarName {
     let ref:Ref = node['ref'];
     if (!ref) throwError(node, "expected a reference");
     return new VarName(validateNode(node, 'varName'), node.allText, ref.defs);

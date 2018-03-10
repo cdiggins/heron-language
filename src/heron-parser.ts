@@ -3,6 +3,7 @@
 // https://www.khronos.org/registry/gles/specs/2.0/GLSL_ES_Specification_1.0.17.pdf
 
 import { Myna as m } from "myna-parser";
+import { HeronAstNode } from "./heron-ast-rewrite";
 
 // Defines a Myna grammar for parsing Cat expressions that support the introduction and usage of scoped variables. 
 const g = new function() {
@@ -238,9 +239,9 @@ m.registerGrammar('heron', g, g.file);
 export const heronGrammar = m.grammars['heron'];
 export const heronParser  = m.parsers['heron'];
 
-export function parseHeron(s: string, r: m.Rule = heronGrammar.file) : m.AstNode {
+export function parseHeron(s: string, r: m.Rule = heronGrammar.file) : HeronAstNode {
     var ast =  r.parse(s);
     if (ast.end != s.length)
         throw new Error("Whole input was not parsed");        
-    return ast;
+    return ast as HeronAstNode;
 }

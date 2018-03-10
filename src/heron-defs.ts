@@ -2,17 +2,17 @@
 // A definition could be a function definition, parameter definition, variable definition, type definition. 
  
 import { Myna } from "myna-parser/myna";
-import { visitAst, validateNode, throwError } from "./heron-ast-rewrite";
+import { visitAst, validateNode, throwError, HeronAstNode } from "./heron-ast-rewrite";
 import { Expr, createExpr } from "./heron-expr";
 
 // Temporary: the type of something is one of these things.  
-type TypeRef = Myna.AstNode | string;
+type TypeRef = HeronAstNode | string;
 
 
 // This is a definition of a name. It could be a function, variable, type
 export class Def {    
     constructor(
-        public readonly node: Myna.AstNode,
+        public readonly node: HeronAstNode,
         public readonly name: string, 
         public readonly type: TypeRef,
     )
@@ -27,7 +27,7 @@ export class Def {
 export class FuncDef extends Def 
 {    
     constructor(
-        public readonly node: Myna.AstNode,
+        public readonly node: HeronAstNode,
         public readonly name: string, 
         public readonly type: TypeRef,
         public readonly params: FuncParamDef[],
@@ -40,7 +40,7 @@ export class FuncDef extends Def
 export class FuncParamDef extends Def
 {
     constructor(
-        public readonly node: Myna.AstNode,
+        public readonly node: HeronAstNode,
         public readonly name: string, 
         public readonly type: TypeRef,
     )
@@ -52,9 +52,9 @@ export class FuncParamDef extends Def
 export class VarDef extends Def
 {
     constructor(
-        public readonly node: Myna.AstNode,
+        public readonly node: HeronAstNode,
         public readonly name: string, 
-        public readonly expr: Myna.AstNode
+        public readonly expr: HeronAstNode
     )
     { super(node, name, null); }    
 }
@@ -63,7 +63,7 @@ export class VarDef extends Def
 export class TypeDef extends Def
 {
     constructor(
-        public readonly node: Myna.AstNode,
+        public readonly node: HeronAstNode,
         public readonly name: string, 
     )
     { super(node, name, 'type'); }        
@@ -73,9 +73,9 @@ export class TypeDef extends Def
 export class TypeParamDef extends Def
 {
     constructor(
-        public readonly node: Myna.AstNode,
+        public readonly node: HeronAstNode,
         public readonly name: string, 
-        public readonly constraint: Myna.AstNode
+        public readonly constraint: HeronAstNode
     )
     { super(node, name, 'type'); }        
 }
@@ -84,7 +84,7 @@ export class TypeParamDef extends Def
 export class ModuleDef extends Def
 {
     constructor(
-        public readonly node: Myna.AstNode,
+        public readonly node: HeronAstNode,
         public readonly name: string, 
     )
     { super(node, name, null); }            
@@ -93,7 +93,7 @@ export class ModuleDef extends Def
 //==========================================================================================
 // Exported functions
 
-export function createDef(node: Myna.AstNode): Def {
+export function createDef(node: HeronAstNode): Def {
     // NOTE: typeParamDef and funcParamDef are created by the funcDef    
     switch (node.name) {
         case "funcDef": 
@@ -110,14 +110,14 @@ export function createDef(node: Myna.AstNode): Def {
 
 //==========================================================================================
 
-export function createTypeParam(node: Myna.AstNode): TypeParamDef {
+export function createTypeParam(node: HeronAstNode): TypeParamDef {
     validateNode(node, 'genericParam');
     let name = node.children[0].allText;
     let constraint = node.children.length > 1 ? node.children[1] : null;
     return new TypeParamDef(node, name, constraint);
 }
 
-export function createFuncDef(node: Myna.AstNode): FuncDef {
+export function createFuncDef(node: HeronAstNode): FuncDef {
     validateNode(node, 'funcDef', 'intrinsicDef');
     let sig = validateNode(node.children[0], 'funcSig');
     let name = sig.children[0].allText;
@@ -128,27 +128,27 @@ export function createFuncDef(node: Myna.AstNode): FuncDef {
     return new FuncDef(node, name, retType, params, genericParams);
 }
 
-export function createFuncParamDef(node: Myna.AstNode): FuncParamDef {
+export function createFuncParamDef(node: HeronAstNode): FuncParamDef {
     validateNode(node, 'funcParam');
     let name = node.children[0].allText;
     let type =  (node.children.length > 1) ? node.children[1] : null;
     return new FuncParamDef(node, name, type);
 }
 
-export function createVarDef(node: Myna.AstNode) {
+export function createVarDef(node: HeronAstNode) {
     validateNode(node, 'varDecl');
     let name = validateNode(node.children[0], 'varNameDecl');
     let init = validateNode(node.children[1], 'varInitialization');
     return new VarDef(node, name.allText, init.children[0]);
 }
 
-export function createTypeDef(node: Myna.AstNode) {
+export function createTypeDef(node: HeronAstNode) {
     validateNode(node, 'typeDef');
     let name = node.children[0].allText;
     return new TypeDef(node, name);
 }
 
-export function getDef<T extends Def>(node: Myna.AstNode, typeName: string): T {
+export function getDef<T extends Def>(node: HeronAstNode, typeName: string): T {
     if (!node) throw new Error("Node is missing");
     let def = node['def'];
     if (!def) throwError(node, "No definition associated with node");

@@ -1,16 +1,5 @@
 "use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 Object.defineProperty(exports, "__esModule", { value: true });
-var myna_1 = require("myna-parser/myna");
 var heron_scope_analysis_1 = require("./heron-scope-analysis");
 var heron_ast_rewrite_1 = require("./heron-ast-rewrite");
 var heron_parser_1 = require("./heron-parser");
@@ -24,17 +13,6 @@ var nodePackage = JSON.parse(fs.readFileSync('package.json', 'utf8'));
 var ver = nodePackage.version;
 var flavor = 'std';
 var ext = '.heron';
-// After processing and transforming the nodes in the AST tree they 
-// are extended with the following new properties. 
-// This is not a JavaScript class: you don't have a typeof.
-var HeronAstNode = /** @class */ (function (_super) {
-    __extends(HeronAstNode, _super);
-    function HeronAstNode() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    return HeronAstNode;
-}(myna_1.Myna.AstNode));
-exports.HeronAstNode = HeronAstNode;
 // Module resolution
 exports.moduleFolder = path.join('.', 'inputs');
 exports.defaultModules = ['intrinsics'];
