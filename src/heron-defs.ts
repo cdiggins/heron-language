@@ -10,7 +10,7 @@ export class Def {
         public readonly node: HeronAstNode,
         public readonly name: string, 
     )
-    { node['def'] = this; }
+    { node.def = this; }
 
     toString() {
         return this.name + '_' + this.constructor['name'] + this.node['id'];
@@ -53,6 +53,19 @@ export class VarDef extends Def
     { super(node, name); }    
 }
 
+// Represents the definition of a variable used in a for loop
+// The type is not known, until the type of the expression is figured out.
+// Unlike a VarDef the expression must be an array.
+export class ForLoopVarDef extends Def
+{
+    constructor(
+        public readonly node: HeronAstNode,
+        public readonly name: string, 
+        public readonly expr: HeronAstNode
+    )
+    { super(node, name); }    
+}
+
 // Represents the definition of a type 
 export class TypeDef extends Def
 {
@@ -86,10 +99,11 @@ export function createDef(node: HeronAstNode): Def {
         case "typeDef": 
             return createTypeDef(node); 
         case "forLoop":
+            return createForLoopVarDef(node);
         case "varDecl": 
             return createVarDef(node); 
         case "lambdaArg":
-        case "lambdaArgsNoParen":
+        case "lambdaArgNoType":
             return createFuncParamDef(node);
     }
     return null
@@ -116,7 +130,7 @@ export function createFuncDef(node: HeronAstNode): FuncDef {
 }
 
 export function createFuncParamDef(node: HeronAstNode): FuncParamDef {
-    validateNode(node, 'funcParam', 'lambdaArg', 'lambdaArgsNoParen');
+    validateNode(node, 'funcParam', 'lambdaArg', 'lambdaArgNoType');
     let name = node.children[0].allText;
     let type =  (node.children.length > 1) ? node.children[1] : null;
     return new FuncParamDef(node, name, type);
@@ -129,11 +143,10 @@ export function createVarDef(node: HeronAstNode): VarDef {
     return new VarDef(node, name.allText, init.children[0]);
 }
 
-export function createVarDefFromForLoop(node: HeronAstNode): ForLoopVarDef {
+export function createForLoopVarDef(node: HeronAstNode): ForLoopVarDef {
     validateNode(node, 'forLoop');
     let name = validateNode(node.children[0], 'identifier');
-    let array = validateNode(node.children[1], 'varInitialization');
-    return new VarDef(node, name.allText, init.children[0]);
+    return new ForLoopVarDef(node, name.allText, node.children[1]);
 }
 
 export function createTypeDef(node: HeronAstNode): TypeDef {
@@ -144,7 +157,7 @@ export function createTypeDef(node: HeronAstNode): TypeDef {
 
 export function getDef<T extends Def>(node: HeronAstNode, typeName: string): T {
     if (!node) throw new Error("Node is missing");
-    let def = node['def'];
+    let def = node.def;
     if (!def) throwError(node, "No definition associated with node");
     if (def.constructor['name'] !== typeName) 
         throwError(node, "Incorrect definition type, expected " + typeName + " was " + def.constructor['name']);

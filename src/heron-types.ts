@@ -1,7 +1,7 @@
 import { Type, typeConstant, typeArray, isTypeArray, TypeArray, isTypeConstant, functionType, TypeConstant } from "type-inference/build/type-system";
 import { HeronAstNode, throwError, validateNode } from "./heron-ast-rewrite";
 import { Lambda, VarName, Literal, BoolLiteral, NumLiteral, StrLiteral, ArrayLiteral, ObjectLiteral, FunCall, ConditionalExpr, Expr } from "./heron-expr";
-import { Def, FuncDef, FuncParamDef, TypeDef, VarDef } from "./heron-defs";
+import { Def, FuncDef, FuncParamDef, TypeDef, VarDef, ForLoopVarDef } from "./heron-defs";
 import { RefType } from "./heron-refs";
 
 export module Types 
@@ -168,5 +168,10 @@ export function getDefType(def: Def)
     else if (def instanceof VarDef) 
     {
         return computeType(def.expr);
+    }
+    else if (def instanceof ForLoopVarDef)
+    {
+        // TODO: figure out the type of the array, and the type of an element.        
+        return Types.AnyType;
     }
 }

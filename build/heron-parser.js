@@ -134,10 +134,10 @@ var g = new function () {
     this.intrinsicDef = guardedWsDelimSeq(myna_parser_1.Myna.keyword("intrinsic"), this.funcSig, ';').ast;
     // Lambda expression 
     this.lambdaArg = this.identifier.then(this.funcParamType.opt).ast;
+    this.lambdaArgNoType = this.identifier.ast;
     this.lambdaBody = this.recCompoundStatement.or(this.expr).ast;
-    this.lambdaArgsNoParen = this.identifier.ast;
     this.lambdaArgsWithParen = myna_parser_1.Myna.seq("(", this.ws, commaDelimited(this.lambdaArg), ")", this.ws);
-    this.lambdaArgs = myna_parser_1.Myna.choice(this.lambdaArgsNoParen, this.lambdaArgsWithParen);
+    this.lambdaArgs = myna_parser_1.Myna.choice(this.lambdaArgNoType, this.lambdaArgsWithParen).ast;
     this.lambdaExpr = myna_parser_1.Myna.seq(this.lambdaArgs, guardedWsDelimSeq("=>", this.lambdaBody)).ast;
     // Leaf expressions (unary expressions)
     this.leafExpr = myna_parser_1.Myna.choice(this.varExpr, this.objectExpr, this.lambdaExpr, this.parenExpr, this.arrayExpr, this.literal, this.varName).then(this.ws).ast;

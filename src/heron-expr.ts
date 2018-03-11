@@ -244,16 +244,27 @@ export function createArrayExpr(node: HeronAstNode): ArrayLiteral {
 
 export function createBoolExpr(node: HeronAstNode): BoolLiteral {
     let value = node.allText === 'true' ? true : false;
-    return new BoolLiteral(validateNode(node, 'boolean'), value);
+    return new BoolLiteral(validateNode(node, 'bool'), value);
 }
 
 export function createConditionalExpr(node: HeronAstNode): ConditionalExpr {
-    return new ConditionalExpr(validateNode(node, 'conditionalExpr'), createExpr(node.children[0]), createExpr(node.children[1]), createExpr(node.children[2]));
+    validateNode(node, 'conditionalExpr')        
+    if (node.children.length !== 2)
+        throwError(node, 'Conditional expressions should have two children');
+    let rnode = validateNode(node.children[1], 'conditionalExprRight');
+    if (rnode.children.length !== 2)
+        throwError(node, 'Right side of conditional expression should have two children');
+    return new ConditionalExpr(node, 
+        createExpr(node.children[0]), 
+        createExpr(rnode.children[0]), 
+        createExpr(rnode.children[1]));
 }
 
 // TODO: the fact that I am calling a lambda body an expression is a problem.
-export function createLambdaExpr(node: HeronAstNode): Lambda {
-    return new Lambda(validateNode(node, 'lambdaExpr'), node.children[0].children.map(c => getDef<FuncParamDef>(c, 'FuncParamDef')), createExpr(node.children[1]));
+export function createLambdaExpr(node: HeronAstNode): Lambda {    
+    return new Lambda(validateNode(node, 'lambdaExpr'), 
+        node.children[0].children.map(c => getDef<FuncParamDef>(c, 'FuncParamDef')), 
+        createExpr(node.children[1]));
 }
 
 export function createNumExpr(node: HeronAstNode): NumLiteral {

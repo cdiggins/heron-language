@@ -149,6 +149,10 @@ function getDefType(def) {
     else if (def instanceof heron_defs_1.VarDef) {
         return computeType(def.expr);
     }
+    else if (def instanceof heron_defs_1.ForLoopVarDef) {
+        // TODO: figure out the type of the array, and the type of an element.        
+        return Types.AnyType;
+    }
 }
 exports.getDefType = getDefType;
 //# sourceMappingURL=heron-types.js.map

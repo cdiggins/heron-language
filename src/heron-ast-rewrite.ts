@@ -50,21 +50,17 @@ export function throwError(node: HeronAstNode, msg:string = '') {
     throw new Error(msg + (msg ? "\n" : "") + parseLocation(node));
 }
 
+// TODO: fix a bug. This doesn't work. 
 export function getFile(node: HeronAstNode): string {
     if (!node) return '';
     return node.file ? node.file.filePath : getFile(node.parent);
 }
 
-export function parseLocation(node: HeronAstNode | HasNode ): string {
-    if (node['node'])
-        return parseLocation(node['node']);
-    if (node['original'])
-        return parseLocation(node['original']);
-    if (node instanceof Myna.AstNode) {
-        let loc = new Myna.ParseLocation(node.input, node.start);
-        return loc.toString() + '\n' + 'in file ' + getFile(node);
-    }
-    throw new Error('Unexpected node: ' + node);
+export function parseLocation(node: HeronAstNode): string {
+    if (node.original)
+        return parseLocation(node.original);
+    let loc = new Myna.ParseLocation(node.input, node.start);
+    return loc.toString() + '\n' + 'in file ' + getFile(node);
 }
 
 export function opSymbolToString(sym: string): string {
@@ -86,6 +82,12 @@ export function opSymbolToString(sym: string): string {
         case ".": return "dot";
         default: throw new Error("Not a symbol: " + sym);
     }
+}
+
+export function makeNode(rule: Myna.Rule, src: HeronAstNode, text: string, ...children:HeronAstNode[]): HeronAstNode {
+    let result = rule.node(text, ...children) as HeronAstNode;
+    result.original = src;
+    return result;
 }
 
 export function opToString(op: string) {
@@ -114,41 +116,41 @@ export function identifierToString(id: string) {
 }
 
 // Applies a transform function to each member of the AST to create a new one
-export function mapAst(ast: HeronAstNode, f: (_: HeronAstNode) => HeronAstNode): HeronAstNode {
-    ast.children = ast.children.map(c => mapAst(c, f));
-    let r = f(ast);
+export function mapAst(node: HeronAstNode, f: (_: HeronAstNode) => HeronAstNode): HeronAstNode {    
+    node.children = node.children ? node.children.map(c => mapAst(c, f)) : null;
+    let r = f(node);
     // Store a back pointer to the original AST 
-    if (r != ast)
-        r['original'] = ast;
+    if (r != node)
+        r.original = node;
     return r;
 }
 
 // Creates a function call node given a function name, and some arguments 
-export function funCall(fxnName: string, ...args) : HeronAstNode {
-    let fxn = g.varName.node(fxnName);
-    let fxnCallArgs = g.funCall.node('', ...args);
-    return g.postfixExpr.node('', fxn, fxnCallArgs);
+export function funCall(src: HeronAstNode, fxnName: string, ...args) : HeronAstNode {
+    let fxn = makeNode(g.varName, src, fxnName);
+    let fxnCallArgs = makeNode(g.funCall, src, '', ...args);
+    return makeNode(g.postfixExpr, src, '', fxn, fxnCallArgs);
 }
 
 // Given a binary operator, a left operand and a right operand, creates a new AstNode 
-export function opToFunCall(op: string, left: HeronAstNode, right: HeronAstNode) {
-    return funCall("op" + op, left, right);
+export function opToFunCall(src: HeronAstNode, op: string, left: HeronAstNode, right: HeronAstNode) {
+    return funCall(src, "op" + op, left, right);
 }
 
-export function isFunCall(ast: HeronAstNode): boolean {
-    return ast && ast.name !== 'postfixExpr' && ast.children[1].name == 'funCall'; 
+export function isFunCall(node: HeronAstNode): boolean {
+    return node && node.name !== 'postfixExpr' && node.children[1].name == 'funCall'; 
 }
 
-export function isFieldSelect(ast: HeronAstNode): boolean {
-    return ast && ast.name !== 'postfixExpr' && ast.children[1].name == 'fieldSelect'; 
+export function isFieldSelect(node: HeronAstNode): boolean {
+    return node && node.name !== 'postfixExpr' && node.children[1].name == 'fieldSelect'; 
 }
 
-export function isMethodCall(ast: HeronAstNode): boolean {
-    return isFunCall(ast) && isFieldSelect(ast.children[0]);
+export function isMethodCall(node: HeronAstNode): boolean {
+    return isFunCall(node) && isFieldSelect(node.children[0]);
 }
 
-export function isExpr(ast: HeronAstNode): boolean {
-    switch (ast.name)
+export function isExpr(node: HeronAstNode): boolean {
+    switch (node.name)
     {
     case "postfixExpr":
     case "objectExpr":
@@ -172,53 +174,55 @@ export function isExpr(ast: HeronAstNode): boolean {
     case "relationalExpr":
     case "equalityExpr":
     case "rangeExpr":            
-        throw new Error("Unsupported expression found: pre-processing was not performed: " + ast.name);
+        throw new Error("Unsupported expression found: pre-processing was not performed: " + node.name);
     default:
         return false;
     }
 }
 
 // Transform x.f(y) => f(x, y)
-export function methodToFunction(ast: HeronAstNode): HeronAstNode {
-    if (ast.name === 'postfixExpr') {
-        if (ast.children.length != 2)
+export function methodToFunction(node: HeronAstNode): HeronAstNode {
+    if (node.name === 'postfixExpr') {
+        if (node.children.length != 2)
             throw new Error("Expected the postfix expression to have exactly two children at this point: probably forgot to pre-process");
         
-        if (ast.children[1].name === 'funCall') {
-            if (ast.children[0].name === 'postfixExpr') {
-                if (ast.children[0].children[1].name === 'fieldSelect') {
-                    let fn = ast.children[0].children[1].children[0].allText;
-                    let _this = ast.children[0].children[0];
-                    let args = ast.children[1].children;
-                    return funCall(fn, _this, ...args);                    
+        if (node.children[1].name === 'funCall') {
+            if (node.children[0].name === 'postfixExpr') {
+                if (node.children[0].children[1].name === 'fieldSelect') {
+                    let fn = node.children[0].children[1].children[0].allText;
+                    let _this = node.children[0].children[0];
+                    let args = node.children[1].children;
+                    return funCall(node, fn, _this, ...args);                    
                 }
             }
         }
     }
-    return ast;
+    return node;
 }
 
 // Converts x.a => a(x)
-export function fieldSelectToFunction(ast: HeronAstNode): HeronAstNode {    
-    if (ast.name === 'postfixExpr') {
-        if (ast.children[1].name === 'fieldSelect') {
-            let fieldName = ast.children[1].children[0].allText;
-            return funCall(fieldName, ast.children[0]);
+export function fieldSelectToFunction(node: HeronAstNode): HeronAstNode {    
+    if (node.name === 'postfixExpr') {
+        if (node.children[1].name === 'fieldSelect') {
+            let fieldName = node.children[1].children[0].allText;
+            return funCall(node, fieldName, node.children[0]);
         }
     }
-    return ast;
+    return node;
 }
 
 // Converts array indexing to function calls
 // xs[i] = op[](xs, i)
-export function arrayIndexToFunction(ast: HeronAstNode): HeronAstNode {    
-    if (ast.name === 'postfixExpr') {
-        if (ast.children[1].name === 'arrayIndex') {
-            let arrayIndex = ast.children[1].children[0];
-            return funCall('op[]', ast.children[0], arrayIndex)
+export function arrayIndexToFunction(node: HeronAstNode): HeronAstNode {    
+    if (node.name === 'postfixExpr') {
+        if (node.children.length !== 2)
+            throw new Error('Expected two children for a postfix expression');
+        if (node.children[1].name === 'arrayIndex') {
+            let arrayIndex = node.children[1].children[0];
+            return funCall(node, 'op[]', node.children[0], arrayIndex)
         }
     }
-    return ast;
+    return node;
 }
     
 // Converts binary operators to function calls
@@ -237,7 +241,7 @@ export function opToFunction(node: HeronAstNode): HeronAstNode {
                     case '!': opName = 'op_not'; break;
                     default: throw new Error('Unrecognized prefix operator ' + node.children[i].allText);
                 }
-                r = funCall(opName, r);
+                r = funCall(node, opName, r);
             }
             return r;
         }
@@ -265,7 +269,7 @@ export function opToFunction(node: HeronAstNode): HeronAstNode {
     if (right.children.length != 2)
         throw new Error("Expected two children of the right");
     let op = right.children[0].allText;                    
-    return opToFunCall(op, left, right.children[1]);
+    return opToFunCall(node, op, left, right.children[1]);
 }
 
 // Some expressions are parsed as a list of expression. 
@@ -274,9 +278,9 @@ export function opToFunction(node: HeronAstNode): HeronAstNode {
 // (a op b op c op d) => (((a op b) op c) op d)
 // (a op b) => (a op b)
 // (a) => a 
-export function exprListToPair(ast: HeronAstNode): HeronAstNode {
+export function exprListToPair(node: HeronAstNode): HeronAstNode {
     // We are only going to handle certain cases
-    switch (ast.name)
+    switch (node.name)
     {    
         case 'assignmentExprLeft':
         case 'conditionalExprLeft':
@@ -293,9 +297,9 @@ export function exprListToPair(ast: HeronAstNode): HeronAstNode {
         case 'leafExpr':
         case 'expr':        
             {
-                if (ast.children.length != 1)
+                if (node.children.length != 1)
                     throw new Error("Exepcted exactly one child");
-                return ast.children[0];
+                return node.children[0];
             }
         case 'assignmentExpr':
         case 'conditionalExpr':
@@ -311,40 +315,40 @@ export function exprListToPair(ast: HeronAstNode): HeronAstNode {
         case 'prefixExpr':
             break;
         default: 
-            return ast;
+            return node;
     }
 
     // Check there is at least one child
-    if (ast.children.length == 0)
+    if (node.children.length == 0)
         throw new Error("Expected at least one child");
 
     // If there is only one child: we just return that child 
-    if (ast.children.length == 1) 
-        return ast.children[0];
+    if (node.children.length == 1) 
+        return node.children[0];
 
     // there are two already: we are done 
-    if (ast.children.length == 2)
-        return ast;
+    if (node.children.length == 2)
+        return node;
 
     // We are shifting left (in the case of most operations)
     // Or are shifting right in the case of prefix expr 
-    if (ast.name === 'prefixExpr') {
+    if (node.name === 'prefixExpr') {
         // More than two, we are going to shift things to the left-side
-        let right = ast.children[ast.children.length - 1];
-        for (let i=ast.children.length-2; i >= 0; --i)
+        let right = node.children[node.children.length - 1];
+        for (let i=node.children.length-2; i >= 0; --i)
         {   
-            let left = ast.children[i];
-            right = ast.rule.node('', left, right) as HeronAstNode;
+            let left = node.children[i];
+            right = makeNode(node.rule, node, '', left, right) as HeronAstNode;
         }
         return right;
     }
     else {
         // More than two, we are going to shift things to the left-side
-        let left = ast.children[0];
-        for (let i=1; i < ast.children.length; ++i)
+        let left = node.children[0];
+        for (let i=1; i < node.children.length; ++i)
         {   
-            let right = ast.children[i];
-            left = ast.rule.node('', left, right) as HeronAstNode;
+            let right = node.children[i];
+            left = makeNode(node.rule, node, '', left, right) as HeronAstNode;
         }
         return left;
     }
@@ -358,36 +362,49 @@ export function validateNode(node: HeronAstNode, ...names: string[]): HeronAstNo
 }
 
 // Calls a function on every node in the AST passing the AST node and it's child
-export function visitAstWithParent(ast: HeronAstNode, parent: HeronAstNode, f:((child:HeronAstNode, parent:HeronAstNode)=>void)) {    
-    ast.children.forEach(c => visitAstWithParent(c, ast, f));
-    f(ast, parent);
+export function visitAstWithParent(node: HeronAstNode, parent: HeronAstNode, f:((child:HeronAstNode, parent:HeronAstNode)=>void)) {    
+    node.children.forEach(c => visitAstWithParent(c, node, f));
+    f(node, parent);
 }
 
 // Calls a function on every node in the AST passing the AST node and it's child
-export function visitAst(ast: HeronAstNode, f:((_:HeronAstNode)=>void)) {    
-    ast.children.forEach(c => visitAst(c, f));
-    f(ast);
+export function visitAst(node: HeronAstNode, f:((_:HeronAstNode)=>void)) {    
+    node.children.forEach(c => visitAst(c, f));
+    f(node);
+}
+
+// Visits every node creating a pointer to its parent 
+export function setParentPointers(node: HeronAstNode) {
+    visitAstWithParent(node, null, (c, p) => c.parent = p);
 }
 
 // Performs some pre-processing of the AST to make it easier to work with
 // Many expressions are converted into function calls.
 // Also parent back pointers are added along with ids to the nodes. 
-export function preprocessAst(ast: HeronAstNode) 
+export function preprocessAst(node: HeronAstNode, file: SourceFile) 
 {
+    // We have to set parent pointers on the original tree 
+    setParentPointers(node);
+
+    // Set pointers to the file
+    visitAst(node, n => n.file = file);
+
     // The order of transforms matters. Particularly we need to do 
     // Method to function before doing fieldSelectToFunctions
-    ast = mapAst(ast, exprListToPair);
-    ast = mapAst(ast, methodToFunction);
-    ast = mapAst(ast, fieldSelectToFunction);
-    ast = mapAst(ast, arrayIndexToFunction);
-    ast = mapAst(ast, opToFunction);
+    node = mapAst(node, exprListToPair);
+    node = mapAst(node, methodToFunction);
+    node = mapAst(node, fieldSelectToFunction);
+    node = mapAst(node, arrayIndexToFunction);
+    node = mapAst(node, opToFunction);
  
-    // Some operations later on are easier if we have a parent pointer  
-    visitAstWithParent(ast, null, (c, p) => c['parent'] = p);
+    // The tree has been transformed, and new nodes have been added
+    // so we have to recompute parent pointers, and the file pointers 
+    setParentPointers(node);
+    visitAst(node, n => n.file = file);
 
     // Assign unique ids, for convenience and looks up. 
     let id = 0;
-    visitAst(ast, node => node['id'] = id++);
+    visitAst(node, node => node['id'] = id++);
 
-    return ast;
+    return node;
 }

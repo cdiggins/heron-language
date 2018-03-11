@@ -46,22 +46,20 @@ function sortyBy(xs, f) {
     return xs.slice().sort(function (a, b) { return (f(a) > f(b)) ? 1 : ((f(b) > f(a)) ? -1 : 0); });
 }
 exports.sortyBy = sortyBy;
-function mergeMultipleDefs(ast, nameAnalysis) {
+/*
+export function mergeMultipleDefs(ast, nameAnalysis: Package) {
     var funcDefs = [];
-    for (var _i = 0, _a = nameAnalysis.scopes; _i < _a.length; _i++) {
-        var scope = _a[_i];
-        for (var _b = 0, _c = scope.defs; _b < _c.length; _b++) {
-            var def = _c[_b];
+    for (var scope of nameAnalysis.scopes)
+        for (var def of scope.defs)
             if (def.node.name === 'funcDef')
                 funcDefs.push(def);
-        }
-    }
-    var grps = groupBy(funcDefs, function (x) { return x.name; });
-    for (var grp in grps) {
-        console.log(grp + ": " + grps[grp].map(function (op) { return op.decoratedName; }));
+    var grps = groupBy(funcDefs, x => x.name);
+    for (var grp in grps)
+    {
+        console.log(grp + ": " + grps[grp].map(op => op.decoratedName));
     }
 }
-exports.mergeMultipleDefs = mergeMultipleDefs;
+*/
 function findAllNodes(ast, f, r) {
     if (r === void 0) { r = []; }
     if (f(ast))
@@ -302,19 +300,11 @@ var HeronToJs = /** @class */ (function () {
         // seq(expr,expr[0,Infinity])[0,1]
         this.delimited(ast.children, state, ", ");
     };
-    HeronToJs.prototype.visit_lambdaArg = function (ast, state) {
-        // identifier
-        this.visitChildren(ast, state);
-    };
     HeronToJs.prototype.visit_lambdaArgs = function (ast, state) {
         // choice(lambdaArgsNoParen,lambdaArgsWithParen)
         state.push("(");
         this.visitNode(ast.children[0], state);
         state.push(")");
-    };
-    HeronToJs.prototype.visit_lambdaArgsNoParen = function (ast, state) {
-        // identifier
-        state.push(ast.allText);
     };
     HeronToJs.prototype.visit_lambdaArgsWithParen = function (ast, state) {
         // seq(lambdaArg,lambdaArg[0,Infinity])[0,1]

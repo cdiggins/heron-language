@@ -54,7 +54,7 @@ var Package = /** @class */ (function () {
             var m = _a[_i];
             var ast = m.node;
             // Perform pre-processing
-            heron_ast_rewrite_1.preprocessAst(ast);
+            heron_ast_rewrite_1.preprocessAst(ast, m.file);
             // Create definitions 
             heron_ast_rewrite_1.visitAst(ast, heron_defs_1.createDef);
             // Add scopes and references

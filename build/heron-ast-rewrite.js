@@ -29,6 +29,7 @@ function throwError(node, msg) {
     throw new Error(msg + (msg ? "\n" : "") + parseLocation(node));
 }
 exports.throwError = throwError;
+// TODO: fix a bug. This doesn't work. 
 function getFile(node) {
     if (!node)
         return '';
@@ -36,15 +37,10 @@ function getFile(node) {
 }
 exports.getFile = getFile;
 function parseLocation(node) {
-    if (node['node'])
-        return parseLocation(node['node']);
-    if (node['original'])
-        return parseLocation(node['original']);
-    if (node instanceof myna_1.Myna.AstNode) {
-        var loc = new myna_1.Myna.ParseLocation(node.input, node.start);
-        return loc.toString() + '\n' + 'in file ' + getFile(node);
-    }
-    throw new Error('Unexpected node: ' + node);
+    if (node.original)
+        return parseLocation(node.original);
+    var loc = new myna_1.Myna.ParseLocation(node.input, node.start);
+    return loc.toString() + '\n' + 'in file ' + getFile(node);
 }
 exports.parseLocation = parseLocation;
 function opSymbolToString(sym) {
@@ -67,6 +63,16 @@ function opSymbolToString(sym) {
     }
 }
 exports.opSymbolToString = opSymbolToString;
+function makeNode(rule, src, text) {
+    var children = [];
+    for (var _i = 3; _i < arguments.length; _i++) {
+        children[_i - 3] = arguments[_i];
+    }
+    var result = rule.node.apply(rule, [text].concat(children));
+    result.original = src;
+    return result;
+}
+exports.makeNode = makeNode;
 function opToString(op) {
     var r = "op";
     for (var i = 0; i < op.length; ++i)
@@ -94,46 +100,45 @@ function identifierToString(id) {
 }
 exports.identifierToString = identifierToString;
 // Applies a transform function to each member of the AST to create a new one
-function mapAst(ast, f) {
-    ast.children = ast.children.map(function (c) { return mapAst(c, f); });
-    var r = f(ast);
+function mapAst(node, f) {
+    node.children = node.children ? node.children.map(function (c) { return mapAst(c, f); }) : null;
+    var r = f(node);
     // Store a back pointer to the original AST 
-    if (r != ast)
-        r['original'] = ast;
+    if (r != node)
+        r.original = node;
     return r;
 }
 exports.mapAst = mapAst;
 // Creates a function call node given a function name, and some arguments 
-function funCall(fxnName) {
+function funCall(src, fxnName) {
     var args = [];
-    for (var _i = 1; _i < arguments.length; _i++) {
-        args[_i - 1] = arguments[_i];
+    for (var _i = 2; _i < arguments.length; _i++) {
+        args[_i - 2] = arguments[_i];
     }
-    var fxn = g.varName.node(fxnName);
-    var fxnCallArgs = (_a = g.funCall).node.apply(_a, [''].concat(args));
-    return g.postfixExpr.node('', fxn, fxnCallArgs);
-    var _a;
+    var fxn = makeNode(g.varName, src, fxnName);
+    var fxnCallArgs = makeNode.apply(void 0, [g.funCall, src, ''].concat(args));
+    return makeNode(g.postfixExpr, src, '', fxn, fxnCallArgs);
 }
 exports.funCall = funCall;
 // Given a binary operator, a left operand and a right operand, creates a new AstNode 
-function opToFunCall(op, left, right) {
-    return funCall("op" + op, left, right);
+function opToFunCall(src, op, left, right) {
+    return funCall(src, "op" + op, left, right);
 }
 exports.opToFunCall = opToFunCall;
-function isFunCall(ast) {
-    return ast && ast.name !== 'postfixExpr' && ast.children[1].name == 'funCall';
+function isFunCall(node) {
+    return node && node.name !== 'postfixExpr' && node.children[1].name == 'funCall';
 }
 exports.isFunCall = isFunCall;
-function isFieldSelect(ast) {
-    return ast && ast.name !== 'postfixExpr' && ast.children[1].name == 'fieldSelect';
+function isFieldSelect(node) {
+    return node && node.name !== 'postfixExpr' && node.children[1].name == 'fieldSelect';
 }
 exports.isFieldSelect = isFieldSelect;
-function isMethodCall(ast) {
-    return isFunCall(ast) && isFieldSelect(ast.children[0]);
+function isMethodCall(node) {
+    return isFunCall(node) && isFieldSelect(node.children[0]);
 }
 exports.isMethodCall = isMethodCall;
-function isExpr(ast) {
-    switch (ast.name) {
+function isExpr(node) {
+    switch (node.name) {
         case "postfixExpr":
         case "objectExpr":
         case "lambdaExpr":
@@ -156,52 +161,54 @@ function isExpr(ast) {
         case "relationalExpr":
         case "equalityExpr":
         case "rangeExpr":
-            throw new Error("Unsupported expression found: pre-processing was not performed: " + ast.name);
+            throw new Error("Unsupported expression found: pre-processing was not performed: " + node.name);
         default:
             return false;
     }
 }
 exports.isExpr = isExpr;
 // Transform x.f(y) => f(x, y)
-function methodToFunction(ast) {
-    if (ast.name === 'postfixExpr') {
-        if (ast.children.length != 2)
+function methodToFunction(node) {
+    if (node.name === 'postfixExpr') {
+        if (node.children.length != 2)
             throw new Error("Expected the postfix expression to have exactly two children at this point: probably forgot to pre-process");
-        if (ast.children[1].name === 'funCall') {
-            if (ast.children[0].name === 'postfixExpr') {
-                if (ast.children[0].children[1].name === 'fieldSelect') {
-                    var fn = ast.children[0].children[1].children[0].allText;
-                    var _this = ast.children[0].children[0];
-                    var args = ast.children[1].children;
-                    return funCall.apply(void 0, [fn, _this].concat(args));
+        if (node.children[1].name === 'funCall') {
+            if (node.children[0].name === 'postfixExpr') {
+                if (node.children[0].children[1].name === 'fieldSelect') {
+                    var fn = node.children[0].children[1].children[0].allText;
+                    var _this = node.children[0].children[0];
+                    var args = node.children[1].children;
+                    return funCall.apply(void 0, [node, fn, _this].concat(args));
                 }
             }
         }
     }
-    return ast;
+    return node;
 }
 exports.methodToFunction = methodToFunction;
 // Converts x.a => a(x)
-function fieldSelectToFunction(ast) {
-    if (ast.name === 'postfixExpr') {
-        if (ast.children[1].name === 'fieldSelect') {
-            var fieldName = ast.children[1].children[0].allText;
-            return funCall(fieldName, ast.children[0]);
+function fieldSelectToFunction(node) {
+    if (node.name === 'postfixExpr') {
+        if (node.children[1].name === 'fieldSelect') {
+            var fieldName = node.children[1].children[0].allText;
+            return funCall(node, fieldName, node.children[0]);
         }
     }
-    return ast;
+    return node;
 }
 exports.fieldSelectToFunction = fieldSelectToFunction;
 // Converts array indexing to function calls
 // xs[i] = op[](xs, i)
-function arrayIndexToFunction(ast) {
-    if (ast.name === 'postfixExpr') {
-        if (ast.children[1].name === 'arrayIndex') {
-            var arrayIndex = ast.children[1].children[0];
-            return funCall('op[]', ast.children[0], arrayIndex);
+function arrayIndexToFunction(node) {
+    if (node.name === 'postfixExpr') {
+        if (node.children.length !== 2)
+            throw new Error('Expected two children for a postfix expression');
+        if (node.children[1].name === 'arrayIndex') {
+            var arrayIndex = node.children[1].children[0];
+            return funCall(node, 'op[]', node.children[0], arrayIndex);
         }
     }
-    return ast;
+    return node;
 }
 exports.arrayIndexToFunction = arrayIndexToFunction;
 // Converts binary operators to function calls
@@ -227,7 +234,7 @@ function opToFunction(node) {
                         break;
                     default: throw new Error('Unrecognized prefix operator ' + node.children[i].allText);
                 }
-                r = funCall(opName, r);
+                r = funCall(node, opName, r);
             }
             return r;
         }
@@ -252,7 +259,7 @@ function opToFunction(node) {
     if (right.children.length != 2)
         throw new Error("Expected two children of the right");
     var op = right.children[0].allText;
-    return opToFunCall(op, left, right.children[1]);
+    return opToFunCall(node, op, left, right.children[1]);
 }
 exports.opToFunction = opToFunction;
 // Some expressions are parsed as a list of expression. 
@@ -261,9 +268,9 @@ exports.opToFunction = opToFunction;
 // (a op b op c op d) => (((a op b) op c) op d)
 // (a op b) => (a op b)
 // (a) => a 
-function exprListToPair(ast) {
+function exprListToPair(node) {
     // We are only going to handle certain cases
-    switch (ast.name) {
+    switch (node.name) {
         case 'assignmentExprLeft':
         case 'conditionalExprLeft':
         case 'rangeExprLeft':
@@ -279,9 +286,9 @@ function exprListToPair(ast) {
         case 'leafExpr':
         case 'expr':
             {
-                if (ast.children.length != 1)
+                if (node.children.length != 1)
                     throw new Error("Exepcted exactly one child");
-                return ast.children[0];
+                return node.children[0];
             }
         case 'assignmentExpr':
         case 'conditionalExpr':
@@ -297,34 +304,34 @@ function exprListToPair(ast) {
         case 'prefixExpr':
             break;
         default:
-            return ast;
+            return node;
     }
     // Check there is at least one child
-    if (ast.children.length == 0)
+    if (node.children.length == 0)
         throw new Error("Expected at least one child");
     // If there is only one child: we just return that child 
-    if (ast.children.length == 1)
-        return ast.children[0];
+    if (node.children.length == 1)
+        return node.children[0];
     // there are two already: we are done 
-    if (ast.children.length == 2)
-        return ast;
+    if (node.children.length == 2)
+        return node;
     // We are shifting left (in the case of most operations)
     // Or are shifting right in the case of prefix expr 
-    if (ast.name === 'prefixExpr') {
+    if (node.name === 'prefixExpr') {
         // More than two, we are going to shift things to the left-side
-        var right = ast.children[ast.children.length - 1];
-        for (var i = ast.children.length - 2; i >= 0; --i) {
-            var left = ast.children[i];
-            right = ast.rule.node('', left, right);
+        var right = node.children[node.children.length - 1];
+        for (var i = node.children.length - 2; i >= 0; --i) {
+            var left = node.children[i];
+            right = makeNode(node.rule, node, '', left, right);
         }
         return right;
     }
     else {
         // More than two, we are going to shift things to the left-side
-        var left = ast.children[0];
-        for (var i = 1; i < ast.children.length; ++i) {
-            var right = ast.children[i];
-            left = ast.rule.node('', left, right);
+        var left = node.children[0];
+        for (var i = 1; i < node.children.length; ++i) {
+            var right = node.children[i];
+            left = makeNode(node.rule, node, '', left, right);
         }
         return left;
     }
@@ -342,34 +349,45 @@ function validateNode(node) {
 }
 exports.validateNode = validateNode;
 // Calls a function on every node in the AST passing the AST node and it's child
-function visitAstWithParent(ast, parent, f) {
-    ast.children.forEach(function (c) { return visitAstWithParent(c, ast, f); });
-    f(ast, parent);
+function visitAstWithParent(node, parent, f) {
+    node.children.forEach(function (c) { return visitAstWithParent(c, node, f); });
+    f(node, parent);
 }
 exports.visitAstWithParent = visitAstWithParent;
 // Calls a function on every node in the AST passing the AST node and it's child
-function visitAst(ast, f) {
-    ast.children.forEach(function (c) { return visitAst(c, f); });
-    f(ast);
+function visitAst(node, f) {
+    node.children.forEach(function (c) { return visitAst(c, f); });
+    f(node);
 }
 exports.visitAst = visitAst;
+// Visits every node creating a pointer to its parent 
+function setParentPointers(node) {
+    visitAstWithParent(node, null, function (c, p) { return c.parent = p; });
+}
+exports.setParentPointers = setParentPointers;
 // Performs some pre-processing of the AST to make it easier to work with
 // Many expressions are converted into function calls.
 // Also parent back pointers are added along with ids to the nodes. 
-function preprocessAst(ast) {
+function preprocessAst(node, file) {
+    // We have to set parent pointers on the original tree 
+    setParentPointers(node);
+    // Set pointers to the file
+    visitAst(node, function (n) { return n.file = file; });
     // The order of transforms matters. Particularly we need to do 
     // Method to function before doing fieldSelectToFunctions
-    ast = mapAst(ast, exprListToPair);
-    ast = mapAst(ast, methodToFunction);
-    ast = mapAst(ast, fieldSelectToFunction);
-    ast = mapAst(ast, arrayIndexToFunction);
-    ast = mapAst(ast, opToFunction);
-    // Some operations later on are easier if we have a parent pointer  
-    visitAstWithParent(ast, null, function (c, p) { return c['parent'] = p; });
+    node = mapAst(node, exprListToPair);
+    node = mapAst(node, methodToFunction);
+    node = mapAst(node, fieldSelectToFunction);
+    node = mapAst(node, arrayIndexToFunction);
+    node = mapAst(node, opToFunction);
+    // The tree has been transformed, and new nodes have been added
+    // so we have to recompute parent pointers, and the file pointers 
+    setParentPointers(node);
+    visitAst(node, function (n) { return n.file = file; });
     // Assign unique ids, for convenience and looks up. 
     var id = 0;
-    visitAst(ast, function (node) { return node['id'] = id++; });
-    return ast;
+    visitAst(node, function (node) { return node['id'] = id++; });
+    return node;
 }
 exports.preprocessAst = preprocessAst;
 //# sourceMappingURL=heron-ast-rewrite.js.map

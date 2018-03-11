@@ -257,14 +257,6 @@ var HeronToTextVisitor = /** @class */ (function () {
         }
     };
     HeronToTextVisitor.prototype.visit_lambdaArgs = function (ast, state) {
-        // choice(lambdaArgsNoParen,lambdaArgsWithParen)
-        this.visitChildren(ast, state);
-    };
-    HeronToTextVisitor.prototype.visit_lambdaArgsNoParen = function (ast, state) {
-        // identifier
-        this.visitChildren(ast, state);
-    };
-    HeronToTextVisitor.prototype.visit_lambdaArgsWithParen = function (ast, state) {
         // seq(lambdaArg,lambdaArg[0,Infinity])[0,1]
         state.push('(');
         this.visitChildrenDelimited(ast, state, ', ');

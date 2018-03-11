@@ -257,14 +257,6 @@ class HeronToTextVisitor
         }
     }
     visit_lambdaArgs(ast: HeronAstNode, state: CodeBuilder) {
-        // choice(lambdaArgsNoParen,lambdaArgsWithParen)
-        this.visitChildren(ast, state);
-    }
-    visit_lambdaArgsNoParen(ast: HeronAstNode, state: CodeBuilder) {
-        // identifier
-        this.visitChildren(ast, state);
-    }
-    visit_lambdaArgsWithParen(ast: HeronAstNode, state: CodeBuilder) {
         // seq(lambdaArg,lambdaArg[0,Infinity])[0,1]
         state.push('(');
         this.visitChildrenDelimited(ast, state, ', ');

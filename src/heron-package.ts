@@ -63,7 +63,7 @@ export class Package
             let ast = m.node;
 
             // Perform pre-processing
-            preprocessAst(ast);
+            preprocessAst(ast, m.file);
 
             // Create definitions 
             visitAst(ast, createDef);

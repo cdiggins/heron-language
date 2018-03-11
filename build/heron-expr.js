@@ -281,11 +281,17 @@ function createArrayExpr(node) {
 exports.createArrayExpr = createArrayExpr;
 function createBoolExpr(node) {
     var value = node.allText === 'true' ? true : false;
-    return new BoolLiteral(heron_ast_rewrite_1.validateNode(node, 'boolean'), value);
+    return new BoolLiteral(heron_ast_rewrite_1.validateNode(node, 'bool'), value);
 }
 exports.createBoolExpr = createBoolExpr;
 function createConditionalExpr(node) {
-    return new ConditionalExpr(heron_ast_rewrite_1.validateNode(node, 'conditionalExpr'), createExpr(node.children[0]), createExpr(node.children[1]), createExpr(node.children[2]));
+    heron_ast_rewrite_1.validateNode(node, 'conditionalExpr');
+    if (node.children.length !== 2)
+        heron_ast_rewrite_1.throwError(node, 'Conditional expressions should have two children');
+    var rnode = heron_ast_rewrite_1.validateNode(node.children[1], 'conditionalExprRight');
+    if (rnode.children.length !== 2)
+        heron_ast_rewrite_1.throwError(node, 'Right side of conditional expression should have two children');
+    return new ConditionalExpr(node, createExpr(node.children[0]), createExpr(rnode.children[0]), createExpr(rnode.children[1]));
 }
 exports.createConditionalExpr = createConditionalExpr;
 // TODO: the fact that I am calling a lambda body an expression is a problem.

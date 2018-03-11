@@ -18,7 +18,7 @@ var Def = /** @class */ (function () {
     function Def(node, name) {
         this.node = node;
         this.name = name;
-        node['def'] = this;
+        node.def = this;
     }
     Def.prototype.toString = function () {
         return this.name + '_' + this.constructor['name'] + this.node['id'];
@@ -68,6 +68,21 @@ var VarDef = /** @class */ (function (_super) {
     return VarDef;
 }(Def));
 exports.VarDef = VarDef;
+// Represents the definition of a variable used in a for loop
+// The type is not known, until the type of the expression is figured out.
+// Unlike a VarDef the expression must be an array.
+var ForLoopVarDef = /** @class */ (function (_super) {
+    __extends(ForLoopVarDef, _super);
+    function ForLoopVarDef(node, name, expr) {
+        var _this = _super.call(this, node, name) || this;
+        _this.node = node;
+        _this.name = name;
+        _this.expr = expr;
+        return _this;
+    }
+    return ForLoopVarDef;
+}(Def));
+exports.ForLoopVarDef = ForLoopVarDef;
 // Represents the definition of a type 
 var TypeDef = /** @class */ (function (_super) {
     __extends(TypeDef, _super);
@@ -104,10 +119,11 @@ function createDef(node) {
         case "typeDef":
             return createTypeDef(node);
         case "forLoop":
+            return createForLoopVarDef(node);
         case "varDecl":
             return createVarDef(node);
         case "lambdaArg":
-        case "lambdaArgsNoParen":
+        case "lambdaArgNoType":
             return createFuncParamDef(node);
     }
     return null;
@@ -133,7 +149,7 @@ function createFuncDef(node) {
 }
 exports.createFuncDef = createFuncDef;
 function createFuncParamDef(node) {
-    heron_ast_rewrite_1.validateNode(node, 'funcParam', 'lambdaArg', 'lambdaArgsNoParen');
+    heron_ast_rewrite_1.validateNode(node, 'funcParam', 'lambdaArg', 'lambdaArgNoType');
     var name = node.children[0].allText;
     var type = (node.children.length > 1) ? node.children[1] : null;
     return new FuncParamDef(node, name, type);
@@ -146,13 +162,12 @@ function createVarDef(node) {
     return new VarDef(node, name.allText, init.children[0]);
 }
 exports.createVarDef = createVarDef;
-function createVarDefFromForLoop(node) {
+function createForLoopVarDef(node) {
     heron_ast_rewrite_1.validateNode(node, 'forLoop');
     var name = heron_ast_rewrite_1.validateNode(node.children[0], 'identifier');
-    var array = heron_ast_rewrite_1.validateNode(node.children[1], 'varInitialization');
-    return new VarDef(node, name.allText, init.children[0]);
+    return new ForLoopVarDef(node, name.allText, node.children[1]);
 }
-exports.createVarDefFromForLoop = createVarDefFromForLoop;
+exports.createForLoopVarDef = createForLoopVarDef;
 function createTypeDef(node) {
     heron_ast_rewrite_1.validateNode(node, 'typeDef');
     var name = node.children[0].allText;
@@ -162,7 +177,7 @@ exports.createTypeDef = createTypeDef;
 function getDef(node, typeName) {
     if (!node)
         throw new Error("Node is missing");
-    var def = node['def'];
+    var def = node.def;
     if (!def)
         heron_ast_rewrite_1.throwError(node, "No definition associated with node");
     if (def.constructor['name'] !== typeName)

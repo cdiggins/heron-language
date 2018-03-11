@@ -103,10 +103,10 @@ module heron:std.array:0.1
         = gen(xs.count + ys.count, i => i < xs.count ? xs[i] : ys[i - xs.count]);    
 
     function cut(xs, from, n) 
-        = gen(xs.count - n, i < from ? xs[i] : xs[i + n]);    
+        = gen(xs.count - n, i => i < from ? xs[i] : xs[i + n]);    
 
     function splice(xs, from, ys) 
-        = xs.take(from).concat(ys).concat(xs.drop(from));    
+        = xs.take(from).concat(ys).concat(xs.skip(from));    
 
     function sum(xs) 
         = xs.reduce(0, op+);    
@@ -124,7 +124,7 @@ module heron:std.array:0.1
         = xs.reduce(xs[0], max);
 
     function partition(a, lo, hi) {
-        pivot = a[lo];
+        var pivot = a[lo];
         var i = lo-1;
         var j = hi+1;
         while (true) {
@@ -140,6 +140,7 @@ module heron:std.array:0.1
 
     function qsort(a, lo, hi) {
         if (lo < hi) {
+            var p = a[lo]; 
             a = partition(a, lo, hi);
             a = qsort(a, lo, p);
             a = qsort(a, p+1, hi);
@@ -148,7 +149,7 @@ module heron:std.array:0.1
     }
 
     function sort(xs) 
-        = xs.mutable.qsort(a, b).array;    
+        = xs.mutable.qsort(0, xs.count-1).array;    
 
     function median(xs) {        
         var ys = xs.sort;

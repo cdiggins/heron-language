@@ -1,6 +1,5 @@
 import { Myna } from "myna-parser/myna";
 import { preprocessAst, identifierToString, HeronAstNode } from "./heron-ast-rewrite";
-import { Package } from "./heron-scope-analysis";
 import { CodeBuilder } from "./code-builder";
 
 //=====================================
@@ -43,6 +42,7 @@ export function sortyBy(xs, f) {
     return [...xs].sort(function(a,b) {return (f(a) > f(b)) ? 1 : ((f(b) > f(a)) ? -1 : 0);});
 }
 
+/*
 export function mergeMultipleDefs(ast, nameAnalysis: Package) {
     var funcDefs = [];
     for (var scope of nameAnalysis.scopes) 
@@ -55,6 +55,7 @@ export function mergeMultipleDefs(ast, nameAnalysis: Package) {
         console.log(grp + ": " + grps[grp].map(op => op.decoratedName));
     }
 }
+*/
 
 export function findAllNodes(ast:HeronAstNode, f:(_:HeronAstNode)=>boolean, r:HeronAstNode[]=[]): HeronAstNode[] {
     if (f(ast))
@@ -295,19 +296,11 @@ class HeronToJs
         // seq(expr,expr[0,Infinity])[0,1]
         this.delimited(ast.children, state, ", ");
     }    
-    visit_lambdaArg(ast, state) {
-        // identifier
-        this.visitChildren(ast, state);
-    }
     visit_lambdaArgs(ast, state) {
         // choice(lambdaArgsNoParen,lambdaArgsWithParen)
         state.push("(");
         this.visitNode(ast.children[0], state);
         state.push(")");
-    }
-    visit_lambdaArgsNoParen(ast, state) {
-        // identifier
-        state.push(ast.allText);
     }
     visit_lambdaArgsWithParen(ast, state) {
         // seq(lambdaArg,lambdaArg[0,Infinity])[0,1]

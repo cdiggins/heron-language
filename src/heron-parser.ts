@@ -150,10 +150,10 @@ const g = new function() {
 
     // Lambda expression 
     this.lambdaArg = this.identifier.then(this.funcParamType.opt).ast;
+    this.lambdaArgNoType = this.identifier.ast;
     this.lambdaBody = this.recCompoundStatement.or(this.expr).ast;
-    this.lambdaArgsNoParen = this.identifier.ast;
     this.lambdaArgsWithParen = m.seq("(", this.ws, commaDelimited(this.lambdaArg), ")", this.ws);
-    this.lambdaArgs = m.choice(this.lambdaArgsNoParen, this.lambdaArgsWithParen);
+    this.lambdaArgs = m.choice(this.lambdaArgNoType, this.lambdaArgsWithParen).ast;
     this.lambdaExpr = m.seq(this.lambdaArgs, guardedWsDelimSeq("=>", this.lambdaBody)).ast;
      
     // Leaf expressions (unary expressions)
