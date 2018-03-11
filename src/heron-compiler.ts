@@ -1,5 +1,5 @@
 import { Myna } from "myna-parser/myna";
-import { Scope, Package } from "./heron-scope-analysis";
+import { Scope } from "./heron-scope-analysis";
 import { Type } from "type-inference/type-system";
 import { preprocessAst, visitAst, HeronAstNode } from "./heron-ast-rewrite";
 import { parseHeron, heronGrammar } from "./heron-parser";
@@ -7,6 +7,8 @@ import { heronToText } from "./heron-to-text";
 import { Def, createDef } from "./heron-defs";
 import { Ref } from "./heron-refs";
 import { Expr, createExpr } from "./heron-expr";
+import { computeType } from "./heron-types";
+import { Package } from "./heron-package";
 
 const g = heronGrammar;
 
@@ -21,7 +23,7 @@ let ext = '.heron';
 
 // Module resolution
 export const moduleFolder = path.join('.', 'inputs');
-export const defaultModules = ['intrinsics'];
+export const intrinsicModules = ['intrinsics'];
 export const modules: HeronAstNode[] = [];
 
 //================================================================
@@ -29,9 +31,18 @@ export const modules: HeronAstNode[] = [];
 
 export function createPackage(moduleNames: string[]): Package {
     const pkg = new Package();
-    loadDefaultModules(pkg);
-    for (let m of moduleNames) 
-        parseModule(m, false, pkg);
+
+    // Load the intrinsic (built-in) modules
+    for (let name of intrinsicModules) 
+        addModuleToPackage(name, true, pkg);
+
+    // Load the specified modules (any order)    
+    for (let name of moduleNames) 
+        addModuleToPackage(name, false, pkg);
+
+    // The package is doing the heavy lifting 
+    pkg.processModules();
+    
     for (let sf of pkg.files) {
         let outputPath = sf.filePath.substr(0, sf.filePath.lastIndexOf('.')) + '.output.heron';
         let text = heronToText(sf.node as HeronAstNode);
@@ -40,53 +51,24 @@ export function createPackage(moduleNames: string[]): Package {
     return pkg;
 }
 
-//================================================================
-
-export function scanAllModules() {
-    const path = moduleFolder + defaultModules;
-    const files = fs.readdirSync(path);
-    throw new Error("Not finished yet");
+export function addModuleToPackage(moduleName: string, intrinsic: boolean, pkg: Package) {
+    let modulePath = moduleNameToPath(name);
+    let ast = parseFile(modulePath);
+    pkg.addFile(ast, intrinsic, modulePath);
 }
 
 export function moduleNameToPath(f: string): string {
     return path.join(moduleFolder, f + ext);
 }
 
-export function parseModule(moduleName: string, builtIn: boolean, pkg: Package) {
+export function parseModule(moduleName: string): HeronAstNode {
     let modulePath = moduleNameToPath(moduleName);
-    parseFile(modulePath, builtIn, pkg);
+    return parseFile(modulePath);
 }
 
-export function loadDefaultModules(pkg: Package) {    
-    for (let moduleName of defaultModules) 
-        parseModule(moduleName, true, pkg);
-}
-
-export function parseFile(f: string, builtIn: boolean, pkg: Package): HeronAstNode {
+export function parseFile(f: string): HeronAstNode {
     let outputFile = f.substring(0, f.lastIndexOf('.')) + '.output.heron';
     let code = fs.readFileSync(f, 'utf-8');
-    let mynaAst = parseHeron(code, g.file);     
-    let ast = toHeronAst(mynaAst, pkg, builtIn, f);
+    let ast = parseHeron(code, g.file);     
     return ast;
-}
-
-// Convert a generic Myna AST tree into a proper Heron AST. 
-export function toHeronAst(ast: HeronAstNode, pkg: Package, builtIn: boolean, filePath: string): HeronAstNode {
-    // Perform pre-processing
-    ast = preprocessAst(ast);
-
-    // Creates name defintions and add them to the nodes. 
-    visitAst(ast, createDef);
-
-    // Adding the file to the package, does a name analysis and adds references. 
-    pkg.addFile(ast, builtIn, filePath);
-
-    // We need to create expressions, and add them to the nodes
-    visitAst(ast, createExpr);
-
-    // All expressions are assigned types (WIP)
-    // computeTypes(ast); 
-
-    // Type-cast the node.
-    return ast as HeronAstNode;
 }

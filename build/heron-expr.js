@@ -26,22 +26,6 @@ var Expr = /** @class */ (function () {
     return Expr;
 }());
 exports.Expr = Expr;
-// A named reference to a function can resolve to multiple functions, so we talk in terms of function sets.
-// The type of a function set is the union of the types of each function definition it has  
-var FuncSet = /** @class */ (function (_super) {
-    __extends(FuncSet, _super);
-    function FuncSet(node, defs) {
-        var _this = _super.call(this, node) || this;
-        _this.node = node;
-        _this.defs = defs;
-        return _this;
-    }
-    FuncSet.prototype.toString = function () {
-        return 'funcSet' + this.node['id'] + '(' + this.defs.join(',') + ')';
-    };
-    return FuncSet;
-}(Expr));
-exports.FuncSet = FuncSet;
 // An anonymous function, also known as a lambda.
 var Lambda = /** @class */ (function (_super) {
     __extends(Lambda, _super);
@@ -58,7 +42,8 @@ var Lambda = /** @class */ (function (_super) {
     return Lambda;
 }(Expr));
 exports.Lambda = Lambda;
-// The name of a variable
+// The name of a variable. This could resolve to a function name, in which case there 
+// will be multiple types.
 var VarName = /** @class */ (function (_super) {
     __extends(VarName, _super);
     function VarName(node, name, defs) {
@@ -89,6 +74,30 @@ var Literal = /** @class */ (function (_super) {
     return Literal;
 }(Expr));
 exports.Literal = Literal;
+var BoolLiteral = /** @class */ (function (_super) {
+    __extends(BoolLiteral, _super);
+    function BoolLiteral() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    return BoolLiteral;
+}(Literal));
+exports.BoolLiteral = BoolLiteral;
+var NumLiteral = /** @class */ (function (_super) {
+    __extends(NumLiteral, _super);
+    function NumLiteral() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    return NumLiteral;
+}(Literal));
+exports.NumLiteral = NumLiteral;
+var StrLiteral = /** @class */ (function (_super) {
+    __extends(StrLiteral, _super);
+    function StrLiteral() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    return StrLiteral;
+}(Literal));
+exports.StrLiteral = StrLiteral;
 // An array literal expression
 var ArrayLiteral = /** @class */ (function (_super) {
     __extends(ArrayLiteral, _super);
@@ -134,21 +143,20 @@ var ObjectLiteral = /** @class */ (function (_super) {
     return ObjectLiteral;
 }(Expr));
 exports.ObjectLiteral = ObjectLiteral;
-// Type expressions 
-var TypeExpr = /** @class */ (function (_super) {
-    __extends(TypeExpr, _super);
-    function TypeExpr(node, def) {
-        var _this = _super.call(this, node) || this;
-        _this.node = node;
-        _this.def = def;
-        return _this;
-    }
-    TypeExpr.prototype.toString = function () {
+/*
+// Type expressions
+export class TypeExpr extends Expr {
+    constructor(
+        public readonly node: HeronAstNode,
+        public readonly def: Def,
+    )
+    { super(node); }
+
+    toString(): string {
         return this.node.allText;
-    };
-    return TypeExpr;
-}(Expr));
-exports.TypeExpr = TypeExpr;
+    }
+}
+*/
 // Function call expressions
 var FunCall = /** @class */ (function (_super) {
     __extends(FunCall, _super);
@@ -226,8 +234,6 @@ function createExpr(node) {
             return createStrExpr(node);
         case "prefixExpr":
             heron_ast_rewrite_1.throwError(node, "Prefix expr should be converted into function calls");
-        case "typeExpr":
-            return createTypeExpr(node);
         case "conditionalExpr":
             return createConditionalExpr(node);
         case "varName":
@@ -275,7 +281,7 @@ function createArrayExpr(node) {
 exports.createArrayExpr = createArrayExpr;
 function createBoolExpr(node) {
     var value = node.allText === 'true' ? true : false;
-    return new Literal(heron_ast_rewrite_1.validateNode(node, 'boolean'), value);
+    return new BoolLiteral(heron_ast_rewrite_1.validateNode(node, 'boolean'), value);
 }
 exports.createBoolExpr = createBoolExpr;
 function createConditionalExpr(node) {
@@ -289,24 +295,13 @@ function createLambdaExpr(node) {
 exports.createLambdaExpr = createLambdaExpr;
 function createNumExpr(node) {
     var value = parseFloat(node.allText);
-    return new Literal(heron_ast_rewrite_1.validateNode(node, 'number'), value);
+    return new NumLiteral(heron_ast_rewrite_1.validateNode(node, 'number'), value);
 }
 exports.createNumExpr = createNumExpr;
 function createStrExpr(node) {
-    return new Literal(heron_ast_rewrite_1.validateNode(node, 'string'), node.allText);
+    return new StrLiteral(heron_ast_rewrite_1.validateNode(node, 'string'), node.allText);
 }
 exports.createStrExpr = createStrExpr;
-function createTypeExpr(node) {
-    var typeName = heron_ast_rewrite_1.validateNode(node.children[0], 'typeName');
-    var ref = typeName['ref'];
-    if (!ref)
-        heron_ast_rewrite_1.throwError(typeName, "expected a reference");
-    if (ref.defs.length !== 1)
-        throw new Error("Expected exactly one definition not " + ref.defs.length);
-    var def = ref.defs[0];
-    return new TypeExpr(heron_ast_rewrite_1.validateNode(node, 'typeExpr'), def);
-}
-exports.createTypeExpr = createTypeExpr;
 function createVarNameExpr(node) {
     var ref = node['ref'];
     if (!ref)

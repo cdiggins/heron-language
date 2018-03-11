@@ -1,24 +1,12 @@
-language heron:std:0:1;
+language heron:std:0.1;
 
 module heron:std.array:0.1
 {
-    // The two Array types 
-
-    /*
-    type Array<T>
-        = { count: Int; at(n: Int): T; } 
-
-    type MutableArray<T> 
-        = { count: Int; at(n: Int): T; setAt(n: Int, x: T); }
-    */
-
-    // Functions
-
-    function array(n, f)
-        = { count=n; at=f; } as Array; 
+    function unit(x) 
+        = [x];
 
     function map(xs, f)
-        = array(xs.count, i => f(xs[i]));
+        = array(xs.count, i => f(xs[i]));        
 
     function min(x, y) 
         = x <= y ? x : y;
@@ -67,7 +55,7 @@ module heron:std.array:0.1
         for (var x in xs) 
             if (p(x)) 
                 ys[i++] = x;
-        return ys.take(i);
+        return ys.array.take(i);
     }
 
     function repeat(x, n) 
@@ -75,10 +63,10 @@ module heron:std.array:0.1
 
     function prefixScan(xs, op) {
         if (xs.empty) return xs;
-        var ys = xs[0].repeat(xs.count).mutable();
+        var ys = xs[0].repeat(xs.count).mutable;
         for (var i in 1 .. ys.count)
             ys[i] = op(xs[i], ys[i-1]);
-        return ys;
+        return ys.array;
     }
 
     function adjacentDifferences(xs) 
@@ -135,46 +123,41 @@ module heron:std.array:0.1
     function maxElement(xs) 
         = xs.reduce(xs[0], max);
 
-    // https://en.wikipedia.org/wiki/Quicksort
-    function sort(xs) {
-        var a = xs.mutable();
-
-        // A function cannot modify an array passed to it. 
-        // A function that captures a variable and modifies it cannot be passed 
-        // as a lambda. It is an effectful function. 
-        function qsort(a, lo, hi) 
-        {
-            function partition() 
-            {
-                pivot = a[lo];
-                var i = lo-1;
-                var j = hi+1;
-                while (true) {
-                    do { i++; } while (a[i] < pivot);
-                    do { j--; } while (a[j] > pivot);
-                    if (i >= j) return j;
-                    var tmp = a[i];
-                    a[i] = a[j];
-                    a[j] = tmp;
-                }
-            }
-            if (lo < hi) {
-                p = partition();
-                qsort(a, lo, p);
-                qsort(a, p+1, hi);
-            }
+    function partition(a, lo, hi) {
+        pivot = a[lo];
+        var i = lo-1;
+        var j = hi+1;
+        while (true) {
+            do { i++; } while (a[i] < pivot);
+            do { j--; } while (a[j] > pivot);
+            if (i >= j) return j;
+            var tmp = a[i];
+            a[i] = a[j];
+            a[j] = tmp;
         }
         return a;
-    }    
+    }
+
+    function qsort(a, lo, hi) {
+        if (lo < hi) {
+            a = partition(a, lo, hi);
+            a = qsort(a, lo, p);
+            a = qsort(a, p+1, hi);
+        }
+        return a;
+    }
+
+    function sort(xs) 
+        = xs.mutable.qsort(a, b).array;    
 
     function median(xs) {        
-        var ys = xs.sort();
+        var ys = xs.sort;
         return ys.count % 2 == 0 
             ? ys[ys.count / 2] 
             : ys[ys.count / 2 - 1] + ys[ys.count / 2 + 1] / 2;
     }
 
-    function inrange(xs, n) 
+    function inRange(xs, n) 
         = n >= 0 && n < xs.count;    
 
     function last(xs) 
@@ -183,9 +166,17 @@ module heron:std.array:0.1
     function first(xs) 
         = xs[0];
 
-    var pi = 3.14159265353897;
+    function reduce(xs, acc, f) {
+        // TODO: support 'for' loops as expressions 
+        // TODO: support 'assignment' as expressions. 
+        for (x in xs)
+            acc = f(acc, x);
+        return acc;
+    }
 
-    // https://en.wikipedia.org/wiki/Gaussian_blur
-    function gaussian_blur(x, y, sigma) 
-        = pow(1 / (2 * pi * sigma* sigma) * e,  -(x*x + y*y) / (2 * sigma * sigma));    
+    function flatten(xs)
+        = xs.reduce([], concat);
+
+    function flatMap(xs, f)       
+        = xs.map(f).flatten;
 }

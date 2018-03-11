@@ -17,20 +17,6 @@ export class Expr {
     }
 }
 
-// A named reference to a function can resolve to multiple functions, so we talk in terms of function sets.
-// The type of a function set is the union of the types of each function definition it has  
-export class FuncSet extends Expr {    
-    constructor(
-        public readonly node: HeronAstNode,
-        public readonly defs: FuncDef[],
-    )
-    { super(node); }
-
-    toString(): string {
-        return 'funcSet' + this.node['id'] + '(' + this.defs.join(',') + ')';        
-    }
-}
-
 // An anonymous function, also known as a lambda.
 export class Lambda extends Expr {
     constructor(
@@ -45,7 +31,8 @@ export class Lambda extends Expr {
     }
 }
 
-// The name of a variable
+// The name of a variable. This could resolve to a function name, in which case there 
+// will be multiple types.
 export class VarName extends Expr {    
     constructor(
         public readonly node: HeronAstNode,
@@ -70,6 +57,15 @@ export class Literal<T> extends Expr {
     toString(): string {
         return this.value.toString();
     }
+}
+
+export class BoolLiteral extends Literal<boolean> {    
+}
+
+export class NumLiteral extends Literal<number> {    
+}
+
+export class StrLiteral extends Literal<string> {
 }
 
 // An array literal expression
@@ -110,6 +106,7 @@ export class ObjectLiteral extends Expr {
     }
 }
 
+/*
 // Type expressions 
 export class TypeExpr extends Expr {    
     constructor(
@@ -122,6 +119,7 @@ export class TypeExpr extends Expr {
         return this.node.allText;
     }
 }
+*/
 
 // Function call expressions
 export class FunCall extends Expr {
@@ -198,8 +196,6 @@ export function createExpr(node: HeronAstNode): Expr {
             return createStrExpr(node);
         case "prefixExpr":
             throwError(node, "Prefix expr should be converted into function calls");
-        case "typeExpr":
-            return createTypeExpr(node);
         case "conditionalExpr":
             return createConditionalExpr(node);
         case "varName":
@@ -246,9 +242,9 @@ export function createArrayExpr(node: HeronAstNode): ArrayLiteral {
     return new ArrayLiteral(validateNode(node, 'arrayExpr'), node.children.map(createExpr));
 }
 
-export function createBoolExpr(node: HeronAstNode): Literal<boolean> {
+export function createBoolExpr(node: HeronAstNode): BoolLiteral {
     let value = node.allText === 'true' ? true : false;
-    return new Literal<boolean>(validateNode(node, 'boolean'), value);
+    return new BoolLiteral(validateNode(node, 'boolean'), value);
 }
 
 export function createConditionalExpr(node: HeronAstNode): ConditionalExpr {
@@ -260,23 +256,13 @@ export function createLambdaExpr(node: HeronAstNode): Lambda {
     return new Lambda(validateNode(node, 'lambdaExpr'), node.children[0].children.map(c => getDef<FuncParamDef>(c, 'FuncParamDef')), createExpr(node.children[1]));
 }
 
-export function createNumExpr(node: HeronAstNode): Literal<number> {
+export function createNumExpr(node: HeronAstNode): NumLiteral {
     let value = parseFloat(node.allText);
-    return new Literal<number>(validateNode(node, 'number'), value);
+    return new NumLiteral(validateNode(node, 'number'), value);
 }
 
-export function createStrExpr(node: HeronAstNode): Literal<string> {
-    return new Literal<string>(validateNode(node, 'string'), node.allText);
-}
-
-export function createTypeExpr(node: HeronAstNode): TypeExpr {
-    let typeName = validateNode(node.children[0], 'typeName');
-    let ref:Ref = typeName['ref'];
-    if (!ref) throwError(typeName, "expected a reference");
-    if (ref.defs.length !== 1)
-        throw new Error("Expected exactly one definition not " + ref.defs.length);
-    let def = ref.defs[0];
-    return new TypeExpr(validateNode(node, 'typeExpr'), def);
+export function createStrExpr(node: HeronAstNode): StrLiteral {
+    return new StrLiteral(validateNode(node, 'string'), node.allText);
 }
 
 export function createVarNameExpr(node: HeronAstNode): VarName {

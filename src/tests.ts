@@ -2,10 +2,11 @@ import * as Myna from "myna-parser";
 import { heronGrammar, parseHeron } from './heron-parser';
 import { heronToJs } from "./heron-to-js";
 import { HeronAstNode, preprocessAst, parseLocation } from "./heron-ast-rewrite";
-import { Package, Scope } from "./heron-scope-analysis";
+import { Scope } from "./heron-scope-analysis";
 import { heronToText } from "./heron-to-text";
-import { toHeronAst, parseFile, parseModule, createPackage } from "./heron-compiler";
+import { parseFile, parseModule, createPackage } from "./heron-compiler";
 import { Ref } from "./heron-refs";
+import { Package } from "./heron-package";
 
 const m = Myna.Myna;
 const g = heronGrammar;

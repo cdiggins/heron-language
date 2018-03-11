@@ -15,10 +15,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var heron_ast_rewrite_1 = require("./heron-ast-rewrite");
 // This is a definition of a name. It could be a function, variable, type
 var Def = /** @class */ (function () {
-    function Def(node, name, type) {
+    function Def(node, name) {
         this.node = node;
         this.name = name;
-        this.type = type;
         node['def'] = this;
     }
     Def.prototype.toString = function () {
@@ -30,11 +29,11 @@ exports.Def = Def;
 // Represents the definition of a function 
 var FuncDef = /** @class */ (function (_super) {
     __extends(FuncDef, _super);
-    function FuncDef(node, name, type, params, genericParams) {
-        var _this = _super.call(this, node, name, type) || this;
+    function FuncDef(node, name, retTypeNode, params, genericParams) {
+        var _this = _super.call(this, node, name) || this;
         _this.node = node;
         _this.name = name;
-        _this.type = type;
+        _this.retTypeNode = retTypeNode;
         _this.params = params;
         _this.genericParams = genericParams;
         return _this;
@@ -45,11 +44,11 @@ exports.FuncDef = FuncDef;
 // Represent a parameter to a function or a lambda expression 
 var FuncParamDef = /** @class */ (function (_super) {
     __extends(FuncParamDef, _super);
-    function FuncParamDef(node, name, type) {
-        var _this = _super.call(this, node, name, type) || this;
+    function FuncParamDef(node, name, typeNode) {
+        var _this = _super.call(this, node, name) || this;
         _this.node = node;
         _this.name = name;
-        _this.type = type;
+        _this.typeNode = typeNode;
         return _this;
     }
     return FuncParamDef;
@@ -60,7 +59,7 @@ exports.FuncParamDef = FuncParamDef;
 var VarDef = /** @class */ (function (_super) {
     __extends(VarDef, _super);
     function VarDef(node, name, expr) {
-        var _this = _super.call(this, node, name, null) || this;
+        var _this = _super.call(this, node, name) || this;
         _this.node = node;
         _this.name = name;
         _this.expr = expr;
@@ -73,7 +72,7 @@ exports.VarDef = VarDef;
 var TypeDef = /** @class */ (function (_super) {
     __extends(TypeDef, _super);
     function TypeDef(node, name) {
-        var _this = _super.call(this, node, name, 'type') || this;
+        var _this = _super.call(this, node, name) || this;
         _this.node = node;
         _this.name = name;
         return _this;
@@ -85,7 +84,7 @@ exports.TypeDef = TypeDef;
 var TypeParamDef = /** @class */ (function (_super) {
     __extends(TypeParamDef, _super);
     function TypeParamDef(node, name, constraint) {
-        var _this = _super.call(this, node, name, 'type') || this;
+        var _this = _super.call(this, node, name) || this;
         _this.node = node;
         _this.name = name;
         _this.constraint = constraint;
@@ -95,17 +94,17 @@ var TypeParamDef = /** @class */ (function (_super) {
 }(Def));
 exports.TypeParamDef = TypeParamDef;
 // Represents the definition of a module
-var ModuleDef = /** @class */ (function (_super) {
-    __extends(ModuleDef, _super);
-    function ModuleDef(node, name) {
-        var _this = _super.call(this, node, name, null) || this;
+var Module = /** @class */ (function (_super) {
+    __extends(Module, _super);
+    function Module(node, name) {
+        var _this = _super.call(this, node, name) || this;
         _this.node = node;
         _this.name = name;
         return _this;
     }
-    return ModuleDef;
+    return Module;
 }(Def));
-exports.ModuleDef = ModuleDef;
+exports.Module = Module;
 //==========================================================================================
 // Exported functions
 function createDef(node) {

@@ -11,7 +11,7 @@ module squarecubes:1.0
     function isSquare(x)
         = x.float.sqrt.isInteger;
 
-    function isCube(x)
+    function isCube(x)  
         = x.float.pow(1/3).isInteger;
 
     function isSquareCube(x)

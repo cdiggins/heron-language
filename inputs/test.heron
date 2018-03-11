@@ -1,0 +1,27 @@
+language heron:std:0.1;
+
+module heron:std.tests.array:0.1
+{
+    import std.array:0.1;
+
+    function main() {
+        simpleTest();
+    }
+
+    // Expect: [1, 11, 3], 1, 11, 3, 1, 3, 1, 11, 3, 15, 5
+    fuction simpleTest() {
+        var xs = [1, 11, 3];
+        print(xs);
+        for (var x in xs)
+            print(x);
+        print(xs[0]);
+        print(xs.count);
+        print(xs.first);
+        print(xs.last);
+        print(xs.min);
+        print(xs.max);
+        print(xs.median);
+        print(xs.sum);
+        print(xs.average);
+    }
+}

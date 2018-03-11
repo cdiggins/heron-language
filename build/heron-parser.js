@@ -183,15 +183,16 @@ var g = new function () {
     this.returnStatement = guardedWsDelimSeq(myna_parser_1.Myna.keyword("return"), this.expr.opt, this.eos).ast;
     this.emptyStatement = this.eos.ast;
     this.typeDef = guardedWsDelimSeq(myna_parser_1.Myna.keyword("type"), this.identifier, this.eos).ast;
-    this.statement = myna_parser_1.Myna.choice(this.emptyStatement, this.compoundStatement, this.ifStatement, this.returnStatement, this.continueStatement, this.breakStatement, this.forLoop, this.doLoop, this.whileLoop, this.varDeclStatement, this.funcDef, this.intrinsicDef, this.typeDef, this.exprStatement).then(this.ws);
+    this.importStatement = guardedWsDelimSeq(myna_parser_1.Myna.keyword("import"), this.moduleName, this.eos).ast;
+    this.statement = myna_parser_1.Myna.choice(this.emptyStatement, this.compoundStatement, this.ifStatement, this.returnStatement, this.continueStatement, this.breakStatement, this.forLoop, this.doLoop, this.whileLoop, this.varDeclStatement, this.funcDef, this.intrinsicDef, this.typeDef, this.importStatement, this.exprStatement).then(this.ws);
     // Urns are used for the language definition and the module name 
     this.urnPart = myna_parser_1.Myna.alphaNumeric.or(myna_parser_1.Myna.char('.-')).zeroOrMore.ast;
     this.urnDiv = myna_parser_1.Myna.choice(':');
     this.urn = this.urnPart.then(this.urnDiv.then(this.urnPart).zeroOrMore).ast;
     this.moduleName = this.urn.ast;
-    this.langVer = this.urn.ast;
+    this.langVerURN = this.urn.ast;
     // Tope level declarations
-    this.langDecl = guardedWsDelimSeq(myna_parser_1.Myna.keyword("language"), this.langVer, this.eos).ast;
+    this.langDecl = guardedWsDelimSeq(myna_parser_1.Myna.keyword("language"), this.langVer, this.eos);
     this.moduleBody = this.statement.zeroOrMore.ast;
     this.module = guardedWsDelimSeq(myna_parser_1.Myna.keyword('module'), this.moduleName, '{', this.moduleBody, '}').ast;
     this.file = this.langDecl.opt.then(this.module).ast;

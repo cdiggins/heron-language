@@ -427,3 +427,104 @@ Is my code any good.
 1. How much code redundancy is there? 
 1. Quality of a repo? 
 1. Is it tested?
+1. Cyclomatic complexity? 
+1. Different operators used?
+1. Average line length
+1. Function call charts? 
+
+//==
+
+I should probably check that a node only has one of:
+
+//==
+
+The type system for f(v) = z(v)
+
+1) I need something that supports a "z". Signature based polymorphism. The type is the set of 
+functions that are applicable. Note that "z" is polymorphic. There might be more types that support "z" then those that have been provided. Can the "definition" see the module that is 
+including it? So if I add a new type, that has a "z" can that module use it? This is what is expected in a polymorphic type system. It is what is expected in C++ templates, in macros,
+and with virtual functions. A lot of systems invent techniques to allow this. 
+
+So the type of "v" is anything that can fit into "z"? How do I express that? 
+
+1) It really has to do with, every spot in every function that it is used. 
+
+Now in many languages we talk about interfaces. Which implies polymorphism on the first 
+argument. 
+
+So I can say: 
+1) The set of functions where the first argument is "v".
+This constitutes the interface/trait. 
+
+2) Every function is a trait. 
+
+3) 
+
+//==
+
+Types are named. There is a set of named types. Functions will accept them, or they won't. 
+
+//
+
+Now that I have "traits" and "types", how does the system know that some types are 
+actually traits? 
+
+The implementation of a trait function for a given type makes it a trait. Which is 
+weird and confusing a bit. 
+
+It implies I would have to reimplement freaking everything. 
+
+//==
+
+I can explicitly define interfaces. 
+
+I can imply interfaces, but it is hard to know if something completely implements an interface.
+For example consider the "Numerical".
+
+I like the idea of having raw types, and then force casting when a function dictates so. 
+
+So to write a type cast, provide a type signature.
+
+Just giving a name to an interface is not sufficient, I think? 
+
+The question now, is what are the intrinsics? 
+
+I kind of need to bootstrap, to tell the compiler that my type implements X. 
+
+Normally though I just want to write functions, and let it figure it out. 
+
+I could do this in the intrinsics. It is repetitive, but it is accurate. 
+
+//===
+
+Building meshes is a great way to start. There will be a number of small tests I need to pass on the way there. 
+
+Note: having a sort would be really nice. This implies the array assignment operators needs to
+be made to work. It also implies I need a Mutable array (e.g. ArrayBuilder). 
+
+The cube / squares example is good. I should do that. 
+
+I have to walk before I run. One example of working good would be great. 
+
+//== 
+
+Resolve the modules. 
+Check the languages and their compatibility.
+Check the language strings. 
+Check the versions of the languages of each file.
+
+//== 
+
+1. Print an array of numbers from 1..20
+1. Print the biggest and smallest
+1. Print the median
+1. Print the sum
+1. Print the average 
+1. Filter the list (only evens)
+1. Compute cubes and squares 
+1. Sort the numbers
+
+1. Compute sphere points
+1. Scale sphere points 
+1. Draw a sphere
+

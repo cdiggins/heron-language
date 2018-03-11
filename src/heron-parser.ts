@@ -201,6 +201,7 @@ const g = new function() {
     this.returnStatement = guardedWsDelimSeq(m.keyword("return"), this.expr.opt, this.eos).ast;
     this.emptyStatement = this.eos.ast;
     this.typeDef = guardedWsDelimSeq(m.keyword("type"), this.identifier, this.eos).ast;
+    this.importStatement = guardedWsDelimSeq(m.keyword("import"), this.moduleName, this.eos).ast;
 
     this.statement = m.choice(
         this.emptyStatement,
@@ -216,6 +217,7 @@ const g = new function() {
         this.funcDef,
         this.intrinsicDef,
         this.typeDef,    
+        this.importStatement,
         this.exprStatement,
     ).then(this.ws);
 
@@ -224,10 +226,10 @@ const g = new function() {
     this.urnDiv = m.choice(':')
     this.urn = this.urnPart.then(this.urnDiv.then(this.urnPart).zeroOrMore).ast;
     this.moduleName = this.urn.ast;
-    this.langVer = this.urn.ast;
+    this.langVerURN = this.urn.ast;
 
     // Tope level declarations
-    this.langDecl = guardedWsDelimSeq(m.keyword("language"), this.langVer, this.eos).ast;
+    this.langDecl = guardedWsDelimSeq(m.keyword("language"), this.langVer, this.eos);
     this.moduleBody = this.statement.zeroOrMore.ast;
     this.module = guardedWsDelimSeq(m.keyword('module'), this.moduleName, '{', this.moduleBody, '}').ast;
     this.file = this.langDecl.opt.then(this.module).ast;

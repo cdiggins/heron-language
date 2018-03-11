@@ -3,18 +3,12 @@
  
 import { Myna } from "myna-parser/myna";
 import { visitAst, validateNode, throwError, HeronAstNode } from "./heron-ast-rewrite";
-import { Expr, createExpr } from "./heron-expr";
-
-// Temporary: the type of something is one of these things.  
-type TypeRef = HeronAstNode | string;
-
 
 // This is a definition of a name. It could be a function, variable, type
 export class Def {    
     constructor(
         public readonly node: HeronAstNode,
         public readonly name: string, 
-        public readonly type: TypeRef,
     )
     { node['def'] = this; }
 
@@ -29,11 +23,11 @@ export class FuncDef extends Def
     constructor(
         public readonly node: HeronAstNode,
         public readonly name: string, 
-        public readonly type: TypeRef,
+        public readonly retTypeNode: HeronAstNode,
         public readonly params: FuncParamDef[],
         public readonly genericParams: TypeParamDef[],
         )
-    { super(node, name, type); }
+    { super(node, name); }
 }
 
 // Represent a parameter to a function or a lambda expression 
@@ -42,9 +36,9 @@ export class FuncParamDef extends Def
     constructor(
         public readonly node: HeronAstNode,
         public readonly name: string, 
-        public readonly type: TypeRef,
+        public readonly typeNode: HeronAstNode,
     )
-    { super(node, name, type); }
+    { super(node, name); }
 }
 
 // Represents the definition of a variable. 
@@ -56,7 +50,7 @@ export class VarDef extends Def
         public readonly name: string, 
         public readonly expr: HeronAstNode
     )
-    { super(node, name, null); }    
+    { super(node, name); }    
 }
 
 // Represents the definition of a type 
@@ -66,7 +60,7 @@ export class TypeDef extends Def
         public readonly node: HeronAstNode,
         public readonly name: string, 
     )
-    { super(node, name, 'type'); }        
+    { super(node, name); }        
 }
 
 // Represents the definition of a generic type parameter 
@@ -77,17 +71,17 @@ export class TypeParamDef extends Def
         public readonly name: string, 
         public readonly constraint: HeronAstNode
     )
-    { super(node, name, 'type'); }        
+    { super(node, name); }        
 }
 
 // Represents the definition of a module
-export class ModuleDef extends Def
+export class Module extends Def
 {
     constructor(
         public readonly node: HeronAstNode,
         public readonly name: string, 
     )
-    { super(node, name, null); }            
+    { super(node, name); }            
 }
 
 //==========================================================================================

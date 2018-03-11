@@ -1,11 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var heron_scope_analysis_1 = require("./heron-scope-analysis");
-var heron_ast_rewrite_1 = require("./heron-ast-rewrite");
 var heron_parser_1 = require("./heron-parser");
 var heron_to_text_1 = require("./heron-to-text");
-var heron_defs_1 = require("./heron-defs");
-var heron_expr_1 = require("./heron-expr");
+var heron_package_1 = require("./heron-package");
 var g = heron_parser_1.heronGrammar;
 var fs = require('fs');
 var path = require('path');
@@ -15,19 +12,26 @@ var flavor = 'std';
 var ext = '.heron';
 // Module resolution
 exports.moduleFolder = path.join('.', 'inputs');
-exports.defaultModules = ['intrinsics'];
+exports.intrinsicModules = ['intrinsics'];
 exports.modules = [];
 //================================================================
 // Main functions 
 function createPackage(moduleNames) {
-    var pkg = new heron_scope_analysis_1.Package();
-    loadDefaultModules(pkg);
-    for (var _i = 0, moduleNames_1 = moduleNames; _i < moduleNames_1.length; _i++) {
-        var m = moduleNames_1[_i];
-        parseModule(m, false, pkg);
+    var pkg = new heron_package_1.Package();
+    // Load the intrinsic (built-in) modules
+    for (var _i = 0, intrinsicModules_1 = exports.intrinsicModules; _i < intrinsicModules_1.length; _i++) {
+        var name_1 = intrinsicModules_1[_i];
+        addModuleToPackage(name_1, true, pkg);
     }
-    for (var _a = 0, _b = pkg.files; _a < _b.length; _a++) {
-        var sf = _b[_a];
+    // Load the specified modules (any order)    
+    for (var _a = 0, moduleNames_1 = moduleNames; _a < moduleNames_1.length; _a++) {
+        var name_2 = moduleNames_1[_a];
+        addModuleToPackage(name_2, false, pkg);
+    }
+    // The package is doing the heavy lifting 
+    pkg.processModules();
+    for (var _b = 0, _c = pkg.files; _b < _c.length; _b++) {
+        var sf = _c[_b];
         var outputPath = sf.filePath.substr(0, sf.filePath.lastIndexOf('.')) + '.output.heron';
         var text = heron_to_text_1.heronToText(sf.node);
         fs.writeFileSync(outputPath, text);
@@ -35,51 +39,26 @@ function createPackage(moduleNames) {
     return pkg;
 }
 exports.createPackage = createPackage;
-//================================================================
-function scanAllModules() {
-    var path = exports.moduleFolder + exports.defaultModules;
-    var files = fs.readdirSync(path);
-    throw new Error("Not finished yet");
+function addModuleToPackage(moduleName, intrinsic, pkg) {
+    var modulePath = moduleNameToPath(name);
+    var ast = parseFile(modulePath);
+    pkg.addFile(ast, intrinsic, modulePath);
 }
-exports.scanAllModules = scanAllModules;
+exports.addModuleToPackage = addModuleToPackage;
 function moduleNameToPath(f) {
     return path.join(exports.moduleFolder, f + ext);
 }
 exports.moduleNameToPath = moduleNameToPath;
-function parseModule(moduleName, builtIn, pkg) {
+function parseModule(moduleName) {
     var modulePath = moduleNameToPath(moduleName);
-    parseFile(modulePath, builtIn, pkg);
+    return parseFile(modulePath);
 }
 exports.parseModule = parseModule;
-function loadDefaultModules(pkg) {
-    for (var _i = 0, defaultModules_1 = exports.defaultModules; _i < defaultModules_1.length; _i++) {
-        var moduleName = defaultModules_1[_i];
-        parseModule(moduleName, true, pkg);
-    }
-}
-exports.loadDefaultModules = loadDefaultModules;
-function parseFile(f, builtIn, pkg) {
+function parseFile(f) {
     var outputFile = f.substring(0, f.lastIndexOf('.')) + '.output.heron';
     var code = fs.readFileSync(f, 'utf-8');
-    var mynaAst = heron_parser_1.parseHeron(code, g.file);
-    var ast = toHeronAst(mynaAst, pkg, builtIn, f);
+    var ast = heron_parser_1.parseHeron(code, g.file);
     return ast;
 }
 exports.parseFile = parseFile;
-// Convert a generic Myna AST tree into a proper Heron AST. 
-function toHeronAst(ast, pkg, builtIn, filePath) {
-    // Perform pre-processing
-    ast = heron_ast_rewrite_1.preprocessAst(ast);
-    // Creates name defintions and add them to the nodes. 
-    heron_ast_rewrite_1.visitAst(ast, heron_defs_1.createDef);
-    // Adding the file to the package, does a name analysis and adds references. 
-    pkg.addFile(ast, builtIn, filePath);
-    // We need to create expressions, and add them to the nodes
-    heron_ast_rewrite_1.visitAst(ast, heron_expr_1.createExpr);
-    // All expressions are assigned types (WIP)
-    // computeTypes(ast); 
-    // Type-cast the node.
-    return ast;
-}
-exports.toHeronAst = toHeronAst;
 //# sourceMappingURL=heron-compiler.js.map

@@ -21,6 +21,8 @@ function outputDetails(node, state) {
         state.pushLine('// definition ' + node.def);
     if (node.expr)
         state.pushLine('// expression ' + node.expr.constructor['name'] + ' ' + node.expr);
+    if (node.type)
+        state.pushLine('// type ' + node.type);
 }
 // A visitor class for generating Heron code. 
 var HeronToTextVisitor = /** @class */ (function () {

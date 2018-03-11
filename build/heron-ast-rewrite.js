@@ -32,7 +32,7 @@ exports.throwError = throwError;
 function getFile(node) {
     if (!node)
         return '';
-    return node['file'] ? node['file'] : getFile(node['parent']);
+    return node.file ? node.file.filePath : getFile(node.parent);
 }
 exports.getFile = getFile;
 function parseLocation(node) {

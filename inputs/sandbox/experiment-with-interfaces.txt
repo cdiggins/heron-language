@@ -1,0 +1,127 @@
+language heron:std:0.1;
+
+// An intrinsic is a function that has an implementation provided by the compiler.
+
+module heron:intrinsics:0.1
+{
+    // These are core types     
+    type Float;
+    type Float2;
+    type Float3; 
+    type Float4; 
+    type Bool; 
+    type String;
+    type Array; 
+
+    // These are interface (aka traits or protocols)    
+    interface INumerical; 
+    interface IOrderable;
+    interface IComparable;
+
+    var pi = 3.14159265358979323846;
+    var e = 2.71828182845904523536;
+
+    intrinsic float2(x: Float, y: Float): Float2;    
+    intrinsic x(v: Float2): Float;
+    intrinsic y(v: Float2): Float;
+
+    intrinsic float3(x: Float, y: Float, z: Float): Float3;
+    intrinsic x(v: Float3): Float;
+    intrinsic y(v: Float3): Float;
+    intrinsic z(v: Float3): Float;
+
+    intrinsic float4(x: Float, y: Float, z: Float, w: Float): Float4;
+    intrinsic x(v: Float4): Float;
+    intrinsic y(v: Float4): Float;
+    intrinsic z(v: Float4): Float;
+    intrinsic w(v: Float4): Float;
+
+    interface INumerical<T> {
+        abs(x: T): T;
+        acos(x: T): T;
+        asin(x: T): T;
+        atan(x: T): T;
+        atan2(y: T, x: T): T;
+        ceil(x: T): T;
+        clamp(x: T, min: T, max: T): T;
+        cos(x: T): T;
+        exp(x: T): T;
+        floor(x: T): T;
+        log(x: T): T;
+        max(x: T, y: T): T;
+        min(x: T, y: T): T;
+        pow(x: T, y: T): T;
+        round(x: T): T;
+        sin(x: T): T;
+        sign(x: T): T;
+        sqrt(x: T): T;
+        tan(x: T): T; 
+
+        op+ (x: T, y: T): T;
+        op- (x: T, y: T): T;
+        op* (x: T, y: T): T;
+        op/ (x: T, y: T): T;
+        op% (x: T, y: T): T;
+    }  
+
+    map(v: Vector2, f)
+        = vector2(f(v.x), f(v.y));
+    
+    map(v: Vector3, f)
+        = vector3(f(v.x), f(v.y), f(v.z));
+
+    map(v: Vector4, f)
+        = vector4(f(v.x), f(v.y), f(v.z), f(v.z));
+
+    // Ignores the 'integer'
+    abs<T: IMappable<U>, U: INumerical>(x: T)
+        = x.map(abs);
+
+    acos(x: T): T;
+    asin(x: T): T;
+    atan(x: T): T;
+    atan2(y: T, x: T): T;
+    ceil(x: T): T;
+    clamp(x: T, min: T, max: T): T;
+    cos(x: T): T;
+    exp(x: T): T;
+    floor(x: T): T;
+    log(x: T): T;
+    max(x: T, y: T): T;
+    min(x: T, y: T): T;
+    pow(x: T, y: T): T;
+    round(x: T): T;
+    sin(x: T): T;
+    sign(x: T): T;
+    sqrt(x: T): T;
+    tan(x: T): T; 
+
+    op+ (x: T, y: T): T;
+    op- (x: T, y: T): T;
+    op* (x: T, y: T): T;
+    op/ (x: T, y: T): T;
+    op% (x: T, y: T): T;
+
+    interface IMappable<T, U> {
+        map(x: T, f: (U) -> U)): T;
+    } 
+
+    interface IOrderable<T> {
+        op>  (x: T, y: T): Bool;
+        op>= (x: T, y: T): Bool;
+        op<  (x: T, y: T): Bool;
+        op<= (x: T, y: T): Bool;
+    }
+
+    interface IEquatable<T> {
+        op!= (x: T, y: T): Bool;
+        op== (x: T, y: T): Bool;
+    }
+
+    // Special operators that have identifier names 
+    op_at(x: Array, i: Int): Any;
+    op_range(from: Int, to: Int): Array;
+    op_not(x: Bool): Bool;
+    op_negate(x: T): T;
+
+}

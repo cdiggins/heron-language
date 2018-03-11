@@ -4,6 +4,7 @@ import { Ref } from "./heron-refs";
 import { Scope } from "./heron-scope-analysis";
 import { Type } from "type-inference/type-system";
 import { Expr } from "./heron-expr";
+import { SourceFile } from "./heron-package";
 
 // After processing and transforming the nodes in the AST tree they 
 // are extended with the following new properties. 
@@ -36,6 +37,9 @@ export class HeronAstNode extends Myna.AstNode
 
     // If this node is an expression, additional information is stored here.
     expr?: Expr;
+
+    // If this is a source file, this contains the file path and more. 
+    file?: SourceFile;
 }
 
 const g = Myna.grammars['heron'];
@@ -48,7 +52,7 @@ export function throwError(node: HeronAstNode, msg:string = '') {
 
 export function getFile(node: HeronAstNode): string {
     if (!node) return '';
-    return node['file'] ? node['file'] : getFile(node['parent']);
+    return node.file ? node.file.filePath : getFile(node.parent);
 }
 
 export function parseLocation(node: HeronAstNode | HasNode ): string {
