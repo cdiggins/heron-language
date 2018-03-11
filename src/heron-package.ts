@@ -20,11 +20,11 @@ export class Package
     // When done adding files call "processModules" to sort the dependencies 
     addFile(node: HeronAstNode, intrinsic: boolean, filePath: string) {        
         validateNode(node, 'file');
-        let langVerNode = validateNode(node.children[0], 'langVerURN');
+        let langVerNode = validateNode(node.children[0], 'langVer');
         let langVer = this.parseURN(langVerNode);
-        if (langVer.length != 3)
-            throwError(langVerNode, "Expected three component to language version URN: name, flavor, and version")
+        //if (langVer.length != 3) throwError(langVerNode, "Expected three component to language version URN: name, flavor, and version")
         let file = new SourceFile(node, intrinsic, filePath, langVerNode.allText);
+        this.files.push(file);
 
         let moduleNode = validateNode(node.children[1], 'module');
         let moduleNameNode = validateNode(moduleNode.children[0], 'moduleName');
@@ -33,7 +33,7 @@ export class Package
         let importNodes = moduleBodyNode.children.filter(c => c.name === 'import');
         let importURNs = importNodes.map(this.parseModuleName);
         let module = new Module(moduleNode, moduleNameURN, file, importURNs);
-        this.files.push(file);
+        this.modules.push(module);
     }
 
     // Given a URN 
@@ -255,9 +255,9 @@ class AstVisitor
         this.visitChildren(node, state);
         state.popScope();
     }
-    visit_module(node: HeronAstNode, state: Package) {
+    visit_moduleBody(node: HeronAstNode, state: Package) {
         // All definitions at the module level, are available to all others.
-        for (let c of node.children[1].children)
+        for (let c of node.children)
             if (c['def'])
                 state.addDef(c['def']);
         this.visitChildren(node, state);

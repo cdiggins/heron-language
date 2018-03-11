@@ -82,43 +82,51 @@ const g = new function() {
     this.logicalAndOp       = m.text('&&').ast;
     this.logicalOrOp        = m.text('||').ast;
     this.logicalXOrOp       = m.text('^^').ast;
+    this.rangeOp            = m.text('..').ast;
     
     // Identifiers including special operator indicators 
-    this.opSymbol       = m.char('<>=+-*/%^|&$!');
+    this.opSymbol       = m.char('<>=+-*/%^|&$!.[]');
     this.opName         = m.seq("op", this.opSymbol.oneOrMore).ast;
     this.identifier     = m.choice(this.opName, m.identifier).ast;
 
+    // Urns are used for the language definition and the module name 
+    this.urnPart    = m.alphaNumeric.or(m.char('.-')).zeroOrMore.ast;
+    this.urnDiv     = m.choice(':')
+    this.urn        = this.urnPart.then(this.urnDiv.then(this.urnPart).zeroOrMore).ast;
+    this.langVer    = this.urn.ast;
+    this.moduleName = this.urn.ast;
+
     // Type information 
-    this.recType = m.delay(() => _this.type);
-    this.typeParam = this.recType.ast;
-    this.typeParamList = guardedWsDelimSeq('<', commaDelimited(this.typeParam), '>').ast;
-    this.typeName = this.identifier.ast;
-    this.typeExpr = this.typeName.then(this.typeParamList.opt).ast;
+    this.recType        = m.delay(() => _this.type);
+    this.typeParam      = this.recType.ast;
+    this.typeParamList  = guardedWsDelimSeq('<', commaDelimited(this.typeParam), '>').ast;
+    this.typeName       = this.identifier.ast;
+    this.typeExpr       = this.typeName.then(this.typeParamList.opt).ast;
     
     // Postfix expressions
-    this.funCall = guardedWsDelimSeq("(", commaDelimited(this.expr), ")").ast;
+    this.funCall        = guardedWsDelimSeq("(", commaDelimited(this.expr), ")").ast;
     // TODO: consider this if we want to add syntactic support for slices and strides 
     //this.arrayStride = guardedWsDelimSeq(":", this.expr).ast;
     //this.arraySlice = guardedWsDelimSeq(":", this.expr, this.arrayStride.opt).ast;
     //this.arrayIndex = guardedWsDelimSeq("[", this.expr, this.arraySlice.opt, "]").ast;
-    this.arrayIndex = guardedWsDelimSeq("[", this.expr, "]").ast;
-    this.fieldSelect = m.seq(".", this.identifier).ast;
-    this.asType = guardedWsDelimSeq(m.keyword("as"), this.typeExpr);
-    this.postfixOp = m.choice(this.funCall, this.arrayIndex, this.fieldSelect, this.postIncOp, this.postDecOp).then(this.ws);
+    this.arrayIndex     = guardedWsDelimSeq("[", this.expr, "]").ast;
+    this.fieldSelect    = m.seq(".", this.identifier).ast;
+    this.asType         = guardedWsDelimSeq(m.keyword("as"), this.typeExpr);
+    this.postfixOp      = m.choice(this.funCall, this.arrayIndex, this.fieldSelect, this.postIncOp, this.postDecOp).then(this.ws);
 
     // Some of the leaf expressions 
-    this.arrayExpr = guardedWsDelimSeq("[", commaDelimited(this.expr), "]").ast;
-    this.parenExpr = guardedWsDelimSeq("(", this.expr, ")").ast;
-    this.objectField = guardedWsDelimSeq(this.identifier, "=", this.expr, ";").ast;
-    this.objectExpr = guardedWsDelimSeq("{", this.objectField.zeroOrMore, "}").ast;
-    this.varName = m.identifier.ast;
+    this.arrayExpr      = guardedWsDelimSeq("[", commaDelimited(this.expr), "]").ast;
+    this.parenExpr      = guardedWsDelimSeq("(", this.expr, ")").ast;
+    this.objectField    = guardedWsDelimSeq(this.identifier, "=", this.expr, ";").ast;
+    this.objectExpr     = guardedWsDelimSeq("{", this.objectField.zeroOrMore, "}").ast;
+    this.varName        = this.identifier.ast;
 
     // The "var x = y in x * x" expression form or also part of "varDeclStatement"
-    this.varNameDecl = this.identifier.ast;
-    this.varInitialization = guardedWsDelimSeq("=", this.expr).ast;
-    this.varDecl = m.seq(this.varNameDecl, this.varInitialization).ast;
-    this.varDecls = m.seq(this.varDecl, guardedWsDelimSeq(",", this.varDecl).zeroOrMore).ast;
-    this.varExpr = guardedWsDelimSeq(m.keyword("var"), this.varDecls, m.keyword("in"), this.expr).ast;
+    this.varNameDecl        = this.identifier.ast;
+    this.varInitialization  = guardedWsDelimSeq("=", this.expr).ast;
+    this.varDecl            = m.seq(this.varNameDecl, this.varInitialization).ast;
+    this.varDecls           = m.seq(this.varDecl, guardedWsDelimSeq(",", this.varDecl).zeroOrMore).ast;
+    this.varExpr            = guardedWsDelimSeq(m.keyword("var"), this.varDecls, m.keyword("in"), this.expr).ast;
 
     // Generic parameters 
     this.genericConstraint = guardedWsDelimSeq(':', this.typeExpr).ast;
@@ -176,7 +184,7 @@ const g = new function() {
     this.logicalOrExprRight = guardedWsDelimSeq(this.logicalOrOp,  this.logicalOrExprLeft).ast;
     this.logicalOrExpr = this.logicalOrExprLeft.then(this.logicalOrExprRight.zeroOrMore).ast;
     this.rangeExprLeft = this.logicalOrExpr.ast;
-    this.rangeExprRight = guardedWsDelimSeq("..",  this.rangeExprLeft).ast;
+    this.rangeExprRight = guardedWsDelimSeq(this.rangeOp,  this.rangeExprLeft).ast;
     this.rangeExpr = this.rangeExprLeft.then(this.rangeExprRight.opt).ast;
     this.conditionalExprLeft = this.rangeExpr.ast;
     this.conditionalExprRight = guardedWsDelimSeq("?", this.conditionalExprLeft, ":", this.conditionalExprLeft).ast;
@@ -220,13 +228,6 @@ const g = new function() {
         this.importStatement,
         this.exprStatement,
     ).then(this.ws);
-
-    // Urns are used for the language definition and the module name 
-    this.urnPart = m.alphaNumeric.or(m.char('.-')).zeroOrMore.ast;
-    this.urnDiv = m.choice(':')
-    this.urn = this.urnPart.then(this.urnDiv.then(this.urnPart).zeroOrMore).ast;
-    this.moduleName = this.urn.ast;
-    this.langVerURN = this.urn.ast;
 
     // Tope level declarations
     this.langDecl = guardedWsDelimSeq(m.keyword("language"), this.langVer, this.eos);

@@ -93,31 +93,22 @@ var TypeParamDef = /** @class */ (function (_super) {
     return TypeParamDef;
 }(Def));
 exports.TypeParamDef = TypeParamDef;
-// Represents the definition of a module
-var Module = /** @class */ (function (_super) {
-    __extends(Module, _super);
-    function Module(node, name) {
-        var _this = _super.call(this, node, name) || this;
-        _this.node = node;
-        _this.name = name;
-        return _this;
-    }
-    return Module;
-}(Def));
-exports.Module = Module;
 //==========================================================================================
 // Exported functions
 function createDef(node) {
     // NOTE: typeParamDef and funcParamDef are created by the funcDef    
     switch (node.name) {
         case "funcDef":
-            return createFuncDef(node);
         case "intrinsicDef":
             return createFuncDef(node);
         case "typeDef":
             return createTypeDef(node);
+        case "forLoop":
         case "varDecl":
             return createVarDef(node);
+        case "lambdaArg":
+        case "lambdaArgsNoParen":
+            return createFuncParamDef(node);
     }
     return null;
 }
@@ -142,7 +133,7 @@ function createFuncDef(node) {
 }
 exports.createFuncDef = createFuncDef;
 function createFuncParamDef(node) {
-    heron_ast_rewrite_1.validateNode(node, 'funcParam');
+    heron_ast_rewrite_1.validateNode(node, 'funcParam', 'lambdaArg', 'lambdaArgsNoParen');
     var name = node.children[0].allText;
     var type = (node.children.length > 1) ? node.children[1] : null;
     return new FuncParamDef(node, name, type);
@@ -155,6 +146,13 @@ function createVarDef(node) {
     return new VarDef(node, name.allText, init.children[0]);
 }
 exports.createVarDef = createVarDef;
+function createVarDefFromForLoop(node) {
+    heron_ast_rewrite_1.validateNode(node, 'forLoop');
+    var name = heron_ast_rewrite_1.validateNode(node.children[0], 'identifier');
+    var array = heron_ast_rewrite_1.validateNode(node.children[1], 'varInitialization');
+    return new VarDef(node, name.allText, init.children[0]);
+}
+exports.createVarDefFromForLoop = createVarDefFromForLoop;
 function createTypeDef(node) {
     heron_ast_rewrite_1.validateNode(node, 'typeDef');
     var name = node.children[0].allText;

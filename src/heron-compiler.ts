@@ -51,7 +51,7 @@ export function createPackage(moduleNames: string[]): Package {
     return pkg;
 }
 
-export function addModuleToPackage(moduleName: string, intrinsic: boolean, pkg: Package) {
+export function addModuleToPackage(name: string, intrinsic: boolean, pkg: Package) {
     let modulePath = moduleNameToPath(name);
     let ast = parseFile(modulePath);
     pkg.addFile(ast, intrinsic, modulePath);

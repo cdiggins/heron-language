@@ -39,7 +39,7 @@ function createPackage(moduleNames) {
     return pkg;
 }
 exports.createPackage = createPackage;
-function addModuleToPackage(moduleName, intrinsic, pkg) {
+function addModuleToPackage(name, intrinsic, pkg) {
     var modulePath = moduleNameToPath(name);
     var ast = parseFile(modulePath);
     pkg.addFile(ast, intrinsic, modulePath);

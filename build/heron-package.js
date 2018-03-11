@@ -19,11 +19,11 @@ var Package = /** @class */ (function () {
     // When done adding files call "processModules" to sort the dependencies 
     Package.prototype.addFile = function (node, intrinsic, filePath) {
         heron_ast_rewrite_1.validateNode(node, 'file');
-        var langVerNode = heron_ast_rewrite_1.validateNode(node.children[0], 'langVerURN');
+        var langVerNode = heron_ast_rewrite_1.validateNode(node.children[0], 'langVer');
         var langVer = this.parseURN(langVerNode);
-        if (langVer.length != 3)
-            heron_ast_rewrite_1.throwError(langVerNode, "Expected three component to language version URN: name, flavor, and version");
+        //if (langVer.length != 3) throwError(langVerNode, "Expected three component to language version URN: name, flavor, and version")
         var file = new SourceFile(node, intrinsic, filePath, langVerNode.allText);
+        this.files.push(file);
         var moduleNode = heron_ast_rewrite_1.validateNode(node.children[1], 'module');
         var moduleNameNode = heron_ast_rewrite_1.validateNode(moduleNode.children[0], 'moduleName');
         var moduleBodyNode = heron_ast_rewrite_1.validateNode(moduleNode.children[1], 'moduleBody');
@@ -31,7 +31,7 @@ var Package = /** @class */ (function () {
         var importNodes = moduleBodyNode.children.filter(function (c) { return c.name === 'import'; });
         var importURNs = importNodes.map(this.parseModuleName);
         var module = new Module(moduleNode, moduleNameURN, file, importURNs);
-        this.files.push(file);
+        this.modules.push(module);
     };
     // Given a URN 
     Package.prototype.parseURN = function (node) {
@@ -230,9 +230,9 @@ var AstVisitor = /** @class */ (function () {
         this.visitChildren(node, state);
         state.popScope();
     };
-    AstVisitor.prototype.visit_module = function (node, state) {
+    AstVisitor.prototype.visit_moduleBody = function (node, state) {
         // All definitions at the module level, are available to all others.
-        for (var _i = 0, _a = node.children[1].children; _i < _a.length; _i++) {
+        for (var _i = 0, _a = node.children; _i < _a.length; _i++) {
             var c = _a[_i];
             if (c['def'])
                 state.addDef(c['def']);

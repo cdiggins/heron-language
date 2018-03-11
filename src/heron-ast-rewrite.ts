@@ -210,32 +210,32 @@ export function fieldSelectToFunction(ast: HeronAstNode): HeronAstNode {
 }
 
 // Converts array indexing to function calls
-// xs[i] = op_at(xs, i)
+// xs[i] = op[](xs, i)
 export function arrayIndexToFunction(ast: HeronAstNode): HeronAstNode {    
     if (ast.name === 'postfixExpr') {
         if (ast.children[1].name === 'arrayIndex') {
             let arrayIndex = ast.children[1].children[0];
-            return funCall('op_at', ast.children[0], arrayIndex)
+            return funCall('op[]', ast.children[0], arrayIndex)
         }
     }
     return ast;
 }
     
 // Converts binary operators to function calls
-export function opToFunction(ast: HeronAstNode): HeronAstNode {    
+export function opToFunction(node: HeronAstNode): HeronAstNode {    
     // We are only going to handle certain cases
-    switch (ast.name)
+    switch (node.name)
     {    
         case 'prefixExpr': {
-            let r = ast.children[ast.children.length-1];
-            for (let i=ast.children.length-2; i >= 0; --i) {
+            let r = node.children[node.children.length-1];
+            for (let i=node.children.length-2; i >= 0; --i) {
                 let opName = '';
-                switch (ast.children[i].allText) {
+                switch (node.children[i].allText) {
                     case '++': opName = 'op_preinc'; break;
                     case '--': opName = 'op_predec'; break;
                     case '-': opName = 'op_negate'; break;
                     case '!': opName = 'op_not'; break;
-                    default: throw new Error('Unrecognized prefix operator ' + ast.children[i].allText);
+                    default: throw new Error('Unrecognized prefix operator ' + node.children[i].allText);
                 }
                 r = funCall(opName, r);
             }
@@ -251,16 +251,19 @@ export function opToFunction(ast: HeronAstNode): HeronAstNode {
         case 'multiplicativeExpr':
             break;
         default: 
-            return ast;
+            return node;
     }
 
-    if (ast.children.length != 2)
+    if (node.children.length != 2)
         throw new Error("Expected exactly two children");
 
-    let left = ast.children[0];
-    let right = ast.children[1];
+    let left = node.children[0];
+    let right = node.children[1];
+
+    // In the binary operator cases there is always two nodes on the right side.
+    // The first is the operator, and the second is the rvalue.
     if (right.children.length != 2)
-        throw new Error("Expected two children of 2");
+        throw new Error("Expected two children of the right");
     let op = right.children[0].allText;                    
     return opToFunCall(op, left, right.children[1]);
 }

@@ -35,7 +35,7 @@ module heron:std.array:0.1
     function zip(xs, ys, f) 
         = xs.count <= ys.count 
             ? xs.map((x, i) => f(x, ys[i]))
-            : ys.map((x, y) => f(x, xs[i]));
+            : ys.map((y, i) => f(xs[i], y));
 
     function all(xs, p) 
         = xs.reduce(true, (prev, x) => prev && p(x));    
@@ -169,7 +169,7 @@ module heron:std.array:0.1
     function reduce(xs, acc, f) {
         // TODO: support 'for' loops as expressions 
         // TODO: support 'assignment' as expressions. 
-        for (x in xs)
+        for (var x in xs)
             acc = f(acc, x);
         return acc;
     }

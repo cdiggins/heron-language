@@ -69,7 +69,8 @@ const ruleTests = [
     [g.expr, ['0..1', '0 .. 1', 'f(a .. b)'], ['xs[0:5]', 'xs[4:0:-1]']],
     [g.expr, ['x => 42', '(x) => 13', 'x=>3', 'x => { return 42; }', '(x, y) => x * y'], []],
     [g.expr, ['(3)', '(3 + 2)', '(c)', '(a)+(b)', 'a+(b)', 'a+b+c', 'a?b:c', 'a?b+c:d', 'a?b:c+d','a?(b):c', '(a)?b:c'], []],
-    [g.expr, ['a?b:(c)'], ['f > max ? max : (f < min ? min) : f']],    
+    [g.expr, ['a?b:1(c)'], ['f > max ? max : (f < min ? min) : f']], 
+    [g.expr, ['op+', 'f(op+)', 'f(0, op+)'], []],
     [g.expr, ['a?b:c', 'a?b:c?d:e', 'a?b:(c<d?e:f)', 'a>3?b:c', 'a > 3 ? b : c', 'f > max ? max : (f < min ? min : f)'], []],
     [g.statement, [
             'var x = 0;',
@@ -103,7 +104,7 @@ function testParsingRules() {
 }
 
 // TEMP: this needs to be uncommented
-// testParsingRules()
+testParsingRules()
 
 declare var require;
 const fs = require('fs');
@@ -149,7 +150,7 @@ function outputPackageStats(pkg: Package) {
 
 function tests() {
     // TODO: eventually we need to pre-scan the files    
-    let inputs = ['geometry-vector3'];
+    let inputs = ['geometry-vector3', 'array'];
     let pkg = createPackage(inputs);
     outputPackageStats(pkg);
     console.log('Done');

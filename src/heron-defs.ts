@@ -74,16 +74,6 @@ export class TypeParamDef extends Def
     { super(node, name); }        
 }
 
-// Represents the definition of a module
-export class Module extends Def
-{
-    constructor(
-        public readonly node: HeronAstNode,
-        public readonly name: string, 
-    )
-    { super(node, name); }            
-}
-
 //==========================================================================================
 // Exported functions
 
@@ -91,13 +81,16 @@ export function createDef(node: HeronAstNode): Def {
     // NOTE: typeParamDef and funcParamDef are created by the funcDef    
     switch (node.name) {
         case "funcDef": 
-            return createFuncDef(node); 
         case "intrinsicDef": 
             return createFuncDef(node); 
         case "typeDef": 
             return createTypeDef(node); 
+        case "forLoop":
         case "varDecl": 
             return createVarDef(node); 
+        case "lambdaArg":
+        case "lambdaArgsNoParen":
+            return createFuncParamDef(node);
     }
     return null
 }
@@ -123,20 +116,27 @@ export function createFuncDef(node: HeronAstNode): FuncDef {
 }
 
 export function createFuncParamDef(node: HeronAstNode): FuncParamDef {
-    validateNode(node, 'funcParam');
+    validateNode(node, 'funcParam', 'lambdaArg', 'lambdaArgsNoParen');
     let name = node.children[0].allText;
     let type =  (node.children.length > 1) ? node.children[1] : null;
     return new FuncParamDef(node, name, type);
 }
 
-export function createVarDef(node: HeronAstNode) {
+export function createVarDef(node: HeronAstNode): VarDef {
     validateNode(node, 'varDecl');
     let name = validateNode(node.children[0], 'varNameDecl');
     let init = validateNode(node.children[1], 'varInitialization');
     return new VarDef(node, name.allText, init.children[0]);
 }
 
-export function createTypeDef(node: HeronAstNode) {
+export function createVarDefFromForLoop(node: HeronAstNode): ForLoopVarDef {
+    validateNode(node, 'forLoop');
+    let name = validateNode(node.children[0], 'identifier');
+    let array = validateNode(node.children[1], 'varInitialization');
+    return new VarDef(node, name.allText, init.children[0]);
+}
+
+export function createTypeDef(node: HeronAstNode): TypeDef {
     validateNode(node, 'typeDef');
     let name = node.children[0].allText;
     return new TypeDef(node, name);

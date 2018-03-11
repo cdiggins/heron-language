@@ -1,0 +1,538 @@
+// Generated on Sun Mar 11 2018 00:26:28 GMT-0500 (Eastern Standard Time)
+heron:std:0.1heron:std.array:0.1{
+
+/**
+function unit(x) 
+        = [x];
+
+    
+*/
+function unit(x)
+ = [x];
+
+/**
+function map(xs, f)
+        = array(xs.count, i => f(xs[i]));        
+
+    
+*/
+function map(xs, f)
+ = array(xs.count, i => f(xs[i]));
+
+/**
+function min(x, y) 
+        = x <= y ? x : y;
+
+    
+*/
+function min(x, y)
+ = x <= y ? xy;
+
+/**
+function max(x, y) 
+        = x <= y ? x : y;
+   
+    
+*/
+function max(x, y)
+ = x <= y ? xy;
+
+/**
+function shorter(xs, ys) 
+        = xs.count <= ys.count ? xs : ys;
+   
+    
+*/
+function shorter(xs, ys)
+ = xs.count <= ys.count ? xsys;
+
+/**
+function longer(xs, ys) 
+        = xs.count >= ys.count ? xs : ys;
+
+    
+*/
+function longer(xs, ys)
+ = xs.count >= ys.count ? xsys;
+
+/**
+function empty(xs) 
+        = xs.count == 0;
+
+    
+*/
+function empty(xs)
+ = xs.count == 0;
+
+/**
+function at(xs, i) 
+        = xs[i];
+
+    
+*/
+function at(xs, i)
+ = xs[i];
+
+/**
+function selectByIndex(xs, indices) 
+        = indices.map(xs.at);
+
+    
+*/
+function selectByIndex(xs, indices)
+ = indices.map(xs.at);
+
+/**
+function indices(xs) 
+        = 0 .. xs.count;
+
+    
+*/
+function indices(xs)
+ = 0 .. 0;
+
+/**
+function zip(xs, ys, f) 
+        = xs.count <= ys.count 
+            ? xs.map((x, i) => f(x, ys[i]))
+            : ys.map((x, y) => f(x, xs[i]));
+
+    
+*/
+function zip(xs, ys, f)
+ = xs.count <= ys.count ? xs.map(xi => f(x, ys[i]))ys.map(xy => f(x, xs[i]));
+
+/**
+function all(xs, p) 
+        = xs.reduce(true, (prev, x) => prev && p(x));    
+
+    
+*/
+function all(xs, p)
+ = xs.reduce(true, prevx => prev && p(x));
+
+/**
+function any(xs, p) 
+        = xs.reduce(false, (prev, x) => prev || p(x));
+
+    
+*/
+function any(xs, p)
+ = xs.reduce(false, prevx => prev || p(x));
+
+/**
+function count(xs, p) 
+        = xs.reduce(0, (prev, x) => p(x) ? prev + 1 : prev);    
+
+    
+*/
+function count(xs, p)
+ = xs.reduce(0, prevx => p(x) ? prev + 1prev);
+
+/**
+function eq(xs, ys) 
+        = xs.count == ys.count;    
+
+    
+*/
+function eq(xs, ys)
+ = xs.count == ys.count;
+
+/**
+function filter(xs, p) {
+        var ys = xs.mutable;
+        var i = 0;
+        for (var x in xs) 
+            if (p(x)) 
+                ys[i++] = x;
+        return ys.array.take(i);
+    }
+
+    
+*/
+function filter(xs, p)
+{
+{
+var ys = xs.mutable;
+var i = 0;
+for (x in xs)
+if (p(x))ys[i++] = x;
+return ys.array.take(i);
+}
+}
+
+/**
+function repeat(x, n) 
+        = (0 .. n).map(i => x);    
+
+    
+*/
+function repeat(x, n)
+ = (0 .. 0).map(i => x);
+
+/**
+function prefixScan(xs, op) {
+        if (xs.empty) return xs;
+        var ys = xs[0].repeat(xs.count).mutable;
+        for (var i in 1 .. ys.count)
+            ys[i] = op(xs[i], ys[i-1]);
+        return ys.array;
+    }
+
+    
+*/
+function prefixScan(xs, op)
+{
+{
+if (xs.empty)return xs;
+var ys = xs[0].repeat(xs.count).mutable;
+for (i in 1 .. 1)
+ys[i] = op(xs[i], ys[i - 1]);
+return ys.array;
+}
+}
+
+/**
+function adjacentDifferences(xs) 
+        = xs.indices.map(i => i > 0 ? xs[i] - xs[i-1] : xs[i]);
+    
+    
+*/
+function adjacentDifferences(xs)
+ = xs.indices.map(i => i > 0 ? xs[i] - xs[i - 1]xs[i]);
+
+/**
+function slice(xs, from, to) 
+        = (from .. to).map(xs.at);    
+
+    
+*/
+function slice(xs, from, to)
+ = (from .. from).map(xs.at);
+
+/**
+function stride(xs, n) 
+        = (0 .. xs.count / n).map(i => xs[i * n]);    
+
+    
+*/
+function stride(xs, n)
+ = (0 .. 0).map(i => xs[i * n]);
+
+/**
+function slices(xs, n) 
+        = (0 .. n).map(i => xs.slice(i * n, (i+1) * n));    
+
+    
+*/
+function slices(xs, n)
+ = (0 .. 0).map(i => xs.slice(i * n, (i + 1) * n));
+
+/**
+function take(xs, n) 
+        = xs.slice(0, n);    
+
+    
+*/
+function take(xs, n)
+ = xs.slice(0, n);
+
+/**
+function skip(xs, n) 
+        = xs.slice(n, xs.count - n);    
+
+    
+*/
+function skip(xs, n)
+ = xs.slice(n, xs.count - n);
+
+/**
+function dropSuffix(xs, n) 
+        = xs.take(xs.count - n);    
+
+    
+*/
+function dropSuffix(xs, n)
+ = xs.take(xs.count - n);
+
+/**
+function suffix(xs, n) 
+        = xs.skip(xs.count-n);
+
+    
+*/
+function suffix(xs, n)
+ = xs.skip(xs.count - n);
+
+/**
+function reverse(xs, n) 
+        = xs.indices.map(i => xs[xs.count-1-i]);    
+
+    
+*/
+function reverse(xs, n)
+ = xs.indices.map(i => xs[xs.count - 1 - i]);
+
+/**
+function gen(cnt, f) 
+        = (0 .. cnt).map(f);    
+
+    
+*/
+function gen(cnt, f)
+ = (0 .. 0).map(f);
+
+/**
+function concat(xs, ys) 
+        = gen(xs.count + ys.count, i => i < xs.count ? xs[i] : ys[i - xs.count]);    
+
+    
+*/
+function concat(xs, ys)
+ = gen(xs.count + ys.count, i => i < xs.count ? xs[i]ys[i - xs.count]);
+
+/**
+function cut(xs, from, n) 
+        = gen(xs.count - n, i < from ? xs[i] : xs[i + n]);    
+
+    
+*/
+function cut(xs, from, n)
+ = gen(xs.count - n, i < from ? xs[i]xs[i + n]);
+
+/**
+function splice(xs, from, ys) 
+        = xs.take(from).concat(ys).concat(xs.drop(from));    
+
+    
+*/
+function splice(xs, from, ys)
+ = xs.take(from).concat(ys).concat(xs.drop(from));
+
+/**
+function sum(xs) 
+        = xs.reduce(0, op+);    
+
+    
+*/
+function sum(xs)
+ = xs.reduce(0, op+);
+
+/**
+function product(xs) 
+        = xs.reduce(1, op*);    
+    
+    
+*/
+function product(xs)
+ = xs.reduce(1, op*);
+
+/**
+function average(xs) 
+        = xs.sum / xs.count;    
+
+    
+*/
+function average(xs)
+ = xs.sum / xs.count;
+
+/**
+function minElement(xs) 
+        = xs.reduce(xs[0], min);    
+
+    
+*/
+function minElement(xs)
+ = xs.reduce(xs[0], min);
+
+/**
+function maxElement(xs) 
+        = xs.reduce(xs[0], max);
+
+    
+*/
+function maxElement(xs)
+ = xs.reduce(xs[0], max);
+
+/**
+function partition(a, lo, hi) {
+        pivot = a[lo];
+        var i = lo-1;
+        var j = hi+1;
+        while (true) {
+            do { i++; } while (a[i] < pivot);
+            do { j--; } while (a[j] > pivot);
+            if (i >= j) return j;
+            var tmp = a[i];
+            a[i] = a[j];
+            a[j] = tmp;
+        }
+        return a;
+    }
+
+    
+*/
+function partition(a, lo, hi)
+{
+{
+pivot = a[lo];
+var i = lo - 1;
+var j = hi + 1;
+while (while (true)
+)
+while (true)
+{
+do
+{
+i++;
+}
+while (a[i] < pivot)
+;
+do
+{
+j--;
+}
+while (a[j] > pivot)
+;
+if (i >= j)return j;
+var tmp = a[i];
+a[i] = a[j];
+a[j] = tmp;
+}
+{
+do
+{
+i++;
+}
+while (a[i] < pivot)
+;
+do
+{
+j--;
+}
+while (a[j] > pivot)
+;
+if (i >= j)return j;
+var tmp = a[i];
+a[i] = a[j];
+a[j] = tmp;
+}
+return a;
+}
+}
+
+/**
+function qsort(a, lo, hi) {
+        if (lo < hi) {
+            a = partition(a, lo, hi);
+            a = qsort(a, lo, p);
+            a = qsort(a, p+1, hi);
+        }
+        return a;
+    }
+
+    
+*/
+function qsort(a, lo, hi)
+{
+{
+if (lo < hi){
+a = partition(a, lo, hi);
+a = qsort(a, lo, p);
+a = qsort(a, p + 1, hi);
+}
+return a;
+}
+}
+
+/**
+function sort(xs) 
+        = xs.mutable.qsort(a, b).array;    
+
+    
+*/
+function sort(xs)
+ = xs.mutable.qsort(a, b).array;
+
+/**
+function median(xs) {        
+        var ys = xs.sort;
+        return ys.count % 2 == 0 
+            ? ys[ys.count / 2] 
+            : ys[ys.count / 2 - 1] + ys[ys.count / 2 + 1] / 2;
+    }
+
+    
+*/
+function median(xs)
+{
+{
+var ys = xs.sort;
+return ys.count % 2 == 0 ? ys[ys.count / 2]ys[ys.count / 2 - 1] + ys[ys.count / 2 + 1] / 2;
+}
+}
+
+/**
+function inRange(xs, n) 
+        = n >= 0 && n < xs.count;    
+
+    
+*/
+function inRange(xs, n)
+ = n >= 0 && n < xs.count;
+
+/**
+function last(xs) 
+        = xs[xs.count - 1];    
+
+    
+*/
+function last(xs)
+ = xs[xs.count - 1];
+
+/**
+function first(xs) 
+        = xs[0];
+
+    
+*/
+function first(xs)
+ = xs[0];
+
+/**
+function reduce(xs, acc, f) {
+        // TODO: support 'for' loops as expressions 
+        // TODO: support 'assignment' as expressions. 
+        for (var x in xs)
+            acc = f(acc, x);
+        return acc;
+    }
+
+    
+*/
+function reduce(xs, acc, f)
+{
+{
+for (x in xs)
+acc = f(acc, x);
+return acc;
+}
+}
+
+/**
+function flatten(xs)
+        = xs.reduce([], concat);
+
+    
+*/
+function flatten(xs)
+ = xs.reduce([], concat);
+
+/**
+function flatMap(xs, f)       
+        = xs.map(f).flatten;
+
+*/
+function flatMap(xs, f)
+ = xs.map(f).flatten;
+}

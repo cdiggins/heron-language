@@ -15,6 +15,7 @@ module heron:intrinsics:0.1
     type Array; 
     type ArrayBuilder;
     type Function;
+    type Any;
 
     // Intrinsic (built-in) functions. 
     intrinsic float2(x: Float, y: Float): Float2;    
@@ -62,17 +63,27 @@ module heron:intrinsics:0.1
     intrinsic op/ (x: Float, y: Float): Float;
     intrinsic op% (x: Float, y: Float): Float;
 
+    // Comparison operators 
     intrinsic op>  (x: Float, y: Float): Bool;
     intrinsic op>= (x: Float, y: Float): Bool;
     intrinsic op<  (x: Float, y: Float): Bool;
     intrinsic op<= (x: Float, y: Float): Bool;
 
+    // Equality operators 
     intrinsic op!= (x: Float, y: Float): Bool;
     intrinsic op== (x: Float, y: Float): Bool;
 
+    // Boolean operators
+    intrinsic op&& (x: Bool, y: Bool): Bool;
+    intrinsic op|| (x: Bool, y: Bool): Bool;
+    intrinsic op^^ (x: Bool, y: Bool): Bool;
+
+
+    // Array operators (range and indexing)
+    intrinsic op.. (x: Int, y: Int): Array;
+    intrinsic op[] (x: Array, i: Int): Any;
+
     // Non-binary operators. These have identifier names.
-    intrinsic op_at(x: Array, i: Int): Any;
-    intrinsic op_range(from: Int, to: Int): Array;
     intrinsic op_not(x: Bool): Bool;
     intrinsic op_negate(x: Float): Float;
 

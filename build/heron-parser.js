@@ -75,10 +75,17 @@ var g = new function () {
     this.logicalAndOp = myna_parser_1.Myna.text('&&').ast;
     this.logicalOrOp = myna_parser_1.Myna.text('||').ast;
     this.logicalXOrOp = myna_parser_1.Myna.text('^^').ast;
+    this.rangeOp = myna_parser_1.Myna.text('..').ast;
     // Identifiers including special operator indicators 
-    this.opSymbol = myna_parser_1.Myna.char('<>=+-*/%^|&$!');
+    this.opSymbol = myna_parser_1.Myna.char('<>=+-*/%^|&$!.[]');
     this.opName = myna_parser_1.Myna.seq("op", this.opSymbol.oneOrMore).ast;
     this.identifier = myna_parser_1.Myna.choice(this.opName, myna_parser_1.Myna.identifier).ast;
+    // Urns are used for the language definition and the module name 
+    this.urnPart = myna_parser_1.Myna.alphaNumeric.or(myna_parser_1.Myna.char('.-')).zeroOrMore.ast;
+    this.urnDiv = myna_parser_1.Myna.choice(':');
+    this.urn = this.urnPart.then(this.urnDiv.then(this.urnPart).zeroOrMore).ast;
+    this.langVer = this.urn.ast;
+    this.moduleName = this.urn.ast;
     // Type information 
     this.recType = myna_parser_1.Myna.delay(function () { return _this.type; });
     this.typeParam = this.recType.ast;
@@ -100,7 +107,7 @@ var g = new function () {
     this.parenExpr = guardedWsDelimSeq("(", this.expr, ")").ast;
     this.objectField = guardedWsDelimSeq(this.identifier, "=", this.expr, ";").ast;
     this.objectExpr = guardedWsDelimSeq("{", this.objectField.zeroOrMore, "}").ast;
-    this.varName = myna_parser_1.Myna.identifier.ast;
+    this.varName = this.identifier.ast;
     // The "var x = y in x * x" expression form or also part of "varDeclStatement"
     this.varNameDecl = this.identifier.ast;
     this.varInitialization = guardedWsDelimSeq("=", this.expr).ast;
@@ -159,7 +166,7 @@ var g = new function () {
     this.logicalOrExprRight = guardedWsDelimSeq(this.logicalOrOp, this.logicalOrExprLeft).ast;
     this.logicalOrExpr = this.logicalOrExprLeft.then(this.logicalOrExprRight.zeroOrMore).ast;
     this.rangeExprLeft = this.logicalOrExpr.ast;
-    this.rangeExprRight = guardedWsDelimSeq("..", this.rangeExprLeft).ast;
+    this.rangeExprRight = guardedWsDelimSeq(this.rangeOp, this.rangeExprLeft).ast;
     this.rangeExpr = this.rangeExprLeft.then(this.rangeExprRight.opt).ast;
     this.conditionalExprLeft = this.rangeExpr.ast;
     this.conditionalExprRight = guardedWsDelimSeq("?", this.conditionalExprLeft, ":", this.conditionalExprLeft).ast;
@@ -185,12 +192,6 @@ var g = new function () {
     this.typeDef = guardedWsDelimSeq(myna_parser_1.Myna.keyword("type"), this.identifier, this.eos).ast;
     this.importStatement = guardedWsDelimSeq(myna_parser_1.Myna.keyword("import"), this.moduleName, this.eos).ast;
     this.statement = myna_parser_1.Myna.choice(this.emptyStatement, this.compoundStatement, this.ifStatement, this.returnStatement, this.continueStatement, this.breakStatement, this.forLoop, this.doLoop, this.whileLoop, this.varDeclStatement, this.funcDef, this.intrinsicDef, this.typeDef, this.importStatement, this.exprStatement).then(this.ws);
-    // Urns are used for the language definition and the module name 
-    this.urnPart = myna_parser_1.Myna.alphaNumeric.or(myna_parser_1.Myna.char('.-')).zeroOrMore.ast;
-    this.urnDiv = myna_parser_1.Myna.choice(':');
-    this.urn = this.urnPart.then(this.urnDiv.then(this.urnPart).zeroOrMore).ast;
-    this.moduleName = this.urn.ast;
-    this.langVerURN = this.urn.ast;
     // Tope level declarations
     this.langDecl = guardedWsDelimSeq(myna_parser_1.Myna.keyword("language"), this.langVer, this.eos);
     this.moduleBody = this.statement.zeroOrMore.ast;
