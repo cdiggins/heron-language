@@ -4,7 +4,7 @@
 
 import { Myna } from "myna-parser/myna";
 import { Def } from "./heron-defs";
-import { Scope } from "./heron-scope-analysis";
+import { Scope } from "./heron-scope";
 import { throwError, HeronAstNode } from "./heron-ast-rewrite";
 
 // The kind of the reference

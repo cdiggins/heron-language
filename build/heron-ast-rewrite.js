@@ -220,12 +220,8 @@ function opToFunction(node) {
             for (var i = node.children.length - 2; i >= 0; --i) {
                 var opName = '';
                 switch (node.children[i].allText) {
-                    case '++':
-                        opName = 'op_preinc';
-                        break;
-                    case '--':
-                        opName = 'op_predec';
-                        break;
+                    case '++': break;
+                    case '--': break;
                     case '-':
                         opName = 'op_negate';
                         break;

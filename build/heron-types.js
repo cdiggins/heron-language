@@ -37,12 +37,15 @@ function getUnionOptions(t) {
     return r;
 }
 exports.getUnionOptions = getUnionOptions;
-// Given several different types creates a union
+// Given several different types creates a union. 
+// TODO: remove redundant types from the union. 
 function unionType() {
     var types = [];
     for (var _i = 0; _i < arguments.length; _i++) {
         types[_i] = arguments[_i];
     }
+    if (types.length === 1)
+        return types[0];
     var r = [];
     for (var _a = 0, types_1 = types; _a < types_1.length; _a++) {
         var t = types_1[_a];
@@ -51,6 +54,8 @@ function unionType() {
         else
             r.push(t);
     }
+    // This should be impossible, based on the above code, but just making sure no one
+    // creates a unionType via another mechaism 
     if (r.some(isUnionType))
         throw new Error('A union type should not contain union types');
     return type_system_1.typeArray([type_system_1.typeConstant('union')].concat(r));
@@ -58,8 +63,11 @@ function unionType() {
 exports.unionType = unionType;
 // Merges two types together
 function mergeTypes(a, b) {
-    if (a.toString() !== b.toString())
-        throw new Error("Types are not the same");
+    if (a.toString() !== b.toString()) {
+        // TODO: deal with incompatible types 
+        // throw new Error("Types are not the same");
+        return Types.AnyType;
+    }
     return a;
 }
 exports.mergeTypes = mergeTypes;
@@ -116,6 +124,9 @@ function getExprType(expr) {
     else if (expr instanceof heron_expr_1.ConditionalExpr) {
         return mergeTypes(computeType(expr.onFalse.node), computeType(expr.onTrue.node));
     }
+    else if (expr instanceof heron_expr_1.PostfixDec || expr instanceof heron_expr_1.PostfixInc) {
+        return Types.NumType;
+    }
     return Types.VoidType;
 }
 exports.getExprType = getExprType;
@@ -147,7 +158,7 @@ function getDefType(def) {
         return new type_system_1.TypeConstant(def.name);
     }
     else if (def instanceof heron_defs_1.VarDef) {
-        return computeType(def.expr);
+        return getExprType(def.expr);
     }
     else if (def instanceof heron_defs_1.ForLoopVarDef) {
         // TODO: figure out the type of the array, and the type of an element.        

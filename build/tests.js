@@ -128,7 +128,7 @@ function outputPackageStats(pkg) {
 }
 function tests() {
     // TODO: eventually we need to pre-scan the files    
-    var inputs = ['geometry-vector3', 'array'];
+    var inputs = ['geometry-vector3', 'array', 'test'];
     var pkg = heron_compiler_1.createPackage(inputs);
     outputPackageStats(pkg);
     console.log('Done');

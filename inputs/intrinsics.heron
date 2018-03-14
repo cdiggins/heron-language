@@ -98,7 +98,7 @@ module heron:intrinsics:0.1
     intrinsic set(xs: ArrayBuilder, i: Int, x: Any): ArrayBuilder;
     intrinsic array(xs: ArrayBuilder): Array;
     intrinsic count(xs: ArrayBuilder): Int;
-    intrinsic at(xs: ArrayBuilder, i: count): Any;
+    intrinsic at(xs: ArrayBuilder, i: Int): Any;
     
     // Some helpers (todo: move to a separate library)
     function array(v: Float2) = [v.x, v.y];    

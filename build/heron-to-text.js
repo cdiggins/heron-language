@@ -153,27 +153,11 @@ var HeronToTextVisitor = /** @class */ (function () {
         this.visitNode(ast.children[2], state);
     };
     HeronToTextVisitor.prototype.visit_funCall = function (ast, state) {
-        // seq(expr,expr[0,Infinity])[0,1]
         state.push('(');
         this.visitChildrenDelimited(ast, state, ', ');
         state.push(')');
     };
-    HeronToTextVisitor.prototype.visit_funcBody = function (ast, state) {
-        // choice(funcBodyStatement,funcBodyExpr)
-        this.visitChildren(ast, state);
-    };
-    HeronToTextVisitor.prototype.visit_funcBodyExpr = function (ast, state) {
-        // expr
-        state.push(' = ');
-        this.visitChildren(ast, state);
-        state.pushLine(';');
-    };
-    HeronToTextVisitor.prototype.visit_funcBodyStatement = function (ast, state) {
-        // recCompoundStatement
-        this.visitChildren(ast, state);
-    };
     HeronToTextVisitor.prototype.visit_funcDef = function (ast, state) {
-        // seq(funcSig,funcBody)
         state.pushLine('');
         state.pushLine('/**');
         state.pushLine(ast.allText);
@@ -427,12 +411,10 @@ var HeronToTextVisitor = /** @class */ (function () {
         state.pushLine(';');
     };
     HeronToTextVisitor.prototype.visit_varInitialization = function (ast, state) {
-        // expr
         state.push(' = ');
         this.visitChildren(ast, state);
     };
     HeronToTextVisitor.prototype.visit_whileLoop = function (ast, state) {
-        // seq(loopCond,recStatement)
         state.push('while (');
         this.visitNode(ast.children[0], state);
         state.pushLine(')');

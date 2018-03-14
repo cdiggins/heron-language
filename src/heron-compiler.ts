@@ -1,5 +1,5 @@
 import { Myna } from "myna-parser/myna";
-import { Scope } from "./heron-scope-analysis";
+import { Scope } from "./heron-scope";
 import { Type } from "type-inference/type-system";
 import { preprocessAst, visitAst, HeronAstNode } from "./heron-ast-rewrite";
 import { parseHeron, heronGrammar } from "./heron-parser";

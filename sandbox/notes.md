@@ -528,3 +528,57 @@ Check the versions of the languages of each file.
 1. Scale sphere points 
 1. Draw a sphere
 
+//==
+
+assignment . . . 
+i += 1;
+
+//==
+
+Right now, I need to deal with assignments. I think I am skipping them.
+
+THEN, I need to generate some JavaScript. *phew* 
+
+Note: I can accidentally reference a function as a type. Weird. 
+
+//==
+
+There are two kinds of assignments. 
+
+xs[n] = 
+
+during preprocess: rewrite assignments. 
+
+//== 
+
+xs.sort
+    => sort(xs)
+
+map(xs, f)
+    => map(xs)(f)
+
+xs.map(f)
+    => map(xs)(f)
+
+xs.count
+    => count(xs)
+
+xs[i]
+xs.at(i)
+    => at(xs)(i)
+
+//==
+
+float3 v;
+v.x;
+
+array = { count:Int; map:(Array, Int -> x); }
+
+map(array, )
+
+
+var obj = Float3(x=42, y=x+3, z=0);
+
+
+
+

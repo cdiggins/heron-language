@@ -1,22 +1,59 @@
 import { Myna } from "myna-parser/myna";
 import { preprocessAst, identifierToString, HeronAstNode } from "./heron-ast-rewrite";
 import { CodeBuilder } from "./code-builder";
+import { Package } from "./heron-package";
+import { Type } from "type-inference/type-system";
 
 //=====================================
 // Main entry function 
 
 // It is assumed that the AST is transformed
-export function heronToJs(ast) {
-    // TODO: finish 
-    /*
-    var na = analyzeHeronNames(ast);
-    mergeMultipleDefs(ast, na);
-    let js = new HeronToJs();
-    let cb = new CodeBuilder();
-    js.visitNode(ast, cb);
-    return cb;
-    */
-    throw new Error('Not implemented yet');
+export function heronToJs(pkg: Package, entryPoint: string): string {
+    const cb = new CodeBuilder();
+    // Find the entry point. 
+    // Whenever a function call occurs, replace it with its value, or something like that. 
+    // NOTE: when possible we are going to track values. 
+    // Now every expression has a unique ID. I can use that to track the thing.
+    // This is like a symbolic execution of the code.         
+    return cb.toString();
+}
+
+/*
+type Sym = SymValue | {};
+interface SymValue { value: any }
+interface SymValueSet { values: Sym[] }
+interface GreaterThan { value: Sym }
+interface Less
+interface Intersection { symbols: Sym[]; }
+interface Conditional { condition: ()=> boolean; onTrue: Sym; onFalse: Sym; }
+interface 
+*/
+
+class SymbolicValue {
+    value: any;
+    type: Type;
+    location: Node;
+    // Might be a value. 
+    // Might have a range. 
+    // Might be a set of possible values. 
+    // Might be a type.
+    // Might be a set of types
+    // Non-zero? 
+    // Non-NaN? 
+    // Are there values that are impossible? 
+    // Is it associative? 
+    // What are the operations that are performed? 
+    // Could it be NULL? 
+    // Is it reachable? 
+    // Is it a constant? 
+    // Can we have a list of the values that are given to it. 
+    // Is it "applied" or not.     
+}
+
+// NOTE: this works best if it is an immutable structure. 
+// different branches can have their own 'env'.
+class Env {
+    [name: string]: SymbolicValue;
 }
 
 //=====================================
@@ -108,7 +145,6 @@ class HeronToJs
         this.visitChildren(ast, state);
     }
     visit_compoundStatement(ast, state) {
-        // recStatement[0,Infinity]
         state.pushLine('{');
         this.visitChildren(ast, state);
         state.pushLine('}');
@@ -141,9 +177,6 @@ class HeronToJs
     }
     visit_forLoop(ast, state) {
         // seq(identifier,expr,recStatement)
-        this.visitChildren(ast, state);
-    }
-    visit_funcBody(ast, state) {
         this.visitChildren(ast, state);
     }
     visit_funcBodyExpr(ast, state) {

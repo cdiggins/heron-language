@@ -1,8 +1,8 @@
 language heron:std:0.1;
 
-module heron:std.tests.array:0.1
+module heron:tests:0.1
 {
-    import std.array:0.1;
+    import heron:std.array:0.1;
 
     function main() {
         simpleTest();

@@ -1,5 +1,5 @@
 import { CodeBuilder } from "./code-builder";
-import { Scope } from "./heron-scope-analysis";
+import { Scope } from "./heron-scope";
 import { HeronAstNode, isExpr } from "./heron-ast-rewrite";
 import { Ref } from "./heron-refs";
 
@@ -153,27 +153,11 @@ class HeronToTextVisitor
         this.visitNode(ast.children[2], state);
     }
     visit_funCall(ast: HeronAstNode, state: CodeBuilder) {
-        // seq(expr,expr[0,Infinity])[0,1]
         state.push('(');
         this.visitChildrenDelimited(ast, state, ', ');
         state.push(')');
     }
-    visit_funcBody(ast: HeronAstNode, state: CodeBuilder) {
-        // choice(funcBodyStatement,funcBodyExpr)
-        this.visitChildren(ast, state);
-    }
-    visit_funcBodyExpr(ast: HeronAstNode, state: CodeBuilder) {
-        // expr
-        state.push(' = ');
-        this.visitChildren(ast, state);
-        state.pushLine(';');
-    }
-    visit_funcBodyStatement(ast: HeronAstNode, state: CodeBuilder) {
-        // recCompoundStatement
-        this.visitChildren(ast, state);
-    }
     visit_funcDef(ast: HeronAstNode, state: CodeBuilder) {
-        // seq(funcSig,funcBody)
         state.pushLine('');
         state.pushLine('/**');
         state.pushLine(ast.allText);
@@ -426,12 +410,10 @@ class HeronToTextVisitor
         state.pushLine(';');
     }
     visit_varInitialization(ast: HeronAstNode, state: CodeBuilder) {
-        // expr
         state.push(' = ');
         this.visitChildren(ast, state);
     }
     visit_whileLoop(ast: HeronAstNode, state: CodeBuilder) {
-        // seq(loopCond,recStatement)
         state.push('while (');
         this.visitNode(ast.children[0], state);
         state.pushLine(')')

@@ -3,7 +3,7 @@ import { HeronAstNode, isExpr, validateNode, throwError, preprocessAst, visitAst
 import { Type } from "type-inference/type-system";
 import { Def, createDef } from "./heron-defs";
 import { Ref, RefType } from "./heron-refs";
-import { Scope } from "./heron-scope-analysis";
+import { Scope } from "./heron-scope";
 import { createExpr } from "./heron-expr";
 import { computeType } from "./heron-types";
 

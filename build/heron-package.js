@@ -3,14 +3,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var heron_ast_rewrite_1 = require("./heron-ast-rewrite");
 var heron_defs_1 = require("./heron-defs");
 var heron_refs_1 = require("./heron-refs");
-var heron_scope_analysis_1 = require("./heron-scope-analysis");
+var heron_scope_1 = require("./heron-scope");
 var heron_expr_1 = require("./heron-expr");
 var heron_types_1 = require("./heron-types");
 // A package is a compiled system. It contains a set of modules in different source files. 
 var Package = /** @class */ (function () {
     function Package() {
         this.modules = [];
-        this.scope = new heron_scope_analysis_1.Scope(null);
+        this.scope = new heron_scope_1.Scope(null);
         this.scopes = [this.scope];
         this.refs = [];
         this.defs = [];
@@ -126,7 +126,7 @@ var Package = /** @class */ (function () {
     //=============================================
     // These functions are used by the visitor to incrementally build the package  
     Package.prototype.pushScope = function (node) {
-        var scope = new heron_scope_analysis_1.Scope(node);
+        var scope = new heron_scope_1.Scope(node);
         scope.id = this.scopes.length;
         this.scopes.push(scope);
         this.scope.children.push(scope);

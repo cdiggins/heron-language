@@ -10,10 +10,34 @@ export class Expr {
     constructor(
         public readonly node: HeronAstNode,
     )
-    { node['expr'] = this; }
+    { node.expr = this; }
 
     toString(): string {
         return 'expr' + this.node['id'];        
+    }
+}
+
+export class PostfixDec extends Expr {
+    constructor(
+        public readonly node: HeronAstNode,
+        public readonly lvalue: Expr,
+    )
+    { super(node); }
+
+    toString(): string {
+        return '--' + this.lvalue;
+    }
+}
+
+export class PostfixInc extends Expr {
+    constructor(
+        public readonly node: HeronAstNode,
+        public readonly lvalue: Expr,
+    )
+    { super(node); }
+
+    toString(): string {
+        return '++' + this.lvalue;
     }
 }
 
@@ -43,6 +67,20 @@ export class VarName extends Expr {
 
     toString(): string {
         return this.name + '[' + this.defs.join(',') + ']';
+    }
+}
+
+// Let bindings: variable declarations used in the contet of another expression.
+export class VarExpr extends Expr {    
+    constructor(
+        public readonly node: HeronAstNode,
+        public readonly vars: VarDef[],
+        public readonly expr: Expr,
+    )
+    { super(node); } 
+
+    toString(): string {
+        return 'var ' + this.vars.join(', ') + ' in ' + this.expr;
     }
 }
 
@@ -106,6 +144,7 @@ export class ObjectLiteral extends Expr {
     }
 }
 
+
 /*
 // Type expressions 
 export class TypeExpr extends Expr {    
@@ -163,6 +202,10 @@ export function computeExprs(ast: HeronAstNode) {
 }
 
 export function createExpr(node: HeronAstNode): Expr {
+    if (!node)
+        return null;
+    if (node.expr)
+        return node.expr;
     switch (node.name) {
         case "postfixExpr":
             switch (node.children[1].name)
@@ -172,8 +215,9 @@ export function createExpr(node: HeronAstNode): Expr {
                 case "arrayIndex":
                     throwError(node, "Array indexing should be transformed into function calls");
                 case "postIncOp":
+                    return new PostfixInc(node, createExpr(node.children[0]));
                 case "postDecOp":
-                    throwError(node, "Not supported yet, postInc and postDec should be converted to assignment expressions");
+                    return new PostfixDec(node, createExpr(node.children[0]));
                 case "funCall":
                     // TODO: find the correct function based on the number and types of the arguments
                     return createFunCall(node);
@@ -185,7 +229,7 @@ export function createExpr(node: HeronAstNode): Expr {
         case "lambdaExpr":
             return createLambdaExpr(node);
         case "varExpr":
-            return addExpr(node, createExpr(node.children[1]));
+            return createVarExpr(node)
         case "arrayExpr":
             return createArrayExpr(node);
         case "bool":
@@ -251,13 +295,13 @@ export function createConditionalExpr(node: HeronAstNode): ConditionalExpr {
     validateNode(node, 'conditionalExpr')        
     if (node.children.length !== 2)
         throwError(node, 'Conditional expressions should have two children');
-    let rnode = validateNode(node.children[1], 'conditionalExprRight');
-    if (rnode.children.length !== 2)
+    let rightNode = validateNode(node.children[1], 'conditionalExprRight');
+    if (rightNode.children.length !== 2)
         throwError(node, 'Right side of conditional expression should have two children');
     return new ConditionalExpr(node, 
         createExpr(node.children[0]), 
-        createExpr(rnode.children[0]), 
-        createExpr(rnode.children[1]));
+        createExpr(rightNode.children[0]), 
+        createExpr(rightNode.children[1]));
 }
 
 // TODO: the fact that I am calling a lambda body an expression is a problem.
@@ -280,4 +324,11 @@ export function createVarNameExpr(node: HeronAstNode): VarName {
     let ref:Ref = node['ref'];
     if (!ref) throwError(node, "expected a reference");
     return new VarName(validateNode(node, 'varName'), node.allText, ref.defs);
+}
+
+export function createVarExpr(node: HeronAstNode): VarExpr {
+    validateNode(node, 'varExpr');
+    let defs = node.children[0].children.map(c => c.def as VarDef);
+    let body = createExpr(node.children[1]);
+    return new VarExpr(node, defs, body);
 }

@@ -1,22 +1,42 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var heron_ast_rewrite_1 = require("./heron-ast-rewrite");
+var code_builder_1 = require("./code-builder");
 //=====================================
 // Main entry function 
 // It is assumed that the AST is transformed
-function heronToJs(ast) {
-    // TODO: finish 
-    /*
-    var na = analyzeHeronNames(ast);
-    mergeMultipleDefs(ast, na);
-    let js = new HeronToJs();
-    let cb = new CodeBuilder();
-    js.visitNode(ast, cb);
-    return cb;
-    */
-    throw new Error('Not implemented yet');
+function heronToJs(pkg, entryPoint) {
+    var cb = new code_builder_1.CodeBuilder();
+    // Find the entry point. 
+    // Whenever a function call occurs, replace it with its value, or something like that. 
+    // NOTE: when possible we are going to track values. 
+    // Now every expression has a unique ID. I can use that to track the thing.
+    // This is like a symbolic execution of the code.         
+    return cb.toString();
 }
 exports.heronToJs = heronToJs;
+/*
+type Sym = SymValue | {};
+interface SymValue { value: any }
+interface SymValueSet { values: Sym[] }
+interface GreaterThan { value: Sym }
+interface Less
+interface Intersection { symbols: Sym[]; }
+interface Conditional { condition: ()=> boolean; onTrue: Sym; onFalse: Sym; }
+interface
+*/
+var SymbolicValue = /** @class */ (function () {
+    function SymbolicValue() {
+    }
+    return SymbolicValue;
+}());
+// NOTE: this works best if it is an immutable structure. 
+// different branches can have their own 'env'.
+var Env = /** @class */ (function () {
+    function Env() {
+    }
+    return Env;
+}());
 //=====================================
 // Helper functions 
 function generateAccessor(ast, state) {
@@ -112,7 +132,6 @@ var HeronToJs = /** @class */ (function () {
         this.visitChildren(ast, state);
     };
     HeronToJs.prototype.visit_compoundStatement = function (ast, state) {
-        // recStatement[0,Infinity]
         state.pushLine('{');
         this.visitChildren(ast, state);
         state.pushLine('}');
@@ -145,9 +164,6 @@ var HeronToJs = /** @class */ (function () {
     };
     HeronToJs.prototype.visit_forLoop = function (ast, state) {
         // seq(identifier,expr,recStatement)
-        this.visitChildren(ast, state);
-    };
-    HeronToJs.prototype.visit_funcBody = function (ast, state) {
         this.visitChildren(ast, state);
     };
     HeronToJs.prototype.visit_funcBodyExpr = function (ast, state) {

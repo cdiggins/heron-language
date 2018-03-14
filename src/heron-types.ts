@@ -1,6 +1,6 @@
 import { Type, typeConstant, typeArray, isTypeArray, TypeArray, isTypeConstant, functionType, TypeConstant } from "type-inference/build/type-system";
 import { HeronAstNode, throwError, validateNode } from "./heron-ast-rewrite";
-import { Lambda, VarName, Literal, BoolLiteral, NumLiteral, StrLiteral, ArrayLiteral, ObjectLiteral, FunCall, ConditionalExpr, Expr } from "./heron-expr";
+import { Lambda, VarName, Literal, BoolLiteral, NumLiteral, StrLiteral, ArrayLiteral, ObjectLiteral, FunCall, ConditionalExpr, Expr, PostfixDec, PostfixInc } from "./heron-expr";
 import { Def, FuncDef, FuncParamDef, TypeDef, VarDef, ForLoopVarDef } from "./heron-defs";
 import { RefType } from "./heron-refs";
 
@@ -40,8 +40,11 @@ export function getUnionOptions(t: Type): Type[] {
     return r;
 }
 
-// Given several different types creates a union
-export function unionType(...types:Type[]): Type {
+// Given several different types creates a union. 
+// TODO: remove redundant types from the union. 
+export function unionType(...types:Type[]): Type {    
+    if (types.length === 1)
+        return types[0];    
     let r: Type[] = [];
     for (let t of types)
     {
@@ -50,6 +53,8 @@ export function unionType(...types:Type[]): Type {
         else 
             r.push(t);
     }    
+    // This should be impossible, based on the above code, but just making sure no one
+    // creates a unionType via another mechaism 
     if (r.some(isUnionType))
         throw new Error('A union type should not contain union types');
     return typeArray([typeConstant('union'), ...r]);
@@ -57,8 +62,11 @@ export function unionType(...types:Type[]): Type {
 
 // Merges two types together
 export function mergeTypes(a: Type, b: Type): Type {
-    if (a.toString() !== b.toString())
-        throw new Error("Types are not the same");
+    if (a.toString() !== b.toString()) {
+        // TODO: deal with incompatible types 
+        // throw new Error("Types are not the same");
+        return Types.AnyType;
+    }
     return a;
 }
 
@@ -130,6 +138,11 @@ export function getExprType(expr: Expr): Type
             computeType(expr.onFalse.node), 
             computeType(expr.onTrue.node));
     } 
+    else if (expr instanceof PostfixDec || expr instanceof PostfixInc) 
+    {
+        return Types.NumType;
+    }
+
     return Types.VoidType;
 }
 
@@ -167,7 +180,7 @@ export function getDefType(def: Def)
     }
     else if (def instanceof VarDef) 
     {
-        return computeType(def.expr);
+        return getExprType(def.expr);
     }
     else if (def instanceof ForLoopVarDef)
     {

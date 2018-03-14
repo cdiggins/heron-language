@@ -18,7 +18,7 @@ var heron_ast_rewrite_1 = require("./heron-ast-rewrite");
 var Expr = /** @class */ (function () {
     function Expr(node) {
         this.node = node;
-        node['expr'] = this;
+        node.expr = this;
     }
     Expr.prototype.toString = function () {
         return 'expr' + this.node['id'];
@@ -26,6 +26,34 @@ var Expr = /** @class */ (function () {
     return Expr;
 }());
 exports.Expr = Expr;
+var PostfixDec = /** @class */ (function (_super) {
+    __extends(PostfixDec, _super);
+    function PostfixDec(node, lvalue) {
+        var _this = _super.call(this, node) || this;
+        _this.node = node;
+        _this.lvalue = lvalue;
+        return _this;
+    }
+    PostfixDec.prototype.toString = function () {
+        return '--' + this.lvalue;
+    };
+    return PostfixDec;
+}(Expr));
+exports.PostfixDec = PostfixDec;
+var PostfixInc = /** @class */ (function (_super) {
+    __extends(PostfixInc, _super);
+    function PostfixInc(node, lvalue) {
+        var _this = _super.call(this, node) || this;
+        _this.node = node;
+        _this.lvalue = lvalue;
+        return _this;
+    }
+    PostfixInc.prototype.toString = function () {
+        return '++' + this.lvalue;
+    };
+    return PostfixInc;
+}(Expr));
+exports.PostfixInc = PostfixInc;
 // An anonymous function, also known as a lambda.
 var Lambda = /** @class */ (function (_super) {
     __extends(Lambda, _super);
@@ -59,6 +87,22 @@ var VarName = /** @class */ (function (_super) {
     return VarName;
 }(Expr));
 exports.VarName = VarName;
+// Let bindings: variable declarations used in the contet of another expression.
+var VarExpr = /** @class */ (function (_super) {
+    __extends(VarExpr, _super);
+    function VarExpr(node, vars, expr) {
+        var _this = _super.call(this, node) || this;
+        _this.node = node;
+        _this.vars = vars;
+        _this.expr = expr;
+        return _this;
+    }
+    VarExpr.prototype.toString = function () {
+        return 'var ' + this.vars.join(', ') + ' in ' + this.expr;
+    };
+    return VarExpr;
+}(Expr));
+exports.VarExpr = VarExpr;
 // The different kinds of literals like boolean, number, ints, arrays, objects, and more. 
 var Literal = /** @class */ (function (_super) {
     __extends(Literal, _super);
@@ -202,6 +246,10 @@ function computeExprs(ast) {
 }
 exports.computeExprs = computeExprs;
 function createExpr(node) {
+    if (!node)
+        return null;
+    if (node.expr)
+        return node.expr;
     switch (node.name) {
         case "postfixExpr":
             switch (node.children[1].name) {
@@ -210,8 +258,9 @@ function createExpr(node) {
                 case "arrayIndex":
                     heron_ast_rewrite_1.throwError(node, "Array indexing should be transformed into function calls");
                 case "postIncOp":
+                    return new PostfixInc(node, createExpr(node.children[0]));
                 case "postDecOp":
-                    heron_ast_rewrite_1.throwError(node, "Not supported yet, postInc and postDec should be converted to assignment expressions");
+                    return new PostfixDec(node, createExpr(node.children[0]));
                 case "funCall":
                     // TODO: find the correct function based on the number and types of the arguments
                     return createFunCall(node);
@@ -223,7 +272,7 @@ function createExpr(node) {
         case "lambdaExpr":
             return createLambdaExpr(node);
         case "varExpr":
-            return addExpr(node, createExpr(node.children[1]));
+            return createVarExpr(node);
         case "arrayExpr":
             return createArrayExpr(node);
         case "bool":
@@ -288,10 +337,10 @@ function createConditionalExpr(node) {
     heron_ast_rewrite_1.validateNode(node, 'conditionalExpr');
     if (node.children.length !== 2)
         heron_ast_rewrite_1.throwError(node, 'Conditional expressions should have two children');
-    var rnode = heron_ast_rewrite_1.validateNode(node.children[1], 'conditionalExprRight');
-    if (rnode.children.length !== 2)
+    var rightNode = heron_ast_rewrite_1.validateNode(node.children[1], 'conditionalExprRight');
+    if (rightNode.children.length !== 2)
         heron_ast_rewrite_1.throwError(node, 'Right side of conditional expression should have two children');
-    return new ConditionalExpr(node, createExpr(node.children[0]), createExpr(rnode.children[0]), createExpr(rnode.children[1]));
+    return new ConditionalExpr(node, createExpr(node.children[0]), createExpr(rightNode.children[0]), createExpr(rightNode.children[1]));
 }
 exports.createConditionalExpr = createConditionalExpr;
 // TODO: the fact that I am calling a lambda body an expression is a problem.
@@ -315,4 +364,11 @@ function createVarNameExpr(node) {
     return new VarName(heron_ast_rewrite_1.validateNode(node, 'varName'), node.allText, ref.defs);
 }
 exports.createVarNameExpr = createVarNameExpr;
+function createVarExpr(node) {
+    heron_ast_rewrite_1.validateNode(node, 'varExpr');
+    var defs = node.children[0].children.map(function (c) { return c.def; });
+    var body = createExpr(node.children[1]);
+    return new VarExpr(node, defs, body);
+}
+exports.createVarExpr = createVarExpr;
 //# sourceMappingURL=heron-expr.js.map

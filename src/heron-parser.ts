@@ -123,7 +123,7 @@ const g = new function() {
 
     // The "var x = y in x * x" expression form or also part of "varDeclStatement"
     this.varNameDecl        = this.identifier.ast;
-    this.varInitialization  = guardedWsDelimSeq("=", this.expr).ast;
+    this.varInitialization  = guardedWsDelimSeq("=", this.expr);
     this.varDecl            = m.seq(this.varNameDecl, this.varInitialization).ast;
     this.varDecls           = m.seq(this.varDecl, guardedWsDelimSeq(",", this.varDecl).zeroOrMore).ast;
     this.varExpr            = guardedWsDelimSeq(m.keyword("var"), this.varDecls, m.keyword("in"), this.expr).ast;
@@ -202,7 +202,7 @@ const g = new function() {
     this.doLoop = guardedWsDelimSeq(m.keyword("do"), this.recStatement, m.keyword("while"), this.loopCond).ast;
     this.elseStatement = guardedWsDelimSeq(m.keyword("else"), this.recStatement).ast;
     this.ifCond = guardedWsDelimSeq("(", this.expr, ")").ast;
-    this.ifStatement = guardedWsDelimSeq(m.keyword("if"), this.ifCond, this.recStatement, this.elseStatement.zeroOrMore).ast;
+    this.ifStatement = guardedWsDelimSeq(m.keyword("if"), this.ifCond, this.recStatement, this.elseStatement.opt).ast;
     this.compoundStatement = guardedWsDelimSeq("{", this.recStatement.zeroOrMore, "}").ast;
     this.breakStatement = guardedWsDelimSeq(m.keyword("break"), this.eos).ast;
     this.continueStatement = guardedWsDelimSeq(m.keyword("continue"), this.eos).ast;

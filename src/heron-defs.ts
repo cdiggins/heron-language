@@ -3,6 +3,7 @@
  
 import { Myna } from "myna-parser/myna";
 import { visitAst, validateNode, throwError, HeronAstNode } from "./heron-ast-rewrite";
+import { Expr, createExpr } from "./heron-expr";
 
 // This is a definition of a name. It could be a function, variable, type
 export class Def {    
@@ -42,15 +43,18 @@ export class FuncParamDef extends Def
 }
 
 // Represents the definition of a variable. 
-// The type is not known, until the type of the expression is figured out.
 export class VarDef extends Def
 {
     constructor(
         public readonly node: HeronAstNode,
         public readonly name: string, 
-        public readonly expr: HeronAstNode
+        public readonly expr: Expr,
     )
     { super(node, name); }    
+
+    toString() {
+        return this.name + this.expr ? ' = ' + this.expr : '';
+    }
 }
 
 // Represents the definition of a variable used in a for loop
@@ -61,7 +65,7 @@ export class ForLoopVarDef extends Def
     constructor(
         public readonly node: HeronAstNode,
         public readonly name: string, 
-        public readonly expr: HeronAstNode
+        public readonly expr: Expr,
     )
     { super(node, name); }    
 }
@@ -140,13 +144,13 @@ export function createVarDef(node: HeronAstNode): VarDef {
     validateNode(node, 'varDecl');
     let name = validateNode(node.children[0], 'varNameDecl');
     let init = validateNode(node.children[1], 'varInitialization');
-    return new VarDef(node, name.allText, init.children[0]);
+    return new VarDef(node, name.allText, createExpr(init.children[0]));
 }
 
 export function createForLoopVarDef(node: HeronAstNode): ForLoopVarDef {
     validateNode(node, 'forLoop');
     let name = validateNode(node.children[0], 'identifier');
-    return new ForLoopVarDef(node, name.allText, node.children[1]);
+    return new ForLoopVarDef(node, name.allText, createExpr(node.children[1]));
 }
 
 export function createTypeDef(node: HeronAstNode): TypeDef {

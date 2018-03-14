@@ -110,7 +110,7 @@ var g = new function () {
     this.varName = this.identifier.ast;
     // The "var x = y in x * x" expression form or also part of "varDeclStatement"
     this.varNameDecl = this.identifier.ast;
-    this.varInitialization = guardedWsDelimSeq("=", this.expr).ast;
+    this.varInitialization = guardedWsDelimSeq("=", this.expr);
     this.varDecl = myna_parser_1.Myna.seq(this.varNameDecl, this.varInitialization).ast;
     this.varDecls = myna_parser_1.Myna.seq(this.varDecl, guardedWsDelimSeq(",", this.varDecl).zeroOrMore).ast;
     this.varExpr = guardedWsDelimSeq(myna_parser_1.Myna.keyword("var"), this.varDecls, myna_parser_1.Myna.keyword("in"), this.expr).ast;
@@ -183,7 +183,7 @@ var g = new function () {
     this.doLoop = guardedWsDelimSeq(myna_parser_1.Myna.keyword("do"), this.recStatement, myna_parser_1.Myna.keyword("while"), this.loopCond).ast;
     this.elseStatement = guardedWsDelimSeq(myna_parser_1.Myna.keyword("else"), this.recStatement).ast;
     this.ifCond = guardedWsDelimSeq("(", this.expr, ")").ast;
-    this.ifStatement = guardedWsDelimSeq(myna_parser_1.Myna.keyword("if"), this.ifCond, this.recStatement, this.elseStatement.zeroOrMore).ast;
+    this.ifStatement = guardedWsDelimSeq(myna_parser_1.Myna.keyword("if"), this.ifCond, this.recStatement, this.elseStatement.opt).ast;
     this.compoundStatement = guardedWsDelimSeq("{", this.recStatement.zeroOrMore, "}").ast;
     this.breakStatement = guardedWsDelimSeq(myna_parser_1.Myna.keyword("break"), this.eos).ast;
     this.continueStatement = guardedWsDelimSeq(myna_parser_1.Myna.keyword("continue"), this.eos).ast;

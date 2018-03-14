@@ -1,10 +1,11 @@
 import { Myna } from "myna-parser/myna";
 import { createDef, Def } from "./heron-defs";
 import { Ref } from "./heron-refs";
-import { Scope } from "./heron-scope-analysis";
+import { Scope } from "./heron-scope";
 import { Type } from "type-inference/type-system";
 import { Expr } from "./heron-expr";
 import { SourceFile } from "./heron-package";
+import { Statement } from "./heron-statement";
 
 // After processing and transforming the nodes in the AST tree they 
 // are extended with the following new properties. 
@@ -37,6 +38,9 @@ export class HeronAstNode extends Myna.AstNode
 
     // If this node is an expression, additional information is stored here.
     expr?: Expr;
+
+    // If this node is a statement, additional information about the statement is stored here.
+    statement?: Statement;
 
     // If this is a source file, this contains the file path and more. 
     file?: SourceFile;
@@ -235,8 +239,8 @@ export function opToFunction(node: HeronAstNode): HeronAstNode {
             for (let i=node.children.length-2; i >= 0; --i) {
                 let opName = '';
                 switch (node.children[i].allText) {
-                    case '++': opName = 'op_preinc'; break;
-                    case '--': opName = 'op_predec'; break;
+                    case '++': break;
+                    case '--': break;
                     case '-': opName = 'op_negate'; break;
                     case '!': opName = 'op_not'; break;
                     default: throw new Error('Unrecognized prefix operator ' + node.children[i].allText);

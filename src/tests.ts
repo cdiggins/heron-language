@@ -2,7 +2,7 @@ import * as Myna from "myna-parser";
 import { heronGrammar, parseHeron } from './heron-parser';
 import { heronToJs } from "./heron-to-js";
 import { HeronAstNode, preprocessAst, parseLocation } from "./heron-ast-rewrite";
-import { Scope } from "./heron-scope-analysis";
+import { Scope } from "./heron-scope";
 import { heronToText } from "./heron-to-text";
 import { parseFile, parseModule, createPackage } from "./heron-compiler";
 import { Ref } from "./heron-refs";
@@ -150,7 +150,7 @@ function outputPackageStats(pkg: Package) {
 
 function tests() {
     // TODO: eventually we need to pre-scan the files    
-    let inputs = ['geometry-vector3', 'array'];
+    let inputs = ['geometry-vector3', 'array', 'test'];
     let pkg = createPackage(inputs);
     outputPackageStats(pkg);
     console.log('Done');
