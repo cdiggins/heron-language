@@ -144,22 +144,6 @@ export class ObjectLiteral extends Expr {
     }
 }
 
-
-/*
-// Type expressions 
-export class TypeExpr extends Expr {    
-    constructor(
-        public readonly node: HeronAstNode,
-        public readonly def: Def, 
-    )
-    { super(node); }
-
-    toString(): string {
-        return this.node.allText;
-    }
-}
-*/
-
 // Function call expressions
 export class FunCall extends Expr {
     constructor(
@@ -186,6 +170,19 @@ export class ConditionalExpr extends Expr {
 
     toString(): string {
         return this.cond + ' ? ' + this.onTrue + ' : ' + this.onFalse;
+    }
+}
+
+// Assignment of a value to a variable 
+export class VarAssignmentExpr extends Expr {
+    constructor(
+        public readonly node: HeronAstNode,
+        public readonly name: string,
+        public readonly value: Expr) 
+    { super(node); }
+
+    toString(): string {
+        return this.name + ' = ' + this.value;
     }
 }
 
@@ -246,6 +243,8 @@ export function createExpr(node: HeronAstNode): Expr {
             return createVarNameExpr(node);
         case "parenExpr":
             return addExpr(node, createExpr(node.children[0]));            
+        case "assignmentExpr":
+            return createVarAssignmentExpr(node);
         case "multiplicativeExpr":
         case "additiveExpr":
         case "relationalExpr":
@@ -331,4 +330,14 @@ export function createVarExpr(node: HeronAstNode): VarExpr {
     let defs = node.children[0].children.map(c => c.def as VarDef);
     let body = createExpr(node.children[1]);
     return new VarExpr(node, defs, body);
+}
+
+export function createVarAssignmentExpr(node: HeronAstNode): VarAssignmentExpr {
+    validateNode(node, 'varExpr');
+    let lvalue = validateNode(node.children[0], 'varName').allText;
+    let op = validateNode(node.children[1].children[0], 'assignmentOp').allText;
+    if (node.children[1].children.length !== 2) throwError(node, 'Expected two children on right side of assignment expression');
+    if (op !== '=') throwError(node, 'All assignment operators are supposed to be rewritten: found ' + op);
+    let rvalue = node.children[1].children[1];
+    return new VarAssignmentExpr(node, lvalue, createExpr(rvalue));
 }

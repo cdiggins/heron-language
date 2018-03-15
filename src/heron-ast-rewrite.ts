@@ -136,6 +136,13 @@ export function funCall(src: HeronAstNode, fxnName: string, ...args) : HeronAstN
     return makeNode(g.postfixExpr, src, '', fxn, fxnCallArgs);
 }
 
+// Creates an assignment  given a function name, and some arguments 
+export function assignment(src: HeronAstNode, lValue: HeronAstNode, rValue: HeronAstNode) : HeronAstNode {
+    let op = g.assignmentOp.node(src, '=');
+    let rValue2 = g.assignmentExprRight(src, op, rValue);
+    return makeNode(g.assignmentExpr, src, '=', lValue, rValue2);
+}
+
 // Given a binary operator, a left operand and a right operand, creates a new AstNode 
 export function opToFunCall(src: HeronAstNode, op: string, left: HeronAstNode, right: HeronAstNode) {
     return funCall(src, "op" + op, left, right);
@@ -214,6 +221,51 @@ export function fieldSelectToFunction(node: HeronAstNode): HeronAstNode {
     }
     return node;
 }
+
+// Any of the special assignment operations are going to be mapped to a simple assignment 
+// x += 2 => x = x + 2;
+export function rewriteAssignment(node: HeronAstNode): HeronAstNode {
+    if (node.name !== 'assignmentExpr') return node;
+    if (node.children.length !== 2) throw new Error('Assignment expressions should have two children');
+    let left = node.children[0];
+    let right = validateNode(node.children[1], 'assignmentExprRight');    
+    let op = validateNode(right.children[0], 'assignmentOp').allText;
+    if (op === '=') return node;
+    let newOp = 'op' + op.substr(1);
+    let func = funCall(node, op, left, right.children[1]); 
+    return assignment(node, left, right.children[1]);
+}
+
+export function isArrayIndexingExpr(node: HeronAstNode): boolean {
+    if (node.name !== 'postfixExpr') return false;
+    if (node.children.length !== 2)
+        throw new Error('Expected two children for a postfix expression');
+    return (node.children[1].name === 'arrayIndex');
+}
+
+// Converts array indexing assignment to function calls
+// xs[i] = x => xs = set(xs, i, x);
+export function arrayIndexAssignmentToFunction(node: HeronAstNode): HeronAstNode {    
+    if (node.name !== 'assignmentExpr') 
+        return node;
+    if (node.children.length !== 2)
+        throw new Error('Expected two children for a postfix expression');
+    let lvalue = node.children[0];
+    let rvalue = node.children[1];
+    if (isArrayIndexingExpr(lvalue)) {
+        // xs[i] = x is valid
+        // f()[i] = x is not, because it won't do anything. 
+        let array = lvalue.children[0];
+        if (array.name !== 'varName')
+            throw new Error("Can only assign to an array index which is bound to a variable");
+        let arrayIndex = lvalue.children[1].children[0];
+        let call = funCall(node, 'set', array, arrayIndex, rvalue.children[1]);
+        let assign = assignment(node, array, call);
+        return assign;
+    }
+    return node;
+}
+    
 
 // Converts array indexing to function calls
 // xs[i] = op[](xs, i)
@@ -396,8 +448,10 @@ export function preprocessAst(node: HeronAstNode, file: SourceFile)
     // The order of transforms matters. Particularly we need to do 
     // Method to function before doing fieldSelectToFunctions
     node = mapAst(node, exprListToPair);
+    node = mapAst(node, rewriteAssignment);
     node = mapAst(node, methodToFunction);
     node = mapAst(node, fieldSelectToFunction);
+    node = mapAst(node, arrayIndexAssignmentToFunction);
     node = mapAst(node, arrayIndexToFunction);
     node = mapAst(node, opToFunction);
  

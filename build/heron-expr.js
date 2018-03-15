@@ -187,20 +187,6 @@ var ObjectLiteral = /** @class */ (function (_super) {
     return ObjectLiteral;
 }(Expr));
 exports.ObjectLiteral = ObjectLiteral;
-/*
-// Type expressions
-export class TypeExpr extends Expr {
-    constructor(
-        public readonly node: HeronAstNode,
-        public readonly def: Def,
-    )
-    { super(node); }
-
-    toString(): string {
-        return this.node.allText;
-    }
-}
-*/
 // Function call expressions
 var FunCall = /** @class */ (function (_super) {
     __extends(FunCall, _super);
@@ -234,6 +220,22 @@ var ConditionalExpr = /** @class */ (function (_super) {
     return ConditionalExpr;
 }(Expr));
 exports.ConditionalExpr = ConditionalExpr;
+// Assignment of a value to a variable 
+var VarAssignmentExpr = /** @class */ (function (_super) {
+    __extends(VarAssignmentExpr, _super);
+    function VarAssignmentExpr(node, name, value) {
+        var _this = _super.call(this, node) || this;
+        _this.node = node;
+        _this.name = name;
+        _this.value = value;
+        return _this;
+    }
+    VarAssignmentExpr.prototype.toString = function () {
+        return this.name + ' = ' + this.value;
+    };
+    return VarAssignmentExpr;
+}(Expr));
+exports.VarAssignmentExpr = VarAssignmentExpr;
 //==========================================================================================
 // Expressions
 function addExpr(node, expr) {
@@ -289,6 +291,8 @@ function createExpr(node) {
             return createVarNameExpr(node);
         case "parenExpr":
             return addExpr(node, createExpr(node.children[0]));
+        case "assignmentExpr":
+            return createVarAssignmentExpr(node);
         case "multiplicativeExpr":
         case "additiveExpr":
         case "relationalExpr":
@@ -371,4 +375,16 @@ function createVarExpr(node) {
     return new VarExpr(node, defs, body);
 }
 exports.createVarExpr = createVarExpr;
+function createVarAssignmentExpr(node) {
+    heron_ast_rewrite_1.validateNode(node, 'varExpr');
+    var lvalue = heron_ast_rewrite_1.validateNode(node.children[0], 'varName').allText;
+    var op = heron_ast_rewrite_1.validateNode(node.children[1].children[0], 'assignmentOp').allText;
+    if (node.children[1].children.length !== 2)
+        heron_ast_rewrite_1.throwError(node, 'Expected two children on right side of assignment expression');
+    if (op !== '=')
+        heron_ast_rewrite_1.throwError(node, 'All assignment operators are supposed to be rewritten: found ' + op);
+    var rvalue = node.children[1].children[1];
+    return new VarAssignmentExpr(node, lvalue, createExpr(rvalue));
+}
+exports.createVarAssignmentExpr = createVarAssignmentExpr;
 //# sourceMappingURL=heron-expr.js.map

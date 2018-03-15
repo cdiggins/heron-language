@@ -120,6 +120,13 @@ function funCall(src, fxnName) {
     return makeNode(g.postfixExpr, src, '', fxn, fxnCallArgs);
 }
 exports.funCall = funCall;
+// Creates an assignment  given a function name, and some arguments 
+function assignment(src, lValue, rValue) {
+    var op = g.assignmentOp.node(src, '=');
+    var rValue2 = g.assignmentExprRight(src, op, rValue);
+    return makeNode(g.assignmentExpr, src, '=', lValue, rValue2);
+}
+exports.assignment = assignment;
 // Given a binary operator, a left operand and a right operand, creates a new AstNode 
 function opToFunCall(src, op, left, right) {
     return funCall(src, "op" + op, left, right);
@@ -197,6 +204,54 @@ function fieldSelectToFunction(node) {
     return node;
 }
 exports.fieldSelectToFunction = fieldSelectToFunction;
+// Any of the special assignment operations are going to be mapped to a simple assignment 
+// x += 2 => x = x + 2;
+function rewriteAssignment(node) {
+    if (node.name !== 'assignmentExpr')
+        return node;
+    if (node.children.length !== 2)
+        throw new Error('Assignment expressions should have two children');
+    var left = node.children[0];
+    var right = validateNode(node.children[1], 'assignmentExprRight');
+    var op = validateNode(right.children[0], 'assignmentOp').allText;
+    if (op === '=')
+        return node;
+    var newOp = 'op' + op.substr(1);
+    var func = funCall(node, op, left, right.children[1]);
+    return assignment(node, left, right.children[1]);
+}
+exports.rewriteAssignment = rewriteAssignment;
+function isArrayIndexingExpr(node) {
+    if (node.name !== 'postfixExpr')
+        return false;
+    if (node.children.length !== 2)
+        throw new Error('Expected two children for a postfix expression');
+    return (node.children[1].name === 'arrayIndex');
+}
+exports.isArrayIndexingExpr = isArrayIndexingExpr;
+// Converts array indexing assignment to function calls
+// xs[i] = x => xs = set(xs, i, x);
+function arrayIndexAssignmentToFunction(node) {
+    if (node.name !== 'assignmentExpr')
+        return node;
+    if (node.children.length !== 2)
+        throw new Error('Expected two children for a postfix expression');
+    var lvalue = node.children[0];
+    var rvalue = node.children[1];
+    if (isArrayIndexingExpr(lvalue)) {
+        // xs[i] = x is valid
+        // f()[i] = x is not, because it won't do anything. 
+        var array = lvalue.children[0];
+        if (array.name !== 'varName')
+            throw new Error("Can only assign to an array index which is bound to a variable");
+        var arrayIndex = lvalue.children[1].children[0];
+        var call = funCall(node, 'set', array, arrayIndex, rvalue.children[1]);
+        var assign = assignment(node, array, call);
+        return assign;
+    }
+    return node;
+}
+exports.arrayIndexAssignmentToFunction = arrayIndexAssignmentToFunction;
 // Converts array indexing to function calls
 // xs[i] = op[](xs, i)
 function arrayIndexToFunction(node) {
@@ -372,8 +427,10 @@ function preprocessAst(node, file) {
     // The order of transforms matters. Particularly we need to do 
     // Method to function before doing fieldSelectToFunctions
     node = mapAst(node, exprListToPair);
+    node = mapAst(node, rewriteAssignment);
     node = mapAst(node, methodToFunction);
     node = mapAst(node, fieldSelectToFunction);
+    node = mapAst(node, arrayIndexAssignmentToFunction);
     node = mapAst(node, arrayIndexToFunction);
     node = mapAst(node, opToFunction);
     // The tree has been transformed, and new nodes have been added
