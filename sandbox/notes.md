@@ -580,5 +580,36 @@ map(array, )
 var obj = Float3(x=42, y=x+3, z=0);
 
 
+            // SO: we need to figure out which function this is here, based on the 
+            // types of the arguments. Then where do we store it? 
+            // The concept is: if it works we can use it. If there is ambiguity, well don't. 
+            
+            // What about inlining and stuff like that? 
+            // Do I try inlining all of the functions? What happens in those cases? 
+            // Do their names get resolved differently? 
+
+            // Are we trying to work out the actual value? Or just the type? 
+            // Well in most scases, just the type. 
+
+            // 
+
+
+Consider the case of a new data type. 
+
+A Quaternion for example. Or a ray? 
+
+A ray might have a distance. 
+
+If it has a distance then the distance2 should be given obviously. 
+
+Or if it has a begin and an end? Then there is a midpoint. 
+
+This is how a lot really interesting stuff starts. 
+
+I can recreate the refs for the functions that are loaded. 
+
+In a way, we are creating a copy of the function. 
+
+I'll have to be careful, because there could be some ambiguity. 
 
 

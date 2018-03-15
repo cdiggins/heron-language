@@ -18,7 +18,7 @@ var Ref = /** @class */ (function () {
         this.scope = scope;
         this.refType = refType;
         this.defs = defs;
-        node['ref'] = this;
+        node.ref = this;
         if (defs.length === 0)
             heron_ast_rewrite_1.throwError(node, 'No definition found for ' + name);
     }

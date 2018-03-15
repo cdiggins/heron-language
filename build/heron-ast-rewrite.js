@@ -122,8 +122,8 @@ function funCall(src, fxnName) {
 exports.funCall = funCall;
 // Creates an assignment  given a function name, and some arguments 
 function assignment(src, lValue, rValue) {
-    var op = g.assignmentOp.node(src, '=');
-    var rValue2 = g.assignmentExprRight(src, op, rValue);
+    var op = makeNode(g.assignmentOp, src, '=');
+    var rValue2 = makeNode(g.assignmentExprRight, src, '', op, rValue);
     return makeNode(g.assignmentExpr, src, '=', lValue, rValue2);
 }
 exports.assignment = assignment;
@@ -204,6 +204,19 @@ function fieldSelectToFunction(node) {
     return node;
 }
 exports.fieldSelectToFunction = fieldSelectToFunction;
+/* TODO: finish the postfix increment/decrement.
+export function rewritePostfixIncAndDec(node: HeronAstNode): HeronAstNode {
+    if (node.name !== 'postfixExpr') return node;
+    let op = '';
+    if (node.children[1].name === 'postIncOp')
+        op = 'op-';
+    else
+        || node.children[1].name === 'postDecOp') {
+        let op = node.children[1].allText.substr(1);
+        for (let )
+    }
+}
+*/
 // Any of the special assignment operations are going to be mapped to a simple assignment 
 // x += 2 => x = x + 2;
 function rewriteAssignment(node) {

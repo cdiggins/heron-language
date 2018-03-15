@@ -94,7 +94,8 @@ function getExprType(expr) {
         return Types.LambdaType;
     }
     else if (expr instanceof heron_expr_1.VarName) {
-        return unionType.apply(void 0, expr.defs.map(function (d) { return computeType(d.node); }));
+        // TODO: figure this out based on the definitions found. 
+        return Types.AnyType;
     }
     else if (expr instanceof heron_expr_1.BoolLiteral) {
         return Types.BoolType;
@@ -158,7 +159,7 @@ function getDefType(def) {
         return new type_system_1.TypeConstant(def.name);
     }
     else if (def instanceof heron_defs_1.VarDef) {
-        return getExprType(def.expr);
+        return getExprType(def.exprNode.expr);
     }
     else if (def instanceof heron_defs_1.ForLoopVarDef) {
         // TODO: figure out the type of the array, and the type of an element.        

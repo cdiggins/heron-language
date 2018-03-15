@@ -125,7 +125,7 @@ export function mapAst(node: HeronAstNode, f: (_: HeronAstNode) => HeronAstNode)
     let r = f(node);
     // Store a back pointer to the original AST 
     if (r != node)
-        r.original = node;
+        r.original = node;    
     return r;
 }
 
@@ -138,8 +138,8 @@ export function funCall(src: HeronAstNode, fxnName: string, ...args) : HeronAstN
 
 // Creates an assignment  given a function name, and some arguments 
 export function assignment(src: HeronAstNode, lValue: HeronAstNode, rValue: HeronAstNode) : HeronAstNode {
-    let op = g.assignmentOp.node(src, '=');
-    let rValue2 = g.assignmentExprRight(src, op, rValue);
+    let op = makeNode(g.assignmentOp, src, '=');
+    let rValue2 = makeNode(g.assignmentExprRight, src, '', op, rValue);
     return makeNode(g.assignmentExpr, src, '=', lValue, rValue2);
 }
 
@@ -221,6 +221,20 @@ export function fieldSelectToFunction(node: HeronAstNode): HeronAstNode {
     }
     return node;
 }
+
+/* TODO: finish the postfix increment/decrement. 
+export function rewritePostfixIncAndDec(node: HeronAstNode): HeronAstNode {
+    if (node.name !== 'postfixExpr') return node;
+    let op = '';
+    if (node.children[1].name === 'postIncOp')
+        op = 'op-';
+    else 
+        || node.children[1].name === 'postDecOp') {
+        let op = node.children[1].allText.substr(1);
+        for (let )
+    }
+}
+*/
 
 // Any of the special assignment operations are going to be mapped to a simple assignment 
 // x += 2 => x = x + 2;

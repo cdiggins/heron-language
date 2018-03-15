@@ -22,7 +22,7 @@ export class Ref
         public readonly refType: RefType,
         public readonly defs: Def[])
     { 
-        node['ref'] = this;
+        node.ref = this;
         if (defs.length === 0)
             throwError(node, 'No definition found for ' + name);
     }

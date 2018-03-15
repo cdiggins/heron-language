@@ -1,5 +1,5 @@
-// Generated on Mon Mar 12 2018 23:32:59 GMT-0400 (Eastern Daylight Time)
-heron:std:0.1// scope module_1902
+// Generated on Thu Mar 15 2018 19:14:07 GMT-0400 (Eastern Daylight Time)
+heron:std:0.1// scope module_1901
 heron:std.array:0.1{
 // scope funcDef_18
 // definition unit_FuncDef18
@@ -17,10 +17,10 @@ function unit(x)
 function unit(// definition x_FuncParamDef10
 // type Any
 x)
-// expression ArrayLiteral [x[x_FuncParamDef10]]
+// expression ArrayLiteral [x]
 // type Array
 [// reference x_14:varName:var[x_FuncParamDef10]
-// expression VarName x[x_FuncParamDef10]
+// expression VarName x
 // type Any
 x]// scope funcDef_57
 // definition map_FuncDef57
@@ -40,18 +40,18 @@ function map(// definition xs_FuncParamDef24
 xs, // definition f_FuncParamDef27
 // type Any
 f)
-// expression FunCall array[array_FuncDef1018,array_FuncDef1138,array_FuncDef1201,array_FuncDef1231,array_FuncDef1266](count[count_FuncDef463](xs[xs_FuncParamDef24]),lambda52(i_FuncParamDef38)undefined)
+// expression FunCall array(count(xs),lambda52(i_FuncParamDef38)undefined)
 // type Any
 // reference array_31:varName:var[array_FuncDef1018, array_FuncDef1138, array_FuncDef1201, array_FuncDef1231, array_FuncDef1266]
-// expression VarName array[array_FuncDef1018,array_FuncDef1138,array_FuncDef1201,array_FuncDef1231,array_FuncDef1266]
-// type (union ((Int Function) -> : Array) ((ArrayBuilder) -> : Array) ((Float2) -> Any) ((Float3) -> Any) ((Float4) -> Any))
-array(// expression FunCall count[count_FuncDef463](xs[xs_FuncParamDef24])
+// expression VarName array
+// type Any
+array(// expression FunCall count(xs)
 // type Any
 // reference count_32:varName:var[count_FuncDef463]
-// expression VarName count[count_FuncDef463]
-// type ((Any Any) -> Any)
+// expression VarName count
+// type Any
 count(// reference xs_34:varName:var[xs_FuncParamDef24]
-// expression VarName xs[xs_FuncParamDef24]
+// expression VarName xs
 // type Any
 xs), // scope lambdaExpr_52
 // expression Lambda lambda52(i_FuncParamDef38)undefined
@@ -59,21 +59,21 @@ xs), // scope lambdaExpr_52
 (// definition i_FuncParamDef38
 // type Any
 i)// scope lambdaBody_51
- => // expression FunCall f[f_FuncParamDef27](op[][op[]_FuncDef964](xs[xs_FuncParamDef24],i[i_FuncParamDef38]))
+ => // expression FunCall f(op[](xs,i))
 // type Any
 // reference f_41:varName:var[f_FuncParamDef27]
-// expression VarName f[f_FuncParamDef27]
+// expression VarName f
 // type Any
-f(// expression FunCall op[][op[]_FuncDef964](xs[xs_FuncParamDef24],i[i_FuncParamDef38])
+f(// expression FunCall op[](xs,i)
 // type Any
 // reference op[]_42:varName:var[op[]_FuncDef964]
-// expression VarName op[][op[]_FuncDef964]
-// type ((Array Int) -> : Any)
+// expression VarName op[]
+// type Any
 op[](// reference xs_44:varName:var[xs_FuncParamDef24]
-// expression VarName xs[xs_FuncParamDef24]
+// expression VarName xs
 // type Any
 xs, // reference i_46:varName:var[i_FuncParamDef38]
-// expression VarName i[i_FuncParamDef38]
+// expression VarName i
 // type Any
 i)))// scope funcDef_84
 // definition min_FuncDef84
@@ -93,24 +93,24 @@ function min(// definition x_FuncParamDef63
 x, // definition y_FuncParamDef66
 // type Any
 y)
-// expression ConditionalExpr op<=[op<=_FuncDef803](x[x_FuncParamDef63],y[y_FuncParamDef66]) ? x[x_FuncParamDef63] : y[y_FuncParamDef66]
+// expression ConditionalExpr op<=(x,y) ? x : y
 // type Any
-// expression FunCall op<=[op<=_FuncDef803](x[x_FuncParamDef63],y[y_FuncParamDef66])
+// expression FunCall op<=(x,y)
 // type Any
 // reference op<=_69:varName:var[op<=_FuncDef803]
-// expression VarName op<=[op<=_FuncDef803]
-// type ((Float Float) -> : Bool)
+// expression VarName op<=
+// type Any
 op<=(// reference x_71:varName:var[x_FuncParamDef63]
-// expression VarName x[x_FuncParamDef63]
+// expression VarName x
 // type Any
 x, // reference y_73:varName:var[y_FuncParamDef66]
-// expression VarName y[y_FuncParamDef66]
+// expression VarName y
 // type Any
 y) ? // reference x_77:varName:var[x_FuncParamDef63]
-// expression VarName x[x_FuncParamDef63]
+// expression VarName x
 // type Any
 x// reference y_79:varName:var[y_FuncParamDef66]
-// expression VarName y[y_FuncParamDef66]
+// expression VarName y
 // type Any
 y// scope funcDef_111
 // definition max_FuncDef111
@@ -130,24 +130,24 @@ function max(// definition x_FuncParamDef90
 x, // definition y_FuncParamDef93
 // type Any
 y)
-// expression ConditionalExpr op<=[op<=_FuncDef803](x[x_FuncParamDef90],y[y_FuncParamDef93]) ? x[x_FuncParamDef90] : y[y_FuncParamDef93]
+// expression ConditionalExpr op<=(x,y) ? x : y
 // type Any
-// expression FunCall op<=[op<=_FuncDef803](x[x_FuncParamDef90],y[y_FuncParamDef93])
+// expression FunCall op<=(x,y)
 // type Any
 // reference op<=_96:varName:var[op<=_FuncDef803]
-// expression VarName op<=[op<=_FuncDef803]
-// type ((Float Float) -> : Bool)
+// expression VarName op<=
+// type Any
 op<=(// reference x_98:varName:var[x_FuncParamDef90]
-// expression VarName x[x_FuncParamDef90]
+// expression VarName x
 // type Any
 x, // reference y_100:varName:var[y_FuncParamDef93]
-// expression VarName y[y_FuncParamDef93]
+// expression VarName y
 // type Any
 y) ? // reference x_104:varName:var[x_FuncParamDef90]
-// expression VarName x[x_FuncParamDef90]
+// expression VarName x
 // type Any
 x// reference y_106:varName:var[y_FuncParamDef93]
-// expression VarName y[y_FuncParamDef93]
+// expression VarName y
 // type Any
 y// scope funcDef_144
 // definition shorter_FuncDef144
@@ -167,34 +167,34 @@ function shorter(// definition xs_FuncParamDef117
 xs, // definition ys_FuncParamDef120
 // type Any
 ys)
-// expression ConditionalExpr op<=[op<=_FuncDef803](count[count_FuncDef463](xs[xs_FuncParamDef117]),count[count_FuncDef463](ys[ys_FuncParamDef120])) ? xs[xs_FuncParamDef117] : ys[ys_FuncParamDef120]
+// expression ConditionalExpr op<=(count(xs),count(ys)) ? xs : ys
 // type Any
-// expression FunCall op<=[op<=_FuncDef803](count[count_FuncDef463](xs[xs_FuncParamDef117]),count[count_FuncDef463](ys[ys_FuncParamDef120]))
+// expression FunCall op<=(count(xs),count(ys))
 // type Any
 // reference op<=_123:varName:var[op<=_FuncDef803]
-// expression VarName op<=[op<=_FuncDef803]
-// type ((Float Float) -> : Bool)
-op<=(// expression FunCall count[count_FuncDef463](xs[xs_FuncParamDef117])
+// expression VarName op<=
+// type Any
+op<=(// expression FunCall count(xs)
 // type Any
 // reference count_124:varName:var[count_FuncDef463]
-// expression VarName count[count_FuncDef463]
-// type ((Any Any) -> Any)
-count(// reference xs_126:varName:var[xs_FuncParamDef117]
-// expression VarName xs[xs_FuncParamDef117]
+// expression VarName count
 // type Any
-xs), // expression FunCall count[count_FuncDef463](ys[ys_FuncParamDef120])
+count(// reference xs_126:varName:var[xs_FuncParamDef117]
+// expression VarName xs
+// type Any
+xs), // expression FunCall count(ys)
 // type Any
 // reference count_129:varName:var[count_FuncDef463]
-// expression VarName count[count_FuncDef463]
-// type ((Any Any) -> Any)
+// expression VarName count
+// type Any
 count(// reference ys_131:varName:var[ys_FuncParamDef120]
-// expression VarName ys[ys_FuncParamDef120]
+// expression VarName ys
 // type Any
 ys)) ? // reference xs_137:varName:var[xs_FuncParamDef117]
-// expression VarName xs[xs_FuncParamDef117]
+// expression VarName xs
 // type Any
 xs// reference ys_139:varName:var[ys_FuncParamDef120]
-// expression VarName ys[ys_FuncParamDef120]
+// expression VarName ys
 // type Any
 ys// scope funcDef_177
 // definition longer_FuncDef177
@@ -214,34 +214,34 @@ function longer(// definition xs_FuncParamDef150
 xs, // definition ys_FuncParamDef153
 // type Any
 ys)
-// expression ConditionalExpr op>=[op>=_FuncDef757](count[count_FuncDef463](xs[xs_FuncParamDef150]),count[count_FuncDef463](ys[ys_FuncParamDef153])) ? xs[xs_FuncParamDef150] : ys[ys_FuncParamDef153]
+// expression ConditionalExpr op>=(count(xs),count(ys)) ? xs : ys
 // type Any
-// expression FunCall op>=[op>=_FuncDef757](count[count_FuncDef463](xs[xs_FuncParamDef150]),count[count_FuncDef463](ys[ys_FuncParamDef153]))
+// expression FunCall op>=(count(xs),count(ys))
 // type Any
 // reference op>=_156:varName:var[op>=_FuncDef757]
-// expression VarName op>=[op>=_FuncDef757]
-// type ((Float Float) -> : Bool)
-op>=(// expression FunCall count[count_FuncDef463](xs[xs_FuncParamDef150])
+// expression VarName op>=
+// type Any
+op>=(// expression FunCall count(xs)
 // type Any
 // reference count_157:varName:var[count_FuncDef463]
-// expression VarName count[count_FuncDef463]
-// type ((Any Any) -> Any)
-count(// reference xs_159:varName:var[xs_FuncParamDef150]
-// expression VarName xs[xs_FuncParamDef150]
+// expression VarName count
 // type Any
-xs), // expression FunCall count[count_FuncDef463](ys[ys_FuncParamDef153])
+count(// reference xs_159:varName:var[xs_FuncParamDef150]
+// expression VarName xs
+// type Any
+xs), // expression FunCall count(ys)
 // type Any
 // reference count_162:varName:var[count_FuncDef463]
-// expression VarName count[count_FuncDef463]
-// type ((Any Any) -> Any)
+// expression VarName count
+// type Any
 count(// reference ys_164:varName:var[ys_FuncParamDef153]
-// expression VarName ys[ys_FuncParamDef153]
+// expression VarName ys
 // type Any
 ys)) ? // reference xs_170:varName:var[xs_FuncParamDef150]
-// expression VarName xs[xs_FuncParamDef150]
+// expression VarName xs
 // type Any
 xs// reference ys_172:varName:var[ys_FuncParamDef153]
-// expression VarName ys[ys_FuncParamDef153]
+// expression VarName ys
 // type Any
 ys// scope funcDef_197
 // definition empty_FuncDef197
@@ -259,18 +259,18 @@ function empty(xs)
 function empty(// definition xs_FuncParamDef183
 // type Any
 xs)
-// expression FunCall op==[op==_FuncDef849](count[count_FuncDef463](xs[xs_FuncParamDef183]),0)
+// expression FunCall op==(count(xs),0)
 // type Any
 // reference op==_186:varName:var[op==_FuncDef849]
-// expression VarName op==[op==_FuncDef849]
-// type ((Float Float) -> : Bool)
-op==(// expression FunCall count[count_FuncDef463](xs[xs_FuncParamDef183])
+// expression VarName op==
+// type Any
+op==(// expression FunCall count(xs)
 // type Any
 // reference count_187:varName:var[count_FuncDef463]
-// expression VarName count[count_FuncDef463]
-// type ((Any Any) -> Any)
+// expression VarName count
+// type Any
 count(// reference xs_189:varName:var[xs_FuncParamDef183]
-// expression VarName xs[xs_FuncParamDef183]
+// expression VarName xs
 // type Any
 xs), // expression NumLiteral 0
 // type Num
@@ -292,16 +292,16 @@ function at(// definition xs_FuncParamDef203
 xs, // definition i_FuncParamDef206
 // type Any
 i)
-// expression FunCall op[][op[]_FuncDef964](xs[xs_FuncParamDef203],i[i_FuncParamDef206])
+// expression FunCall op[](xs,i)
 // type Any
 // reference op[]_209:varName:var[op[]_FuncDef964]
-// expression VarName op[][op[]_FuncDef964]
-// type ((Array Int) -> : Any)
+// expression VarName op[]
+// type Any
 op[](// reference xs_211:varName:var[xs_FuncParamDef203]
-// expression VarName xs[xs_FuncParamDef203]
+// expression VarName xs
 // type Any
 xs, // reference i_213:varName:var[i_FuncParamDef206]
-// expression VarName i[i_FuncParamDef206]
+// expression VarName i
 // type Any
 i)// scope funcDef_242
 // definition selectByIndex_FuncDef242
@@ -321,21 +321,21 @@ function selectByIndex(// definition xs_FuncParamDef224
 xs, // definition indices_FuncParamDef227
 // type Any
 indices)
-// expression FunCall map[map_FuncDef57](indices[indices_FuncParamDef227],at[at_FuncDef218](xs[xs_FuncParamDef224]))
+// expression FunCall map(indices,at(xs))
 // type Any
 // reference map_230:varName:var[map_FuncDef57]
-// expression VarName map[map_FuncDef57]
-// type ((Any Any) -> Any)
-map(// reference indices_232:varName:var[indices_FuncParamDef227]
-// expression VarName indices[indices_FuncParamDef227]
+// expression VarName map
 // type Any
-indices, // expression FunCall at[at_FuncDef218](xs[xs_FuncParamDef224])
+map(// reference indices_232:varName:var[indices_FuncParamDef227]
+// expression VarName indices
+// type Any
+indices, // expression FunCall at(xs)
 // type Any
 // reference at_233:varName:var[at_FuncDef218]
-// expression VarName at[at_FuncDef218]
-// type ((Any Any) -> Any)
+// expression VarName at
+// type Any
 at(// reference xs_235:varName:var[xs_FuncParamDef224]
-// expression VarName xs[xs_FuncParamDef224]
+// expression VarName xs
 // type Any
 xs))// scope funcDef_262
 // definition indices_FuncDef262
@@ -353,20 +353,20 @@ function indices(xs)
 function indices(// definition xs_FuncParamDef248
 // type Any
 xs)
-// expression FunCall op..[op.._FuncDef941](0,count[count_FuncDef463](xs[xs_FuncParamDef248]))
+// expression FunCall op..(0,count(xs))
 // type Any
 // reference op.._251:varName:var[op.._FuncDef941]
-// expression VarName op..[op.._FuncDef941]
-// type ((Int Int) -> : Array)
+// expression VarName op..
+// type Any
 op..(// expression NumLiteral 0
 // type Num
-0, // expression FunCall count[count_FuncDef463](xs[xs_FuncParamDef248])
+0, // expression FunCall count(xs)
 // type Any
 // reference count_253:varName:var[count_FuncDef463]
-// expression VarName count[count_FuncDef463]
-// type ((Any Any) -> Any)
+// expression VarName count
+// type Any
 count(// reference xs_255:varName:var[xs_FuncParamDef248]
-// expression VarName xs[xs_FuncParamDef248]
+// expression VarName xs
 // type Any
 xs))// scope funcDef_344
 // definition zip_FuncDef344
@@ -390,36 +390,36 @@ xs, // definition ys_FuncParamDef271
 ys, // definition f_FuncParamDef274
 // type Any
 f)
-// expression ConditionalExpr op<=[op<=_FuncDef803](count[count_FuncDef463](xs[xs_FuncParamDef268]),count[count_FuncDef463](ys[ys_FuncParamDef271])) ? map[map_FuncDef57](xs[xs_FuncParamDef268],lambda312(x_FuncParamDef294,i_FuncParamDef296)undefined) : map[map_FuncDef57](ys[ys_FuncParamDef271],lambda337(y_FuncParamDef319,i_FuncParamDef321)undefined)
+// expression ConditionalExpr op<=(count(xs),count(ys)) ? map(xs,lambda312(x_FuncParamDef294,i_FuncParamDef296)undefined) : map(ys,lambda337(y_FuncParamDef319,i_FuncParamDef321)undefined)
 // type Any
-// expression FunCall op<=[op<=_FuncDef803](count[count_FuncDef463](xs[xs_FuncParamDef268]),count[count_FuncDef463](ys[ys_FuncParamDef271]))
+// expression FunCall op<=(count(xs),count(ys))
 // type Any
 // reference op<=_277:varName:var[op<=_FuncDef803]
-// expression VarName op<=[op<=_FuncDef803]
-// type ((Float Float) -> : Bool)
-op<=(// expression FunCall count[count_FuncDef463](xs[xs_FuncParamDef268])
+// expression VarName op<=
+// type Any
+op<=(// expression FunCall count(xs)
 // type Any
 // reference count_278:varName:var[count_FuncDef463]
-// expression VarName count[count_FuncDef463]
-// type ((Any Any) -> Any)
-count(// reference xs_280:varName:var[xs_FuncParamDef268]
-// expression VarName xs[xs_FuncParamDef268]
+// expression VarName count
 // type Any
-xs), // expression FunCall count[count_FuncDef463](ys[ys_FuncParamDef271])
+count(// reference xs_280:varName:var[xs_FuncParamDef268]
+// expression VarName xs
+// type Any
+xs), // expression FunCall count(ys)
 // type Any
 // reference count_283:varName:var[count_FuncDef463]
-// expression VarName count[count_FuncDef463]
-// type ((Any Any) -> Any)
-count(// reference ys_285:varName:var[ys_FuncParamDef271]
-// expression VarName ys[ys_FuncParamDef271]
+// expression VarName count
 // type Any
-ys)) ? // expression FunCall map[map_FuncDef57](xs[xs_FuncParamDef268],lambda312(x_FuncParamDef294,i_FuncParamDef296)undefined)
+count(// reference ys_285:varName:var[ys_FuncParamDef271]
+// expression VarName ys
+// type Any
+ys)) ? // expression FunCall map(xs,lambda312(x_FuncParamDef294,i_FuncParamDef296)undefined)
 // type Any
 // reference map_290:varName:var[map_FuncDef57]
-// expression VarName map[map_FuncDef57]
-// type ((Any Any) -> Any)
+// expression VarName map
+// type Any
 map(// reference xs_292:varName:var[xs_FuncParamDef268]
-// expression VarName xs[xs_FuncParamDef268]
+// expression VarName xs
 // type Any
 xs, // scope lambdaExpr_312
 // expression Lambda lambda312(x_FuncParamDef294,i_FuncParamDef296)undefined
@@ -429,32 +429,32 @@ xs, // scope lambdaExpr_312
 x, // definition i_FuncParamDef296
 // type Any
 i)// scope lambdaBody_311
- => // expression FunCall f[f_FuncParamDef274](x[x_FuncParamDef294],op[][op[]_FuncDef964](ys[ys_FuncParamDef271],i[i_FuncParamDef296]))
+ => // expression FunCall f(x,op[](ys,i))
 // type Any
 // reference f_299:varName:var[f_FuncParamDef274]
-// expression VarName f[f_FuncParamDef274]
+// expression VarName f
 // type Any
 f(// reference x_301:varName:var[x_FuncParamDef294]
-// expression VarName x[x_FuncParamDef294]
+// expression VarName x
 // type Any
-x, // expression FunCall op[][op[]_FuncDef964](ys[ys_FuncParamDef271],i[i_FuncParamDef296])
+x, // expression FunCall op[](ys,i)
 // type Any
 // reference op[]_302:varName:var[op[]_FuncDef964]
-// expression VarName op[][op[]_FuncDef964]
-// type ((Array Int) -> : Any)
+// expression VarName op[]
+// type Any
 op[](// reference ys_304:varName:var[ys_FuncParamDef271]
-// expression VarName ys[ys_FuncParamDef271]
+// expression VarName ys
 // type Any
 ys, // reference i_306:varName:var[i_FuncParamDef296]
-// expression VarName i[i_FuncParamDef296]
+// expression VarName i
 // type Any
-i)))// expression FunCall map[map_FuncDef57](ys[ys_FuncParamDef271],lambda337(y_FuncParamDef319,i_FuncParamDef321)undefined)
+i)))// expression FunCall map(ys,lambda337(y_FuncParamDef319,i_FuncParamDef321)undefined)
 // type Any
 // reference map_315:varName:var[map_FuncDef57]
-// expression VarName map[map_FuncDef57]
-// type ((Any Any) -> Any)
+// expression VarName map
+// type Any
 map(// reference ys_317:varName:var[ys_FuncParamDef271]
-// expression VarName ys[ys_FuncParamDef271]
+// expression VarName ys
 // type Any
 ys, // scope lambdaExpr_337
 // expression Lambda lambda337(y_FuncParamDef319,i_FuncParamDef321)undefined
@@ -464,24 +464,24 @@ ys, // scope lambdaExpr_337
 y, // definition i_FuncParamDef321
 // type Any
 i)// scope lambdaBody_336
- => // expression FunCall f[f_FuncParamDef274](op[][op[]_FuncDef964](xs[xs_FuncParamDef268],i[i_FuncParamDef321]),y[y_FuncParamDef319])
+ => // expression FunCall f(op[](xs,i),y)
 // type Any
 // reference f_324:varName:var[f_FuncParamDef274]
-// expression VarName f[f_FuncParamDef274]
+// expression VarName f
 // type Any
-f(// expression FunCall op[][op[]_FuncDef964](xs[xs_FuncParamDef268],i[i_FuncParamDef321])
+f(// expression FunCall op[](xs,i)
 // type Any
 // reference op[]_325:varName:var[op[]_FuncDef964]
-// expression VarName op[][op[]_FuncDef964]
-// type ((Array Int) -> : Any)
+// expression VarName op[]
+// type Any
 op[](// reference xs_327:varName:var[xs_FuncParamDef268]
-// expression VarName xs[xs_FuncParamDef268]
+// expression VarName xs
 // type Any
 xs, // reference i_329:varName:var[i_FuncParamDef321]
-// expression VarName i[i_FuncParamDef321]
+// expression VarName i
 // type Any
 i), // reference y_333:varName:var[y_FuncParamDef319]
-// expression VarName y[y_FuncParamDef319]
+// expression VarName y
 // type Any
 y))// scope funcDef_382
 // definition all_FuncDef382
@@ -501,13 +501,13 @@ function all(// definition xs_FuncParamDef350
 xs, // definition p_FuncParamDef353
 // type Any
 p)
-// expression FunCall reduce[reduce_FuncDef1857](xs[xs_FuncParamDef350],true,lambda377(prev_FuncParamDef361,x_FuncParamDef363)undefined)
+// expression FunCall reduce(xs,true,lambda377(prev_FuncParamDef361,x_FuncParamDef363)undefined)
 // type Any
-// reference reduce_356:varName:var[reduce_FuncDef1857]
-// expression VarName reduce[reduce_FuncDef1857]
-// type ((Any Any Any) -> Any)
+// reference reduce_356:varName:var[reduce_FuncDef1856]
+// expression VarName reduce
+// type Any
 reduce(// reference xs_358:varName:var[xs_FuncParamDef350]
-// expression VarName xs[xs_FuncParamDef350]
+// expression VarName xs
 // type Any
 xs, // expression BoolLiteral true
 // type Bool
@@ -519,21 +519,21 @@ true, // scope lambdaExpr_377
 prev, // definition x_FuncParamDef363
 // type Any
 x)// scope lambdaBody_376
- => // expression FunCall op&&[op&&_FuncDef872](prev[prev_FuncParamDef361],p[p_FuncParamDef353](x[x_FuncParamDef363]))
+ => // expression FunCall op&&(prev,p(x))
 // type Any
 // reference op&&_365:varName:var[op&&_FuncDef872]
-// expression VarName op&&[op&&_FuncDef872]
-// type ((Bool Bool) -> : Bool)
-op&&(// reference prev_367:varName:var[prev_FuncParamDef361]
-// expression VarName prev[prev_FuncParamDef361]
+// expression VarName op&&
 // type Any
-prev, // expression FunCall p[p_FuncParamDef353](x[x_FuncParamDef363])
+op&&(// reference prev_367:varName:var[prev_FuncParamDef361]
+// expression VarName prev
+// type Any
+prev, // expression FunCall p(x)
 // type Any
 // reference p_369:varName:var[p_FuncParamDef353]
-// expression VarName p[p_FuncParamDef353]
+// expression VarName p
 // type Any
 p(// reference x_371:varName:var[x_FuncParamDef363]
-// expression VarName x[x_FuncParamDef363]
+// expression VarName x
 // type Any
 x)))// scope funcDef_420
 // definition any_FuncDef420
@@ -553,13 +553,13 @@ function any(// definition xs_FuncParamDef388
 xs, // definition p_FuncParamDef391
 // type Any
 p)
-// expression FunCall reduce[reduce_FuncDef1857](xs[xs_FuncParamDef388],false,lambda415(prev_FuncParamDef399,x_FuncParamDef401)undefined)
+// expression FunCall reduce(xs,false,lambda415(prev_FuncParamDef399,x_FuncParamDef401)undefined)
 // type Any
-// reference reduce_394:varName:var[reduce_FuncDef1857]
-// expression VarName reduce[reduce_FuncDef1857]
-// type ((Any Any Any) -> Any)
+// reference reduce_394:varName:var[reduce_FuncDef1856]
+// expression VarName reduce
+// type Any
 reduce(// reference xs_396:varName:var[xs_FuncParamDef388]
-// expression VarName xs[xs_FuncParamDef388]
+// expression VarName xs
 // type Any
 xs, // expression BoolLiteral false
 // type Bool
@@ -571,21 +571,21 @@ false, // scope lambdaExpr_415
 prev, // definition x_FuncParamDef401
 // type Any
 x)// scope lambdaBody_414
- => // expression FunCall op||[op||_FuncDef895](prev[prev_FuncParamDef399],p[p_FuncParamDef391](x[x_FuncParamDef401]))
+ => // expression FunCall op||(prev,p(x))
 // type Any
 // reference op||_403:varName:var[op||_FuncDef895]
-// expression VarName op||[op||_FuncDef895]
-// type ((Bool Bool) -> : Bool)
-op||(// reference prev_405:varName:var[prev_FuncParamDef399]
-// expression VarName prev[prev_FuncParamDef399]
+// expression VarName op||
 // type Any
-prev, // expression FunCall p[p_FuncParamDef391](x[x_FuncParamDef401])
+op||(// reference prev_405:varName:var[prev_FuncParamDef399]
+// expression VarName prev
+// type Any
+prev, // expression FunCall p(x)
 // type Any
 // reference p_407:varName:var[p_FuncParamDef391]
-// expression VarName p[p_FuncParamDef391]
+// expression VarName p
 // type Any
 p(// reference x_409:varName:var[x_FuncParamDef401]
-// expression VarName x[x_FuncParamDef401]
+// expression VarName x
 // type Any
 x)))// scope funcDef_463
 // definition count_FuncDef463
@@ -605,13 +605,13 @@ function count(// definition xs_FuncParamDef426
 xs, // definition p_FuncParamDef429
 // type Any
 p)
-// expression FunCall reduce[reduce_FuncDef1857](xs[xs_FuncParamDef426],0,lambda458(prev_FuncParamDef437,x_FuncParamDef439)undefined)
+// expression FunCall reduce(xs,0,lambda458(prev_FuncParamDef437,x_FuncParamDef439)undefined)
 // type Any
-// reference reduce_432:varName:var[reduce_FuncDef1857]
-// expression VarName reduce[reduce_FuncDef1857]
-// type ((Any Any Any) -> Any)
+// reference reduce_432:varName:var[reduce_FuncDef1856]
+// expression VarName reduce
+// type Any
 reduce(// reference xs_434:varName:var[xs_FuncParamDef426]
-// expression VarName xs[xs_FuncParamDef426]
+// expression VarName xs
 // type Any
 xs, // expression NumLiteral 0
 // type Num
@@ -623,28 +623,28 @@ xs, // expression NumLiteral 0
 prev, // definition x_FuncParamDef439
 // type Any
 x)// scope lambdaBody_457
- => // expression ConditionalExpr p[p_FuncParamDef429](x[x_FuncParamDef439]) ? op+[op+_FuncDef619](prev[prev_FuncParamDef437],1) : prev[prev_FuncParamDef437]
+ => // expression ConditionalExpr p(x) ? op+(prev,1) : prev
 // type Any
-// expression FunCall p[p_FuncParamDef429](x[x_FuncParamDef439])
+// expression FunCall p(x)
 // type Any
 // reference p_442:varName:var[p_FuncParamDef429]
-// expression VarName p[p_FuncParamDef429]
+// expression VarName p
 // type Any
 p(// reference x_444:varName:var[x_FuncParamDef439]
-// expression VarName x[x_FuncParamDef439]
+// expression VarName x
 // type Any
-x) ? // expression FunCall op+[op+_FuncDef619](prev[prev_FuncParamDef437],1)
+x) ? // expression FunCall op+(prev,1)
 // type Any
 // reference op+_447:varName:var[op+_FuncDef619]
-// expression VarName op+[op+_FuncDef619]
-// type ((Float Float) -> : Float)
+// expression VarName op+
+// type Any
 op+(// reference prev_449:varName:var[prev_FuncParamDef437]
-// expression VarName prev[prev_FuncParamDef437]
+// expression VarName prev
 // type Any
 prev, // expression NumLiteral 1
 // type Num
 1)// reference prev_454:varName:var[prev_FuncParamDef437]
-// expression VarName prev[prev_FuncParamDef437]
+// expression VarName prev
 // type Any
 prev)// scope funcDef_490
 // definition eq_FuncDef490
@@ -664,26 +664,26 @@ function eq(// definition xs_FuncParamDef469
 xs, // definition ys_FuncParamDef472
 // type Any
 ys)
-// expression FunCall op==[op==_FuncDef849](count[count_FuncDef463](xs[xs_FuncParamDef469]),count[count_FuncDef463](ys[ys_FuncParamDef472]))
+// expression FunCall op==(count(xs),count(ys))
 // type Any
 // reference op==_475:varName:var[op==_FuncDef849]
-// expression VarName op==[op==_FuncDef849]
-// type ((Float Float) -> : Bool)
-op==(// expression FunCall count[count_FuncDef463](xs[xs_FuncParamDef469])
+// expression VarName op==
+// type Any
+op==(// expression FunCall count(xs)
 // type Any
 // reference count_476:varName:var[count_FuncDef463]
-// expression VarName count[count_FuncDef463]
-// type ((Any Any) -> Any)
-count(// reference xs_478:varName:var[xs_FuncParamDef469]
-// expression VarName xs[xs_FuncParamDef469]
+// expression VarName count
 // type Any
-xs), // expression FunCall count[count_FuncDef463](ys[ys_FuncParamDef472])
+count(// reference xs_478:varName:var[xs_FuncParamDef469]
+// expression VarName xs
+// type Any
+xs), // expression FunCall count(ys)
 // type Any
 // reference count_481:varName:var[count_FuncDef463]
-// expression VarName count[count_FuncDef463]
-// type ((Any Any) -> Any)
+// expression VarName count
+// type Any
 count(// reference ys_483:varName:var[ys_FuncParamDef472]
-// expression VarName ys[ys_FuncParamDef472]
+// expression VarName ys
 // type Any
 ys))// scope funcDef_562
 // definition filter_FuncDef562
@@ -713,69 +713,75 @@ p)
 {
 // scope compoundStatement_558
 {
-var // definition ys_VarDef510
+var // definition ys_VarDef509
 // type Any
-ys = // expression FunCall mutable[mutable_FuncDef1072](xs[xs_FuncParamDef496])
+ys// expression FunCall mutable(xs)
 // type Any
 // reference mutable_504:varName:var[mutable_FuncDef1072]
-// expression VarName mutable[mutable_FuncDef1072]
-// type ((Array) -> : ArrayBuilder)
+// expression VarName mutable
+// type Any
 mutable(// reference xs_506:varName:var[xs_FuncParamDef496]
-// expression VarName xs[xs_FuncParamDef496]
+// expression VarName xs
 // type Any
 xs);
-var // definition i_VarDef517
+var // definition i_VarDef515
 // type Num
-i = // expression NumLiteral 0
+i// expression NumLiteral 0
 // type Num
 0;
+// scope forLoop_546
 // definition x_ForLoopVarDef546
 // type Any
-for (x in // reference xs_522:varName:var[xs_FuncParamDef496]
-// expression VarName xs[xs_FuncParamDef496]
+for (x in // reference xs_520:varName:var[xs_FuncParamDef496]
+// expression VarName xs
 // type Any
 xs)
-if (// expression FunCall p[p_FuncParamDef499](x[x_ForLoopVarDef546])
+if (// expression FunCall p(x)
 // type Any
-// reference p_524:varName:var[p_FuncParamDef499]
-// expression VarName p[p_FuncParamDef499]
+// reference p_522:varName:var[p_FuncParamDef499]
+// expression VarName p
 // type Any
-p(// reference x_526:varName:var[x_ForLoopVarDef546]
-// expression VarName x[x_ForLoopVarDef546]
+p(// reference x_524:varName:var[x_ForLoopVarDef546]
+// expression VarName x
 // type Any
-x))// expression FunCall op[][op[]_FuncDef964](ys[ys_VarDef510],++i[i_VarDef517])
+x))// expression VarAssignmentExpr ys = set(ys,++i,x)
+// type Void
+// reference ys_533:varName:var[ys_VarDef509]
+// expression VarName ys
 // type Any
-// reference op[]_530:varName:var[op[]_FuncDef964]
-// expression VarName op[][op[]_FuncDef964]
-// type ((Array Int) -> : Any)
-op[](// reference ys_532:varName:var[ys_VarDef510]
-// expression VarName ys[ys_VarDef510]
+ys = // expression FunCall set(ys,++i,x)
 // type Any
-ys, // expression PostfixInc ++i[i_VarDef517]
+// reference set_531:varName:var[set_FuncDef1122]
+// expression VarName set
+// type Any
+set(// reference ys_533:varName:var[ys_VarDef509]
+// expression VarName ys
+// type Any
+ys, // expression PostfixInc ++i
 // type Num
-// reference i_534:varName:var[i_VarDef517]
-// expression VarName i[i_VarDef517]
-// type Num
-i++) = // reference x_541:varName:var[x_ForLoopVarDef546]
-// expression VarName x[x_ForLoopVarDef546]
+// reference i_535:varName:var[i_VarDef515]
+// expression VarName i
 // type Any
-x;
-return // expression FunCall take[take_FuncDef909](array[array_FuncDef1018,array_FuncDef1138,array_FuncDef1201,array_FuncDef1231,array_FuncDef1266](ys[ys_VarDef510]),i[i_VarDef517])
+i++, // reference x_539:varName:var[x_ForLoopVarDef546]
+// expression VarName x
 // type Any
-// reference take_547:varName:var[take_FuncDef909]
-// expression VarName take[take_FuncDef909]
-// type ((Any Any) -> Any)
-take(// expression FunCall array[array_FuncDef1018,array_FuncDef1138,array_FuncDef1201,array_FuncDef1231,array_FuncDef1266](ys[ys_VarDef510])
+x);
+return // expression FunCall take(array(ys),i)
+// type Any
+// reference take_547:varName:var[take_FuncDef910]
+// expression VarName take
+// type Any
+take(// expression FunCall array(ys)
 // type Any
 // reference array_548:varName:var[array_FuncDef1018, array_FuncDef1138, array_FuncDef1201, array_FuncDef1231, array_FuncDef1266]
-// expression VarName array[array_FuncDef1018,array_FuncDef1138,array_FuncDef1201,array_FuncDef1231,array_FuncDef1266]
-// type (union ((Int Function) -> : Array) ((ArrayBuilder) -> : Array) ((Float2) -> Any) ((Float3) -> Any) ((Float4) -> Any))
-array(// reference ys_550:varName:var[ys_VarDef510]
-// expression VarName ys[ys_VarDef510]
+// expression VarName array
 // type Any
-ys), // reference i_554:varName:var[i_VarDef517]
-// expression VarName i[i_VarDef517]
-// type Num
+array(// reference ys_550:varName:var[ys_VarDef509]
+// expression VarName ys
+// type Any
+ys), // reference i_554:varName:var[i_VarDef515]
+// expression VarName i
+// type Any
 i);
 }
 }
@@ -797,22 +803,22 @@ function repeat(// definition x_FuncParamDef568
 x, // definition n_FuncParamDef571
 // type Any
 n)
-// expression FunCall map[map_FuncDef57](op..[op.._FuncDef941](0,n[n_FuncParamDef571]),lambda588(i_FuncParamDef583)undefined)
+// expression FunCall map(op..(0,n),lambda588(i_FuncParamDef583)undefined)
 // type Any
 // reference map_574:varName:var[map_FuncDef57]
-// expression VarName map[map_FuncDef57]
-// type ((Any Any) -> Any)
-map(// expression FunCall op..[op.._FuncDef941](0,n[n_FuncParamDef571])
+// expression VarName map
 // type Any
-(// expression FunCall op..[op.._FuncDef941](0,n[n_FuncParamDef571])
+map(// expression FunCall op..(0,n)
+// type Any
+(// expression FunCall op..(0,n)
 // type Any
 // reference op.._575:varName:var[op.._FuncDef941]
-// expression VarName op..[op.._FuncDef941]
-// type ((Int Int) -> : Array)
+// expression VarName op..
+// type Any
 op..(// expression NumLiteral 0
 // type Num
 0, // reference n_578:varName:var[n_FuncParamDef571]
-// expression VarName n[n_FuncParamDef571]
+// expression VarName n
 // type Any
 n)), // scope lambdaExpr_588
 // expression Lambda lambda588(i_FuncParamDef583)undefined
@@ -821,10 +827,10 @@ n)), // scope lambdaExpr_588
 // type Any
 i)// scope lambdaBody_587
  => // reference x_586:varName:var[x_FuncParamDef568]
-// expression VarName x[x_FuncParamDef568]
+// expression VarName x
 // type Any
-x)// scope funcDef_692
-// definition prefixScan_FuncDef692
+x)// scope funcDef_693
+// definition prefixScan_FuncDef693
 // type ((Any Any) -> Any)
 
 /**
@@ -838,138 +844,144 @@ function prefixScan(xs, op) {
 
     
 */
-// scope funcDef_692
-// definition prefixScan_FuncDef692
+// scope funcDef_693
+// definition prefixScan_FuncDef693
 // type ((Any Any) -> Any)
 function prefixScan(// definition xs_FuncParamDef599
 // type Any
 xs, // definition op_FuncParamDef602
 // type Any
 op)
-// scope recCompoundStatement_689
+// scope recCompoundStatement_690
 {
-// scope compoundStatement_688
+// scope compoundStatement_689
 {
-if (// expression FunCall empty[empty_FuncDef197](xs[xs_FuncParamDef599])
+if (// expression FunCall empty(xs)
 // type Any
 // reference empty_605:varName:var[empty_FuncDef197]
-// expression VarName empty[empty_FuncDef197]
-// type ((Any) -> Any)
+// expression VarName empty
+// type Any
 empty(// reference xs_607:varName:var[xs_FuncParamDef599]
-// expression VarName xs[xs_FuncParamDef599]
+// expression VarName xs
 // type Any
 xs))return // reference xs_612:varName:var[xs_FuncParamDef599]
-// expression VarName xs[xs_FuncParamDef599]
+// expression VarName xs
 // type Any
 xs;
-var // definition ys_VarDef635
+var // definition ys_VarDef634
 // type Any
-ys = // expression FunCall mutable[mutable_FuncDef1072](repeat[repeat_FuncDef593](op[][op[]_FuncDef964](xs[xs_FuncParamDef599],0),count[count_FuncDef463](xs[xs_FuncParamDef599])))
+ys// expression FunCall mutable(repeat(op[](xs,0),count(xs)))
 // type Any
 // reference mutable_617:varName:var[mutable_FuncDef1072]
-// expression VarName mutable[mutable_FuncDef1072]
-// type ((Array) -> : ArrayBuilder)
-mutable(// expression FunCall repeat[repeat_FuncDef593](op[][op[]_FuncDef964](xs[xs_FuncParamDef599],0),count[count_FuncDef463](xs[xs_FuncParamDef599]))
+// expression VarName mutable
+// type Any
+mutable(// expression FunCall repeat(op[](xs,0),count(xs))
 // type Any
 // reference repeat_618:varName:var[repeat_FuncDef593]
-// expression VarName repeat[repeat_FuncDef593]
-// type ((Any Any) -> Any)
-repeat(// expression FunCall op[][op[]_FuncDef964](xs[xs_FuncParamDef599],0)
+// expression VarName repeat
+// type Any
+repeat(// expression FunCall op[](xs,0)
 // type Any
 // reference op[]_619:varName:var[op[]_FuncDef964]
-// expression VarName op[][op[]_FuncDef964]
-// type ((Array Int) -> : Any)
+// expression VarName op[]
+// type Any
 op[](// reference xs_621:varName:var[xs_FuncParamDef599]
-// expression VarName xs[xs_FuncParamDef599]
+// expression VarName xs
 // type Any
 xs, // expression NumLiteral 0
 // type Num
-0), // expression FunCall count[count_FuncDef463](xs[xs_FuncParamDef599])
+0), // expression FunCall count(xs)
 // type Any
 // reference count_625:varName:var[count_FuncDef463]
-// expression VarName count[count_FuncDef463]
-// type ((Any Any) -> Any)
+// expression VarName count
+// type Any
 count(// reference xs_627:varName:var[xs_FuncParamDef599]
-// expression VarName xs[xs_FuncParamDef599]
+// expression VarName xs
 // type Any
 xs)));
-// definition i_ForLoopVarDef681
+// scope forLoop_682
+// definition i_ForLoopVarDef682
 // type Any
-for (i in // expression FunCall op..[op.._FuncDef941](1,count[count_FuncDef463](ys[ys_VarDef635]))
+for (i in // expression FunCall op..(1,count(ys))
 // type Any
-// reference op.._639:varName:var[op.._FuncDef941]
-// expression VarName op..[op.._FuncDef941]
-// type ((Int Int) -> : Array)
+// reference op.._638:varName:var[op.._FuncDef941]
+// expression VarName op..
+// type Any
 op..(// expression NumLiteral 1
 // type Num
-1, // expression FunCall count[count_FuncDef463](ys[ys_VarDef635])
+1, // expression FunCall count(ys)
 // type Any
-// reference count_641:varName:var[count_FuncDef463]
-// expression VarName count[count_FuncDef463]
-// type ((Any Any) -> Any)
-count(// reference ys_643:varName:var[ys_VarDef635]
-// expression VarName ys[ys_VarDef635]
+// reference count_640:varName:var[count_FuncDef463]
+// expression VarName count
+// type Any
+count(// reference ys_642:varName:var[ys_VarDef634]
+// expression VarName ys
 // type Any
 ys)))
-// expression FunCall op[][op[]_FuncDef964](ys[ys_VarDef635],i[i_ForLoopVarDef681])
+// expression VarAssignmentExpr ys = set(ys,i,op(op[](xs,i),op[](ys,op-(i,1))))
+// type Void
+// reference ys_652:varName:var[ys_VarDef634]
+// expression VarName ys
 // type Any
-// reference op[]_648:varName:var[op[]_FuncDef964]
-// expression VarName op[][op[]_FuncDef964]
-// type ((Array Int) -> : Any)
-op[](// reference ys_650:varName:var[ys_VarDef635]
-// expression VarName ys[ys_VarDef635]
+ys = // expression FunCall set(ys,i,op(op[](xs,i),op[](ys,op-(i,1))))
 // type Any
-ys, // reference i_652:varName:var[i_ForLoopVarDef681]
-// expression VarName i[i_ForLoopVarDef681]
+// reference set_650:varName:var[set_FuncDef1122]
+// expression VarName set
 // type Any
-i) = // expression FunCall op[op_FuncParamDef602](op[][op[]_FuncDef964](xs[xs_FuncParamDef599],i[i_ForLoopVarDef681]),op[][op[]_FuncDef964](ys[ys_VarDef635],op-[op-_FuncDef642](i[i_ForLoopVarDef681],1)))
+set(// reference ys_652:varName:var[ys_VarDef634]
+// expression VarName ys
 // type Any
-// reference op_657:varName:var[op_FuncParamDef602]
-// expression VarName op[op_FuncParamDef602]
+ys, // reference i_654:varName:var[i_ForLoopVarDef682]
+// expression VarName i
 // type Any
-op(// expression FunCall op[][op[]_FuncDef964](xs[xs_FuncParamDef599],i[i_ForLoopVarDef681])
+i, // expression FunCall op(op[](xs,i),op[](ys,op-(i,1)))
 // type Any
-// reference op[]_658:varName:var[op[]_FuncDef964]
-// expression VarName op[][op[]_FuncDef964]
-// type ((Array Int) -> : Any)
-op[](// reference xs_660:varName:var[xs_FuncParamDef599]
-// expression VarName xs[xs_FuncParamDef599]
+// reference op_656:varName:var[op_FuncParamDef602]
+// expression VarName op
 // type Any
-xs, // reference i_662:varName:var[i_ForLoopVarDef681]
-// expression VarName i[i_ForLoopVarDef681]
+op(// expression FunCall op[](xs,i)
 // type Any
-i), // expression FunCall op[][op[]_FuncDef964](ys[ys_VarDef635],op-[op-_FuncDef642](i[i_ForLoopVarDef681],1))
+// reference op[]_657:varName:var[op[]_FuncDef964]
+// expression VarName op[]
 // type Any
-// reference op[]_665:varName:var[op[]_FuncDef964]
-// expression VarName op[][op[]_FuncDef964]
-// type ((Array Int) -> : Any)
-op[](// reference ys_667:varName:var[ys_VarDef635]
-// expression VarName ys[ys_VarDef635]
+op[](// reference xs_659:varName:var[xs_FuncParamDef599]
+// expression VarName xs
 // type Any
-ys, // expression FunCall op-[op-_FuncDef642](i[i_ForLoopVarDef681],1)
+xs, // reference i_661:varName:var[i_ForLoopVarDef682]
+// expression VarName i
 // type Any
-// reference op-_668:varName:var[op-_FuncDef642]
-// expression VarName op-[op-_FuncDef642]
-// type ((Float Float) -> : Float)
-op-(// reference i_670:varName:var[i_ForLoopVarDef681]
-// expression VarName i[i_ForLoopVarDef681]
+i), // expression FunCall op[](ys,op-(i,1))
+// type Any
+// reference op[]_664:varName:var[op[]_FuncDef964]
+// expression VarName op[]
+// type Any
+op[](// reference ys_666:varName:var[ys_VarDef634]
+// expression VarName ys
+// type Any
+ys, // expression FunCall op-(i,1)
+// type Any
+// reference op-_667:varName:var[op-_FuncDef642]
+// expression VarName op-
+// type Any
+op-(// reference i_669:varName:var[i_ForLoopVarDef682]
+// expression VarName i
 // type Any
 i, // expression NumLiteral 1
 // type Num
-1)));
-return // expression FunCall array[array_FuncDef1018,array_FuncDef1138,array_FuncDef1201,array_FuncDef1231,array_FuncDef1266](ys[ys_VarDef635])
+1))));
+return // expression FunCall array(ys)
 // type Any
-// reference array_682:varName:var[array_FuncDef1018, array_FuncDef1138, array_FuncDef1201, array_FuncDef1231, array_FuncDef1266]
-// expression VarName array[array_FuncDef1018,array_FuncDef1138,array_FuncDef1201,array_FuncDef1231,array_FuncDef1266]
-// type (union ((Int Function) -> : Array) ((ArrayBuilder) -> : Array) ((Float2) -> Any) ((Float3) -> Any) ((Float4) -> Any))
-array(// reference ys_684:varName:var[ys_VarDef635]
-// expression VarName ys[ys_VarDef635]
+// reference array_683:varName:var[array_FuncDef1018, array_FuncDef1138, array_FuncDef1201, array_FuncDef1231, array_FuncDef1266]
+// expression VarName array
+// type Any
+array(// reference ys_685:varName:var[ys_VarDef634]
+// expression VarName ys
 // type Any
 ys);
 }
 }
-// scope funcDef_752
-// definition adjacentDifferences_FuncDef752
+// scope funcDef_753
+// definition adjacentDifferences_FuncDef753
 // type ((Any) -> Any)
 
 /**
@@ -978,90 +990,90 @@ function adjacentDifferences(xs)
     
     
 */
-// scope funcDef_752
-// definition adjacentDifferences_FuncDef752
+// scope funcDef_753
+// definition adjacentDifferences_FuncDef753
 // type ((Any) -> Any)
-function adjacentDifferences(// definition xs_FuncParamDef698
+function adjacentDifferences(// definition xs_FuncParamDef699
 // type Any
 xs)
-// expression FunCall map[map_FuncDef57](indices[indices_FuncDef262](xs[xs_FuncParamDef698]),lambda747(i_FuncParamDef708)undefined)
+// expression FunCall map(indices(xs),lambda748(i_FuncParamDef709)undefined)
 // type Any
-// reference map_701:varName:var[map_FuncDef57]
-// expression VarName map[map_FuncDef57]
-// type ((Any Any) -> Any)
-map(// expression FunCall indices[indices_FuncDef262](xs[xs_FuncParamDef698])
+// reference map_702:varName:var[map_FuncDef57]
+// expression VarName map
 // type Any
-// reference indices_702:varName:var[indices_FuncDef262]
-// expression VarName indices[indices_FuncDef262]
-// type ((Any) -> Any)
-indices(// reference xs_704:varName:var[xs_FuncParamDef698]
-// expression VarName xs[xs_FuncParamDef698]
+map(// expression FunCall indices(xs)
 // type Any
-xs), // scope lambdaExpr_747
-// expression Lambda lambda747(i_FuncParamDef708)undefined
+// reference indices_703:varName:var[indices_FuncDef262]
+// expression VarName indices
+// type Any
+indices(// reference xs_705:varName:var[xs_FuncParamDef699]
+// expression VarName xs
+// type Any
+xs), // scope lambdaExpr_748
+// expression Lambda lambda748(i_FuncParamDef709)undefined
 // type Lambda
-(// definition i_FuncParamDef708
+(// definition i_FuncParamDef709
 // type Any
-i)// scope lambdaBody_746
- => // expression ConditionalExpr op>[op>_FuncDef734](i[i_FuncParamDef708],0) ? op-[op-_FuncDef642](op[][op[]_FuncDef964](xs[xs_FuncParamDef698],i[i_FuncParamDef708]),op[][op[]_FuncDef964](xs[xs_FuncParamDef698],op-[op-_FuncDef642](i[i_FuncParamDef708],1))) : op[][op[]_FuncDef964](xs[xs_FuncParamDef698],i[i_FuncParamDef708])
+i)// scope lambdaBody_747
+ => // expression ConditionalExpr op>(i,0) ? op-(op[](xs,i),op[](xs,op-(i,1))) : op[](xs,i)
 // type Any
-// expression FunCall op>[op>_FuncDef734](i[i_FuncParamDef708],0)
+// expression FunCall op>(i,0)
 // type Any
-// reference op>_710:varName:var[op>_FuncDef734]
-// expression VarName op>[op>_FuncDef734]
-// type ((Float Float) -> : Bool)
-op>(// reference i_712:varName:var[i_FuncParamDef708]
-// expression VarName i[i_FuncParamDef708]
+// reference op>_711:varName:var[op>_FuncDef734]
+// expression VarName op>
+// type Any
+op>(// reference i_713:varName:var[i_FuncParamDef709]
+// expression VarName i
 // type Any
 i, // expression NumLiteral 0
 // type Num
-0) ? // expression FunCall op-[op-_FuncDef642](op[][op[]_FuncDef964](xs[xs_FuncParamDef698],i[i_FuncParamDef708]),op[][op[]_FuncDef964](xs[xs_FuncParamDef698],op-[op-_FuncDef642](i[i_FuncParamDef708],1)))
+0) ? // expression FunCall op-(op[](xs,i),op[](xs,op-(i,1)))
 // type Any
-// reference op-_716:varName:var[op-_FuncDef642]
-// expression VarName op-[op-_FuncDef642]
-// type ((Float Float) -> : Float)
-op-(// expression FunCall op[][op[]_FuncDef964](xs[xs_FuncParamDef698],i[i_FuncParamDef708])
+// reference op-_717:varName:var[op-_FuncDef642]
+// expression VarName op-
 // type Any
-// reference op[]_717:varName:var[op[]_FuncDef964]
-// expression VarName op[][op[]_FuncDef964]
-// type ((Array Int) -> : Any)
-op[](// reference xs_719:varName:var[xs_FuncParamDef698]
-// expression VarName xs[xs_FuncParamDef698]
+op-(// expression FunCall op[](xs,i)
 // type Any
-xs, // reference i_721:varName:var[i_FuncParamDef708]
-// expression VarName i[i_FuncParamDef708]
+// reference op[]_718:varName:var[op[]_FuncDef964]
+// expression VarName op[]
 // type Any
-i), // expression FunCall op[][op[]_FuncDef964](xs[xs_FuncParamDef698],op-[op-_FuncDef642](i[i_FuncParamDef708],1))
+op[](// reference xs_720:varName:var[xs_FuncParamDef699]
+// expression VarName xs
 // type Any
-// reference op[]_724:varName:var[op[]_FuncDef964]
-// expression VarName op[][op[]_FuncDef964]
-// type ((Array Int) -> : Any)
-op[](// reference xs_726:varName:var[xs_FuncParamDef698]
-// expression VarName xs[xs_FuncParamDef698]
+xs, // reference i_722:varName:var[i_FuncParamDef709]
+// expression VarName i
 // type Any
-xs, // expression FunCall op-[op-_FuncDef642](i[i_FuncParamDef708],1)
+i), // expression FunCall op[](xs,op-(i,1))
 // type Any
-// reference op-_727:varName:var[op-_FuncDef642]
-// expression VarName op-[op-_FuncDef642]
-// type ((Float Float) -> : Float)
-op-(// reference i_729:varName:var[i_FuncParamDef708]
-// expression VarName i[i_FuncParamDef708]
+// reference op[]_725:varName:var[op[]_FuncDef964]
+// expression VarName op[]
+// type Any
+op[](// reference xs_727:varName:var[xs_FuncParamDef699]
+// expression VarName xs
+// type Any
+xs, // expression FunCall op-(i,1)
+// type Any
+// reference op-_728:varName:var[op-_FuncDef642]
+// expression VarName op-
+// type Any
+op-(// reference i_730:varName:var[i_FuncParamDef709]
+// expression VarName i
 // type Any
 i, // expression NumLiteral 1
 // type Num
-1)))// expression FunCall op[][op[]_FuncDef964](xs[xs_FuncParamDef698],i[i_FuncParamDef708])
+1)))// expression FunCall op[](xs,i)
 // type Any
-// reference op[]_737:varName:var[op[]_FuncDef964]
-// expression VarName op[][op[]_FuncDef964]
-// type ((Array Int) -> : Any)
-op[](// reference xs_739:varName:var[xs_FuncParamDef698]
-// expression VarName xs[xs_FuncParamDef698]
+// reference op[]_738:varName:var[op[]_FuncDef964]
+// expression VarName op[]
 // type Any
-xs, // reference i_741:varName:var[i_FuncParamDef708]
-// expression VarName i[i_FuncParamDef708]
+op[](// reference xs_740:varName:var[xs_FuncParamDef699]
+// expression VarName xs
 // type Any
-i))// scope funcDef_785
-// definition slice_FuncDef785
+xs, // reference i_742:varName:var[i_FuncParamDef709]
+// expression VarName i
+// type Any
+i))// scope funcDef_786
+// definition slice_FuncDef786
 // type ((Any Any Any) -> Any)
 
 /**
@@ -1070,44 +1082,44 @@ function slice(xs, from, to)
 
     
 */
-// scope funcDef_785
-// definition slice_FuncDef785
+// scope funcDef_786
+// definition slice_FuncDef786
 // type ((Any Any Any) -> Any)
-function slice(// definition xs_FuncParamDef758
+function slice(// definition xs_FuncParamDef759
 // type Any
-xs, // definition from_FuncParamDef761
+xs, // definition from_FuncParamDef762
 // type Any
-from, // definition to_FuncParamDef764
+from, // definition to_FuncParamDef765
 // type Any
 to)
-// expression FunCall map[map_FuncDef57](op..[op.._FuncDef941](from[from_FuncParamDef761],to[to_FuncParamDef764]),at[at_FuncDef218](xs[xs_FuncParamDef758]))
+// expression FunCall map(op..(from,to),at(xs))
 // type Any
-// reference map_767:varName:var[map_FuncDef57]
-// expression VarName map[map_FuncDef57]
-// type ((Any Any) -> Any)
-map(// expression FunCall op..[op.._FuncDef941](from[from_FuncParamDef761],to[to_FuncParamDef764])
+// reference map_768:varName:var[map_FuncDef57]
+// expression VarName map
 // type Any
-(// expression FunCall op..[op.._FuncDef941](from[from_FuncParamDef761],to[to_FuncParamDef764])
+map(// expression FunCall op..(from,to)
 // type Any
-// reference op.._768:varName:var[op.._FuncDef941]
-// expression VarName op..[op.._FuncDef941]
-// type ((Int Int) -> : Array)
-op..(// reference from_770:varName:var[from_FuncParamDef761]
-// expression VarName from[from_FuncParamDef761]
+(// expression FunCall op..(from,to)
 // type Any
-from, // reference to_772:varName:var[to_FuncParamDef764]
-// expression VarName to[to_FuncParamDef764]
+// reference op.._769:varName:var[op.._FuncDef941]
+// expression VarName op..
 // type Any
-to)), // expression FunCall at[at_FuncDef218](xs[xs_FuncParamDef758])
+op..(// reference from_771:varName:var[from_FuncParamDef762]
+// expression VarName from
 // type Any
-// reference at_776:varName:var[at_FuncDef218]
-// expression VarName at[at_FuncDef218]
-// type ((Any Any) -> Any)
-at(// reference xs_778:varName:var[xs_FuncParamDef758]
-// expression VarName xs[xs_FuncParamDef758]
+from, // reference to_773:varName:var[to_FuncParamDef765]
+// expression VarName to
 // type Any
-xs))// scope funcDef_834
-// definition stride_FuncDef834
+to)), // expression FunCall at(xs)
+// type Any
+// reference at_777:varName:var[at_FuncDef218]
+// expression VarName at
+// type Any
+at(// reference xs_779:varName:var[xs_FuncParamDef759]
+// expression VarName xs
+// type Any
+xs))// scope funcDef_835
+// definition stride_FuncDef835
 // type ((Any Any) -> Any)
 
 /**
@@ -1116,71 +1128,71 @@ function stride(xs, n)
 
     
 */
-// scope funcDef_834
-// definition stride_FuncDef834
+// scope funcDef_835
+// definition stride_FuncDef835
 // type ((Any Any) -> Any)
-function stride(// definition xs_FuncParamDef791
+function stride(// definition xs_FuncParamDef792
 // type Any
-xs, // definition n_FuncParamDef794
+xs, // definition n_FuncParamDef795
 // type Any
 n)
-// expression FunCall map[map_FuncDef57](op..[op.._FuncDef941](0,op/[op/_FuncDef688](count[count_FuncDef463](xs[xs_FuncParamDef791]),n[n_FuncParamDef794])),lambda829(i_FuncParamDef814)undefined)
+// expression FunCall map(op..(0,op/(count(xs),n)),lambda830(i_FuncParamDef815)undefined)
 // type Any
-// reference map_797:varName:var[map_FuncDef57]
-// expression VarName map[map_FuncDef57]
-// type ((Any Any) -> Any)
-map(// expression FunCall op..[op.._FuncDef941](0,op/[op/_FuncDef688](count[count_FuncDef463](xs[xs_FuncParamDef791]),n[n_FuncParamDef794]))
+// reference map_798:varName:var[map_FuncDef57]
+// expression VarName map
 // type Any
-(// expression FunCall op..[op.._FuncDef941](0,op/[op/_FuncDef688](count[count_FuncDef463](xs[xs_FuncParamDef791]),n[n_FuncParamDef794]))
+map(// expression FunCall op..(0,op/(count(xs),n))
 // type Any
-// reference op.._798:varName:var[op.._FuncDef941]
-// expression VarName op..[op.._FuncDef941]
-// type ((Int Int) -> : Array)
+(// expression FunCall op..(0,op/(count(xs),n))
+// type Any
+// reference op.._799:varName:var[op.._FuncDef941]
+// expression VarName op..
+// type Any
 op..(// expression NumLiteral 0
 // type Num
-0, // expression FunCall op/[op/_FuncDef688](count[count_FuncDef463](xs[xs_FuncParamDef791]),n[n_FuncParamDef794])
+0, // expression FunCall op/(count(xs),n)
 // type Any
-// reference op/_800:varName:var[op/_FuncDef688]
-// expression VarName op/[op/_FuncDef688]
-// type ((Float Float) -> : Float)
-op/(// expression FunCall count[count_FuncDef463](xs[xs_FuncParamDef791])
+// reference op/_801:varName:var[op/_FuncDef688]
+// expression VarName op/
 // type Any
-// reference count_801:varName:var[count_FuncDef463]
-// expression VarName count[count_FuncDef463]
-// type ((Any Any) -> Any)
-count(// reference xs_803:varName:var[xs_FuncParamDef791]
-// expression VarName xs[xs_FuncParamDef791]
+op/(// expression FunCall count(xs)
 // type Any
-xs), // reference n_807:varName:var[n_FuncParamDef794]
-// expression VarName n[n_FuncParamDef794]
+// reference count_802:varName:var[count_FuncDef463]
+// expression VarName count
 // type Any
-n))), // scope lambdaExpr_829
-// expression Lambda lambda829(i_FuncParamDef814)undefined
+count(// reference xs_804:varName:var[xs_FuncParamDef792]
+// expression VarName xs
+// type Any
+xs), // reference n_808:varName:var[n_FuncParamDef795]
+// expression VarName n
+// type Any
+n))), // scope lambdaExpr_830
+// expression Lambda lambda830(i_FuncParamDef815)undefined
 // type Lambda
-(// definition i_FuncParamDef814
+(// definition i_FuncParamDef815
 // type Any
-i)// scope lambdaBody_828
- => // expression FunCall op[][op[]_FuncDef964](xs[xs_FuncParamDef791],op*[op*_FuncDef665](i[i_FuncParamDef814],n[n_FuncParamDef794]))
+i)// scope lambdaBody_829
+ => // expression FunCall op[](xs,op*(i,n))
 // type Any
-// reference op[]_816:varName:var[op[]_FuncDef964]
-// expression VarName op[][op[]_FuncDef964]
-// type ((Array Int) -> : Any)
-op[](// reference xs_818:varName:var[xs_FuncParamDef791]
-// expression VarName xs[xs_FuncParamDef791]
+// reference op[]_817:varName:var[op[]_FuncDef964]
+// expression VarName op[]
 // type Any
-xs, // expression FunCall op*[op*_FuncDef665](i[i_FuncParamDef814],n[n_FuncParamDef794])
+op[](// reference xs_819:varName:var[xs_FuncParamDef792]
+// expression VarName xs
 // type Any
-// reference op*_819:varName:var[op*_FuncDef665]
-// expression VarName op*[op*_FuncDef665]
-// type ((Float Float) -> : Float)
-op*(// reference i_821:varName:var[i_FuncParamDef814]
-// expression VarName i[i_FuncParamDef814]
+xs, // expression FunCall op*(i,n)
 // type Any
-i, // reference n_823:varName:var[n_FuncParamDef794]
-// expression VarName n[n_FuncParamDef794]
+// reference op*_820:varName:var[op*_FuncDef665]
+// expression VarName op*
 // type Any
-n)))// scope funcDef_887
-// definition slices_FuncDef887
+op*(// reference i_822:varName:var[i_FuncParamDef815]
+// expression VarName i
+// type Any
+i, // reference n_824:varName:var[n_FuncParamDef795]
+// expression VarName n
+// type Any
+n)))// scope funcDef_888
+// definition slices_FuncDef888
 // type ((Any Any) -> Any)
 
 /**
@@ -1189,78 +1201,78 @@ function slices(xs, n)
 
     
 */
-// scope funcDef_887
-// definition slices_FuncDef887
+// scope funcDef_888
+// definition slices_FuncDef888
 // type ((Any Any) -> Any)
-function slices(// definition xs_FuncParamDef840
+function slices(// definition xs_FuncParamDef841
 // type Any
-xs, // definition n_FuncParamDef843
+xs, // definition n_FuncParamDef844
 // type Any
 n)
-// expression FunCall map[map_FuncDef57](op..[op.._FuncDef941](0,n[n_FuncParamDef843]),lambda882(i_FuncParamDef855)undefined)
+// expression FunCall map(op..(0,n),lambda883(i_FuncParamDef856)undefined)
 // type Any
-// reference map_846:varName:var[map_FuncDef57]
-// expression VarName map[map_FuncDef57]
-// type ((Any Any) -> Any)
-map(// expression FunCall op..[op.._FuncDef941](0,n[n_FuncParamDef843])
+// reference map_847:varName:var[map_FuncDef57]
+// expression VarName map
 // type Any
-(// expression FunCall op..[op.._FuncDef941](0,n[n_FuncParamDef843])
+map(// expression FunCall op..(0,n)
 // type Any
-// reference op.._847:varName:var[op.._FuncDef941]
-// expression VarName op..[op.._FuncDef941]
-// type ((Int Int) -> : Array)
+(// expression FunCall op..(0,n)
+// type Any
+// reference op.._848:varName:var[op.._FuncDef941]
+// expression VarName op..
+// type Any
 op..(// expression NumLiteral 0
 // type Num
-0, // reference n_850:varName:var[n_FuncParamDef843]
-// expression VarName n[n_FuncParamDef843]
+0, // reference n_851:varName:var[n_FuncParamDef844]
+// expression VarName n
 // type Any
-n)), // scope lambdaExpr_882
-// expression Lambda lambda882(i_FuncParamDef855)undefined
+n)), // scope lambdaExpr_883
+// expression Lambda lambda883(i_FuncParamDef856)undefined
 // type Lambda
-(// definition i_FuncParamDef855
+(// definition i_FuncParamDef856
 // type Any
-i)// scope lambdaBody_881
- => // expression FunCall slice[slice_FuncDef785](xs[xs_FuncParamDef840],op*[op*_FuncDef665](i[i_FuncParamDef855],n[n_FuncParamDef843]),op*[op*_FuncDef665](op+[op+_FuncDef619](i[i_FuncParamDef855],1),n[n_FuncParamDef843]))
+i)// scope lambdaBody_882
+ => // expression FunCall slice(xs,op*(i,n),op*(op+(i,1),n))
 // type Any
-// reference slice_857:varName:var[slice_FuncDef785]
-// expression VarName slice[slice_FuncDef785]
-// type ((Any Any Any) -> Any)
-slice(// reference xs_859:varName:var[xs_FuncParamDef840]
-// expression VarName xs[xs_FuncParamDef840]
+// reference slice_858:varName:var[slice_FuncDef786]
+// expression VarName slice
 // type Any
-xs, // expression FunCall op*[op*_FuncDef665](i[i_FuncParamDef855],n[n_FuncParamDef843])
+slice(// reference xs_860:varName:var[xs_FuncParamDef841]
+// expression VarName xs
 // type Any
-// reference op*_860:varName:var[op*_FuncDef665]
-// expression VarName op*[op*_FuncDef665]
-// type ((Float Float) -> : Float)
-op*(// reference i_862:varName:var[i_FuncParamDef855]
-// expression VarName i[i_FuncParamDef855]
+xs, // expression FunCall op*(i,n)
 // type Any
-i, // reference n_864:varName:var[n_FuncParamDef843]
-// expression VarName n[n_FuncParamDef843]
+// reference op*_861:varName:var[op*_FuncDef665]
+// expression VarName op*
 // type Any
-n), // expression FunCall op*[op*_FuncDef665](op+[op+_FuncDef619](i[i_FuncParamDef855],1),n[n_FuncParamDef843])
+op*(// reference i_863:varName:var[i_FuncParamDef856]
+// expression VarName i
 // type Any
-// reference op*_867:varName:var[op*_FuncDef665]
-// expression VarName op*[op*_FuncDef665]
-// type ((Float Float) -> : Float)
-op*(// expression FunCall op+[op+_FuncDef619](i[i_FuncParamDef855],1)
+i, // reference n_865:varName:var[n_FuncParamDef844]
+// expression VarName n
 // type Any
-(// expression FunCall op+[op+_FuncDef619](i[i_FuncParamDef855],1)
+n), // expression FunCall op*(op+(i,1),n)
 // type Any
-// reference op+_868:varName:var[op+_FuncDef619]
-// expression VarName op+[op+_FuncDef619]
-// type ((Float Float) -> : Float)
-op+(// reference i_870:varName:var[i_FuncParamDef855]
-// expression VarName i[i_FuncParamDef855]
+// reference op*_868:varName:var[op*_FuncDef665]
+// expression VarName op*
+// type Any
+op*(// expression FunCall op+(i,1)
+// type Any
+(// expression FunCall op+(i,1)
+// type Any
+// reference op+_869:varName:var[op+_FuncDef619]
+// expression VarName op+
+// type Any
+op+(// reference i_871:varName:var[i_FuncParamDef856]
+// expression VarName i
 // type Any
 i, // expression NumLiteral 1
 // type Num
-1)), // reference n_876:varName:var[n_FuncParamDef843]
-// expression VarName n[n_FuncParamDef843]
+1)), // reference n_877:varName:var[n_FuncParamDef844]
+// expression VarName n
 // type Any
-n)))// scope funcDef_909
-// definition take_FuncDef909
+n)))// scope funcDef_910
+// definition take_FuncDef910
 // type ((Any Any) -> Any)
 
 /**
@@ -1269,29 +1281,29 @@ function take(xs, n)
 
     
 */
-// scope funcDef_909
-// definition take_FuncDef909
+// scope funcDef_910
+// definition take_FuncDef910
 // type ((Any Any) -> Any)
-function take(// definition xs_FuncParamDef893
+function take(// definition xs_FuncParamDef894
 // type Any
-xs, // definition n_FuncParamDef896
+xs, // definition n_FuncParamDef897
 // type Any
 n)
-// expression FunCall slice[slice_FuncDef785](xs[xs_FuncParamDef893],0,n[n_FuncParamDef896])
+// expression FunCall slice(xs,0,n)
 // type Any
-// reference slice_899:varName:var[slice_FuncDef785]
-// expression VarName slice[slice_FuncDef785]
-// type ((Any Any Any) -> Any)
-slice(// reference xs_901:varName:var[xs_FuncParamDef893]
-// expression VarName xs[xs_FuncParamDef893]
+// reference slice_900:varName:var[slice_FuncDef786]
+// expression VarName slice
+// type Any
+slice(// reference xs_902:varName:var[xs_FuncParamDef894]
+// expression VarName xs
 // type Any
 xs, // expression NumLiteral 0
 // type Num
-0, // reference n_904:varName:var[n_FuncParamDef896]
-// expression VarName n[n_FuncParamDef896]
+0, // reference n_905:varName:var[n_FuncParamDef897]
+// expression VarName n
 // type Any
-n)// scope funcDef_940
-// definition skip_FuncDef940
+n)// scope funcDef_941
+// definition skip_FuncDef941
 // type ((Any Any) -> Any)
 
 /**
@@ -1300,43 +1312,43 @@ function skip(xs, n)
 
     
 */
-// scope funcDef_940
-// definition skip_FuncDef940
+// scope funcDef_941
+// definition skip_FuncDef941
 // type ((Any Any) -> Any)
-function skip(// definition xs_FuncParamDef915
+function skip(// definition xs_FuncParamDef916
 // type Any
-xs, // definition n_FuncParamDef918
+xs, // definition n_FuncParamDef919
 // type Any
 n)
-// expression FunCall slice[slice_FuncDef785](xs[xs_FuncParamDef915],n[n_FuncParamDef918],op-[op-_FuncDef642](count[count_FuncDef463](xs[xs_FuncParamDef915]),n[n_FuncParamDef918]))
+// expression FunCall slice(xs,n,op-(count(xs),n))
 // type Any
-// reference slice_921:varName:var[slice_FuncDef785]
-// expression VarName slice[slice_FuncDef785]
-// type ((Any Any Any) -> Any)
-slice(// reference xs_923:varName:var[xs_FuncParamDef915]
-// expression VarName xs[xs_FuncParamDef915]
+// reference slice_922:varName:var[slice_FuncDef786]
+// expression VarName slice
 // type Any
-xs, // reference n_925:varName:var[n_FuncParamDef918]
-// expression VarName n[n_FuncParamDef918]
+slice(// reference xs_924:varName:var[xs_FuncParamDef916]
+// expression VarName xs
 // type Any
-n, // expression FunCall op-[op-_FuncDef642](count[count_FuncDef463](xs[xs_FuncParamDef915]),n[n_FuncParamDef918])
+xs, // reference n_926:varName:var[n_FuncParamDef919]
+// expression VarName n
 // type Any
-// reference op-_926:varName:var[op-_FuncDef642]
-// expression VarName op-[op-_FuncDef642]
-// type ((Float Float) -> : Float)
-op-(// expression FunCall count[count_FuncDef463](xs[xs_FuncParamDef915])
+n, // expression FunCall op-(count(xs),n)
 // type Any
-// reference count_927:varName:var[count_FuncDef463]
-// expression VarName count[count_FuncDef463]
-// type ((Any Any) -> Any)
-count(// reference xs_929:varName:var[xs_FuncParamDef915]
-// expression VarName xs[xs_FuncParamDef915]
+// reference op-_927:varName:var[op-_FuncDef642]
+// expression VarName op-
 // type Any
-xs), // reference n_933:varName:var[n_FuncParamDef918]
-// expression VarName n[n_FuncParamDef918]
+op-(// expression FunCall count(xs)
 // type Any
-n))// scope funcDef_969
-// definition dropSuffix_FuncDef969
+// reference count_928:varName:var[count_FuncDef463]
+// expression VarName count
+// type Any
+count(// reference xs_930:varName:var[xs_FuncParamDef916]
+// expression VarName xs
+// type Any
+xs), // reference n_934:varName:var[n_FuncParamDef919]
+// expression VarName n
+// type Any
+n))// scope funcDef_970
+// definition dropSuffix_FuncDef970
 // type ((Any Any) -> Any)
 
 /**
@@ -1345,40 +1357,40 @@ function dropSuffix(xs, n)
 
     
 */
-// scope funcDef_969
-// definition dropSuffix_FuncDef969
+// scope funcDef_970
+// definition dropSuffix_FuncDef970
 // type ((Any Any) -> Any)
-function dropSuffix(// definition xs_FuncParamDef946
+function dropSuffix(// definition xs_FuncParamDef947
 // type Any
-xs, // definition n_FuncParamDef949
+xs, // definition n_FuncParamDef950
 // type Any
 n)
-// expression FunCall take[take_FuncDef909](xs[xs_FuncParamDef946],op-[op-_FuncDef642](count[count_FuncDef463](xs[xs_FuncParamDef946]),n[n_FuncParamDef949]))
+// expression FunCall take(xs,op-(count(xs),n))
 // type Any
-// reference take_952:varName:var[take_FuncDef909]
-// expression VarName take[take_FuncDef909]
-// type ((Any Any) -> Any)
-take(// reference xs_954:varName:var[xs_FuncParamDef946]
-// expression VarName xs[xs_FuncParamDef946]
+// reference take_953:varName:var[take_FuncDef910]
+// expression VarName take
 // type Any
-xs, // expression FunCall op-[op-_FuncDef642](count[count_FuncDef463](xs[xs_FuncParamDef946]),n[n_FuncParamDef949])
+take(// reference xs_955:varName:var[xs_FuncParamDef947]
+// expression VarName xs
 // type Any
-// reference op-_955:varName:var[op-_FuncDef642]
-// expression VarName op-[op-_FuncDef642]
-// type ((Float Float) -> : Float)
-op-(// expression FunCall count[count_FuncDef463](xs[xs_FuncParamDef946])
+xs, // expression FunCall op-(count(xs),n)
 // type Any
-// reference count_956:varName:var[count_FuncDef463]
-// expression VarName count[count_FuncDef463]
-// type ((Any Any) -> Any)
-count(// reference xs_958:varName:var[xs_FuncParamDef946]
-// expression VarName xs[xs_FuncParamDef946]
+// reference op-_956:varName:var[op-_FuncDef642]
+// expression VarName op-
 // type Any
-xs), // reference n_962:varName:var[n_FuncParamDef949]
-// expression VarName n[n_FuncParamDef949]
+op-(// expression FunCall count(xs)
 // type Any
-n))// scope funcDef_998
-// definition suffix_FuncDef998
+// reference count_957:varName:var[count_FuncDef463]
+// expression VarName count
+// type Any
+count(// reference xs_959:varName:var[xs_FuncParamDef947]
+// expression VarName xs
+// type Any
+xs), // reference n_963:varName:var[n_FuncParamDef950]
+// expression VarName n
+// type Any
+n))// scope funcDef_999
+// definition suffix_FuncDef999
 // type ((Any Any) -> Any)
 
 /**
@@ -1387,40 +1399,40 @@ function suffix(xs, n)
 
     
 */
-// scope funcDef_998
-// definition suffix_FuncDef998
+// scope funcDef_999
+// definition suffix_FuncDef999
 // type ((Any Any) -> Any)
-function suffix(// definition xs_FuncParamDef975
+function suffix(// definition xs_FuncParamDef976
 // type Any
-xs, // definition n_FuncParamDef978
+xs, // definition n_FuncParamDef979
 // type Any
 n)
-// expression FunCall skip[skip_FuncDef940](xs[xs_FuncParamDef975],op-[op-_FuncDef642](count[count_FuncDef463](xs[xs_FuncParamDef975]),n[n_FuncParamDef978]))
+// expression FunCall skip(xs,op-(count(xs),n))
 // type Any
-// reference skip_981:varName:var[skip_FuncDef940]
-// expression VarName skip[skip_FuncDef940]
-// type ((Any Any) -> Any)
-skip(// reference xs_983:varName:var[xs_FuncParamDef975]
-// expression VarName xs[xs_FuncParamDef975]
+// reference skip_982:varName:var[skip_FuncDef941]
+// expression VarName skip
 // type Any
-xs, // expression FunCall op-[op-_FuncDef642](count[count_FuncDef463](xs[xs_FuncParamDef975]),n[n_FuncParamDef978])
+skip(// reference xs_984:varName:var[xs_FuncParamDef976]
+// expression VarName xs
 // type Any
-// reference op-_984:varName:var[op-_FuncDef642]
-// expression VarName op-[op-_FuncDef642]
-// type ((Float Float) -> : Float)
-op-(// expression FunCall count[count_FuncDef463](xs[xs_FuncParamDef975])
+xs, // expression FunCall op-(count(xs),n)
 // type Any
-// reference count_985:varName:var[count_FuncDef463]
-// expression VarName count[count_FuncDef463]
-// type ((Any Any) -> Any)
-count(// reference xs_987:varName:var[xs_FuncParamDef975]
-// expression VarName xs[xs_FuncParamDef975]
+// reference op-_985:varName:var[op-_FuncDef642]
+// expression VarName op-
 // type Any
-xs), // reference n_991:varName:var[n_FuncParamDef978]
-// expression VarName n[n_FuncParamDef978]
+op-(// expression FunCall count(xs)
 // type Any
-n))// scope funcDef_1044
-// definition reverse_FuncDef1044
+// reference count_986:varName:var[count_FuncDef463]
+// expression VarName count
+// type Any
+count(// reference xs_988:varName:var[xs_FuncParamDef976]
+// expression VarName xs
+// type Any
+xs), // reference n_992:varName:var[n_FuncParamDef979]
+// expression VarName n
+// type Any
+n))// scope funcDef_1045
+// definition reverse_FuncDef1045
 // type ((Any Any) -> Any)
 
 /**
@@ -1429,66 +1441,66 @@ function reverse(xs, n)
 
     
 */
-// scope funcDef_1044
-// definition reverse_FuncDef1044
+// scope funcDef_1045
+// definition reverse_FuncDef1045
 // type ((Any Any) -> Any)
-function reverse(// definition xs_FuncParamDef1004
+function reverse(// definition xs_FuncParamDef1005
 // type Any
-xs, // definition n_FuncParamDef1007
+xs, // definition n_FuncParamDef1008
 // type Any
 n)
-// expression FunCall map[map_FuncDef57](indices[indices_FuncDef262](xs[xs_FuncParamDef1004]),lambda1039(i_FuncParamDef1017)undefined)
+// expression FunCall map(indices(xs),lambda1040(i_FuncParamDef1018)undefined)
 // type Any
-// reference map_1010:varName:var[map_FuncDef57]
-// expression VarName map[map_FuncDef57]
-// type ((Any Any) -> Any)
-map(// expression FunCall indices[indices_FuncDef262](xs[xs_FuncParamDef1004])
+// reference map_1011:varName:var[map_FuncDef57]
+// expression VarName map
 // type Any
-// reference indices_1011:varName:var[indices_FuncDef262]
-// expression VarName indices[indices_FuncDef262]
-// type ((Any) -> Any)
-indices(// reference xs_1013:varName:var[xs_FuncParamDef1004]
-// expression VarName xs[xs_FuncParamDef1004]
+map(// expression FunCall indices(xs)
 // type Any
-xs), // scope lambdaExpr_1039
-// expression Lambda lambda1039(i_FuncParamDef1017)undefined
+// reference indices_1012:varName:var[indices_FuncDef262]
+// expression VarName indices
+// type Any
+indices(// reference xs_1014:varName:var[xs_FuncParamDef1005]
+// expression VarName xs
+// type Any
+xs), // scope lambdaExpr_1040
+// expression Lambda lambda1040(i_FuncParamDef1018)undefined
 // type Lambda
-(// definition i_FuncParamDef1017
+(// definition i_FuncParamDef1018
 // type Any
-i)// scope lambdaBody_1038
- => // expression FunCall op[][op[]_FuncDef964](xs[xs_FuncParamDef1004],op-[op-_FuncDef642](op-[op-_FuncDef642](count[count_FuncDef463](xs[xs_FuncParamDef1004]),1),i[i_FuncParamDef1017]))
+i)// scope lambdaBody_1039
+ => // expression FunCall op[](xs,op-(op-(count(xs),1),i))
 // type Any
-// reference op[]_1019:varName:var[op[]_FuncDef964]
-// expression VarName op[][op[]_FuncDef964]
-// type ((Array Int) -> : Any)
-op[](// reference xs_1021:varName:var[xs_FuncParamDef1004]
-// expression VarName xs[xs_FuncParamDef1004]
+// reference op[]_1020:varName:var[op[]_FuncDef964]
+// expression VarName op[]
 // type Any
-xs, // expression FunCall op-[op-_FuncDef642](op-[op-_FuncDef642](count[count_FuncDef463](xs[xs_FuncParamDef1004]),1),i[i_FuncParamDef1017])
+op[](// reference xs_1022:varName:var[xs_FuncParamDef1005]
+// expression VarName xs
 // type Any
-// reference op-_1022:varName:var[op-_FuncDef642]
-// expression VarName op-[op-_FuncDef642]
-// type ((Float Float) -> : Float)
-op-(// expression FunCall op-[op-_FuncDef642](count[count_FuncDef463](xs[xs_FuncParamDef1004]),1)
+xs, // expression FunCall op-(op-(count(xs),1),i)
 // type Any
 // reference op-_1023:varName:var[op-_FuncDef642]
-// expression VarName op-[op-_FuncDef642]
-// type ((Float Float) -> : Float)
-op-(// expression FunCall count[count_FuncDef463](xs[xs_FuncParamDef1004])
+// expression VarName op-
 // type Any
-// reference count_1024:varName:var[count_FuncDef463]
-// expression VarName count[count_FuncDef463]
-// type ((Any Any) -> Any)
-count(// reference xs_1026:varName:var[xs_FuncParamDef1004]
-// expression VarName xs[xs_FuncParamDef1004]
+op-(// expression FunCall op-(count(xs),1)
+// type Any
+// reference op-_1024:varName:var[op-_FuncDef642]
+// expression VarName op-
+// type Any
+op-(// expression FunCall count(xs)
+// type Any
+// reference count_1025:varName:var[count_FuncDef463]
+// expression VarName count
+// type Any
+count(// reference xs_1027:varName:var[xs_FuncParamDef1005]
+// expression VarName xs
 // type Any
 xs), // expression NumLiteral 1
 // type Num
-1), // reference i_1033:varName:var[i_FuncParamDef1017]
-// expression VarName i[i_FuncParamDef1017]
+1), // reference i_1034:varName:var[i_FuncParamDef1018]
+// expression VarName i
 // type Any
-i)))// scope funcDef_1070
-// definition gen_FuncDef1070
+i)))// scope funcDef_1071
+// definition gen_FuncDef1071
 // type ((Any Any) -> Any)
 
 /**
@@ -1497,36 +1509,36 @@ function gen(cnt, f)
 
     
 */
-// scope funcDef_1070
-// definition gen_FuncDef1070
+// scope funcDef_1071
+// definition gen_FuncDef1071
 // type ((Any Any) -> Any)
-function gen(// definition cnt_FuncParamDef1050
+function gen(// definition cnt_FuncParamDef1051
 // type Any
-cnt, // definition f_FuncParamDef1053
+cnt, // definition f_FuncParamDef1054
 // type Any
 f)
-// expression FunCall map[map_FuncDef57](op..[op.._FuncDef941](0,cnt[cnt_FuncParamDef1050]),f[f_FuncParamDef1053])
+// expression FunCall map(op..(0,cnt),f)
 // type Any
-// reference map_1056:varName:var[map_FuncDef57]
-// expression VarName map[map_FuncDef57]
-// type ((Any Any) -> Any)
-map(// expression FunCall op..[op.._FuncDef941](0,cnt[cnt_FuncParamDef1050])
+// reference map_1057:varName:var[map_FuncDef57]
+// expression VarName map
 // type Any
-(// expression FunCall op..[op.._FuncDef941](0,cnt[cnt_FuncParamDef1050])
+map(// expression FunCall op..(0,cnt)
 // type Any
-// reference op.._1057:varName:var[op.._FuncDef941]
-// expression VarName op..[op.._FuncDef941]
-// type ((Int Int) -> : Array)
+(// expression FunCall op..(0,cnt)
+// type Any
+// reference op.._1058:varName:var[op.._FuncDef941]
+// expression VarName op..
+// type Any
 op..(// expression NumLiteral 0
 // type Num
-0, // reference cnt_1060:varName:var[cnt_FuncParamDef1050]
-// expression VarName cnt[cnt_FuncParamDef1050]
+0, // reference cnt_1061:varName:var[cnt_FuncParamDef1051]
+// expression VarName cnt
 // type Any
-cnt)), // reference f_1065:varName:var[f_FuncParamDef1053]
-// expression VarName f[f_FuncParamDef1053]
+cnt)), // reference f_1066:varName:var[f_FuncParamDef1054]
+// expression VarName f
 // type Any
-f)// scope funcDef_1140
-// definition concat_FuncDef1140
+f)// scope funcDef_1141
+// definition concat_FuncDef1141
 // type ((Any Any) -> Any)
 
 /**
@@ -1535,101 +1547,101 @@ function concat(xs, ys)
 
     
 */
-// scope funcDef_1140
-// definition concat_FuncDef1140
+// scope funcDef_1141
+// definition concat_FuncDef1141
 // type ((Any Any) -> Any)
-function concat(// definition xs_FuncParamDef1076
+function concat(// definition xs_FuncParamDef1077
 // type Any
-xs, // definition ys_FuncParamDef1079
+xs, // definition ys_FuncParamDef1080
 // type Any
 ys)
-// expression FunCall gen[gen_FuncDef1070](op+[op+_FuncDef619](count[count_FuncDef463](xs[xs_FuncParamDef1076]),count[count_FuncDef463](ys[ys_FuncParamDef1079])),lambda1135(i_FuncParamDef1098)undefined)
+// expression FunCall gen(op+(count(xs),count(ys)),lambda1136(i_FuncParamDef1099)undefined)
 // type Any
-// reference gen_1083:varName:var[gen_FuncDef1070]
-// expression VarName gen[gen_FuncDef1070]
-// type ((Any Any) -> Any)
-gen(// expression FunCall op+[op+_FuncDef619](count[count_FuncDef463](xs[xs_FuncParamDef1076]),count[count_FuncDef463](ys[ys_FuncParamDef1079]))
+// reference gen_1084:varName:var[gen_FuncDef1071]
+// expression VarName gen
 // type Any
-// reference op+_1084:varName:var[op+_FuncDef619]
-// expression VarName op+[op+_FuncDef619]
-// type ((Float Float) -> : Float)
-op+(// expression FunCall count[count_FuncDef463](xs[xs_FuncParamDef1076])
+gen(// expression FunCall op+(count(xs),count(ys))
 // type Any
-// reference count_1085:varName:var[count_FuncDef463]
-// expression VarName count[count_FuncDef463]
-// type ((Any Any) -> Any)
-count(// reference xs_1087:varName:var[xs_FuncParamDef1076]
-// expression VarName xs[xs_FuncParamDef1076]
+// reference op+_1085:varName:var[op+_FuncDef619]
+// expression VarName op+
 // type Any
-xs), // expression FunCall count[count_FuncDef463](ys[ys_FuncParamDef1079])
+op+(// expression FunCall count(xs)
 // type Any
-// reference count_1090:varName:var[count_FuncDef463]
-// expression VarName count[count_FuncDef463]
-// type ((Any Any) -> Any)
-count(// reference ys_1092:varName:var[ys_FuncParamDef1079]
-// expression VarName ys[ys_FuncParamDef1079]
+// reference count_1086:varName:var[count_FuncDef463]
+// expression VarName count
 // type Any
-ys)), // scope lambdaExpr_1135
-// expression Lambda lambda1135(i_FuncParamDef1098)undefined
+count(// reference xs_1088:varName:var[xs_FuncParamDef1077]
+// expression VarName xs
+// type Any
+xs), // expression FunCall count(ys)
+// type Any
+// reference count_1091:varName:var[count_FuncDef463]
+// expression VarName count
+// type Any
+count(// reference ys_1093:varName:var[ys_FuncParamDef1080]
+// expression VarName ys
+// type Any
+ys)), // scope lambdaExpr_1136
+// expression Lambda lambda1136(i_FuncParamDef1099)undefined
 // type Lambda
-(// definition i_FuncParamDef1098
+(// definition i_FuncParamDef1099
 // type Any
-i)// scope lambdaBody_1134
- => // expression ConditionalExpr op<[op<_FuncDef780](i[i_FuncParamDef1098],count[count_FuncDef463](xs[xs_FuncParamDef1076])) ? op[][op[]_FuncDef964](xs[xs_FuncParamDef1076],i[i_FuncParamDef1098]) : op[][op[]_FuncDef964](ys[ys_FuncParamDef1079],op-[op-_FuncDef642](i[i_FuncParamDef1098],count[count_FuncDef463](xs[xs_FuncParamDef1076])))
+i)// scope lambdaBody_1135
+ => // expression ConditionalExpr op<(i,count(xs)) ? op[](xs,i) : op[](ys,op-(i,count(xs)))
 // type Any
-// expression FunCall op<[op<_FuncDef780](i[i_FuncParamDef1098],count[count_FuncDef463](xs[xs_FuncParamDef1076]))
+// expression FunCall op<(i,count(xs))
 // type Any
-// reference op<_1100:varName:var[op<_FuncDef780]
-// expression VarName op<[op<_FuncDef780]
-// type ((Float Float) -> : Bool)
-op<(// reference i_1102:varName:var[i_FuncParamDef1098]
-// expression VarName i[i_FuncParamDef1098]
+// reference op<_1101:varName:var[op<_FuncDef780]
+// expression VarName op<
 // type Any
-i, // expression FunCall count[count_FuncDef463](xs[xs_FuncParamDef1076])
+op<(// reference i_1103:varName:var[i_FuncParamDef1099]
+// expression VarName i
 // type Any
-// reference count_1103:varName:var[count_FuncDef463]
-// expression VarName count[count_FuncDef463]
-// type ((Any Any) -> Any)
-count(// reference xs_1105:varName:var[xs_FuncParamDef1076]
-// expression VarName xs[xs_FuncParamDef1076]
+i, // expression FunCall count(xs)
 // type Any
-xs)) ? // expression FunCall op[][op[]_FuncDef964](xs[xs_FuncParamDef1076],i[i_FuncParamDef1098])
+// reference count_1104:varName:var[count_FuncDef463]
+// expression VarName count
 // type Any
-// reference op[]_1110:varName:var[op[]_FuncDef964]
-// expression VarName op[][op[]_FuncDef964]
-// type ((Array Int) -> : Any)
-op[](// reference xs_1112:varName:var[xs_FuncParamDef1076]
-// expression VarName xs[xs_FuncParamDef1076]
+count(// reference xs_1106:varName:var[xs_FuncParamDef1077]
+// expression VarName xs
 // type Any
-xs, // reference i_1114:varName:var[i_FuncParamDef1098]
-// expression VarName i[i_FuncParamDef1098]
+xs)) ? // expression FunCall op[](xs,i)
 // type Any
-i)// expression FunCall op[][op[]_FuncDef964](ys[ys_FuncParamDef1079],op-[op-_FuncDef642](i[i_FuncParamDef1098],count[count_FuncDef463](xs[xs_FuncParamDef1076])))
+// reference op[]_1111:varName:var[op[]_FuncDef964]
+// expression VarName op[]
 // type Any
-// reference op[]_1117:varName:var[op[]_FuncDef964]
-// expression VarName op[][op[]_FuncDef964]
-// type ((Array Int) -> : Any)
-op[](// reference ys_1119:varName:var[ys_FuncParamDef1079]
-// expression VarName ys[ys_FuncParamDef1079]
+op[](// reference xs_1113:varName:var[xs_FuncParamDef1077]
+// expression VarName xs
 // type Any
-ys, // expression FunCall op-[op-_FuncDef642](i[i_FuncParamDef1098],count[count_FuncDef463](xs[xs_FuncParamDef1076]))
+xs, // reference i_1115:varName:var[i_FuncParamDef1099]
+// expression VarName i
 // type Any
-// reference op-_1120:varName:var[op-_FuncDef642]
-// expression VarName op-[op-_FuncDef642]
-// type ((Float Float) -> : Float)
-op-(// reference i_1122:varName:var[i_FuncParamDef1098]
-// expression VarName i[i_FuncParamDef1098]
+i)// expression FunCall op[](ys,op-(i,count(xs)))
 // type Any
-i, // expression FunCall count[count_FuncDef463](xs[xs_FuncParamDef1076])
+// reference op[]_1118:varName:var[op[]_FuncDef964]
+// expression VarName op[]
 // type Any
-// reference count_1123:varName:var[count_FuncDef463]
-// expression VarName count[count_FuncDef463]
-// type ((Any Any) -> Any)
-count(// reference xs_1125:varName:var[xs_FuncParamDef1076]
-// expression VarName xs[xs_FuncParamDef1076]
+op[](// reference ys_1120:varName:var[ys_FuncParamDef1080]
+// expression VarName ys
 // type Any
-xs))))// scope funcDef_1204
-// definition cut_FuncDef1204
+ys, // expression FunCall op-(i,count(xs))
+// type Any
+// reference op-_1121:varName:var[op-_FuncDef642]
+// expression VarName op-
+// type Any
+op-(// reference i_1123:varName:var[i_FuncParamDef1099]
+// expression VarName i
+// type Any
+i, // expression FunCall count(xs)
+// type Any
+// reference count_1124:varName:var[count_FuncDef463]
+// expression VarName count
+// type Any
+count(// reference xs_1126:varName:var[xs_FuncParamDef1077]
+// expression VarName xs
+// type Any
+xs))))// scope funcDef_1205
+// definition cut_FuncDef1205
 // type ((Any Any Any) -> Any)
 
 /**
@@ -1638,88 +1650,88 @@ function cut(xs, from, n)
 
     
 */
-// scope funcDef_1204
-// definition cut_FuncDef1204
+// scope funcDef_1205
+// definition cut_FuncDef1205
 // type ((Any Any Any) -> Any)
-function cut(// definition xs_FuncParamDef1146
+function cut(// definition xs_FuncParamDef1147
 // type Any
-xs, // definition from_FuncParamDef1149
+xs, // definition from_FuncParamDef1150
 // type Any
-from, // definition n_FuncParamDef1152
+from, // definition n_FuncParamDef1153
 // type Any
 n)
-// expression FunCall gen[gen_FuncDef1070](op-[op-_FuncDef642](count[count_FuncDef463](xs[xs_FuncParamDef1146]),n[n_FuncParamDef1152]),lambda1199(i_FuncParamDef1168)undefined)
+// expression FunCall gen(op-(count(xs),n),lambda1200(i_FuncParamDef1169)undefined)
 // type Any
-// reference gen_1156:varName:var[gen_FuncDef1070]
-// expression VarName gen[gen_FuncDef1070]
-// type ((Any Any) -> Any)
-gen(// expression FunCall op-[op-_FuncDef642](count[count_FuncDef463](xs[xs_FuncParamDef1146]),n[n_FuncParamDef1152])
+// reference gen_1157:varName:var[gen_FuncDef1071]
+// expression VarName gen
 // type Any
-// reference op-_1157:varName:var[op-_FuncDef642]
-// expression VarName op-[op-_FuncDef642]
-// type ((Float Float) -> : Float)
-op-(// expression FunCall count[count_FuncDef463](xs[xs_FuncParamDef1146])
+gen(// expression FunCall op-(count(xs),n)
 // type Any
-// reference count_1158:varName:var[count_FuncDef463]
-// expression VarName count[count_FuncDef463]
-// type ((Any Any) -> Any)
-count(// reference xs_1160:varName:var[xs_FuncParamDef1146]
-// expression VarName xs[xs_FuncParamDef1146]
+// reference op-_1158:varName:var[op-_FuncDef642]
+// expression VarName op-
 // type Any
-xs), // reference n_1164:varName:var[n_FuncParamDef1152]
-// expression VarName n[n_FuncParamDef1152]
+op-(// expression FunCall count(xs)
 // type Any
-n), // scope lambdaExpr_1199
-// expression Lambda lambda1199(i_FuncParamDef1168)undefined
+// reference count_1159:varName:var[count_FuncDef463]
+// expression VarName count
+// type Any
+count(// reference xs_1161:varName:var[xs_FuncParamDef1147]
+// expression VarName xs
+// type Any
+xs), // reference n_1165:varName:var[n_FuncParamDef1153]
+// expression VarName n
+// type Any
+n), // scope lambdaExpr_1200
+// expression Lambda lambda1200(i_FuncParamDef1169)undefined
 // type Lambda
-(// definition i_FuncParamDef1168
+(// definition i_FuncParamDef1169
 // type Any
-i)// scope lambdaBody_1198
- => // expression ConditionalExpr op<[op<_FuncDef780](i[i_FuncParamDef1168],from[from_FuncParamDef1149]) ? op[][op[]_FuncDef964](xs[xs_FuncParamDef1146],i[i_FuncParamDef1168]) : op[][op[]_FuncDef964](xs[xs_FuncParamDef1146],op+[op+_FuncDef619](i[i_FuncParamDef1168],n[n_FuncParamDef1152]))
+i)// scope lambdaBody_1199
+ => // expression ConditionalExpr op<(i,from) ? op[](xs,i) : op[](xs,op+(i,n))
 // type Any
-// expression FunCall op<[op<_FuncDef780](i[i_FuncParamDef1168],from[from_FuncParamDef1149])
+// expression FunCall op<(i,from)
 // type Any
-// reference op<_1170:varName:var[op<_FuncDef780]
-// expression VarName op<[op<_FuncDef780]
-// type ((Float Float) -> : Bool)
-op<(// reference i_1172:varName:var[i_FuncParamDef1168]
-// expression VarName i[i_FuncParamDef1168]
+// reference op<_1171:varName:var[op<_FuncDef780]
+// expression VarName op<
 // type Any
-i, // reference from_1174:varName:var[from_FuncParamDef1149]
-// expression VarName from[from_FuncParamDef1149]
+op<(// reference i_1173:varName:var[i_FuncParamDef1169]
+// expression VarName i
 // type Any
-from) ? // expression FunCall op[][op[]_FuncDef964](xs[xs_FuncParamDef1146],i[i_FuncParamDef1168])
+i, // reference from_1175:varName:var[from_FuncParamDef1150]
+// expression VarName from
 // type Any
-// reference op[]_1177:varName:var[op[]_FuncDef964]
-// expression VarName op[][op[]_FuncDef964]
-// type ((Array Int) -> : Any)
-op[](// reference xs_1179:varName:var[xs_FuncParamDef1146]
-// expression VarName xs[xs_FuncParamDef1146]
+from) ? // expression FunCall op[](xs,i)
 // type Any
-xs, // reference i_1181:varName:var[i_FuncParamDef1168]
-// expression VarName i[i_FuncParamDef1168]
+// reference op[]_1178:varName:var[op[]_FuncDef964]
+// expression VarName op[]
 // type Any
-i)// expression FunCall op[][op[]_FuncDef964](xs[xs_FuncParamDef1146],op+[op+_FuncDef619](i[i_FuncParamDef1168],n[n_FuncParamDef1152]))
+op[](// reference xs_1180:varName:var[xs_FuncParamDef1147]
+// expression VarName xs
 // type Any
-// reference op[]_1184:varName:var[op[]_FuncDef964]
-// expression VarName op[][op[]_FuncDef964]
-// type ((Array Int) -> : Any)
-op[](// reference xs_1186:varName:var[xs_FuncParamDef1146]
-// expression VarName xs[xs_FuncParamDef1146]
+xs, // reference i_1182:varName:var[i_FuncParamDef1169]
+// expression VarName i
 // type Any
-xs, // expression FunCall op+[op+_FuncDef619](i[i_FuncParamDef1168],n[n_FuncParamDef1152])
+i)// expression FunCall op[](xs,op+(i,n))
 // type Any
-// reference op+_1187:varName:var[op+_FuncDef619]
-// expression VarName op+[op+_FuncDef619]
-// type ((Float Float) -> : Float)
-op+(// reference i_1189:varName:var[i_FuncParamDef1168]
-// expression VarName i[i_FuncParamDef1168]
+// reference op[]_1185:varName:var[op[]_FuncDef964]
+// expression VarName op[]
 // type Any
-i, // reference n_1191:varName:var[n_FuncParamDef1152]
-// expression VarName n[n_FuncParamDef1152]
+op[](// reference xs_1187:varName:var[xs_FuncParamDef1147]
+// expression VarName xs
 // type Any
-n)))// scope funcDef_1243
-// definition splice_FuncDef1243
+xs, // expression FunCall op+(i,n)
+// type Any
+// reference op+_1188:varName:var[op+_FuncDef619]
+// expression VarName op+
+// type Any
+op+(// reference i_1190:varName:var[i_FuncParamDef1169]
+// expression VarName i
+// type Any
+i, // reference n_1192:varName:var[n_FuncParamDef1153]
+// expression VarName n
+// type Any
+n)))// scope funcDef_1244
+// definition splice_FuncDef1244
 // type ((Any Any Any) -> Any)
 
 /**
@@ -1728,53 +1740,53 @@ function splice(xs, from, ys)
 
     
 */
-// scope funcDef_1243
-// definition splice_FuncDef1243
+// scope funcDef_1244
+// definition splice_FuncDef1244
 // type ((Any Any Any) -> Any)
-function splice(// definition xs_FuncParamDef1210
+function splice(// definition xs_FuncParamDef1211
 // type Any
-xs, // definition from_FuncParamDef1213
+xs, // definition from_FuncParamDef1214
 // type Any
-from, // definition ys_FuncParamDef1216
+from, // definition ys_FuncParamDef1217
 // type Any
 ys)
-// expression FunCall concat[concat_FuncDef1140](concat[concat_FuncDef1140](take[take_FuncDef909](xs[xs_FuncParamDef1210],from[from_FuncParamDef1213]),ys[ys_FuncParamDef1216]),skip[skip_FuncDef940](xs[xs_FuncParamDef1210],from[from_FuncParamDef1213]))
+// expression FunCall concat(concat(take(xs,from),ys),skip(xs,from))
 // type Any
-// reference concat_1219:varName:var[concat_FuncDef1140]
-// expression VarName concat[concat_FuncDef1140]
-// type ((Any Any) -> Any)
-concat(// expression FunCall concat[concat_FuncDef1140](take[take_FuncDef909](xs[xs_FuncParamDef1210],from[from_FuncParamDef1213]),ys[ys_FuncParamDef1216])
+// reference concat_1220:varName:var[concat_FuncDef1141]
+// expression VarName concat
 // type Any
-// reference concat_1220:varName:var[concat_FuncDef1140]
-// expression VarName concat[concat_FuncDef1140]
-// type ((Any Any) -> Any)
-concat(// expression FunCall take[take_FuncDef909](xs[xs_FuncParamDef1210],from[from_FuncParamDef1213])
+concat(// expression FunCall concat(take(xs,from),ys)
 // type Any
-// reference take_1221:varName:var[take_FuncDef909]
-// expression VarName take[take_FuncDef909]
-// type ((Any Any) -> Any)
-take(// reference xs_1223:varName:var[xs_FuncParamDef1210]
-// expression VarName xs[xs_FuncParamDef1210]
+// reference concat_1221:varName:var[concat_FuncDef1141]
+// expression VarName concat
 // type Any
-xs, // reference from_1225:varName:var[from_FuncParamDef1213]
-// expression VarName from[from_FuncParamDef1213]
+concat(// expression FunCall take(xs,from)
 // type Any
-from), // reference ys_1229:varName:var[ys_FuncParamDef1216]
-// expression VarName ys[ys_FuncParamDef1216]
+// reference take_1222:varName:var[take_FuncDef910]
+// expression VarName take
 // type Any
-ys), // expression FunCall skip[skip_FuncDef940](xs[xs_FuncParamDef1210],from[from_FuncParamDef1213])
+take(// reference xs_1224:varName:var[xs_FuncParamDef1211]
+// expression VarName xs
 // type Any
-// reference skip_1232:varName:var[skip_FuncDef940]
-// expression VarName skip[skip_FuncDef940]
-// type ((Any Any) -> Any)
-skip(// reference xs_1234:varName:var[xs_FuncParamDef1210]
-// expression VarName xs[xs_FuncParamDef1210]
+xs, // reference from_1226:varName:var[from_FuncParamDef1214]
+// expression VarName from
 // type Any
-xs, // reference from_1236:varName:var[from_FuncParamDef1213]
-// expression VarName from[from_FuncParamDef1213]
+from), // reference ys_1230:varName:var[ys_FuncParamDef1217]
+// expression VarName ys
 // type Any
-from))// scope funcDef_1263
-// definition sum_FuncDef1263
+ys), // expression FunCall skip(xs,from)
+// type Any
+// reference skip_1233:varName:var[skip_FuncDef941]
+// expression VarName skip
+// type Any
+skip(// reference xs_1235:varName:var[xs_FuncParamDef1211]
+// expression VarName xs
+// type Any
+xs, // reference from_1237:varName:var[from_FuncParamDef1214]
+// expression VarName from
+// type Any
+from))// scope funcDef_1264
+// definition sum_FuncDef1264
 // type ((Any) -> Any)
 
 /**
@@ -1783,27 +1795,27 @@ function sum(xs)
 
     
 */
-// scope funcDef_1263
-// definition sum_FuncDef1263
+// scope funcDef_1264
+// definition sum_FuncDef1264
 // type ((Any) -> Any)
-function sum(// definition xs_FuncParamDef1249
+function sum(// definition xs_FuncParamDef1250
 // type Any
 xs)
-// expression FunCall reduce[reduce_FuncDef1857](xs[xs_FuncParamDef1249],0,op+[op+_FuncDef619])
+// expression FunCall reduce(xs,0,op+)
 // type Any
-// reference reduce_1252:varName:var[reduce_FuncDef1857]
-// expression VarName reduce[reduce_FuncDef1857]
-// type ((Any Any Any) -> Any)
-reduce(// reference xs_1254:varName:var[xs_FuncParamDef1249]
-// expression VarName xs[xs_FuncParamDef1249]
+// reference reduce_1253:varName:var[reduce_FuncDef1856]
+// expression VarName reduce
+// type Any
+reduce(// reference xs_1255:varName:var[xs_FuncParamDef1250]
+// expression VarName xs
 // type Any
 xs, // expression NumLiteral 0
 // type Num
-0, // reference op+_1258:varName:var[op+_FuncDef619]
-// expression VarName op+[op+_FuncDef619]
-// type ((Float Float) -> : Float)
-op+)// scope funcDef_1283
-// definition product_FuncDef1283
+0, // reference op+_1259:varName:var[op+_FuncDef619]
+// expression VarName op+
+// type Any
+op+)// scope funcDef_1284
+// definition product_FuncDef1284
 // type ((Any) -> Any)
 
 /**
@@ -1812,27 +1824,27 @@ function product(xs)
     
     
 */
-// scope funcDef_1283
-// definition product_FuncDef1283
+// scope funcDef_1284
+// definition product_FuncDef1284
 // type ((Any) -> Any)
-function product(// definition xs_FuncParamDef1269
+function product(// definition xs_FuncParamDef1270
 // type Any
 xs)
-// expression FunCall reduce[reduce_FuncDef1857](xs[xs_FuncParamDef1269],1,op*[op*_FuncDef665])
+// expression FunCall reduce(xs,1,op*)
 // type Any
-// reference reduce_1272:varName:var[reduce_FuncDef1857]
-// expression VarName reduce[reduce_FuncDef1857]
-// type ((Any Any Any) -> Any)
-reduce(// reference xs_1274:varName:var[xs_FuncParamDef1269]
-// expression VarName xs[xs_FuncParamDef1269]
+// reference reduce_1273:varName:var[reduce_FuncDef1856]
+// expression VarName reduce
+// type Any
+reduce(// reference xs_1275:varName:var[xs_FuncParamDef1270]
+// expression VarName xs
 // type Any
 xs, // expression NumLiteral 1
 // type Num
-1, // reference op*_1278:varName:var[op*_FuncDef665]
-// expression VarName op*[op*_FuncDef665]
-// type ((Float Float) -> : Float)
-op*)// scope funcDef_1307
-// definition average_FuncDef1307
+1, // reference op*_1279:varName:var[op*_FuncDef665]
+// expression VarName op*
+// type Any
+op*)// scope funcDef_1308
+// definition average_FuncDef1308
 // type ((Any) -> Any)
 
 /**
@@ -1841,35 +1853,35 @@ function average(xs)
 
     
 */
-// scope funcDef_1307
-// definition average_FuncDef1307
+// scope funcDef_1308
+// definition average_FuncDef1308
 // type ((Any) -> Any)
-function average(// definition xs_FuncParamDef1289
+function average(// definition xs_FuncParamDef1290
 // type Any
 xs)
-// expression FunCall op/[op/_FuncDef688](sum[sum_FuncDef1263](xs[xs_FuncParamDef1289]),count[count_FuncDef463](xs[xs_FuncParamDef1289]))
+// expression FunCall op/(sum(xs),count(xs))
 // type Any
-// reference op/_1292:varName:var[op/_FuncDef688]
-// expression VarName op/[op/_FuncDef688]
-// type ((Float Float) -> : Float)
-op/(// expression FunCall sum[sum_FuncDef1263](xs[xs_FuncParamDef1289])
+// reference op/_1293:varName:var[op/_FuncDef688]
+// expression VarName op/
 // type Any
-// reference sum_1293:varName:var[sum_FuncDef1263]
-// expression VarName sum[sum_FuncDef1263]
-// type ((Any) -> Any)
-sum(// reference xs_1295:varName:var[xs_FuncParamDef1289]
-// expression VarName xs[xs_FuncParamDef1289]
+op/(// expression FunCall sum(xs)
 // type Any
-xs), // expression FunCall count[count_FuncDef463](xs[xs_FuncParamDef1289])
+// reference sum_1294:varName:var[sum_FuncDef1264]
+// expression VarName sum
 // type Any
-// reference count_1298:varName:var[count_FuncDef463]
-// expression VarName count[count_FuncDef463]
-// type ((Any Any) -> Any)
-count(// reference xs_1300:varName:var[xs_FuncParamDef1289]
-// expression VarName xs[xs_FuncParamDef1289]
+sum(// reference xs_1296:varName:var[xs_FuncParamDef1290]
+// expression VarName xs
 // type Any
-xs))// scope funcDef_1331
-// definition minElement_FuncDef1331
+xs), // expression FunCall count(xs)
+// type Any
+// reference count_1299:varName:var[count_FuncDef463]
+// expression VarName count
+// type Any
+count(// reference xs_1301:varName:var[xs_FuncParamDef1290]
+// expression VarName xs
+// type Any
+xs))// scope funcDef_1332
+// definition minElement_FuncDef1332
 // type ((Any) -> Any)
 
 /**
@@ -1878,35 +1890,35 @@ function minElement(xs)
 
     
 */
-// scope funcDef_1331
-// definition minElement_FuncDef1331
+// scope funcDef_1332
+// definition minElement_FuncDef1332
 // type ((Any) -> Any)
-function minElement(// definition xs_FuncParamDef1313
+function minElement(// definition xs_FuncParamDef1314
 // type Any
 xs)
-// expression FunCall reduce[reduce_FuncDef1857](xs[xs_FuncParamDef1313],op[][op[]_FuncDef964](xs[xs_FuncParamDef1313],0),min[min_FuncDef84])
+// expression FunCall reduce(xs,op[](xs,0),min)
 // type Any
-// reference reduce_1316:varName:var[reduce_FuncDef1857]
-// expression VarName reduce[reduce_FuncDef1857]
-// type ((Any Any Any) -> Any)
-reduce(// reference xs_1318:varName:var[xs_FuncParamDef1313]
-// expression VarName xs[xs_FuncParamDef1313]
+// reference reduce_1317:varName:var[reduce_FuncDef1856]
+// expression VarName reduce
 // type Any
-xs, // expression FunCall op[][op[]_FuncDef964](xs[xs_FuncParamDef1313],0)
+reduce(// reference xs_1319:varName:var[xs_FuncParamDef1314]
+// expression VarName xs
 // type Any
-// reference op[]_1319:varName:var[op[]_FuncDef964]
-// expression VarName op[][op[]_FuncDef964]
-// type ((Array Int) -> : Any)
-op[](// reference xs_1321:varName:var[xs_FuncParamDef1313]
-// expression VarName xs[xs_FuncParamDef1313]
+xs, // expression FunCall op[](xs,0)
+// type Any
+// reference op[]_1320:varName:var[op[]_FuncDef964]
+// expression VarName op[]
+// type Any
+op[](// reference xs_1322:varName:var[xs_FuncParamDef1314]
+// expression VarName xs
 // type Any
 xs, // expression NumLiteral 0
 // type Num
-0), // reference min_1326:varName:var[min_FuncDef84]
-// expression VarName min[min_FuncDef84]
-// type ((Any Any) -> Any)
-min)// scope funcDef_1355
-// definition maxElement_FuncDef1355
+0), // reference min_1327:varName:var[min_FuncDef84]
+// expression VarName min
+// type Any
+min)// scope funcDef_1356
+// definition maxElement_FuncDef1356
 // type ((Any) -> Any)
 
 /**
@@ -1915,35 +1927,35 @@ function maxElement(xs)
 
     
 */
-// scope funcDef_1355
-// definition maxElement_FuncDef1355
+// scope funcDef_1356
+// definition maxElement_FuncDef1356
 // type ((Any) -> Any)
-function maxElement(// definition xs_FuncParamDef1337
+function maxElement(// definition xs_FuncParamDef1338
 // type Any
 xs)
-// expression FunCall reduce[reduce_FuncDef1857](xs[xs_FuncParamDef1337],op[][op[]_FuncDef964](xs[xs_FuncParamDef1337],0),max[max_FuncDef111])
+// expression FunCall reduce(xs,op[](xs,0),max)
 // type Any
-// reference reduce_1340:varName:var[reduce_FuncDef1857]
-// expression VarName reduce[reduce_FuncDef1857]
-// type ((Any Any Any) -> Any)
-reduce(// reference xs_1342:varName:var[xs_FuncParamDef1337]
-// expression VarName xs[xs_FuncParamDef1337]
+// reference reduce_1341:varName:var[reduce_FuncDef1856]
+// expression VarName reduce
 // type Any
-xs, // expression FunCall op[][op[]_FuncDef964](xs[xs_FuncParamDef1337],0)
+reduce(// reference xs_1343:varName:var[xs_FuncParamDef1338]
+// expression VarName xs
 // type Any
-// reference op[]_1343:varName:var[op[]_FuncDef964]
-// expression VarName op[][op[]_FuncDef964]
-// type ((Array Int) -> : Any)
-op[](// reference xs_1345:varName:var[xs_FuncParamDef1337]
-// expression VarName xs[xs_FuncParamDef1337]
+xs, // expression FunCall op[](xs,0)
+// type Any
+// reference op[]_1344:varName:var[op[]_FuncDef964]
+// expression VarName op[]
+// type Any
+op[](// reference xs_1346:varName:var[xs_FuncParamDef1338]
+// expression VarName xs
 // type Any
 xs, // expression NumLiteral 0
 // type Num
-0), // reference max_1350:varName:var[max_FuncDef111]
-// expression VarName max[max_FuncDef111]
-// type ((Any Any) -> Any)
-max)// scope funcDef_1516
-// definition partition_FuncDef1516
+0), // reference max_1351:varName:var[max_FuncDef111]
+// expression VarName max
+// type Any
+max)// scope funcDef_1517
+// definition partition_FuncDef1517
 // type ((Any Any Any) -> Any)
 
 /**
@@ -1964,56 +1976,56 @@ function partition(a, lo, hi) {
 
     
 */
-// scope funcDef_1516
-// definition partition_FuncDef1516
+// scope funcDef_1517
+// definition partition_FuncDef1517
 // type ((Any Any Any) -> Any)
-function partition(// definition a_FuncParamDef1361
+function partition(// definition a_FuncParamDef1362
 // type Any
-a, // definition lo_FuncParamDef1364
+a, // definition lo_FuncParamDef1365
 // type Any
-lo, // definition hi_FuncParamDef1367
+lo, // definition hi_FuncParamDef1368
 // type Any
 hi)
-// scope recCompoundStatement_1513
+// scope recCompoundStatement_1514
 {
-// scope compoundStatement_1512
+// scope compoundStatement_1513
 {
 var // definition pivot_VarDef1380
 // type Any
-pivot = // expression FunCall op[][op[]_FuncDef964](a[a_FuncParamDef1361],lo[lo_FuncParamDef1364])
+pivot// expression FunCall op[](a,lo)
 // type Any
-// reference op[]_1372:varName:var[op[]_FuncDef964]
-// expression VarName op[][op[]_FuncDef964]
-// type ((Array Int) -> : Any)
-op[](// reference a_1374:varName:var[a_FuncParamDef1361]
-// expression VarName a[a_FuncParamDef1361]
+// reference op[]_1373:varName:var[op[]_FuncDef964]
+// expression VarName op[]
 // type Any
-a, // reference lo_1376:varName:var[lo_FuncParamDef1364]
-// expression VarName lo[lo_FuncParamDef1364]
+op[](// reference a_1375:varName:var[a_FuncParamDef1362]
+// expression VarName a
+// type Any
+a, // reference lo_1377:varName:var[lo_FuncParamDef1365]
+// expression VarName lo
 // type Any
 lo);
-var // definition i_VarDef1392
+var // definition i_VarDef1391
 // type Any
-i = // expression FunCall op-[op-_FuncDef642](lo[lo_FuncParamDef1364],1)
+i// expression FunCall op-(lo,1)
 // type Any
 // reference op-_1385:varName:var[op-_FuncDef642]
-// expression VarName op-[op-_FuncDef642]
-// type ((Float Float) -> : Float)
-op-(// reference lo_1387:varName:var[lo_FuncParamDef1364]
-// expression VarName lo[lo_FuncParamDef1364]
+// expression VarName op-
+// type Any
+op-(// reference lo_1387:varName:var[lo_FuncParamDef1365]
+// expression VarName lo
 // type Any
 lo, // expression NumLiteral 1
 // type Num
 1);
-var // definition j_VarDef1404
+var // definition j_VarDef1402
 // type Any
-j = // expression FunCall op+[op+_FuncDef619](hi[hi_FuncParamDef1367],1)
+j// expression FunCall op+(hi,1)
 // type Any
-// reference op+_1397:varName:var[op+_FuncDef619]
-// expression VarName op+[op+_FuncDef619]
-// type ((Float Float) -> : Float)
-op+(// reference hi_1399:varName:var[hi_FuncParamDef1367]
-// expression VarName hi[hi_FuncParamDef1367]
+// reference op+_1396:varName:var[op+_FuncDef619]
+// expression VarName op+
+// type Any
+op+(// reference hi_1398:varName:var[hi_FuncParamDef1368]
+// expression VarName hi
 // type Any
 hi, // expression NumLiteral 1
 // type Num
@@ -2025,272 +2037,292 @@ true)
 while (// expression BoolLiteral true
 // type Bool
 true)
-// scope compoundStatement_1507
+// scope compoundStatement_1508
 {
 do
-// scope compoundStatement_1414
+// scope compoundStatement_1412
 {
-// expression PostfixInc ++i[i_VarDef1392]
+// expression PostfixInc ++i
 // type Num
-// reference i_1410:varName:var[i_VarDef1392]
-// expression VarName i[i_VarDef1392]
+// reference i_1408:varName:var[i_VarDef1391]
+// expression VarName i
 // type Any
 i++;
 }
-while (// expression FunCall op<[op<_FuncDef780](op[][op[]_FuncDef964](a[a_FuncParamDef1361],i[i_VarDef1392]),pivot[pivot_VarDef1380])
+while (// expression FunCall op<(op[](a,i),pivot)
 // type Any
-// reference op<_1415:varName:var[op<_FuncDef780]
-// expression VarName op<[op<_FuncDef780]
-// type ((Float Float) -> : Bool)
-op<(// expression FunCall op[][op[]_FuncDef964](a[a_FuncParamDef1361],i[i_VarDef1392])
+// reference op<_1413:varName:var[op<_FuncDef780]
+// expression VarName op<
 // type Any
-// reference op[]_1416:varName:var[op[]_FuncDef964]
-// expression VarName op[][op[]_FuncDef964]
-// type ((Array Int) -> : Any)
-op[](// reference a_1418:varName:var[a_FuncParamDef1361]
-// expression VarName a[a_FuncParamDef1361]
+op<(// expression FunCall op[](a,i)
 // type Any
-a, // reference i_1420:varName:var[i_VarDef1392]
-// expression VarName i[i_VarDef1392]
+// reference op[]_1414:varName:var[op[]_FuncDef964]
+// expression VarName op[]
 // type Any
-i), // reference pivot_1424:varName:var[pivot_VarDef1380]
-// expression VarName pivot[pivot_VarDef1380]
+op[](// reference a_1416:varName:var[a_FuncParamDef1362]
+// expression VarName a
+// type Any
+a, // reference i_1418:varName:var[i_VarDef1391]
+// expression VarName i
+// type Any
+i), // reference pivot_1422:varName:var[pivot_VarDef1380]
+// expression VarName pivot
 // type Any
 pivot))
 ;
 do
-// scope compoundStatement_1435
+// scope compoundStatement_1433
 {
-// expression PostfixDec --j[j_VarDef1404]
+// expression PostfixDec --j
 // type Num
-// reference j_1431:varName:var[j_VarDef1404]
-// expression VarName j[j_VarDef1404]
+// reference j_1429:varName:var[j_VarDef1402]
+// expression VarName j
 // type Any
 j--;
 }
-while (// expression FunCall op>[op>_FuncDef734](op[][op[]_FuncDef964](a[a_FuncParamDef1361],j[j_VarDef1404]),pivot[pivot_VarDef1380])
+while (// expression FunCall op>(op[](a,j),pivot)
 // type Any
-// reference op>_1436:varName:var[op>_FuncDef734]
-// expression VarName op>[op>_FuncDef734]
-// type ((Float Float) -> : Bool)
-op>(// expression FunCall op[][op[]_FuncDef964](a[a_FuncParamDef1361],j[j_VarDef1404])
+// reference op>_1434:varName:var[op>_FuncDef734]
+// expression VarName op>
 // type Any
-// reference op[]_1437:varName:var[op[]_FuncDef964]
-// expression VarName op[][op[]_FuncDef964]
-// type ((Array Int) -> : Any)
-op[](// reference a_1439:varName:var[a_FuncParamDef1361]
-// expression VarName a[a_FuncParamDef1361]
+op>(// expression FunCall op[](a,j)
 // type Any
-a, // reference j_1441:varName:var[j_VarDef1404]
-// expression VarName j[j_VarDef1404]
+// reference op[]_1435:varName:var[op[]_FuncDef964]
+// expression VarName op[]
 // type Any
-j), // reference pivot_1445:varName:var[pivot_VarDef1380]
-// expression VarName pivot[pivot_VarDef1380]
+op[](// reference a_1437:varName:var[a_FuncParamDef1362]
+// expression VarName a
+// type Any
+a, // reference j_1439:varName:var[j_VarDef1402]
+// expression VarName j
+// type Any
+j), // reference pivot_1443:varName:var[pivot_VarDef1380]
+// expression VarName pivot
 // type Any
 pivot))
 ;
-if (// expression FunCall op>=[op>=_FuncDef757](i[i_VarDef1392],j[j_VarDef1404])
+if (// expression FunCall op>=(i,j)
 // type Any
-// reference op>=_1451:varName:var[op>=_FuncDef757]
-// expression VarName op>=[op>=_FuncDef757]
-// type ((Float Float) -> : Bool)
-op>=(// reference i_1453:varName:var[i_VarDef1392]
-// expression VarName i[i_VarDef1392]
+// reference op>=_1449:varName:var[op>=_FuncDef757]
+// expression VarName op>=
 // type Any
-i, // reference j_1455:varName:var[j_VarDef1404]
-// expression VarName j[j_VarDef1404]
+op>=(// reference i_1451:varName:var[i_VarDef1391]
+// expression VarName i
 // type Any
-j))return // reference j_1460:varName:var[j_VarDef1404]
-// expression VarName j[j_VarDef1404]
+i, // reference j_1453:varName:var[j_VarDef1402]
+// expression VarName j
+// type Any
+j))return // reference j_1458:varName:var[j_VarDef1402]
+// expression VarName j
 // type Any
 j;
-var // definition tmp_VarDef1473
+var // definition tmp_VarDef1470
 // type Any
-tmp = // expression FunCall op[][op[]_FuncDef964](a[a_FuncParamDef1361],i[i_VarDef1392])
+tmp// expression FunCall op[](a,i)
 // type Any
-// reference op[]_1465:varName:var[op[]_FuncDef964]
-// expression VarName op[][op[]_FuncDef964]
-// type ((Array Int) -> : Any)
-op[](// reference a_1467:varName:var[a_FuncParamDef1361]
-// expression VarName a[a_FuncParamDef1361]
+// reference op[]_1463:varName:var[op[]_FuncDef964]
+// expression VarName op[]
 // type Any
-a, // reference i_1469:varName:var[i_VarDef1392]
-// expression VarName i[i_VarDef1392]
+op[](// reference a_1465:varName:var[a_FuncParamDef1362]
+// expression VarName a
+// type Any
+a, // reference i_1467:varName:var[i_VarDef1391]
+// expression VarName i
 // type Any
 i);
-// expression FunCall op[][op[]_FuncDef964](a[a_FuncParamDef1361],i[i_VarDef1392])
+// expression VarAssignmentExpr a = set(a,i,op[](a,j))
+// type Void
+// reference a_1478:varName:var[a_FuncParamDef1362]
+// expression VarName a
 // type Any
-// reference op[]_1476:varName:var[op[]_FuncDef964]
-// expression VarName op[][op[]_FuncDef964]
-// type ((Array Int) -> : Any)
-op[](// reference a_1478:varName:var[a_FuncParamDef1361]
-// expression VarName a[a_FuncParamDef1361]
+a = // expression FunCall set(a,i,op[](a,j))
 // type Any
-a, // reference i_1480:varName:var[i_VarDef1392]
-// expression VarName i[i_VarDef1392]
+// reference set_1476:varName:var[set_FuncDef1122]
+// expression VarName set
 // type Any
-i) = // expression FunCall op[][op[]_FuncDef964](a[a_FuncParamDef1361],j[j_VarDef1404])
+set(// reference a_1478:varName:var[a_FuncParamDef1362]
+// expression VarName a
 // type Any
-// reference op[]_1484:varName:var[op[]_FuncDef964]
-// expression VarName op[][op[]_FuncDef964]
-// type ((Array Int) -> : Any)
-op[](// reference a_1486:varName:var[a_FuncParamDef1361]
-// expression VarName a[a_FuncParamDef1361]
+a, // reference i_1480:varName:var[i_VarDef1391]
+// expression VarName i
 // type Any
-a, // reference j_1488:varName:var[j_VarDef1404]
-// expression VarName j[j_VarDef1404]
+i, // expression FunCall op[](a,j)
 // type Any
-j);
-// expression FunCall op[][op[]_FuncDef964](a[a_FuncParamDef1361],j[j_VarDef1404])
+// reference op[]_1481:varName:var[op[]_FuncDef964]
+// expression VarName op[]
 // type Any
-// reference op[]_1494:varName:var[op[]_FuncDef964]
-// expression VarName op[][op[]_FuncDef964]
-// type ((Array Int) -> : Any)
-op[](// reference a_1496:varName:var[a_FuncParamDef1361]
-// expression VarName a[a_FuncParamDef1361]
+op[](// reference a_1483:varName:var[a_FuncParamDef1362]
+// expression VarName a
 // type Any
-a, // reference j_1498:varName:var[j_VarDef1404]
-// expression VarName j[j_VarDef1404]
+a, // reference j_1485:varName:var[j_VarDef1402]
+// expression VarName j
 // type Any
-j) = // reference tmp_1503:varName:var[tmp_VarDef1473]
-// expression VarName tmp[tmp_VarDef1473]
+j));
+// expression VarAssignmentExpr a = set(a,j,tmp)
+// type Void
+// reference a_1498:varName:var[a_FuncParamDef1362]
+// expression VarName a
 // type Any
-tmp;
+a = // expression FunCall set(a,j,tmp)
+// type Any
+// reference set_1496:varName:var[set_FuncDef1122]
+// expression VarName set
+// type Any
+set(// reference a_1498:varName:var[a_FuncParamDef1362]
+// expression VarName a
+// type Any
+a, // reference j_1500:varName:var[j_VarDef1402]
+// expression VarName j
+// type Any
+j, // reference tmp_1502:varName:var[tmp_VarDef1470]
+// expression VarName tmp
+// type Any
+tmp);
 }
-// scope compoundStatement_1507
+// scope compoundStatement_1508
 {
 do
-// scope compoundStatement_1414
+// scope compoundStatement_1412
 {
-// expression PostfixInc ++i[i_VarDef1392]
+// expression PostfixInc ++i
 // type Num
-// reference i_1410:varName:var[i_VarDef1392]
-// expression VarName i[i_VarDef1392]
+// reference i_1408:varName:var[i_VarDef1391]
+// expression VarName i
 // type Any
 i++;
 }
-while (// expression FunCall op<[op<_FuncDef780](op[][op[]_FuncDef964](a[a_FuncParamDef1361],i[i_VarDef1392]),pivot[pivot_VarDef1380])
+while (// expression FunCall op<(op[](a,i),pivot)
 // type Any
-// reference op<_1415:varName:var[op<_FuncDef780]
-// expression VarName op<[op<_FuncDef780]
-// type ((Float Float) -> : Bool)
-op<(// expression FunCall op[][op[]_FuncDef964](a[a_FuncParamDef1361],i[i_VarDef1392])
+// reference op<_1413:varName:var[op<_FuncDef780]
+// expression VarName op<
 // type Any
-// reference op[]_1416:varName:var[op[]_FuncDef964]
-// expression VarName op[][op[]_FuncDef964]
-// type ((Array Int) -> : Any)
-op[](// reference a_1418:varName:var[a_FuncParamDef1361]
-// expression VarName a[a_FuncParamDef1361]
+op<(// expression FunCall op[](a,i)
 // type Any
-a, // reference i_1420:varName:var[i_VarDef1392]
-// expression VarName i[i_VarDef1392]
+// reference op[]_1414:varName:var[op[]_FuncDef964]
+// expression VarName op[]
 // type Any
-i), // reference pivot_1424:varName:var[pivot_VarDef1380]
-// expression VarName pivot[pivot_VarDef1380]
+op[](// reference a_1416:varName:var[a_FuncParamDef1362]
+// expression VarName a
+// type Any
+a, // reference i_1418:varName:var[i_VarDef1391]
+// expression VarName i
+// type Any
+i), // reference pivot_1422:varName:var[pivot_VarDef1380]
+// expression VarName pivot
 // type Any
 pivot))
 ;
 do
-// scope compoundStatement_1435
+// scope compoundStatement_1433
 {
-// expression PostfixDec --j[j_VarDef1404]
+// expression PostfixDec --j
 // type Num
-// reference j_1431:varName:var[j_VarDef1404]
-// expression VarName j[j_VarDef1404]
+// reference j_1429:varName:var[j_VarDef1402]
+// expression VarName j
 // type Any
 j--;
 }
-while (// expression FunCall op>[op>_FuncDef734](op[][op[]_FuncDef964](a[a_FuncParamDef1361],j[j_VarDef1404]),pivot[pivot_VarDef1380])
+while (// expression FunCall op>(op[](a,j),pivot)
 // type Any
-// reference op>_1436:varName:var[op>_FuncDef734]
-// expression VarName op>[op>_FuncDef734]
-// type ((Float Float) -> : Bool)
-op>(// expression FunCall op[][op[]_FuncDef964](a[a_FuncParamDef1361],j[j_VarDef1404])
+// reference op>_1434:varName:var[op>_FuncDef734]
+// expression VarName op>
 // type Any
-// reference op[]_1437:varName:var[op[]_FuncDef964]
-// expression VarName op[][op[]_FuncDef964]
-// type ((Array Int) -> : Any)
-op[](// reference a_1439:varName:var[a_FuncParamDef1361]
-// expression VarName a[a_FuncParamDef1361]
+op>(// expression FunCall op[](a,j)
 // type Any
-a, // reference j_1441:varName:var[j_VarDef1404]
-// expression VarName j[j_VarDef1404]
+// reference op[]_1435:varName:var[op[]_FuncDef964]
+// expression VarName op[]
 // type Any
-j), // reference pivot_1445:varName:var[pivot_VarDef1380]
-// expression VarName pivot[pivot_VarDef1380]
+op[](// reference a_1437:varName:var[a_FuncParamDef1362]
+// expression VarName a
+// type Any
+a, // reference j_1439:varName:var[j_VarDef1402]
+// expression VarName j
+// type Any
+j), // reference pivot_1443:varName:var[pivot_VarDef1380]
+// expression VarName pivot
 // type Any
 pivot))
 ;
-if (// expression FunCall op>=[op>=_FuncDef757](i[i_VarDef1392],j[j_VarDef1404])
+if (// expression FunCall op>=(i,j)
 // type Any
-// reference op>=_1451:varName:var[op>=_FuncDef757]
-// expression VarName op>=[op>=_FuncDef757]
-// type ((Float Float) -> : Bool)
-op>=(// reference i_1453:varName:var[i_VarDef1392]
-// expression VarName i[i_VarDef1392]
+// reference op>=_1449:varName:var[op>=_FuncDef757]
+// expression VarName op>=
 // type Any
-i, // reference j_1455:varName:var[j_VarDef1404]
-// expression VarName j[j_VarDef1404]
+op>=(// reference i_1451:varName:var[i_VarDef1391]
+// expression VarName i
 // type Any
-j))return // reference j_1460:varName:var[j_VarDef1404]
-// expression VarName j[j_VarDef1404]
+i, // reference j_1453:varName:var[j_VarDef1402]
+// expression VarName j
+// type Any
+j))return // reference j_1458:varName:var[j_VarDef1402]
+// expression VarName j
 // type Any
 j;
-var // definition tmp_VarDef1473
+var // definition tmp_VarDef1470
 // type Any
-tmp = // expression FunCall op[][op[]_FuncDef964](a[a_FuncParamDef1361],i[i_VarDef1392])
+tmp// expression FunCall op[](a,i)
 // type Any
-// reference op[]_1465:varName:var[op[]_FuncDef964]
-// expression VarName op[][op[]_FuncDef964]
-// type ((Array Int) -> : Any)
-op[](// reference a_1467:varName:var[a_FuncParamDef1361]
-// expression VarName a[a_FuncParamDef1361]
+// reference op[]_1463:varName:var[op[]_FuncDef964]
+// expression VarName op[]
 // type Any
-a, // reference i_1469:varName:var[i_VarDef1392]
-// expression VarName i[i_VarDef1392]
+op[](// reference a_1465:varName:var[a_FuncParamDef1362]
+// expression VarName a
+// type Any
+a, // reference i_1467:varName:var[i_VarDef1391]
+// expression VarName i
 // type Any
 i);
-// expression FunCall op[][op[]_FuncDef964](a[a_FuncParamDef1361],i[i_VarDef1392])
+// expression VarAssignmentExpr a = set(a,i,op[](a,j))
+// type Void
+// reference a_1478:varName:var[a_FuncParamDef1362]
+// expression VarName a
 // type Any
-// reference op[]_1476:varName:var[op[]_FuncDef964]
-// expression VarName op[][op[]_FuncDef964]
-// type ((Array Int) -> : Any)
-op[](// reference a_1478:varName:var[a_FuncParamDef1361]
-// expression VarName a[a_FuncParamDef1361]
+a = // expression FunCall set(a,i,op[](a,j))
 // type Any
-a, // reference i_1480:varName:var[i_VarDef1392]
-// expression VarName i[i_VarDef1392]
+// reference set_1476:varName:var[set_FuncDef1122]
+// expression VarName set
 // type Any
-i) = // expression FunCall op[][op[]_FuncDef964](a[a_FuncParamDef1361],j[j_VarDef1404])
+set(// reference a_1478:varName:var[a_FuncParamDef1362]
+// expression VarName a
 // type Any
-// reference op[]_1484:varName:var[op[]_FuncDef964]
-// expression VarName op[][op[]_FuncDef964]
-// type ((Array Int) -> : Any)
-op[](// reference a_1486:varName:var[a_FuncParamDef1361]
-// expression VarName a[a_FuncParamDef1361]
+a, // reference i_1480:varName:var[i_VarDef1391]
+// expression VarName i
 // type Any
-a, // reference j_1488:varName:var[j_VarDef1404]
-// expression VarName j[j_VarDef1404]
+i, // expression FunCall op[](a,j)
 // type Any
-j);
-// expression FunCall op[][op[]_FuncDef964](a[a_FuncParamDef1361],j[j_VarDef1404])
+// reference op[]_1481:varName:var[op[]_FuncDef964]
+// expression VarName op[]
 // type Any
-// reference op[]_1494:varName:var[op[]_FuncDef964]
-// expression VarName op[][op[]_FuncDef964]
-// type ((Array Int) -> : Any)
-op[](// reference a_1496:varName:var[a_FuncParamDef1361]
-// expression VarName a[a_FuncParamDef1361]
+op[](// reference a_1483:varName:var[a_FuncParamDef1362]
+// expression VarName a
 // type Any
-a, // reference j_1498:varName:var[j_VarDef1404]
-// expression VarName j[j_VarDef1404]
+a, // reference j_1485:varName:var[j_VarDef1402]
+// expression VarName j
 // type Any
-j) = // reference tmp_1503:varName:var[tmp_VarDef1473]
-// expression VarName tmp[tmp_VarDef1473]
+j));
+// expression VarAssignmentExpr a = set(a,j,tmp)
+// type Void
+// reference a_1498:varName:var[a_FuncParamDef1362]
+// expression VarName a
 // type Any
-tmp;
+a = // expression FunCall set(a,j,tmp)
+// type Any
+// reference set_1496:varName:var[set_FuncDef1122]
+// expression VarName set
+// type Any
+set(// reference a_1498:varName:var[a_FuncParamDef1362]
+// expression VarName a
+// type Any
+a, // reference j_1500:varName:var[j_VarDef1402]
+// expression VarName j
+// type Any
+j, // reference tmp_1502:varName:var[tmp_VarDef1470]
+// expression VarName tmp
+// type Any
+tmp);
 }
-return // reference a_1510:varName:var[a_FuncParamDef1361]
-// expression VarName a[a_FuncParamDef1361]
+return // reference a_1511:varName:var[a_FuncParamDef1362]
+// expression VarName a
 // type Any
 a;
 }
@@ -2315,108 +2347,114 @@ function qsort(a, lo, hi) {
 // scope funcDef_1613
 // definition qsort_FuncDef1613
 // type ((Any Any Any) -> Any)
-function qsort(// definition a_FuncParamDef1522
+function qsort(// definition a_FuncParamDef1523
 // type Any
-a, // definition lo_FuncParamDef1525
+a, // definition lo_FuncParamDef1526
 // type Any
-lo, // definition hi_FuncParamDef1528
+lo, // definition hi_FuncParamDef1529
 // type Any
 hi)
 // scope recCompoundStatement_1610
 {
 // scope compoundStatement_1609
 {
-if (// expression FunCall op<[op<_FuncDef780](lo[lo_FuncParamDef1525],hi[hi_FuncParamDef1528])
+if (// expression FunCall op<(lo,hi)
 // type Any
-// reference op<_1531:varName:var[op<_FuncDef780]
-// expression VarName op<[op<_FuncDef780]
-// type ((Float Float) -> : Bool)
-op<(// reference lo_1533:varName:var[lo_FuncParamDef1525]
-// expression VarName lo[lo_FuncParamDef1525]
+// reference op<_1532:varName:var[op<_FuncDef780]
+// expression VarName op<
 // type Any
-lo, // reference hi_1535:varName:var[hi_FuncParamDef1528]
-// expression VarName hi[hi_FuncParamDef1528]
+op<(// reference lo_1534:varName:var[lo_FuncParamDef1526]
+// expression VarName lo
+// type Any
+lo, // reference hi_1536:varName:var[hi_FuncParamDef1529]
+// expression VarName hi
 // type Any
 hi))// scope compoundStatement_1604
 {
 var // definition p_VarDef1549
 // type Any
-p = // expression FunCall op[][op[]_FuncDef964](a[a_FuncParamDef1522],lo[lo_FuncParamDef1525])
+p// expression FunCall op[](a,lo)
 // type Any
-// reference op[]_1541:varName:var[op[]_FuncDef964]
-// expression VarName op[][op[]_FuncDef964]
-// type ((Array Int) -> : Any)
-op[](// reference a_1543:varName:var[a_FuncParamDef1522]
-// expression VarName a[a_FuncParamDef1522]
+// reference op[]_1542:varName:var[op[]_FuncDef964]
+// expression VarName op[]
 // type Any
-a, // reference lo_1545:varName:var[lo_FuncParamDef1525]
-// expression VarName lo[lo_FuncParamDef1525]
+op[](// reference a_1544:varName:var[a_FuncParamDef1523]
+// expression VarName a
+// type Any
+a, // reference lo_1546:varName:var[lo_FuncParamDef1526]
+// expression VarName lo
 // type Any
 lo);
-// reference a_1553:varName:var[a_FuncParamDef1522]
-// expression VarName a[a_FuncParamDef1522]
+// expression VarAssignmentExpr a = partition(a,lo,hi)
+// type Void
+// reference a_1553:varName:var[a_FuncParamDef1523]
+// expression VarName a
 // type Any
-a = // expression FunCall partition[partition_FuncDef1516](a[a_FuncParamDef1522],lo[lo_FuncParamDef1525],hi[hi_FuncParamDef1528])
+a = // expression FunCall partition(a,lo,hi)
 // type Any
-// reference partition_1556:varName:var[partition_FuncDef1516]
-// expression VarName partition[partition_FuncDef1516]
-// type ((Any Any Any) -> Any)
-partition(// reference a_1558:varName:var[a_FuncParamDef1522]
-// expression VarName a[a_FuncParamDef1522]
+// reference partition_1556:varName:var[partition_FuncDef1517]
+// expression VarName partition
 // type Any
-a, // reference lo_1560:varName:var[lo_FuncParamDef1525]
-// expression VarName lo[lo_FuncParamDef1525]
+partition(// reference a_1558:varName:var[a_FuncParamDef1523]
+// expression VarName a
 // type Any
-lo, // reference hi_1562:varName:var[hi_FuncParamDef1528]
-// expression VarName hi[hi_FuncParamDef1528]
+a, // reference lo_1560:varName:var[lo_FuncParamDef1526]
+// expression VarName lo
+// type Any
+lo, // reference hi_1562:varName:var[hi_FuncParamDef1529]
+// expression VarName hi
 // type Any
 hi);
-// reference a_1569:varName:var[a_FuncParamDef1522]
-// expression VarName a[a_FuncParamDef1522]
+// expression VarAssignmentExpr a = qsort(a,lo,p)
+// type Void
+// reference a_1569:varName:var[a_FuncParamDef1523]
+// expression VarName a
 // type Any
-a = // expression FunCall qsort[qsort_FuncDef1613](a[a_FuncParamDef1522],lo[lo_FuncParamDef1525],p[p_VarDef1549])
+a = // expression FunCall qsort(a,lo,p)
 // type Any
 // reference qsort_1572:varName:var[qsort_FuncDef1613]
-// expression VarName qsort[qsort_FuncDef1613]
-// type ((Any Any Any) -> Any)
-qsort(// reference a_1574:varName:var[a_FuncParamDef1522]
-// expression VarName a[a_FuncParamDef1522]
+// expression VarName qsort
 // type Any
-a, // reference lo_1576:varName:var[lo_FuncParamDef1525]
-// expression VarName lo[lo_FuncParamDef1525]
+qsort(// reference a_1574:varName:var[a_FuncParamDef1523]
+// expression VarName a
+// type Any
+a, // reference lo_1576:varName:var[lo_FuncParamDef1526]
+// expression VarName lo
 // type Any
 lo, // reference p_1578:varName:var[p_VarDef1549]
-// expression VarName p[p_VarDef1549]
+// expression VarName p
 // type Any
 p);
-// reference a_1585:varName:var[a_FuncParamDef1522]
-// expression VarName a[a_FuncParamDef1522]
+// expression VarAssignmentExpr a = qsort(a,op+(p,1),hi)
+// type Void
+// reference a_1585:varName:var[a_FuncParamDef1523]
+// expression VarName a
 // type Any
-a = // expression FunCall qsort[qsort_FuncDef1613](a[a_FuncParamDef1522],op+[op+_FuncDef619](p[p_VarDef1549],1),hi[hi_FuncParamDef1528])
+a = // expression FunCall qsort(a,op+(p,1),hi)
 // type Any
 // reference qsort_1588:varName:var[qsort_FuncDef1613]
-// expression VarName qsort[qsort_FuncDef1613]
-// type ((Any Any Any) -> Any)
-qsort(// reference a_1590:varName:var[a_FuncParamDef1522]
-// expression VarName a[a_FuncParamDef1522]
+// expression VarName qsort
 // type Any
-a, // expression FunCall op+[op+_FuncDef619](p[p_VarDef1549],1)
+qsort(// reference a_1590:varName:var[a_FuncParamDef1523]
+// expression VarName a
+// type Any
+a, // expression FunCall op+(p,1)
 // type Any
 // reference op+_1591:varName:var[op+_FuncDef619]
-// expression VarName op+[op+_FuncDef619]
-// type ((Float Float) -> : Float)
+// expression VarName op+
+// type Any
 op+(// reference p_1593:varName:var[p_VarDef1549]
-// expression VarName p[p_VarDef1549]
+// expression VarName p
 // type Any
 p, // expression NumLiteral 1
 // type Num
-1), // reference hi_1598:varName:var[hi_FuncParamDef1528]
-// expression VarName hi[hi_FuncParamDef1528]
+1), // reference hi_1598:varName:var[hi_FuncParamDef1529]
+// expression VarName hi
 // type Any
 hi);
 }
-return // reference a_1607:varName:var[a_FuncParamDef1522]
-// expression VarName a[a_FuncParamDef1522]
+return // reference a_1607:varName:var[a_FuncParamDef1523]
+// expression VarName a
 // type Any
 a;
 }
@@ -2437,43 +2475,43 @@ function sort(xs)
 function sort(// definition xs_FuncParamDef1619
 // type Any
 xs)
-// expression FunCall array[array_FuncDef1018,array_FuncDef1138,array_FuncDef1201,array_FuncDef1231,array_FuncDef1266](qsort[qsort_FuncDef1613](mutable[mutable_FuncDef1072](xs[xs_FuncParamDef1619]),0,op-[op-_FuncDef642](count[count_FuncDef463](xs[xs_FuncParamDef1619]),1)))
+// expression FunCall array(qsort(mutable(xs),0,op-(count(xs),1)))
 // type Any
 // reference array_1622:varName:var[array_FuncDef1018, array_FuncDef1138, array_FuncDef1201, array_FuncDef1231, array_FuncDef1266]
-// expression VarName array[array_FuncDef1018,array_FuncDef1138,array_FuncDef1201,array_FuncDef1231,array_FuncDef1266]
-// type (union ((Int Function) -> : Array) ((ArrayBuilder) -> : Array) ((Float2) -> Any) ((Float3) -> Any) ((Float4) -> Any))
-array(// expression FunCall qsort[qsort_FuncDef1613](mutable[mutable_FuncDef1072](xs[xs_FuncParamDef1619]),0,op-[op-_FuncDef642](count[count_FuncDef463](xs[xs_FuncParamDef1619]),1))
+// expression VarName array
+// type Any
+array(// expression FunCall qsort(mutable(xs),0,op-(count(xs),1))
 // type Any
 // reference qsort_1623:varName:var[qsort_FuncDef1613]
-// expression VarName qsort[qsort_FuncDef1613]
-// type ((Any Any Any) -> Any)
-qsort(// expression FunCall mutable[mutable_FuncDef1072](xs[xs_FuncParamDef1619])
+// expression VarName qsort
+// type Any
+qsort(// expression FunCall mutable(xs)
 // type Any
 // reference mutable_1624:varName:var[mutable_FuncDef1072]
-// expression VarName mutable[mutable_FuncDef1072]
-// type ((Array) -> : ArrayBuilder)
+// expression VarName mutable
+// type Any
 mutable(// reference xs_1626:varName:var[xs_FuncParamDef1619]
-// expression VarName xs[xs_FuncParamDef1619]
+// expression VarName xs
 // type Any
 xs), // expression NumLiteral 0
 // type Num
-0, // expression FunCall op-[op-_FuncDef642](count[count_FuncDef463](xs[xs_FuncParamDef1619]),1)
+0, // expression FunCall op-(count(xs),1)
 // type Any
 // reference op-_1630:varName:var[op-_FuncDef642]
-// expression VarName op-[op-_FuncDef642]
-// type ((Float Float) -> : Float)
-op-(// expression FunCall count[count_FuncDef463](xs[xs_FuncParamDef1619])
+// expression VarName op-
+// type Any
+op-(// expression FunCall count(xs)
 // type Any
 // reference count_1631:varName:var[count_FuncDef463]
-// expression VarName count[count_FuncDef463]
-// type ((Any Any) -> Any)
+// expression VarName count
+// type Any
 count(// reference xs_1633:varName:var[xs_FuncParamDef1619]
-// expression VarName xs[xs_FuncParamDef1619]
+// expression VarName xs
 // type Any
 xs), // expression NumLiteral 1
 // type Num
-1)))// scope funcDef_1742
-// definition median_FuncDef1742
+1)))// scope funcDef_1741
+// definition median_FuncDef1741
 // type ((Any) -> Any)
 
 /**
@@ -2486,139 +2524,139 @@ function median(xs) {
 
     
 */
-// scope funcDef_1742
-// definition median_FuncDef1742
+// scope funcDef_1741
+// definition median_FuncDef1741
 // type ((Any) -> Any)
 function median(// definition xs_FuncParamDef1651
 // type Any
 xs)
-// scope recCompoundStatement_1739
+// scope recCompoundStatement_1738
 {
-// scope compoundStatement_1738
+// scope compoundStatement_1737
 {
-var // definition ys_VarDef1662
+var // definition ys_VarDef1661
 // type Any
-ys = // expression FunCall sort[sort_FuncDef1645](xs[xs_FuncParamDef1651])
+ys// expression FunCall sort(xs)
 // type Any
 // reference sort_1656:varName:var[sort_FuncDef1645]
-// expression VarName sort[sort_FuncDef1645]
-// type ((Any) -> Any)
+// expression VarName sort
+// type Any
 sort(// reference xs_1658:varName:var[xs_FuncParamDef1651]
-// expression VarName xs[xs_FuncParamDef1651]
+// expression VarName xs
 // type Any
 xs);
-return // expression ConditionalExpr op==[op==_FuncDef849](op%[op%_FuncDef711](count[count_FuncDef463](ys[ys_VarDef1662]),2),0) ? op[][op[]_FuncDef964](ys[ys_VarDef1662],op/[op/_FuncDef688](count[count_FuncDef463](ys[ys_VarDef1662]),2)) : op+[op+_FuncDef619](op[][op[]_FuncDef964](ys[ys_VarDef1662],op-[op-_FuncDef642](op/[op/_FuncDef688](count[count_FuncDef463](ys[ys_VarDef1662]),2),1)),op/[op/_FuncDef688](op[][op[]_FuncDef964](ys[ys_VarDef1662],op+[op+_FuncDef619](op/[op/_FuncDef688](count[count_FuncDef463](ys[ys_VarDef1662]),2),1)),2))
+return // expression ConditionalExpr op==(op%(count(ys),2),0) ? op[](ys,op/(count(ys),2)) : op+(op[](ys,op-(op/(count(ys),2),1)),op/(op[](ys,op+(op/(count(ys),2),1)),2))
 // type Any
-// expression FunCall op==[op==_FuncDef849](op%[op%_FuncDef711](count[count_FuncDef463](ys[ys_VarDef1662]),2),0)
+// expression FunCall op==(op%(count(ys),2),0)
 // type Any
-// reference op==_1665:varName:var[op==_FuncDef849]
-// expression VarName op==[op==_FuncDef849]
-// type ((Float Float) -> : Bool)
-op==(// expression FunCall op%[op%_FuncDef711](count[count_FuncDef463](ys[ys_VarDef1662]),2)
+// reference op==_1664:varName:var[op==_FuncDef849]
+// expression VarName op==
 // type Any
-// reference op%_1666:varName:var[op%_FuncDef711]
-// expression VarName op%[op%_FuncDef711]
-// type ((Float Float) -> : Float)
-op%(// expression FunCall count[count_FuncDef463](ys[ys_VarDef1662])
+op==(// expression FunCall op%(count(ys),2)
 // type Any
-// reference count_1667:varName:var[count_FuncDef463]
-// expression VarName count[count_FuncDef463]
-// type ((Any Any) -> Any)
-count(// reference ys_1669:varName:var[ys_VarDef1662]
-// expression VarName ys[ys_VarDef1662]
+// reference op%_1665:varName:var[op%_FuncDef711]
+// expression VarName op%
+// type Any
+op%(// expression FunCall count(ys)
+// type Any
+// reference count_1666:varName:var[count_FuncDef463]
+// expression VarName count
+// type Any
+count(// reference ys_1668:varName:var[ys_VarDef1661]
+// expression VarName ys
 // type Any
 ys), // expression NumLiteral 2
 // type Num
 2), // expression NumLiteral 0
 // type Num
-0) ? // expression FunCall op[][op[]_FuncDef964](ys[ys_VarDef1662],op/[op/_FuncDef688](count[count_FuncDef463](ys[ys_VarDef1662]),2))
+0) ? // expression FunCall op[](ys,op/(count(ys),2))
 // type Any
-// reference op[]_1678:varName:var[op[]_FuncDef964]
-// expression VarName op[][op[]_FuncDef964]
-// type ((Array Int) -> : Any)
-op[](// reference ys_1680:varName:var[ys_VarDef1662]
-// expression VarName ys[ys_VarDef1662]
+// reference op[]_1677:varName:var[op[]_FuncDef964]
+// expression VarName op[]
 // type Any
-ys, // expression FunCall op/[op/_FuncDef688](count[count_FuncDef463](ys[ys_VarDef1662]),2)
+op[](// reference ys_1679:varName:var[ys_VarDef1661]
+// expression VarName ys
 // type Any
-// reference op/_1681:varName:var[op/_FuncDef688]
-// expression VarName op/[op/_FuncDef688]
-// type ((Float Float) -> : Float)
-op/(// expression FunCall count[count_FuncDef463](ys[ys_VarDef1662])
+ys, // expression FunCall op/(count(ys),2)
 // type Any
-// reference count_1682:varName:var[count_FuncDef463]
-// expression VarName count[count_FuncDef463]
-// type ((Any Any) -> Any)
-count(// reference ys_1684:varName:var[ys_VarDef1662]
-// expression VarName ys[ys_VarDef1662]
+// reference op/_1680:varName:var[op/_FuncDef688]
+// expression VarName op/
+// type Any
+op/(// expression FunCall count(ys)
+// type Any
+// reference count_1681:varName:var[count_FuncDef463]
+// expression VarName count
+// type Any
+count(// reference ys_1683:varName:var[ys_VarDef1661]
+// expression VarName ys
 // type Any
 ys), // expression NumLiteral 2
 // type Num
-2))// expression FunCall op+[op+_FuncDef619](op[][op[]_FuncDef964](ys[ys_VarDef1662],op-[op-_FuncDef642](op/[op/_FuncDef688](count[count_FuncDef463](ys[ys_VarDef1662]),2),1)),op/[op/_FuncDef688](op[][op[]_FuncDef964](ys[ys_VarDef1662],op+[op+_FuncDef619](op/[op/_FuncDef688](count[count_FuncDef463](ys[ys_VarDef1662]),2),1)),2))
+2))// expression FunCall op+(op[](ys,op-(op/(count(ys),2),1)),op/(op[](ys,op+(op/(count(ys),2),1)),2))
 // type Any
-// reference op+_1692:varName:var[op+_FuncDef619]
-// expression VarName op+[op+_FuncDef619]
-// type ((Float Float) -> : Float)
-op+(// expression FunCall op[][op[]_FuncDef964](ys[ys_VarDef1662],op-[op-_FuncDef642](op/[op/_FuncDef688](count[count_FuncDef463](ys[ys_VarDef1662]),2),1))
+// reference op+_1691:varName:var[op+_FuncDef619]
+// expression VarName op+
 // type Any
-// reference op[]_1693:varName:var[op[]_FuncDef964]
-// expression VarName op[][op[]_FuncDef964]
-// type ((Array Int) -> : Any)
-op[](// reference ys_1695:varName:var[ys_VarDef1662]
-// expression VarName ys[ys_VarDef1662]
+op+(// expression FunCall op[](ys,op-(op/(count(ys),2),1))
 // type Any
-ys, // expression FunCall op-[op-_FuncDef642](op/[op/_FuncDef688](count[count_FuncDef463](ys[ys_VarDef1662]),2),1)
+// reference op[]_1692:varName:var[op[]_FuncDef964]
+// expression VarName op[]
 // type Any
-// reference op-_1696:varName:var[op-_FuncDef642]
-// expression VarName op-[op-_FuncDef642]
-// type ((Float Float) -> : Float)
-op-(// expression FunCall op/[op/_FuncDef688](count[count_FuncDef463](ys[ys_VarDef1662]),2)
+op[](// reference ys_1694:varName:var[ys_VarDef1661]
+// expression VarName ys
 // type Any
-// reference op/_1697:varName:var[op/_FuncDef688]
-// expression VarName op/[op/_FuncDef688]
-// type ((Float Float) -> : Float)
-op/(// expression FunCall count[count_FuncDef463](ys[ys_VarDef1662])
+ys, // expression FunCall op-(op/(count(ys),2),1)
 // type Any
-// reference count_1698:varName:var[count_FuncDef463]
-// expression VarName count[count_FuncDef463]
-// type ((Any Any) -> Any)
-count(// reference ys_1700:varName:var[ys_VarDef1662]
-// expression VarName ys[ys_VarDef1662]
+// reference op-_1695:varName:var[op-_FuncDef642]
+// expression VarName op-
+// type Any
+op-(// expression FunCall op/(count(ys),2)
+// type Any
+// reference op/_1696:varName:var[op/_FuncDef688]
+// expression VarName op/
+// type Any
+op/(// expression FunCall count(ys)
+// type Any
+// reference count_1697:varName:var[count_FuncDef463]
+// expression VarName count
+// type Any
+count(// reference ys_1699:varName:var[ys_VarDef1661]
+// expression VarName ys
 // type Any
 ys), // expression NumLiteral 2
 // type Num
 2), // expression NumLiteral 1
 // type Num
-1)), // expression FunCall op/[op/_FuncDef688](op[][op[]_FuncDef964](ys[ys_VarDef1662],op+[op+_FuncDef619](op/[op/_FuncDef688](count[count_FuncDef463](ys[ys_VarDef1662]),2),1)),2)
+1)), // expression FunCall op/(op[](ys,op+(op/(count(ys),2),1)),2)
 // type Any
-// reference op/_1711:varName:var[op/_FuncDef688]
-// expression VarName op/[op/_FuncDef688]
-// type ((Float Float) -> : Float)
-op/(// expression FunCall op[][op[]_FuncDef964](ys[ys_VarDef1662],op+[op+_FuncDef619](op/[op/_FuncDef688](count[count_FuncDef463](ys[ys_VarDef1662]),2),1))
+// reference op/_1710:varName:var[op/_FuncDef688]
+// expression VarName op/
 // type Any
-// reference op[]_1712:varName:var[op[]_FuncDef964]
-// expression VarName op[][op[]_FuncDef964]
-// type ((Array Int) -> : Any)
-op[](// reference ys_1714:varName:var[ys_VarDef1662]
-// expression VarName ys[ys_VarDef1662]
+op/(// expression FunCall op[](ys,op+(op/(count(ys),2),1))
 // type Any
-ys, // expression FunCall op+[op+_FuncDef619](op/[op/_FuncDef688](count[count_FuncDef463](ys[ys_VarDef1662]),2),1)
+// reference op[]_1711:varName:var[op[]_FuncDef964]
+// expression VarName op[]
 // type Any
-// reference op+_1715:varName:var[op+_FuncDef619]
-// expression VarName op+[op+_FuncDef619]
-// type ((Float Float) -> : Float)
-op+(// expression FunCall op/[op/_FuncDef688](count[count_FuncDef463](ys[ys_VarDef1662]),2)
+op[](// reference ys_1713:varName:var[ys_VarDef1661]
+// expression VarName ys
 // type Any
-// reference op/_1716:varName:var[op/_FuncDef688]
-// expression VarName op/[op/_FuncDef688]
-// type ((Float Float) -> : Float)
-op/(// expression FunCall count[count_FuncDef463](ys[ys_VarDef1662])
+ys, // expression FunCall op+(op/(count(ys),2),1)
 // type Any
-// reference count_1717:varName:var[count_FuncDef463]
-// expression VarName count[count_FuncDef463]
-// type ((Any Any) -> Any)
-count(// reference ys_1719:varName:var[ys_VarDef1662]
-// expression VarName ys[ys_VarDef1662]
+// reference op+_1714:varName:var[op+_FuncDef619]
+// expression VarName op+
+// type Any
+op+(// expression FunCall op/(count(ys),2)
+// type Any
+// reference op/_1715:varName:var[op/_FuncDef688]
+// expression VarName op/
+// type Any
+op/(// expression FunCall count(ys)
+// type Any
+// reference count_1716:varName:var[count_FuncDef463]
+// expression VarName count
+// type Any
+count(// reference ys_1718:varName:var[ys_VarDef1661]
+// expression VarName ys
 // type Any
 ys), // expression NumLiteral 2
 // type Num
@@ -2629,8 +2667,8 @@ ys), // expression NumLiteral 2
 2));
 }
 }
-// scope funcDef_1775
-// definition inRange_FuncDef1775
+// scope funcDef_1774
+// definition inRange_FuncDef1774
 // type ((Any Any) -> Any)
 
 /**
@@ -2639,47 +2677,47 @@ function inRange(xs, n)
 
     
 */
-// scope funcDef_1775
-// definition inRange_FuncDef1775
+// scope funcDef_1774
+// definition inRange_FuncDef1774
 // type ((Any Any) -> Any)
-function inRange(// definition xs_FuncParamDef1748
+function inRange(// definition xs_FuncParamDef1747
 // type Any
-xs, // definition n_FuncParamDef1751
+xs, // definition n_FuncParamDef1750
 // type Any
 n)
-// expression FunCall op&&[op&&_FuncDef872](op>=[op>=_FuncDef757](n[n_FuncParamDef1751],0),op<[op<_FuncDef780](n[n_FuncParamDef1751],count[count_FuncDef463](xs[xs_FuncParamDef1748])))
+// expression FunCall op&&(op>=(n,0),op<(n,count(xs)))
 // type Any
-// reference op&&_1754:varName:var[op&&_FuncDef872]
-// expression VarName op&&[op&&_FuncDef872]
-// type ((Bool Bool) -> : Bool)
-op&&(// expression FunCall op>=[op>=_FuncDef757](n[n_FuncParamDef1751],0)
+// reference op&&_1753:varName:var[op&&_FuncDef872]
+// expression VarName op&&
 // type Any
-// reference op>=_1755:varName:var[op>=_FuncDef757]
-// expression VarName op>=[op>=_FuncDef757]
-// type ((Float Float) -> : Bool)
-op>=(// reference n_1757:varName:var[n_FuncParamDef1751]
-// expression VarName n[n_FuncParamDef1751]
+op&&(// expression FunCall op>=(n,0)
+// type Any
+// reference op>=_1754:varName:var[op>=_FuncDef757]
+// expression VarName op>=
+// type Any
+op>=(// reference n_1756:varName:var[n_FuncParamDef1750]
+// expression VarName n
 // type Any
 n, // expression NumLiteral 0
 // type Num
-0), // expression FunCall op<[op<_FuncDef780](n[n_FuncParamDef1751],count[count_FuncDef463](xs[xs_FuncParamDef1748]))
+0), // expression FunCall op<(n,count(xs))
 // type Any
-// reference op<_1761:varName:var[op<_FuncDef780]
-// expression VarName op<[op<_FuncDef780]
-// type ((Float Float) -> : Bool)
-op<(// reference n_1763:varName:var[n_FuncParamDef1751]
-// expression VarName n[n_FuncParamDef1751]
+// reference op<_1760:varName:var[op<_FuncDef780]
+// expression VarName op<
 // type Any
-n, // expression FunCall count[count_FuncDef463](xs[xs_FuncParamDef1748])
+op<(// reference n_1762:varName:var[n_FuncParamDef1750]
+// expression VarName n
 // type Any
-// reference count_1764:varName:var[count_FuncDef463]
-// expression VarName count[count_FuncDef463]
-// type ((Any Any) -> Any)
-count(// reference xs_1766:varName:var[xs_FuncParamDef1748]
-// expression VarName xs[xs_FuncParamDef1748]
+n, // expression FunCall count(xs)
 // type Any
-xs)))// scope funcDef_1800
-// definition last_FuncDef1800
+// reference count_1763:varName:var[count_FuncDef463]
+// expression VarName count
+// type Any
+count(// reference xs_1765:varName:var[xs_FuncParamDef1747]
+// expression VarName xs
+// type Any
+xs)))// scope funcDef_1799
+// definition last_FuncDef1799
 // type ((Any) -> Any)
 
 /**
@@ -2688,37 +2726,37 @@ function last(xs)
 
     
 */
-// scope funcDef_1800
-// definition last_FuncDef1800
+// scope funcDef_1799
+// definition last_FuncDef1799
 // type ((Any) -> Any)
-function last(// definition xs_FuncParamDef1781
+function last(// definition xs_FuncParamDef1780
 // type Any
 xs)
-// expression FunCall op[][op[]_FuncDef964](xs[xs_FuncParamDef1781],op-[op-_FuncDef642](count[count_FuncDef463](xs[xs_FuncParamDef1781]),1))
+// expression FunCall op[](xs,op-(count(xs),1))
 // type Any
-// reference op[]_1784:varName:var[op[]_FuncDef964]
-// expression VarName op[][op[]_FuncDef964]
-// type ((Array Int) -> : Any)
-op[](// reference xs_1786:varName:var[xs_FuncParamDef1781]
-// expression VarName xs[xs_FuncParamDef1781]
+// reference op[]_1783:varName:var[op[]_FuncDef964]
+// expression VarName op[]
 // type Any
-xs, // expression FunCall op-[op-_FuncDef642](count[count_FuncDef463](xs[xs_FuncParamDef1781]),1)
+op[](// reference xs_1785:varName:var[xs_FuncParamDef1780]
+// expression VarName xs
 // type Any
-// reference op-_1787:varName:var[op-_FuncDef642]
-// expression VarName op-[op-_FuncDef642]
-// type ((Float Float) -> : Float)
-op-(// expression FunCall count[count_FuncDef463](xs[xs_FuncParamDef1781])
+xs, // expression FunCall op-(count(xs),1)
 // type Any
-// reference count_1788:varName:var[count_FuncDef463]
-// expression VarName count[count_FuncDef463]
-// type ((Any Any) -> Any)
-count(// reference xs_1790:varName:var[xs_FuncParamDef1781]
-// expression VarName xs[xs_FuncParamDef1781]
+// reference op-_1786:varName:var[op-_FuncDef642]
+// expression VarName op-
+// type Any
+op-(// expression FunCall count(xs)
+// type Any
+// reference count_1787:varName:var[count_FuncDef463]
+// expression VarName count
+// type Any
+count(// reference xs_1789:varName:var[xs_FuncParamDef1780]
+// expression VarName xs
 // type Any
 xs), // expression NumLiteral 1
 // type Num
-1))// scope funcDef_1817
-// definition first_FuncDef1817
+1))// scope funcDef_1816
+// definition first_FuncDef1816
 // type ((Any) -> Any)
 
 /**
@@ -2727,24 +2765,24 @@ function first(xs)
 
     
 */
-// scope funcDef_1817
-// definition first_FuncDef1817
+// scope funcDef_1816
+// definition first_FuncDef1816
 // type ((Any) -> Any)
-function first(// definition xs_FuncParamDef1806
+function first(// definition xs_FuncParamDef1805
 // type Any
 xs)
-// expression FunCall op[][op[]_FuncDef964](xs[xs_FuncParamDef1806],0)
+// expression FunCall op[](xs,0)
 // type Any
-// reference op[]_1809:varName:var[op[]_FuncDef964]
-// expression VarName op[][op[]_FuncDef964]
-// type ((Array Int) -> : Any)
-op[](// reference xs_1811:varName:var[xs_FuncParamDef1806]
-// expression VarName xs[xs_FuncParamDef1806]
+// reference op[]_1808:varName:var[op[]_FuncDef964]
+// expression VarName op[]
+// type Any
+op[](// reference xs_1810:varName:var[xs_FuncParamDef1805]
+// expression VarName xs
 // type Any
 xs, // expression NumLiteral 0
 // type Num
-0)// scope funcDef_1857
-// definition reduce_FuncDef1857
+0)// scope funcDef_1856
+// definition reduce_FuncDef1856
 // type ((Any Any Any) -> Any)
 
 /**
@@ -2758,49 +2796,52 @@ function reduce(xs, acc, f) {
 
     
 */
-// scope funcDef_1857
-// definition reduce_FuncDef1857
+// scope funcDef_1856
+// definition reduce_FuncDef1856
 // type ((Any Any Any) -> Any)
-function reduce(// definition xs_FuncParamDef1823
+function reduce(// definition xs_FuncParamDef1822
 // type Any
-xs, // definition acc_FuncParamDef1826
+xs, // definition acc_FuncParamDef1825
 // type Any
-acc, // definition f_FuncParamDef1829
+acc, // definition f_FuncParamDef1828
 // type Any
 f)
-// scope recCompoundStatement_1854
+// scope recCompoundStatement_1853
 {
-// scope compoundStatement_1853
+// scope compoundStatement_1852
 {
-// definition x_ForLoopVarDef1849
+// scope forLoop_1848
+// definition x_ForLoopVarDef1848
 // type Any
-for (x in // reference xs_1834:varName:var[xs_FuncParamDef1823]
-// expression VarName xs[xs_FuncParamDef1823]
+for (x in // reference xs_1833:varName:var[xs_FuncParamDef1822]
+// expression VarName xs
 // type Any
 xs)
-// reference acc_1836:varName:var[acc_FuncParamDef1826]
-// expression VarName acc[acc_FuncParamDef1826]
+// expression VarAssignmentExpr acc = f(acc,x)
+// type Void
+// reference acc_1835:varName:var[acc_FuncParamDef1825]
+// expression VarName acc
 // type Any
-acc = // expression FunCall f[f_FuncParamDef1829](acc[acc_FuncParamDef1826],x[x_ForLoopVarDef1849])
+acc = // expression FunCall f(acc,x)
 // type Any
-// reference f_1839:varName:var[f_FuncParamDef1829]
-// expression VarName f[f_FuncParamDef1829]
+// reference f_1838:varName:var[f_FuncParamDef1828]
+// expression VarName f
 // type Any
-f(// reference acc_1841:varName:var[acc_FuncParamDef1826]
-// expression VarName acc[acc_FuncParamDef1826]
+f(// reference acc_1840:varName:var[acc_FuncParamDef1825]
+// expression VarName acc
 // type Any
-acc, // reference x_1843:varName:var[x_ForLoopVarDef1849]
-// expression VarName x[x_ForLoopVarDef1849]
+acc, // reference x_1842:varName:var[x_ForLoopVarDef1848]
+// expression VarName x
 // type Any
 x);
-return // reference acc_1851:varName:var[acc_FuncParamDef1826]
-// expression VarName acc[acc_FuncParamDef1826]
+return // reference acc_1850:varName:var[acc_FuncParamDef1825]
+// expression VarName acc
 // type Any
 acc;
 }
 }
-// scope funcDef_1876
-// definition flatten_FuncDef1876
+// scope funcDef_1875
+// definition flatten_FuncDef1875
 // type ((Any) -> Any)
 
 /**
@@ -2809,27 +2850,27 @@ function flatten(xs)
 
     
 */
-// scope funcDef_1876
-// definition flatten_FuncDef1876
+// scope funcDef_1875
+// definition flatten_FuncDef1875
 // type ((Any) -> Any)
-function flatten(// definition xs_FuncParamDef1863
+function flatten(// definition xs_FuncParamDef1862
 // type Any
 xs)
-// expression FunCall reduce[reduce_FuncDef1857](xs[xs_FuncParamDef1863],[],concat[concat_FuncDef1140])
+// expression FunCall reduce(xs,[],concat)
 // type Any
-// reference reduce_1866:varName:var[reduce_FuncDef1857]
-// expression VarName reduce[reduce_FuncDef1857]
-// type ((Any Any Any) -> Any)
-reduce(// reference xs_1868:varName:var[xs_FuncParamDef1863]
-// expression VarName xs[xs_FuncParamDef1863]
+// reference reduce_1865:varName:var[reduce_FuncDef1856]
+// expression VarName reduce
+// type Any
+reduce(// reference xs_1867:varName:var[xs_FuncParamDef1862]
+// expression VarName xs
 // type Any
 xs, // expression ArrayLiteral []
 // type Array
-[], // reference concat_1871:varName:var[concat_FuncDef1140]
-// expression VarName concat[concat_FuncDef1140]
-// type ((Any Any) -> Any)
-concat)// scope funcDef_1900
-// definition flatMap_FuncDef1900
+[], // reference concat_1870:varName:var[concat_FuncDef1141]
+// expression VarName concat
+// type Any
+concat)// scope funcDef_1899
+// definition flatMap_FuncDef1899
 // type ((Any Any) -> Any)
 
 /**
@@ -2837,28 +2878,28 @@ function flatMap(xs, f)
         = xs.map(f).flatten;
 
 */
-// scope funcDef_1900
-// definition flatMap_FuncDef1900
+// scope funcDef_1899
+// definition flatMap_FuncDef1899
 // type ((Any Any) -> Any)
-function flatMap(// definition xs_FuncParamDef1882
+function flatMap(// definition xs_FuncParamDef1881
 // type Any
-xs, // definition f_FuncParamDef1885
+xs, // definition f_FuncParamDef1884
 // type Any
 f)
-// expression FunCall flatten[flatten_FuncDef1876](map[map_FuncDef57](xs[xs_FuncParamDef1882],f[f_FuncParamDef1885]))
+// expression FunCall flatten(map(xs,f))
 // type Any
-// reference flatten_1888:varName:var[flatten_FuncDef1876]
-// expression VarName flatten[flatten_FuncDef1876]
-// type ((Any) -> Any)
-flatten(// expression FunCall map[map_FuncDef57](xs[xs_FuncParamDef1882],f[f_FuncParamDef1885])
+// reference flatten_1887:varName:var[flatten_FuncDef1875]
+// expression VarName flatten
 // type Any
-// reference map_1889:varName:var[map_FuncDef57]
-// expression VarName map[map_FuncDef57]
-// type ((Any Any) -> Any)
-map(// reference xs_1891:varName:var[xs_FuncParamDef1882]
-// expression VarName xs[xs_FuncParamDef1882]
+flatten(// expression FunCall map(xs,f)
 // type Any
-xs, // reference f_1893:varName:var[f_FuncParamDef1885]
-// expression VarName f[f_FuncParamDef1885]
+// reference map_1888:varName:var[map_FuncDef57]
+// expression VarName map
+// type Any
+map(// reference xs_1890:varName:var[xs_FuncParamDef1881]
+// expression VarName xs
+// type Any
+xs, // reference f_1892:varName:var[f_FuncParamDef1884]
+// expression VarName f
 // type Any
 f))}

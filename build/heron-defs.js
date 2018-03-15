@@ -13,7 +13,6 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var heron_ast_rewrite_1 = require("./heron-ast-rewrite");
-var heron_expr_1 = require("./heron-expr");
 // This is a definition of a name. It could be a function, variable, type
 var Def = /** @class */ (function () {
     function Def(node, name) {
@@ -58,16 +57,13 @@ exports.FuncParamDef = FuncParamDef;
 // Represents the definition of a variable. 
 var VarDef = /** @class */ (function (_super) {
     __extends(VarDef, _super);
-    function VarDef(node, name, expr) {
+    function VarDef(node, name, exprNode) {
         var _this = _super.call(this, node, name) || this;
         _this.node = node;
         _this.name = name;
-        _this.expr = expr;
+        _this.exprNode = exprNode;
         return _this;
     }
-    VarDef.prototype.toString = function () {
-        return this.name + this.expr ? ' = ' + this.expr : '';
-    };
     return VarDef;
 }(Def));
 exports.VarDef = VarDef;
@@ -76,11 +72,11 @@ exports.VarDef = VarDef;
 // Unlike a VarDef the expression must be an array.
 var ForLoopVarDef = /** @class */ (function (_super) {
     __extends(ForLoopVarDef, _super);
-    function ForLoopVarDef(node, name, expr) {
+    function ForLoopVarDef(node, name, exprNode) {
         var _this = _super.call(this, node, name) || this;
         _this.node = node;
         _this.name = name;
-        _this.expr = expr;
+        _this.exprNode = exprNode;
         return _this;
     }
     return ForLoopVarDef;
@@ -161,14 +157,13 @@ exports.createFuncParamDef = createFuncParamDef;
 function createVarDef(node) {
     heron_ast_rewrite_1.validateNode(node, 'varDecl');
     var name = heron_ast_rewrite_1.validateNode(node.children[0], 'varNameDecl');
-    var init = heron_ast_rewrite_1.validateNode(node.children[1], 'varInitialization');
-    return new VarDef(node, name.allText, heron_expr_1.createExpr(init.children[0]));
+    return new VarDef(node, name.allText, node.children[1]);
 }
 exports.createVarDef = createVarDef;
 function createForLoopVarDef(node) {
     heron_ast_rewrite_1.validateNode(node, 'forLoop');
     var name = heron_ast_rewrite_1.validateNode(node.children[0], 'identifier');
-    return new ForLoopVarDef(node, name.allText, heron_expr_1.createExpr(node.children[1]));
+    return new ForLoopVarDef(node, name.allText, node.children[1]);
 }
 exports.createForLoopVarDef = createForLoopVarDef;
 function createTypeDef(node) {
@@ -188,8 +183,4 @@ function getDef(node, typeName) {
     return def;
 }
 exports.getDef = getDef;
-// STEP1: create the defs
-// STEP2: create the refs ... 
-// STEP3: figure out the expression ...
-// STEP4: figure out the types ...
 //# sourceMappingURL=heron-defs.js.map

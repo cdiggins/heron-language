@@ -74,15 +74,14 @@ exports.Lambda = Lambda;
 // will be multiple types.
 var VarName = /** @class */ (function (_super) {
     __extends(VarName, _super);
-    function VarName(node, name, defs) {
+    function VarName(node, name) {
         var _this = _super.call(this, node) || this;
         _this.node = node;
         _this.name = name;
-        _this.defs = defs;
         return _this;
     }
     VarName.prototype.toString = function () {
-        return this.name + '[' + this.defs.join(',') + ']';
+        return this.name;
     };
     return VarName;
 }(Expr));
@@ -260,7 +259,8 @@ function createExpr(node) {
                 case "arrayIndex":
                     heron_ast_rewrite_1.throwError(node, "Array indexing should be transformed into function calls");
                 case "postIncOp":
-                    return new PostfixInc(node, createExpr(node.children[0]));
+                    if (node.children[1])
+                        return new PostfixInc(node, createExpr(node.children[0]));
                 case "postDecOp":
                     return new PostfixDec(node, createExpr(node.children[0]));
                 case "funCall":
@@ -362,10 +362,7 @@ function createStrExpr(node) {
 }
 exports.createStrExpr = createStrExpr;
 function createVarNameExpr(node) {
-    var ref = node['ref'];
-    if (!ref)
-        heron_ast_rewrite_1.throwError(node, "expected a reference");
-    return new VarName(heron_ast_rewrite_1.validateNode(node, 'varName'), node.allText, ref.defs);
+    return new VarName(heron_ast_rewrite_1.validateNode(node, 'varName'), node.allText);
 }
 exports.createVarNameExpr = createVarNameExpr;
 function createVarExpr(node) {
@@ -376,7 +373,7 @@ function createVarExpr(node) {
 }
 exports.createVarExpr = createVarExpr;
 function createVarAssignmentExpr(node) {
-    heron_ast_rewrite_1.validateNode(node, 'varExpr');
+    heron_ast_rewrite_1.validateNode(node, 'assignmentExpr');
     var lvalue = heron_ast_rewrite_1.validateNode(node.children[0], 'varName').allText;
     var op = heron_ast_rewrite_1.validateNode(node.children[1].children[0], 'assignmentOp').allText;
     if (node.children[1].children.length !== 2)

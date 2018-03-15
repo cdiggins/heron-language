@@ -99,7 +99,8 @@ export function getExprType(expr: Expr): Type
     } 
     else if (expr instanceof VarName) 
     {
-        return unionType(...expr.defs.map(d => computeType(d.node)));
+        // TODO: figure this out based on the definitions found. 
+        return Types.AnyType;
     } 
     else if (expr instanceof BoolLiteral) 
     {
@@ -180,7 +181,7 @@ export function getDefType(def: Def)
     }
     else if (def instanceof VarDef) 
     {
-        return getExprType(def.expr);
+        return getExprType(def.exprNode.expr);
     }
     else if (def instanceof ForLoopVarDef)
     {

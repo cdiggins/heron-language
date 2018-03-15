@@ -61,12 +61,11 @@ export class VarName extends Expr {
     constructor(
         public readonly node: HeronAstNode,
         public readonly name: string,
-        public readonly defs: Def[],
     )
     { super(node); } 
 
     toString(): string {
-        return this.name + '[' + this.defs.join(',') + ']';
+        return this.name;
     }
 }
 
@@ -212,6 +211,7 @@ export function createExpr(node: HeronAstNode): Expr {
                 case "arrayIndex":
                     throwError(node, "Array indexing should be transformed into function calls");
                 case "postIncOp":
+                    if (node.children[1])
                     return new PostfixInc(node, createExpr(node.children[0]));
                 case "postDecOp":
                     return new PostfixDec(node, createExpr(node.children[0]));
@@ -320,9 +320,7 @@ export function createStrExpr(node: HeronAstNode): StrLiteral {
 }
 
 export function createVarNameExpr(node: HeronAstNode): VarName {
-    let ref:Ref = node['ref'];
-    if (!ref) throwError(node, "expected a reference");
-    return new VarName(validateNode(node, 'varName'), node.allText, ref.defs);
+    return new VarName(validateNode(node, 'varName'), node.allText);
 }
 
 export function createVarExpr(node: HeronAstNode): VarExpr {
@@ -333,7 +331,7 @@ export function createVarExpr(node: HeronAstNode): VarExpr {
 }
 
 export function createVarAssignmentExpr(node: HeronAstNode): VarAssignmentExpr {
-    validateNode(node, 'varExpr');
+    validateNode(node, 'assignmentExpr');
     let lvalue = validateNode(node.children[0], 'varName').allText;
     let op = validateNode(node.children[1].children[0], 'assignmentOp').allText;
     if (node.children[1].children.length !== 2) throwError(node, 'Expected two children on right side of assignment expression');

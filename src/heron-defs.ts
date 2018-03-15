@@ -48,13 +48,9 @@ export class VarDef extends Def
     constructor(
         public readonly node: HeronAstNode,
         public readonly name: string, 
-        public readonly expr: Expr,
+        public readonly exprNode: HeronAstNode,
     )
     { super(node, name); }    
-
-    toString() {
-        return this.name + this.expr ? ' = ' + this.expr : '';
-    }
 }
 
 // Represents the definition of a variable used in a for loop
@@ -65,7 +61,7 @@ export class ForLoopVarDef extends Def
     constructor(
         public readonly node: HeronAstNode,
         public readonly name: string, 
-        public readonly expr: Expr,
+        public readonly exprNode: HeronAstNode,
     )
     { super(node, name); }    
 }
@@ -143,14 +139,13 @@ export function createFuncParamDef(node: HeronAstNode): FuncParamDef {
 export function createVarDef(node: HeronAstNode): VarDef {
     validateNode(node, 'varDecl');
     let name = validateNode(node.children[0], 'varNameDecl');
-    let init = validateNode(node.children[1], 'varInitialization');
-    return new VarDef(node, name.allText, createExpr(init.children[0]));
+    return new VarDef(node, name.allText, node.children[1]);
 }
 
 export function createForLoopVarDef(node: HeronAstNode): ForLoopVarDef {
     validateNode(node, 'forLoop');
     let name = validateNode(node.children[0], 'identifier');
-    return new ForLoopVarDef(node, name.allText, createExpr(node.children[1]));
+    return new ForLoopVarDef(node, name.allText, node.children[1]);
 }
 
 export function createTypeDef(node: HeronAstNode): TypeDef {
@@ -167,8 +162,3 @@ export function getDef<T extends Def>(node: HeronAstNode, typeName: string): T {
         throwError(node, "Incorrect definition type, expected " + typeName + " was " + def.constructor['name']);
     return def as T;
 }
-
-// STEP1: create the defs
-// STEP2: create the refs ... 
-// STEP3: figure out the expression ...
-// STEP4: figure out the types ...

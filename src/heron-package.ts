@@ -6,6 +6,7 @@ import { Ref, RefType } from "./heron-refs";
 import { Scope } from "./heron-scope";
 import { createExpr } from "./heron-expr";
 import { computeType } from "./heron-types";
+import { NameAnalyzer } from "./heron-name-analysis";
 
 // A package is a compiled system. It contains a set of modules in different source files. 
 export class Package 
@@ -13,9 +14,15 @@ export class Package
     modules: Module[] = [];
     scope: Scope = new Scope(null);
     scopes: Scope[] = [this.scope];
-    refs: Ref[] = [];
-    defs: Def[] = [];
     files: SourceFile[] = [];
+
+    get defs(): Def[] {
+        return this.scope.allDefs();
+    }
+    
+    get refs(): Ref[] {
+        return this.scope.allRefs();
+    }
     
     // When done adding files call "processModules" to sort the dependencies 
     addFile(node: HeronAstNode, intrinsic: boolean, filePath: string) {        
@@ -30,8 +37,8 @@ export class Package
         let moduleNameNode = validateNode(moduleNode.children[0], 'moduleName');
         let moduleBodyNode = validateNode(moduleNode.children[1], 'moduleBody');
         let moduleNameURN = this.parseModuleName(moduleNameNode);
-        let importNodes = moduleBodyNode.children.filter(c => c.name === 'import');
-        let importURNs = importNodes.map(this.parseModuleName);
+        let importNodes = moduleBodyNode.children.filter(c => c.name === 'importStatement');
+        let importURNs = importNodes.map(n => this.parseModuleName(n.children[0]));
         let module = new Module(moduleNode, moduleNameURN, file, importURNs);
         this.modules.push(module);
     }
@@ -47,6 +54,24 @@ export class Package
        return node.allText;
     }
 
+    // Load the definitions of a modules
+    loadModuleDefs(module: Module) {
+        let moduleBody = validateNode(module.node.children[1], 'moduleBody');
+        for (let c of moduleBody.children)
+            if (c.def)
+                this.addDef(c.def);        
+    }
+
+    // Load the definitions from the various dependent modules 
+    loadModuleDependencies(module: Module) {
+        for (let imp of module.imports) {
+            let impMod = this.getModule(imp);
+            if (!impMod)
+                throwError(module.node, "Could not find imported module " + imp);
+            this.loadModuleDefs(impMod);
+        }
+    }
+
     // Called once all of the files have been added. 
     processModules() 
     {        
@@ -55,9 +80,9 @@ export class Package
         this.sortModuleDependencies();
         
         // The visitor will be used for adding scopes and references
-        let visitor = new AstVisitor();
+        let nameAnalyzer = new NameAnalyzer();
 
-        // Iterate over the modules (they are now sorted)
+        // Iterate over the modules, pre-process their trees and create definitions. 
         for (let m of this.modules) 
         {
             let ast = m.node;
@@ -67,13 +92,27 @@ export class Package
 
             // Create definitions 
             visitAst(ast, createDef);
+        }
 
-            // Add scopes and references
-            if (!m.file.intrinsic)
-                this.pushScope(m.node);
-            visitor.visitNode(m.node, this);
-            if (!m.file.intrinsic)
-                this.popScope();
+        // Firt load all intrinsic definitions into the global scope
+        for (let m of this.modules) 
+            if (m.file.intrinsic)
+                this.loadModuleDefs(m);                
+                
+        // Analyze names for each module.
+        let moduleScopes = {};
+        for (let m of this.modules) 
+        {
+            this.pushScope(m.node);
+            this.loadModuleDependencies(m);
+            this.loadModuleDefs(m);                
+            nameAnalyzer.visitNode(m.node, this);            
+            this.popScope();
+        }
+
+        // Compute expressions and types 
+        for (let m of this.modules) {
+            let ast = m.node;
 
             // Create expressions, and add them to the nodes
             visitAst(ast, createExpr);
@@ -147,13 +186,13 @@ export class Package
     //=============================================
     // These functions are used by the visitor to incrementally build the package  
 
-    pushScope(node) {
+    pushScope(node: HeronAstNode): Scope {
         let scope = new Scope(node);
         scope.id = this.scopes.length;
         this.scopes.push(scope);
         this.scope.children.push(scope);
         scope.parent = this.scope;
-        this.scope = scope;
+        return this.scope = scope;
    }
 
     popScope() {
@@ -165,22 +204,13 @@ export class Package
     }
 
     addDef(def: Def) {
-        if (!def)
-            throw new Error('Missing def as function argument to addDef');
-
-        // We need to avoid double adding a def. 
-        // This can happen because modules pre-scan their children for all definitions, 
-        // so that they are present for each function. 
-        if (this.defs.indexOf(def) < 0) {
+        if (def && this.scope.defs.indexOf(def) < 0)
             this.scope.defs.push(def);
-            this.defs.push(def);
-        }
     }
 
     addRef(name: string, node: HeronAstNode, refType: RefType) {
         let ref = new Ref(node, name, this.scope, refType, this.findDefs(name));
         this.scope.refs.push(ref);
-        this.refs.push(ref);
     }
 }
 
@@ -206,73 +236,4 @@ export class Module
         public readonly imports: string[],
     )
     { }      
-}
-
-// Used for visiting nodes in the Heron node looking for name defintions, usages, and scopes.
-class AstVisitor
-{
-    // Visitor helper functions
-    visitNode(node: HeronAstNode, state: Package) {
-        if (node['def'])
-            state.addDef(node['def']);
-        const fnName = 'visit_' + node.name;
-        if (fnName in this)
-            this[fnName](node, state);
-        else 
-            this.visitChildren(node, state);        
-    }
-    visitChildren(node: HeronAstNode, state: Package) {
-        for (let child of node.children)
-            this.visitNode(child, state);
-    }
-
-    // Particular node visitors 
-    visit_compoundStatement(node: HeronAstNode, state: Package) {
-        state.pushScope(node);
-        this.visitChildren(node, state);
-        state.popScope();
-    }
-    visit_funcDef(node: HeronAstNode, state: Package) {
-        state.pushScope(node);
-        this.visitChildren(node, state);
-        state.popScope();
-    }
-    visit_intrinsicDef(node: HeronAstNode, state: Package) {
-        state.pushScope(node);
-        this.visitChildren(node, state);
-        state.popScope();
-    }
-    visit_typeName(node: HeronAstNode, state: Package) {
-        state.addRef(node.allText, node, RefType.type);
-    }
-    visit_lambdaBody(node: HeronAstNode, state: Package) {
-        state.pushScope(node);
-        this.visitChildren(node, state);
-        state.popScope();
-    }
-    visit_lambdaExpr(node: HeronAstNode, state: Package) {
-        state.pushScope(node);
-        this.visitChildren(node, state);
-        state.popScope();
-    }
-    visit_moduleBody(node: HeronAstNode, state: Package) {
-        // All definitions at the module level, are available to all others.
-        for (let c of node.children)
-            if (c['def'])
-                state.addDef(c['def']);
-        this.visitChildren(node, state);
-    }
-    visit_recCompoundStatement(node: HeronAstNode, state: Package) {
-        state.pushScope(node);
-        this.visitChildren(node, state);
-        state.popScope();
-    }
-    visit_varExpr(node: HeronAstNode, state: Package) {
-        state.pushScope(node);
-        this.visitChildren(node, state);
-        state.popScope();
-    }
-    visit_varName(node: HeronAstNode, state: Package) {
-        state.addRef(node.allText, node, RefType.var);
-    }
 }
