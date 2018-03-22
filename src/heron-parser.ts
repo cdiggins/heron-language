@@ -41,14 +41,13 @@ const g = new function() {
     }
     
     // Recursive definition of an expression
-    this.expr = m.delay(function() {
-        return _this.assignmentExpr;
-    }).setName("heron", "expr");
+    this.expr = m.delay(() => _this.assignmentExpr).setName("heron", "expr");
 
     // Recursive definition of a statement
-    this.recStatement = m.delay(function() {
-        return _this.statement;
-    }).setName("heron", "recStatement");
+    this.recStatement = m.delay(() => _this.statement).setName("heron", "recStatement");
+
+    // Recursive definition of a compoudn statement
+    this.recCompoundStatement = m.delay(() => _this.compoundStatement).setName("heron", "recCompoundStatement");
 
     // Literals
     this.fraction       = m.seq(".", m.not("."),  m.digit.zeroOrMore);    
@@ -139,11 +138,10 @@ const g = new function() {
     this.funcParamType = guardedWsDelimSeq(':', this.typeExpr);
     this.funcParam = this.funcParamName.then(this.funcParamType.opt).ast;
     this.funcParams = guardedWsDelimSeq("(", commaDelimited(this.funcParam), ")").ast;
-    this.recCompoundStatement = m.delay(() => _this.compoundStatement).ast;
-    this.funcBodyStatement = this.recCompoundStatement.ast;
-    this.funcBodyExpr = guardedWsDelimSeq('=', this.expr, ';').ast;
-    this.funcBody = m.choice(this.funcBodyStatement, this.funcBodyExpr).ast; 
-    this.returnType = guardedWsDelimSeq(':', this.typeExpr).ast;
+    this.funcBodyStatement = this.recCompoundStatement;
+    this.funcBodyExpr = guardedWsDelimSeq('=', this.expr, ';');
+    this.funcBody = m.choice(this.funcBodyStatement, this.funcBodyExpr); 
+    this.returnType = guardedWsDelimSeq(':', this.typeExpr);
     this.funcSig = guardedWsDelimSeq(this.funcName, this.genericParams, this.funcParams, this.returnType.opt).ast;
     this.funcDef = guardedWsDelimSeq(m.keyword("function"), this.funcSig, this.funcBody).ast;
     this.intrinsicDef = guardedWsDelimSeq(m.keyword("intrinsic"), this.funcSig, ';').ast;

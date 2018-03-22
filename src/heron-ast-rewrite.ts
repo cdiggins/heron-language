@@ -1,11 +1,11 @@
 import { Myna } from "myna-parser/myna";
 import { createDef, Def } from "./heron-defs";
 import { Ref } from "./heron-refs";
-import { Scope } from "./heron-scope";
-import { Type } from "type-inference/type-system";
+import { Type } from "./type-system";
 import { Expr } from "./heron-expr";
 import { SourceFile } from "./heron-package";
 import { Statement } from "./heron-statement";
+import { Scope } from "./heron-name-analysis";
 
 // After processing and transforming the nodes in the AST tree they 
 // are extended with the following new properties. 
@@ -424,6 +424,43 @@ export function exprListToPair(node: HeronAstNode): HeronAstNode {
     }
 }
 
+export function wrapInCompoundStatement(node: HeronAstNode): HeronAstNode {
+    if (!node) 
+        return makeNode(g.compoundStatement, node, "");
+
+    if (node.name === 'compoundStatement') return node;
+    return makeNode(g.compoundStatement, node, "", node);
+}
+
+export function makeCompoundStatements(node: HeronAstNode) {
+    if (node.name === 'compoundStatement') {
+        for (var c of node.children) {
+            if (c.name === 'ifStatement') {
+                // Add a compound statement to the end. 
+                if (c.children.length == 2) 
+                    c.children.push(makeNode(g.compoundStatement, c, ""));
+                // Make sure both children are compound statements 
+                c.children[0] = wrapInCompoundStatement(c.children[0]);
+                c.children[1] = wrapInCompoundStatement(c.children[1]);           
+            }
+        }
+    }
+    else if (node.name === 'whileLoop') {
+        node.children[1] = wrapInCompoundStatement(node.children[1]);
+    }
+    else if (node.name === 'doLoop') {
+        node.children[0] = wrapInCompoundStatement(node.children[0]);
+    }
+    else if (node.name === 'forLoop') {
+        node.children[2] = wrapInCompoundStatement(node.children[2]);
+    }
+    if (node === null)
+        throw new Error("Missing node");
+    for (var c of node.children)
+        if (!c)
+            throw new Error("Missing child node");
+}
+
 // Checks that a node has a name 
 export function validateNode(node: HeronAstNode, ...names: string[]): HeronAstNode {
     if (names.indexOf(node.name) < 0)
@@ -439,6 +476,7 @@ export function visitAstWithParent(node: HeronAstNode, parent: HeronAstNode, f:(
 
 // Calls a function on every node in the AST passing the AST node and it's child
 export function visitAst(node: HeronAstNode, f:((_:HeronAstNode)=>void)) {    
+    if (!node) return;
     node.children.forEach(c => visitAst(c, f));
     f(node);
 }
@@ -468,6 +506,9 @@ export function preprocessAst(node: HeronAstNode, file: SourceFile)
     node = mapAst(node, arrayIndexAssignmentToFunction);
     node = mapAst(node, arrayIndexToFunction);
     node = mapAst(node, opToFunction);
+
+    // Make sure that ifStatements have two sides, and that they are both compound statements 
+    visitAst(node, makeCompoundStatements);
  
     // The tree has been transformed, and new nodes have been added
     // so we have to recompute parent pointers, and the file pointers 

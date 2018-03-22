@@ -3,7 +3,7 @@ language heron:std:0.1;
 // Describes the core functionality provided by the run-time.
 module heron:intrinsics:0.1
 {
-    // Built-in types. 
+    // Built-in types 
     type Float;
     type Float2;
     type Float3; 
@@ -78,7 +78,6 @@ module heron:intrinsics:0.1
     intrinsic op|| (x: Bool, y: Bool): Bool;
     intrinsic op^^ (x: Bool, y: Bool): Bool;
 
-
     // Array operators (range and indexing)
     intrinsic op.. (x: Int, y: Int): Array;
     intrinsic op[] (x: Array, i: Int): Any;
@@ -91,9 +90,9 @@ module heron:intrinsics:0.1
     intrinsic array(n: Int, f: Function): Array;
     intrinsic count(xs: Array): Int;
     intrinsic at(xs: Array, i: Int): Any;     
-    intrinsic mutable(xs: Array): ArrayBuilder;
 
     // Array builder functions
+    intrinsic mutable(xs: Array): ArrayBuilder;
     intrinsic push(xs: ArrayBuilder, x: Any): ArrayBuilder;
     intrinsic set(xs: ArrayBuilder, i: Int, x: Any): ArrayBuilder;
     intrinsic array(xs: ArrayBuilder): Array;

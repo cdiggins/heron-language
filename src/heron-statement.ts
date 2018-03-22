@@ -1,96 +1,96 @@
 import { Myna } from "myna-parser/myna";
-import { FuncDef, TypeDef, VarDef, FuncParamDef, createFuncParamDef, getDef, Def } from "./heron-defs";
-import { validateNode, visitAst, throwError, HeronAstNode } from "./heron-ast-rewrite";
+import { FuncDef, VarDef, FuncParamDef, createFuncParamDef, getDef, Def } from "./heron-defs";
+import { validateNode, visitAst, throwError, HeronAstNode, wrapInCompoundStatement } from "./heron-ast-rewrite";
 import { Ref } from "./heron-refs";
 import { Expr, createExpr } from "./heron-expr";
 
 export class Statement {
     constructor(
-        public readonly node: HeronAstNode, 
+        public node: HeronAstNode, 
     )
     { node.statement = this; }
 }
 
 export class CompoundStatement extends Statement {
     constructor(
-        public readonly node: HeronAstNode, 
-        public readonly statements: Statement[]
+        public node: HeronAstNode, 
+        public statements: Statement[]
     )
     { super(node); }
 }
 
 export class IfStatement extends Statement {
     constructor(
-        public readonly node: HeronAstNode, 
-        public readonly condition: Expr,
-        public readonly onTrue: Statement,
-        public readonly onFalse: Statement,
+        public node: HeronAstNode, 
+        public condition: Expr,
+        public onTrue: CompoundStatement,
+        public onFalse: CompoundStatement,
     )
     { super(node); }
 }
 
 export class ReturnStatement extends Statement {
     constructor(
-        public readonly node: HeronAstNode, 
-        public readonly condition: Expr,
+        public node: HeronAstNode, 
+        public condition: Expr,
     )
     { super(node); }
 }
 
 export class ContinueStatement extends Statement {
     constructor(
-        public readonly node: HeronAstNode, 
+        public node: HeronAstNode, 
     )
     { super(node); }
 }
 
 export class BreakStatement extends Statement {
     constructor(
-        public readonly node: HeronAstNode, 
+        public node: HeronAstNode, 
     )
     { super(node); }
 }
 
 export class ExprStatement extends Statement {
     constructor(
-        public readonly node: HeronAstNode,
-        public readonly expr: Expr,
+        public node: HeronAstNode,
+        public expr: Expr,
     )
     { super(node); }    
 }
 
 export class ForStatement extends Statement {
     constructor(
-        public readonly node: HeronAstNode, 
-        public readonly identifier: string,
-        public readonly array: Expr,
-        public readonly loop: Statement,
+        public node: HeronAstNode, 
+        public identifier: string,
+        public array: Expr,
+        public loop: CompoundStatement,
     )
     { super(node); }
 }
 
 export class DoStatement extends Statement {
     constructor(
-        public readonly node: HeronAstNode, 
-        public readonly condition: Expr,
-        public readonly body: Statement,
+        public node: HeronAstNode, 
+        public condition: Expr,
+        public body: CompoundStatement,
     )
     { super(node); }
 }
 
 export class WhileStatement extends Statement {
     constructor(
-        public readonly node: HeronAstNode, 
-        public readonly condition: Expr,
-        public readonly body: Statement,
+        public node: HeronAstNode, 
+        public condition: Expr,
+        public body: CompoundStatement,
     )
     { super(node); }
 }
 
 export class VarDeclStatement extends Statement {
     constructor(
-        public readonly node: HeronAstNode, 
-        public readonly vars: VarDef[],
+        public node: HeronAstNode, 
+        public vars: VarDef[],
     )
     { super(node); }
 }
@@ -100,6 +100,10 @@ export class EmptyStatement extends Statement {
 
 //============================================================
 // Functions 
+
+export function createCompoundStatement(node: HeronAstNode): CompoundStatement {
+    return createStatement(wrapInCompoundStatement(node)) as CompoundStatement;
+}
 
 export function createStatement(node: HeronAstNode): Statement {
     if (node.statement)
@@ -111,11 +115,10 @@ export function createStatement(node: HeronAstNode): Statement {
         case 'compoundStatement':
             return new CompoundStatement(node, node.children.map(createStatement));
         case 'ifStatement':
-            // TODO: I need to rotate the else statement. We should only have one!  
             return new IfStatement(node, 
                 createExpr(node.children[0]), 
-                createStatement(node.children[1]), 
-                node.children.length > 2 ? createStatement(node.children[2]) : new EmptyStatement(null));
+                createCompoundStatement(node.children[1]), 
+                createCompoundStatement(node.children[2]));
         case 'returnStatement':
             return new ReturnStatement(node,
                 node.children.length > 0 ? createExpr(node.children[0]) : null);
@@ -125,17 +128,73 @@ export function createStatement(node: HeronAstNode): Statement {
             return new BreakStatement(node);
         case 'forLoop':
             return new ForStatement(node, node.children[0].allText, 
-                createExpr(node.children[1]), createStatement(node.children[2]));
+                createExpr(node.children[1]), createCompoundStatement(node.children[2]));
         case 'doLoop':
             return new DoStatement(node, 
-                createExpr(node.children[1]), createStatement(node.children[0]));
+                createExpr(node.children[1]), createCompoundStatement(node.children[0]));
         case 'whileLoop': 
             return new WhileStatement(node, 
-                createExpr(node.children[0]), createStatement(node.children[1]));
+                createExpr(node.children[0]), createCompoundStatement(node.children[1]));
         case 'varDeclStatement':            
             return new VarDeclStatement(node, node.children[0].children.map(n => n.def as VarDef));
         case 'exprStatement':
             return new ExprStatement(node, createExpr(node.children[0]));
     }
 }
+
+// Returns true if a statement is a loop break statemnt
+export function isLoopBreak(st: Statement): boolean {
+    return st instanceof ReturnStatement || st instanceof BreakStatement;
+}
+
+// Returns the last statement in a compound statement group
+export function lastStatement(st: CompoundStatement): Statement {
+    if (st.statements.length === 0)
+        return null;
+    return st.statements[st.statements.length - 1];
+}
+
+export function hasLoopBreak(st: Statement): boolean {
+    if (isLoopBreak(st)) 
+        return true;
+
+    if (st instanceof CompoundStatement) {
+        return st.statements.some(hasLoopBreak);
+    }
+    else if (st instanceof IfStatement) {
+        return hasLoopBreak(st.onTrue) || hasLoopBreak(st.onFalse);
+    }
+
+    return false; 
+}
+
+// Put If statements into tail position of a loop 
+export function rewriteIfStatements(node: HeronAstNode) {
+    let st = node.statement;
+    if (!st) return;
+    if (st instanceof CompoundStatement) {
+        for (var i=st.statements.length-2; i >= 0; --i) {
+            let c = st.statements[i];
+            if (c instanceof IfStatement) {
+                if (!isLoopBreak(lastStatement(c.onTrue)))
+                    c.onTrue.statements.push(...st.statements.slice(i));
+                if (!isLoopBreak(lastStatement(c.onFalse)))
+                    c.onFalse.statements.push(...st.statements.slice(i));
+
+                // Delete the statements after the current 
+                st.statements.splice(i+1, st.statements.length - i - 1);
+            }
+            else if (st instanceof BreakStatement) {
+                // Delete the statements after the current 
+                st.statements.splice(i+1, st.statements.length - i - 1);
+            }
+        }
+        // Check the algorithm 
+        for (var i=0; i < st.statements.length - 1; ++i) {
+            if (st.statements[i] instanceof IfStatement) 
+                throw new Error("Internal error: found an If statement in a compound statement that was not in tail position");
+        }
+    }
+}
+
 

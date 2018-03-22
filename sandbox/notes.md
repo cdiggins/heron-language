@@ -351,7 +351,7 @@ Visibility quantifiers (public/private/protected)
 Iterators and generators
 List comprehensions
 Namespaces and packages
-Cross-platform GUI
+Cross-platform GUI)
 Operator overloading
 Keyword and rest parameters
 First-class parser and AST support
@@ -610,6 +610,21 @@ I can recreate the refs for the functions that are loaded.
 
 In a way, we are creating a copy of the function. 
 
-I'll have to be careful, because there could be some ambiguity. 
+I'll have to be careful, because there could be some ambiguity.
+
+//==
+
+So: I need scopes to evaluate things. I will try my best. 
+As we evaluate, we will potentially end up with a different set of definitions. 
+
+HOWEVER, what if a function includes a function, which includes a function? 
+
+Don't worry. Just do it. 
+
+So the evaluator is merged with the ref finding. 
+
+The whole type evaluator is merged up with finding the expressions and doing the pseudo-evaluation.
+
+I can use the scopes: some nodes have a scope.  
 
 

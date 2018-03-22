@@ -18,7 +18,6 @@
     "build": "tsc"
   },
   "dependencies": {
-    "myna-parser": ">=2.5",
-    "type-inference": ">=1.1"
+    "myna-parser": ">=2.5"
   }
 }

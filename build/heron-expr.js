@@ -57,15 +57,20 @@ exports.PostfixInc = PostfixInc;
 // An anonymous function, also known as a lambda.
 var Lambda = /** @class */ (function (_super) {
     __extends(Lambda, _super);
-    function Lambda(node, params, body) {
+    function Lambda(node, params, bodyNode) {
         var _this = _super.call(this, node) || this;
         _this.node = node;
         _this.params = params;
-        _this.body = body;
+        _this.bodyNode = bodyNode;
         return _this;
     }
     Lambda.prototype.toString = function () {
-        return 'lambda' + this.node['id'] + '(' + this.params.join(',') + ')' + this.body;
+        var body = this.bodyNode.expr
+            ? this.bodyNode.expr.toString()
+            : (this.bodyNode.statement)
+                ? this.bodyNode.statement.toString()
+                : "???";
+        return '(' + this.params.map(function (p) { return p.name; }).join(',') + ') => ' + body;
     };
     return Lambda;
 }(Expr));
@@ -194,6 +199,11 @@ var FunCall = /** @class */ (function (_super) {
         _this.node = node;
         _this.func = func;
         _this.args = args;
+        func.calledFunction = _this;
+        for (var _i = 0, args_1 = args; _i < args_1.length; _i++) {
+            var arg = args_1[_i];
+            arg.functionArgument = _this;
+        }
         return _this;
     }
     FunCall.prototype.toString = function () {
@@ -349,7 +359,7 @@ function createConditionalExpr(node) {
 exports.createConditionalExpr = createConditionalExpr;
 // TODO: the fact that I am calling a lambda body an expression is a problem.
 function createLambdaExpr(node) {
-    return new Lambda(heron_ast_rewrite_1.validateNode(node, 'lambdaExpr'), node.children[0].children.map(function (c) { return heron_defs_1.getDef(c, 'FuncParamDef'); }), createExpr(node.children[1]));
+    return new Lambda(heron_ast_rewrite_1.validateNode(node, 'lambdaExpr'), node.children[0].children.map(function (c) { return heron_defs_1.getDef(c, 'FuncParamDef'); }), node.children[1].children[0]);
 }
 exports.createLambdaExpr = createLambdaExpr;
 function createNumExpr(node) {

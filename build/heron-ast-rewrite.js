@@ -401,6 +401,46 @@ function exprListToPair(node) {
     }
 }
 exports.exprListToPair = exprListToPair;
+function wrapInCompoundStatement(node) {
+    if (!node)
+        return makeNode(g.compoundStatement, node, "");
+    if (node.name === 'compoundStatement')
+        return node;
+    return makeNode(g.compoundStatement, node, "", node);
+}
+exports.wrapInCompoundStatement = wrapInCompoundStatement;
+function makeCompoundStatements(node) {
+    if (node.name === 'compoundStatement') {
+        for (var _i = 0, _a = node.children; _i < _a.length; _i++) {
+            var c = _a[_i];
+            if (c.name === 'ifStatement') {
+                // Add a compound statement to the end. 
+                if (c.children.length == 2)
+                    c.children.push(makeNode(g.compoundStatement, c, ""));
+                // Make sure both children are compound statements 
+                c.children[0] = wrapInCompoundStatement(c.children[0]);
+                c.children[1] = wrapInCompoundStatement(c.children[1]);
+            }
+        }
+    }
+    else if (node.name === 'whileLoop') {
+        node.children[1] = wrapInCompoundStatement(node.children[1]);
+    }
+    else if (node.name === 'doLoop') {
+        node.children[0] = wrapInCompoundStatement(node.children[0]);
+    }
+    else if (node.name === 'forLoop') {
+        node.children[2] = wrapInCompoundStatement(node.children[2]);
+    }
+    if (node === null)
+        throw new Error("Missing node");
+    for (var _b = 0, _c = node.children; _b < _c.length; _b++) {
+        var c = _c[_b];
+        if (!c)
+            throw new Error("Missing child node");
+    }
+}
+exports.makeCompoundStatements = makeCompoundStatements;
 // Checks that a node has a name 
 function validateNode(node) {
     var names = [];
@@ -420,6 +460,8 @@ function visitAstWithParent(node, parent, f) {
 exports.visitAstWithParent = visitAstWithParent;
 // Calls a function on every node in the AST passing the AST node and it's child
 function visitAst(node, f) {
+    if (!node)
+        return;
     node.children.forEach(function (c) { return visitAst(c, f); });
     f(node);
 }
@@ -446,6 +488,8 @@ function preprocessAst(node, file) {
     node = mapAst(node, arrayIndexAssignmentToFunction);
     node = mapAst(node, arrayIndexToFunction);
     node = mapAst(node, opToFunction);
+    // Make sure that ifStatements have two sides, and that they are both compound statements 
+    visitAst(node, makeCompoundStatements);
     // The tree has been transformed, and new nodes have been added
     // so we have to recompute parent pointers, and the file pointers 
     setParentPointers(node);

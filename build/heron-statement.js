@@ -10,6 +10,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+var heron_ast_rewrite_1 = require("./heron-ast-rewrite");
 var heron_expr_1 = require("./heron-expr");
 var Statement = /** @class */ (function () {
     function Statement(node) {
@@ -143,6 +144,10 @@ var EmptyStatement = /** @class */ (function (_super) {
 exports.EmptyStatement = EmptyStatement;
 //============================================================
 // Functions 
+function createCompoundStatement(node) {
+    return createStatement(heron_ast_rewrite_1.wrapInCompoundStatement(node));
+}
+exports.createCompoundStatement = createCompoundStatement;
 function createStatement(node) {
     if (node.statement)
         return node.statement;
@@ -152,8 +157,7 @@ function createStatement(node) {
         case 'compoundStatement':
             return new CompoundStatement(node, node.children.map(createStatement));
         case 'ifStatement':
-            // TODO: I need to rotate the else statement. We should only have one!  
-            return new IfStatement(node, heron_expr_1.createExpr(node.children[0]), createStatement(node.children[1]), node.children.length > 2 ? createStatement(node.children[2]) : new EmptyStatement(null));
+            return new IfStatement(node, heron_expr_1.createExpr(node.children[0]), createCompoundStatement(node.children[1]), createCompoundStatement(node.children[2]));
         case 'returnStatement':
             return new ReturnStatement(node, node.children.length > 0 ? heron_expr_1.createExpr(node.children[0]) : null);
         case 'continueStatement':
@@ -161,11 +165,11 @@ function createStatement(node) {
         case 'breakStatement':
             return new BreakStatement(node);
         case 'forLoop':
-            return new ForStatement(node, node.children[0].allText, heron_expr_1.createExpr(node.children[1]), createStatement(node.children[2]));
+            return new ForStatement(node, node.children[0].allText, heron_expr_1.createExpr(node.children[1]), createCompoundStatement(node.children[2]));
         case 'doLoop':
-            return new DoStatement(node, heron_expr_1.createExpr(node.children[1]), createStatement(node.children[0]));
+            return new DoStatement(node, heron_expr_1.createExpr(node.children[1]), createCompoundStatement(node.children[0]));
         case 'whileLoop':
-            return new WhileStatement(node, heron_expr_1.createExpr(node.children[0]), createStatement(node.children[1]));
+            return new WhileStatement(node, heron_expr_1.createExpr(node.children[0]), createCompoundStatement(node.children[1]));
         case 'varDeclStatement':
             return new VarDeclStatement(node, node.children[0].children.map(function (n) { return n.def; }));
         case 'exprStatement':
@@ -173,4 +177,58 @@ function createStatement(node) {
     }
 }
 exports.createStatement = createStatement;
+// Returns true if a statement is a loop break statemnt
+function isLoopBreak(st) {
+    return st instanceof ReturnStatement || st instanceof BreakStatement;
+}
+exports.isLoopBreak = isLoopBreak;
+// Returns the last statement in a compound statement group
+function lastStatement(st) {
+    if (st.statements.length === 0)
+        return null;
+    return st.statements[st.statements.length - 1];
+}
+exports.lastStatement = lastStatement;
+function hasLoopBreak(st) {
+    if (isLoopBreak(st))
+        return true;
+    if (st instanceof CompoundStatement) {
+        return st.statements.some(hasLoopBreak);
+    }
+    else if (st instanceof IfStatement) {
+        return hasLoopBreak(st.onTrue) || hasLoopBreak(st.onFalse);
+    }
+    return false;
+}
+exports.hasLoopBreak = hasLoopBreak;
+// Put If statements into tail position of a loop 
+function rewriteIfStatements(node) {
+    var st = node.statement;
+    if (!st)
+        return;
+    if (st instanceof CompoundStatement) {
+        for (var i = st.statements.length - 2; i >= 0; --i) {
+            var c = st.statements[i];
+            if (c instanceof IfStatement) {
+                if (!isLoopBreak(lastStatement(c.onTrue)))
+                    (_a = c.onTrue.statements).push.apply(_a, st.statements.slice(i));
+                if (!isLoopBreak(lastStatement(c.onFalse)))
+                    (_b = c.onFalse.statements).push.apply(_b, st.statements.slice(i));
+                // Delete the statements after the current 
+                st.statements.splice(i + 1, st.statements.length - i - 1);
+            }
+            else if (st instanceof BreakStatement) {
+                // Delete the statements after the current 
+                st.statements.splice(i + 1, st.statements.length - i - 1);
+            }
+        }
+        // Check the algorithm 
+        for (var i = 0; i < st.statements.length - 1; ++i) {
+            if (st.statements[i] instanceof IfStatement)
+                throw new Error("Internal error: found an If statement in a compound statement that was not in tail position");
+        }
+    }
+    var _a, _b;
+}
+exports.rewriteIfStatements = rewriteIfStatements;
 //# sourceMappingURL=heron-statement.js.map

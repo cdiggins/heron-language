@@ -39,13 +39,11 @@ var g = new function () {
         return r;
     }
     // Recursive definition of an expression
-    this.expr = myna_parser_1.Myna.delay(function () {
-        return _this.assignmentExpr;
-    }).setName("heron", "expr");
+    this.expr = myna_parser_1.Myna.delay(function () { return _this.assignmentExpr; }).setName("heron", "expr");
     // Recursive definition of a statement
-    this.recStatement = myna_parser_1.Myna.delay(function () {
-        return _this.statement;
-    }).setName("heron", "recStatement");
+    this.recStatement = myna_parser_1.Myna.delay(function () { return _this.statement; }).setName("heron", "recStatement");
+    // Recursive definition of a compoudn statement
+    this.recCompoundStatement = myna_parser_1.Myna.delay(function () { return _this.compoundStatement; }).setName("heron", "recCompoundStatement");
     // Literals
     this.fraction = myna_parser_1.Myna.seq(".", myna_parser_1.Myna.not("."), myna_parser_1.Myna.digit.zeroOrMore);
     this.plusOrMinus = myna_parser_1.Myna.char("+-");
@@ -124,11 +122,10 @@ var g = new function () {
     this.funcParamType = guardedWsDelimSeq(':', this.typeExpr);
     this.funcParam = this.funcParamName.then(this.funcParamType.opt).ast;
     this.funcParams = guardedWsDelimSeq("(", commaDelimited(this.funcParam), ")").ast;
-    this.recCompoundStatement = myna_parser_1.Myna.delay(function () { return _this.compoundStatement; }).ast;
-    this.funcBodyStatement = this.recCompoundStatement.ast;
-    this.funcBodyExpr = guardedWsDelimSeq('=', this.expr, ';').ast;
-    this.funcBody = myna_parser_1.Myna.choice(this.funcBodyStatement, this.funcBodyExpr).ast;
-    this.returnType = guardedWsDelimSeq(':', this.typeExpr).ast;
+    this.funcBodyStatement = this.recCompoundStatement;
+    this.funcBodyExpr = guardedWsDelimSeq('=', this.expr, ';');
+    this.funcBody = myna_parser_1.Myna.choice(this.funcBodyStatement, this.funcBodyExpr);
+    this.returnType = guardedWsDelimSeq(':', this.typeExpr);
     this.funcSig = guardedWsDelimSeq(this.funcName, this.genericParams, this.funcParams, this.returnType.opt).ast;
     this.funcDef = guardedWsDelimSeq(myna_parser_1.Myna.keyword("function"), this.funcSig, this.funcBody).ast;
     this.intrinsicDef = guardedWsDelimSeq(myna_parser_1.Myna.keyword("intrinsic"), this.funcSig, ';').ast;

@@ -1,12 +1,14 @@
 import * as Myna from "myna-parser";
 import { heronGrammar, parseHeron } from './heron-parser';
 import { heronToJs } from "./heron-to-js";
-import { HeronAstNode, preprocessAst, parseLocation } from "./heron-ast-rewrite";
-import { Scope } from "./heron-scope";
+import { HeronAstNode, preprocessAst, parseLocation, visitAst, throwError } from "./heron-ast-rewrite";
 import { heronToText } from "./heron-to-text";
 import { parseFile, parseModule, createPackage } from "./heron-compiler";
 import { Ref } from "./heron-refs";
-import { Package } from "./heron-package";
+import { Package, Module } from "./heron-package";
+import { FuncDef, FuncParamDef } from "./heron-defs";
+import { Evaluator, Types, union, analyzeFunctions, findFunc } from "./heron-eval";
+import { FunCall, Expr } from "./heron-expr";
 
 const m = Myna.Myna;
 const g = heronGrammar;
@@ -126,7 +128,6 @@ ${parseLocation(ref.node)}
     ref = ${ref.toString()}
     name = ${ref.name}
     node = ${ref.node['id']}    
-    refType = ${ref.refTypeString}
     expr = ${ref.node['expr']}
     ${ref.defs}`;
 }
@@ -147,12 +148,26 @@ function outputPackageStats(pkg: Package) {
     for (var d of multiDefs)
         console.log(refDetails(d));
 }
-
 function tests() {
-    // TODO: eventually we need to pre-scan the files    
-    let inputs = ['geometry-vector3', 'array', 'test'];
-    let pkg = createPackage(inputs);
-    outputPackageStats(pkg);
+    let inputFiles = ['geometry-vector3', 'array', 'test'];
+    let pkg = createPackage(inputFiles);
+    //outputPackageStats(pkg);
+    // find the main entry point and call into it. 
+    let modName = 'heron:tests:0.1';
+    let mainMod = pkg.getModule(modName);
+    if (!mainMod)
+        throw new Error("Could not find module: " + modName);
+    let mainFunc = findFunc(mainMod, 'main');
+    if (!mainFunc)
+        throw new Error("Could not find entry point function " + modName + "." + mainFunc);
+    let evaluator = new Evaluator();
+    
+    // Try to figure out the value of all the called functions. 
+    //evaluator.evalFunc(mainFunc);
+
+    // Look at the usages of each parameter in each function.
+    analyzeFunctions(pkg);
+
     console.log('Done');
 }
 

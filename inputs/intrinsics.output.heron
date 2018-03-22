@@ -1,1080 +1,637 @@
-// Generated on Thu Mar 15 2018 19:14:07 GMT-0400 (Eastern Daylight Time)
-heron:std:0.1// scope module_1400
+// Generated on Wed Mar 21 2018 20:58:38 GMT-0400 (Eastern Daylight Time)
+heron:std:0.1// scope module_1330
 heron:intrinsics:0.1{
 // definition Float_TypeDef6
-// type Float
 Float// definition Float2_TypeDef8
-// type Float2
 Float2// definition Float3_TypeDef10
-// type Float3
 Float3// definition Float4_TypeDef12
-// type Float4
 Float4// definition Int_TypeDef14
-// type Int
 Int// definition Bool_TypeDef16
-// type Bool
 Bool// definition String_TypeDef18
-// type String
 String// definition StringBuilder_TypeDef20
-// type StringBuilder
 StringBuilder// definition Array_TypeDef22
-// type Array
 Array// definition ArrayBuilder_TypeDef24
-// type ArrayBuilder
 ArrayBuilder// definition Function_TypeDef26
-// type Function
 Function// definition Any_TypeDef28
-// type Any
-Any// scope intrinsicDef_50
-// definition float2_FuncDef50
-// type ((Float Float) -> : Float2)
+Any// scope intrinsicDef_49
+// definition float2_FuncDef49
 intrinsic float2(// definition x_FuncParamDef37
-// type Float
-x : // type Float
-// reference Float_35:typeName:type[Float_TypeDef6]
+x : // reference Float_35:typeName[Float_TypeDef6]
 Float, // definition y_FuncParamDef43
-// type Float
-y : // type Float
-// reference Float_41:typeName:type[Float_TypeDef6]
-Float)// type : Float2
- : // type Float2
-// reference Float2_46:typeName:type[Float2_TypeDef8]
+y : // reference Float_41:typeName[Float_TypeDef6]
+Float)// reference Float2_46:typeName[Float2_TypeDef8]
 Float2
 ;
-// scope intrinsicDef_66
-// definition x_FuncDef66
-// type ((Float2) -> : Float)
-intrinsic x(// definition v_FuncParamDef59
-// type Float2
-v : // type Float2
-// reference Float2_57:typeName:type[Float2_TypeDef8]
-Float2)// type : Float
- : // type Float
-// reference Float_62:typeName:type[Float_TypeDef6]
+// scope intrinsicDef_64
+// definition x_FuncDef64
+intrinsic x(// definition v_FuncParamDef58
+v : // reference Float2_56:typeName[Float2_TypeDef8]
+Float2)// reference Float_61:typeName[Float_TypeDef6]
 Float
 ;
-// scope intrinsicDef_82
-// definition y_FuncDef82
-// type ((Float2) -> : Float)
-intrinsic y(// definition v_FuncParamDef75
-// type Float2
-v : // type Float2
-// reference Float2_73:typeName:type[Float2_TypeDef8]
-Float2)// type : Float
- : // type Float
-// reference Float_78:typeName:type[Float_TypeDef6]
+// scope intrinsicDef_79
+// definition y_FuncDef79
+intrinsic y(// definition v_FuncParamDef73
+v : // reference Float2_71:typeName[Float2_TypeDef8]
+Float2)// reference Float_76:typeName[Float_TypeDef6]
 Float
 ;
-// scope intrinsicDef_110
-// definition float3_FuncDef110
-// type ((Float Float Float) -> : Float3)
-intrinsic float3(// definition x_FuncParamDef91
-// type Float
-x : // type Float
-// reference Float_89:typeName:type[Float_TypeDef6]
-Float, // definition y_FuncParamDef97
-// type Float
-y : // type Float
-// reference Float_95:typeName:type[Float_TypeDef6]
-Float, // definition z_FuncParamDef103
-// type Float
-z : // type Float
-// reference Float_101:typeName:type[Float_TypeDef6]
-Float)// type : Float3
- : // type Float3
-// reference Float3_106:typeName:type[Float3_TypeDef10]
+// scope intrinsicDef_106
+// definition float3_FuncDef106
+intrinsic float3(// definition x_FuncParamDef88
+x : // reference Float_86:typeName[Float_TypeDef6]
+Float, // definition y_FuncParamDef94
+y : // reference Float_92:typeName[Float_TypeDef6]
+Float, // definition z_FuncParamDef100
+z : // reference Float_98:typeName[Float_TypeDef6]
+Float)// reference Float3_103:typeName[Float3_TypeDef10]
 Float3
 ;
-// scope intrinsicDef_126
-// definition x_FuncDef126
-// type ((Float3) -> : Float)
-intrinsic x(// definition v_FuncParamDef119
-// type Float3
-v : // type Float3
-// reference Float3_117:typeName:type[Float3_TypeDef10]
-Float3)// type : Float
- : // type Float
-// reference Float_122:typeName:type[Float_TypeDef6]
+// scope intrinsicDef_121
+// definition x_FuncDef121
+intrinsic x(// definition v_FuncParamDef115
+v : // reference Float3_113:typeName[Float3_TypeDef10]
+Float3)// reference Float_118:typeName[Float_TypeDef6]
 Float
 ;
-// scope intrinsicDef_142
-// definition y_FuncDef142
-// type ((Float3) -> : Float)
-intrinsic y(// definition v_FuncParamDef135
-// type Float3
-v : // type Float3
-// reference Float3_133:typeName:type[Float3_TypeDef10]
-Float3)// type : Float
- : // type Float
-// reference Float_138:typeName:type[Float_TypeDef6]
+// scope intrinsicDef_136
+// definition y_FuncDef136
+intrinsic y(// definition v_FuncParamDef130
+v : // reference Float3_128:typeName[Float3_TypeDef10]
+Float3)// reference Float_133:typeName[Float_TypeDef6]
 Float
 ;
-// scope intrinsicDef_158
-// definition z_FuncDef158
-// type ((Float3) -> : Float)
-intrinsic z(// definition v_FuncParamDef151
-// type Float3
-v : // type Float3
-// reference Float3_149:typeName:type[Float3_TypeDef10]
-Float3)// type : Float
- : // type Float
-// reference Float_154:typeName:type[Float_TypeDef6]
+// scope intrinsicDef_151
+// definition z_FuncDef151
+intrinsic z(// definition v_FuncParamDef145
+v : // reference Float3_143:typeName[Float3_TypeDef10]
+Float3)// reference Float_148:typeName[Float_TypeDef6]
 Float
 ;
-// scope intrinsicDef_192
-// definition float4_FuncDef192
-// type ((Float Float Float Float) -> : Float4)
-intrinsic float4(// definition x_FuncParamDef167
-// type Float
-x : // type Float
-// reference Float_165:typeName:type[Float_TypeDef6]
-Float, // definition y_FuncParamDef173
-// type Float
-y : // type Float
-// reference Float_171:typeName:type[Float_TypeDef6]
-Float, // definition z_FuncParamDef179
-// type Float
-z : // type Float
-// reference Float_177:typeName:type[Float_TypeDef6]
-Float, // definition w_FuncParamDef185
-// type Float
-w : // type Float
-// reference Float_183:typeName:type[Float_TypeDef6]
-Float)// type : Float4
- : // type Float4
-// reference Float4_188:typeName:type[Float4_TypeDef12]
+// scope intrinsicDef_184
+// definition float4_FuncDef184
+intrinsic float4(// definition x_FuncParamDef160
+x : // reference Float_158:typeName[Float_TypeDef6]
+Float, // definition y_FuncParamDef166
+y : // reference Float_164:typeName[Float_TypeDef6]
+Float, // definition z_FuncParamDef172
+z : // reference Float_170:typeName[Float_TypeDef6]
+Float, // definition w_FuncParamDef178
+w : // reference Float_176:typeName[Float_TypeDef6]
+Float)// reference Float4_181:typeName[Float4_TypeDef12]
 Float4
 ;
-// scope intrinsicDef_208
-// definition x_FuncDef208
-// type ((Float4) -> : Float)
-intrinsic x(// definition v_FuncParamDef201
-// type Float4
-v : // type Float4
-// reference Float4_199:typeName:type[Float4_TypeDef12]
-Float4)// type : Float
- : // type Float
-// reference Float_204:typeName:type[Float_TypeDef6]
+// scope intrinsicDef_199
+// definition x_FuncDef199
+intrinsic x(// definition v_FuncParamDef193
+v : // reference Float4_191:typeName[Float4_TypeDef12]
+Float4)// reference Float_196:typeName[Float_TypeDef6]
 Float
 ;
-// scope intrinsicDef_224
-// definition y_FuncDef224
-// type ((Float4) -> : Float)
-intrinsic y(// definition v_FuncParamDef217
-// type Float4
-v : // type Float4
-// reference Float4_215:typeName:type[Float4_TypeDef12]
-Float4)// type : Float
- : // type Float
-// reference Float_220:typeName:type[Float_TypeDef6]
+// scope intrinsicDef_214
+// definition y_FuncDef214
+intrinsic y(// definition v_FuncParamDef208
+v : // reference Float4_206:typeName[Float4_TypeDef12]
+Float4)// reference Float_211:typeName[Float_TypeDef6]
 Float
 ;
-// scope intrinsicDef_240
-// definition z_FuncDef240
-// type ((Float4) -> : Float)
-intrinsic z(// definition v_FuncParamDef233
-// type Float4
-v : // type Float4
-// reference Float4_231:typeName:type[Float4_TypeDef12]
-Float4)// type : Float
- : // type Float
-// reference Float_236:typeName:type[Float_TypeDef6]
+// scope intrinsicDef_229
+// definition z_FuncDef229
+intrinsic z(// definition v_FuncParamDef223
+v : // reference Float4_221:typeName[Float4_TypeDef12]
+Float4)// reference Float_226:typeName[Float_TypeDef6]
 Float
 ;
-// scope intrinsicDef_256
-// definition w_FuncDef256
-// type ((Float4) -> : Float)
-intrinsic w(// definition v_FuncParamDef249
-// type Float4
-v : // type Float4
-// reference Float4_247:typeName:type[Float4_TypeDef12]
-Float4)// type : Float
- : // type Float
-// reference Float_252:typeName:type[Float_TypeDef6]
+// scope intrinsicDef_244
+// definition w_FuncDef244
+intrinsic w(// definition v_FuncParamDef238
+v : // reference Float4_236:typeName[Float4_TypeDef12]
+Float4)// reference Float_241:typeName[Float_TypeDef6]
 Float
 ;
-// scope intrinsicDef_272
-// definition abs_FuncDef272
-// type ((Float) -> : Float)
-intrinsic abs(// definition x_FuncParamDef265
-// type Float
-x : // type Float
-// reference Float_263:typeName:type[Float_TypeDef6]
-Float)// type : Float
- : // type Float
-// reference Float_268:typeName:type[Float_TypeDef6]
+// scope intrinsicDef_259
+// definition abs_FuncDef259
+intrinsic abs(// definition x_FuncParamDef253
+x : // reference Float_251:typeName[Float_TypeDef6]
+Float)// reference Float_256:typeName[Float_TypeDef6]
 Float
 ;
-// scope intrinsicDef_288
-// definition acos_FuncDef288
-// type ((Float) -> : Float)
-intrinsic acos(// definition x_FuncParamDef281
-// type Float
-x : // type Float
-// reference Float_279:typeName:type[Float_TypeDef6]
-Float)// type : Float
- : // type Float
-// reference Float_284:typeName:type[Float_TypeDef6]
+// scope intrinsicDef_274
+// definition acos_FuncDef274
+intrinsic acos(// definition x_FuncParamDef268
+x : // reference Float_266:typeName[Float_TypeDef6]
+Float)// reference Float_271:typeName[Float_TypeDef6]
+Float
+;
+// scope intrinsicDef_289
+// definition asin_FuncDef289
+intrinsic asin(// definition x_FuncParamDef283
+x : // reference Float_281:typeName[Float_TypeDef6]
+Float)// reference Float_286:typeName[Float_TypeDef6]
 Float
 ;
 // scope intrinsicDef_304
-// definition asin_FuncDef304
-// type ((Float) -> : Float)
-intrinsic asin(// definition x_FuncParamDef297
-// type Float
-x : // type Float
-// reference Float_295:typeName:type[Float_TypeDef6]
-Float)// type : Float
- : // type Float
-// reference Float_300:typeName:type[Float_TypeDef6]
+// definition atan_FuncDef304
+intrinsic atan(// definition x_FuncParamDef298
+x : // reference Float_296:typeName[Float_TypeDef6]
+Float)// reference Float_301:typeName[Float_TypeDef6]
 Float
 ;
-// scope intrinsicDef_320
-// definition atan_FuncDef320
-// type ((Float) -> : Float)
-intrinsic atan(// definition x_FuncParamDef313
-// type Float
-x : // type Float
-// reference Float_311:typeName:type[Float_TypeDef6]
-Float)// type : Float
- : // type Float
-// reference Float_316:typeName:type[Float_TypeDef6]
+// scope intrinsicDef_325
+// definition atan2_FuncDef325
+intrinsic atan2(// definition y_FuncParamDef313
+y : // reference Float_311:typeName[Float_TypeDef6]
+Float, // definition x_FuncParamDef319
+x : // reference Float_317:typeName[Float_TypeDef6]
+Float)// reference Float_322:typeName[Float_TypeDef6]
 Float
 ;
-// scope intrinsicDef_342
-// definition atan2_FuncDef342
-// type ((Float Float) -> : Float)
-intrinsic atan2(// definition y_FuncParamDef329
-// type Float
-y : // type Float
-// reference Float_327:typeName:type[Float_TypeDef6]
-Float, // definition x_FuncParamDef335
-// type Float
-x : // type Float
-// reference Float_333:typeName:type[Float_TypeDef6]
-Float)// type : Float
- : // type Float
-// reference Float_338:typeName:type[Float_TypeDef6]
+// scope intrinsicDef_340
+// definition ceil_FuncDef340
+intrinsic ceil(// definition x_FuncParamDef334
+x : // reference Float_332:typeName[Float_TypeDef6]
+Float)// reference Float_337:typeName[Float_TypeDef6]
 Float
 ;
-// scope intrinsicDef_358
-// definition ceil_FuncDef358
-// type ((Float) -> : Float)
-intrinsic ceil(// definition x_FuncParamDef351
-// type Float
-x : // type Float
-// reference Float_349:typeName:type[Float_TypeDef6]
-Float)// type : Float
- : // type Float
-// reference Float_354:typeName:type[Float_TypeDef6]
+// scope intrinsicDef_367
+// definition clamp_FuncDef367
+intrinsic clamp(// definition x_FuncParamDef349
+x : // reference Float_347:typeName[Float_TypeDef6]
+Float, // definition min_FuncParamDef355
+min : // reference Float_353:typeName[Float_TypeDef6]
+Float, // definition max_FuncParamDef361
+max : // reference Float_359:typeName[Float_TypeDef6]
+Float)// reference Float_364:typeName[Float_TypeDef6]
 Float
 ;
-// scope intrinsicDef_386
-// definition clamp_FuncDef386
-// type ((Float Float Float) -> : Float)
-intrinsic clamp(// definition x_FuncParamDef367
-// type Float
-x : // type Float
-// reference Float_365:typeName:type[Float_TypeDef6]
-Float, // definition min_FuncParamDef373
-// type Float
-min : // type Float
-// reference Float_371:typeName:type[Float_TypeDef6]
-Float, // definition max_FuncParamDef379
-// type Float
-max : // type Float
-// reference Float_377:typeName:type[Float_TypeDef6]
-Float)// type : Float
- : // type Float
-// reference Float_382:typeName:type[Float_TypeDef6]
+// scope intrinsicDef_382
+// definition cos_FuncDef382
+intrinsic cos(// definition x_FuncParamDef376
+x : // reference Float_374:typeName[Float_TypeDef6]
+Float)// reference Float_379:typeName[Float_TypeDef6]
 Float
 ;
-// scope intrinsicDef_402
-// definition cos_FuncDef402
-// type ((Float) -> : Float)
-intrinsic cos(// definition x_FuncParamDef395
-// type Float
-x : // type Float
-// reference Float_393:typeName:type[Float_TypeDef6]
-Float)// type : Float
- : // type Float
-// reference Float_398:typeName:type[Float_TypeDef6]
+// scope intrinsicDef_397
+// definition exp_FuncDef397
+intrinsic exp(// definition x_FuncParamDef391
+x : // reference Float_389:typeName[Float_TypeDef6]
+Float)// reference Float_394:typeName[Float_TypeDef6]
 Float
 ;
-// scope intrinsicDef_418
-// definition exp_FuncDef418
-// type ((Float) -> : Float)
-intrinsic exp(// definition x_FuncParamDef411
-// type Float
-x : // type Float
-// reference Float_409:typeName:type[Float_TypeDef6]
-Float)// type : Float
- : // type Float
-// reference Float_414:typeName:type[Float_TypeDef6]
+// scope intrinsicDef_412
+// definition floor_FuncDef412
+intrinsic floor(// definition x_FuncParamDef406
+x : // reference Float_404:typeName[Float_TypeDef6]
+Float)// reference Float_409:typeName[Float_TypeDef6]
 Float
 ;
-// scope intrinsicDef_434
-// definition floor_FuncDef434
-// type ((Float) -> : Float)
-intrinsic floor(// definition x_FuncParamDef427
-// type Float
-x : // type Float
-// reference Float_425:typeName:type[Float_TypeDef6]
-Float)// type : Float
- : // type Float
-// reference Float_430:typeName:type[Float_TypeDef6]
+// scope intrinsicDef_427
+// definition log_FuncDef427
+intrinsic log(// definition x_FuncParamDef421
+x : // reference Float_419:typeName[Float_TypeDef6]
+Float)// reference Float_424:typeName[Float_TypeDef6]
 Float
 ;
-// scope intrinsicDef_450
-// definition log_FuncDef450
-// type ((Float) -> : Float)
-intrinsic log(// definition x_FuncParamDef443
-// type Float
-x : // type Float
-// reference Float_441:typeName:type[Float_TypeDef6]
-Float)// type : Float
- : // type Float
-// reference Float_446:typeName:type[Float_TypeDef6]
+// scope intrinsicDef_448
+// definition max_FuncDef448
+intrinsic max(// definition x_FuncParamDef436
+x : // reference Float_434:typeName[Float_TypeDef6]
+Float, // definition y_FuncParamDef442
+y : // reference Float_440:typeName[Float_TypeDef6]
+Float)// reference Float_445:typeName[Float_TypeDef6]
 Float
 ;
-// scope intrinsicDef_472
-// definition max_FuncDef472
-// type ((Float Float) -> : Float)
-intrinsic max(// definition x_FuncParamDef459
-// type Float
-x : // type Float
-// reference Float_457:typeName:type[Float_TypeDef6]
-Float, // definition y_FuncParamDef465
-// type Float
-y : // type Float
-// reference Float_463:typeName:type[Float_TypeDef6]
-Float)// type : Float
- : // type Float
-// reference Float_468:typeName:type[Float_TypeDef6]
+// scope intrinsicDef_469
+// definition min_FuncDef469
+intrinsic min(// definition x_FuncParamDef457
+x : // reference Float_455:typeName[Float_TypeDef6]
+Float, // definition y_FuncParamDef463
+y : // reference Float_461:typeName[Float_TypeDef6]
+Float)// reference Float_466:typeName[Float_TypeDef6]
 Float
 ;
-// scope intrinsicDef_494
-// definition min_FuncDef494
-// type ((Float Float) -> : Float)
-intrinsic min(// definition x_FuncParamDef481
-// type Float
-x : // type Float
-// reference Float_479:typeName:type[Float_TypeDef6]
-Float, // definition y_FuncParamDef487
-// type Float
-y : // type Float
-// reference Float_485:typeName:type[Float_TypeDef6]
-Float)// type : Float
- : // type Float
-// reference Float_490:typeName:type[Float_TypeDef6]
+// scope intrinsicDef_490
+// definition pow_FuncDef490
+intrinsic pow(// definition x_FuncParamDef478
+x : // reference Float_476:typeName[Float_TypeDef6]
+Float, // definition y_FuncParamDef484
+y : // reference Float_482:typeName[Float_TypeDef6]
+Float)// reference Float_487:typeName[Float_TypeDef6]
 Float
 ;
-// scope intrinsicDef_516
-// definition pow_FuncDef516
-// type ((Float Float) -> : Float)
-intrinsic pow(// definition x_FuncParamDef503
-// type Float
-x : // type Float
-// reference Float_501:typeName:type[Float_TypeDef6]
-Float, // definition y_FuncParamDef509
-// type Float
-y : // type Float
-// reference Float_507:typeName:type[Float_TypeDef6]
-Float)// type : Float
- : // type Float
-// reference Float_512:typeName:type[Float_TypeDef6]
+// scope intrinsicDef_505
+// definition round_FuncDef505
+intrinsic round(// definition x_FuncParamDef499
+x : // reference Float_497:typeName[Float_TypeDef6]
+Float)// reference Float_502:typeName[Float_TypeDef6]
 Float
 ;
-// scope intrinsicDef_532
-// definition round_FuncDef532
-// type ((Float) -> : Float)
-intrinsic round(// definition x_FuncParamDef525
-// type Float
-x : // type Float
-// reference Float_523:typeName:type[Float_TypeDef6]
-Float)// type : Float
- : // type Float
-// reference Float_528:typeName:type[Float_TypeDef6]
+// scope intrinsicDef_520
+// definition sin_FuncDef520
+intrinsic sin(// definition x_FuncParamDef514
+x : // reference Float_512:typeName[Float_TypeDef6]
+Float)// reference Float_517:typeName[Float_TypeDef6]
 Float
 ;
-// scope intrinsicDef_548
-// definition sin_FuncDef548
-// type ((Float) -> : Float)
-intrinsic sin(// definition x_FuncParamDef541
-// type Float
-x : // type Float
-// reference Float_539:typeName:type[Float_TypeDef6]
-Float)// type : Float
- : // type Float
-// reference Float_544:typeName:type[Float_TypeDef6]
+// scope intrinsicDef_535
+// definition sign_FuncDef535
+intrinsic sign(// definition x_FuncParamDef529
+x : // reference Float_527:typeName[Float_TypeDef6]
+Float)// reference Float_532:typeName[Float_TypeDef6]
 Float
 ;
-// scope intrinsicDef_564
-// definition sign_FuncDef564
-// type ((Float) -> : Float)
-intrinsic sign(// definition x_FuncParamDef557
-// type Float
-x : // type Float
-// reference Float_555:typeName:type[Float_TypeDef6]
-Float)// type : Float
- : // type Float
-// reference Float_560:typeName:type[Float_TypeDef6]
+// scope intrinsicDef_550
+// definition sqrt_FuncDef550
+intrinsic sqrt(// definition x_FuncParamDef544
+x : // reference Float_542:typeName[Float_TypeDef6]
+Float)// reference Float_547:typeName[Float_TypeDef6]
 Float
 ;
-// scope intrinsicDef_580
-// definition sqrt_FuncDef580
-// type ((Float) -> : Float)
-intrinsic sqrt(// definition x_FuncParamDef573
-// type Float
-x : // type Float
-// reference Float_571:typeName:type[Float_TypeDef6]
-Float)// type : Float
- : // type Float
-// reference Float_576:typeName:type[Float_TypeDef6]
+// scope intrinsicDef_565
+// definition tan_FuncDef565
+intrinsic tan(// definition x_FuncParamDef559
+x : // reference Float_557:typeName[Float_TypeDef6]
+Float)// reference Float_562:typeName[Float_TypeDef6]
 Float
 ;
-// scope intrinsicDef_596
-// definition tan_FuncDef596
-// type ((Float) -> : Float)
-intrinsic tan(// definition x_FuncParamDef589
-// type Float
-x : // type Float
-// reference Float_587:typeName:type[Float_TypeDef6]
-Float)// type : Float
- : // type Float
-// reference Float_592:typeName:type[Float_TypeDef6]
+// scope intrinsicDef_587
+// definition op+_FuncDef587
+intrinsic op+(// definition x_FuncParamDef575
+x : // reference Float_573:typeName[Float_TypeDef6]
+Float, // definition y_FuncParamDef581
+y : // reference Float_579:typeName[Float_TypeDef6]
+Float)// reference Float_584:typeName[Float_TypeDef6]
 Float
 ;
-// scope intrinsicDef_619
-// definition op+_FuncDef619
-// type ((Float Float) -> : Float)
-intrinsic op+(// definition x_FuncParamDef606
-// type Float
-x : // type Float
-// reference Float_604:typeName:type[Float_TypeDef6]
-Float, // definition y_FuncParamDef612
-// type Float
-y : // type Float
-// reference Float_610:typeName:type[Float_TypeDef6]
-Float)// type : Float
- : // type Float
-// reference Float_615:typeName:type[Float_TypeDef6]
+// scope intrinsicDef_609
+// definition op-_FuncDef609
+intrinsic op-(// definition x_FuncParamDef597
+x : // reference Float_595:typeName[Float_TypeDef6]
+Float, // definition y_FuncParamDef603
+y : // reference Float_601:typeName[Float_TypeDef6]
+Float)// reference Float_606:typeName[Float_TypeDef6]
 Float
 ;
-// scope intrinsicDef_642
-// definition op-_FuncDef642
-// type ((Float Float) -> : Float)
-intrinsic op-(// definition x_FuncParamDef629
-// type Float
-x : // type Float
-// reference Float_627:typeName:type[Float_TypeDef6]
-Float, // definition y_FuncParamDef635
-// type Float
-y : // type Float
-// reference Float_633:typeName:type[Float_TypeDef6]
-Float)// type : Float
- : // type Float
-// reference Float_638:typeName:type[Float_TypeDef6]
+// scope intrinsicDef_631
+// definition op*_FuncDef631
+intrinsic op*(// definition x_FuncParamDef619
+x : // reference Float_617:typeName[Float_TypeDef6]
+Float, // definition y_FuncParamDef625
+y : // reference Float_623:typeName[Float_TypeDef6]
+Float)// reference Float_628:typeName[Float_TypeDef6]
 Float
 ;
-// scope intrinsicDef_665
-// definition op*_FuncDef665
-// type ((Float Float) -> : Float)
-intrinsic op*(// definition x_FuncParamDef652
-// type Float
-x : // type Float
-// reference Float_650:typeName:type[Float_TypeDef6]
-Float, // definition y_FuncParamDef658
-// type Float
-y : // type Float
-// reference Float_656:typeName:type[Float_TypeDef6]
-Float)// type : Float
- : // type Float
-// reference Float_661:typeName:type[Float_TypeDef6]
+// scope intrinsicDef_653
+// definition op/_FuncDef653
+intrinsic op/(// definition x_FuncParamDef641
+x : // reference Float_639:typeName[Float_TypeDef6]
+Float, // definition y_FuncParamDef647
+y : // reference Float_645:typeName[Float_TypeDef6]
+Float)// reference Float_650:typeName[Float_TypeDef6]
 Float
 ;
-// scope intrinsicDef_688
-// definition op/_FuncDef688
-// type ((Float Float) -> : Float)
-intrinsic op/(// definition x_FuncParamDef675
-// type Float
-x : // type Float
-// reference Float_673:typeName:type[Float_TypeDef6]
-Float, // definition y_FuncParamDef681
-// type Float
-y : // type Float
-// reference Float_679:typeName:type[Float_TypeDef6]
-Float)// type : Float
- : // type Float
-// reference Float_684:typeName:type[Float_TypeDef6]
+// scope intrinsicDef_675
+// definition op%_FuncDef675
+intrinsic op%(// definition x_FuncParamDef663
+x : // reference Float_661:typeName[Float_TypeDef6]
+Float, // definition y_FuncParamDef669
+y : // reference Float_667:typeName[Float_TypeDef6]
+Float)// reference Float_672:typeName[Float_TypeDef6]
 Float
 ;
-// scope intrinsicDef_711
-// definition op%_FuncDef711
-// type ((Float Float) -> : Float)
-intrinsic op%(// definition x_FuncParamDef698
-// type Float
-x : // type Float
-// reference Float_696:typeName:type[Float_TypeDef6]
-Float, // definition y_FuncParamDef704
-// type Float
-y : // type Float
-// reference Float_702:typeName:type[Float_TypeDef6]
-Float)// type : Float
- : // type Float
-// reference Float_707:typeName:type[Float_TypeDef6]
-Float
-;
-// scope intrinsicDef_734
-// definition op>_FuncDef734
-// type ((Float Float) -> : Bool)
-intrinsic op>(// definition x_FuncParamDef721
-// type Float
-x : // type Float
-// reference Float_719:typeName:type[Float_TypeDef6]
-Float, // definition y_FuncParamDef727
-// type Float
-y : // type Float
-// reference Float_725:typeName:type[Float_TypeDef6]
-Float)// type : Bool
- : // type Bool
-// reference Bool_730:typeName:type[Bool_TypeDef16]
+// scope intrinsicDef_697
+// definition op>_FuncDef697
+intrinsic op>(// definition x_FuncParamDef685
+x : // reference Float_683:typeName[Float_TypeDef6]
+Float, // definition y_FuncParamDef691
+y : // reference Float_689:typeName[Float_TypeDef6]
+Float)// reference Bool_694:typeName[Bool_TypeDef16]
 Bool
 ;
-// scope intrinsicDef_757
-// definition op>=_FuncDef757
-// type ((Float Float) -> : Bool)
-intrinsic op>=(// definition x_FuncParamDef744
-// type Float
-x : // type Float
-// reference Float_742:typeName:type[Float_TypeDef6]
-Float, // definition y_FuncParamDef750
-// type Float
-y : // type Float
-// reference Float_748:typeName:type[Float_TypeDef6]
-Float)// type : Bool
- : // type Bool
-// reference Bool_753:typeName:type[Bool_TypeDef16]
+// scope intrinsicDef_719
+// definition op>=_FuncDef719
+intrinsic op>=(// definition x_FuncParamDef707
+x : // reference Float_705:typeName[Float_TypeDef6]
+Float, // definition y_FuncParamDef713
+y : // reference Float_711:typeName[Float_TypeDef6]
+Float)// reference Bool_716:typeName[Bool_TypeDef16]
 Bool
 ;
-// scope intrinsicDef_780
-// definition op<_FuncDef780
-// type ((Float Float) -> : Bool)
-intrinsic op<(// definition x_FuncParamDef767
-// type Float
-x : // type Float
-// reference Float_765:typeName:type[Float_TypeDef6]
-Float, // definition y_FuncParamDef773
-// type Float
-y : // type Float
-// reference Float_771:typeName:type[Float_TypeDef6]
-Float)// type : Bool
- : // type Bool
-// reference Bool_776:typeName:type[Bool_TypeDef16]
+// scope intrinsicDef_741
+// definition op<_FuncDef741
+intrinsic op<(// definition x_FuncParamDef729
+x : // reference Float_727:typeName[Float_TypeDef6]
+Float, // definition y_FuncParamDef735
+y : // reference Float_733:typeName[Float_TypeDef6]
+Float)// reference Bool_738:typeName[Bool_TypeDef16]
 Bool
 ;
-// scope intrinsicDef_803
-// definition op<=_FuncDef803
-// type ((Float Float) -> : Bool)
-intrinsic op<=(// definition x_FuncParamDef790
-// type Float
-x : // type Float
-// reference Float_788:typeName:type[Float_TypeDef6]
-Float, // definition y_FuncParamDef796
-// type Float
-y : // type Float
-// reference Float_794:typeName:type[Float_TypeDef6]
-Float)// type : Bool
- : // type Bool
-// reference Bool_799:typeName:type[Bool_TypeDef16]
+// scope intrinsicDef_763
+// definition op<=_FuncDef763
+intrinsic op<=(// definition x_FuncParamDef751
+x : // reference Float_749:typeName[Float_TypeDef6]
+Float, // definition y_FuncParamDef757
+y : // reference Float_755:typeName[Float_TypeDef6]
+Float)// reference Bool_760:typeName[Bool_TypeDef16]
 Bool
 ;
-// scope intrinsicDef_826
-// definition op!=_FuncDef826
-// type ((Float Float) -> : Bool)
-intrinsic op!=(// definition x_FuncParamDef813
-// type Float
-x : // type Float
-// reference Float_811:typeName:type[Float_TypeDef6]
-Float, // definition y_FuncParamDef819
-// type Float
-y : // type Float
-// reference Float_817:typeName:type[Float_TypeDef6]
-Float)// type : Bool
- : // type Bool
-// reference Bool_822:typeName:type[Bool_TypeDef16]
+// scope intrinsicDef_785
+// definition op!=_FuncDef785
+intrinsic op!=(// definition x_FuncParamDef773
+x : // reference Float_771:typeName[Float_TypeDef6]
+Float, // definition y_FuncParamDef779
+y : // reference Float_777:typeName[Float_TypeDef6]
+Float)// reference Bool_782:typeName[Bool_TypeDef16]
 Bool
 ;
-// scope intrinsicDef_849
-// definition op==_FuncDef849
-// type ((Float Float) -> : Bool)
-intrinsic op==(// definition x_FuncParamDef836
-// type Float
-x : // type Float
-// reference Float_834:typeName:type[Float_TypeDef6]
-Float, // definition y_FuncParamDef842
-// type Float
-y : // type Float
-// reference Float_840:typeName:type[Float_TypeDef6]
-Float)// type : Bool
- : // type Bool
-// reference Bool_845:typeName:type[Bool_TypeDef16]
+// scope intrinsicDef_807
+// definition op==_FuncDef807
+intrinsic op==(// definition x_FuncParamDef795
+x : // reference Float_793:typeName[Float_TypeDef6]
+Float, // definition y_FuncParamDef801
+y : // reference Float_799:typeName[Float_TypeDef6]
+Float)// reference Bool_804:typeName[Bool_TypeDef16]
 Bool
 ;
-// scope intrinsicDef_872
-// definition op&&_FuncDef872
-// type ((Bool Bool) -> : Bool)
-intrinsic op&&(// definition x_FuncParamDef859
-// type Bool
-x : // type Bool
-// reference Bool_857:typeName:type[Bool_TypeDef16]
-Bool, // definition y_FuncParamDef865
-// type Bool
-y : // type Bool
-// reference Bool_863:typeName:type[Bool_TypeDef16]
-Bool)// type : Bool
- : // type Bool
-// reference Bool_868:typeName:type[Bool_TypeDef16]
+// scope intrinsicDef_829
+// definition op&&_FuncDef829
+intrinsic op&&(// definition x_FuncParamDef817
+x : // reference Bool_815:typeName[Bool_TypeDef16]
+Bool, // definition y_FuncParamDef823
+y : // reference Bool_821:typeName[Bool_TypeDef16]
+Bool)// reference Bool_826:typeName[Bool_TypeDef16]
+Bool
+;
+// scope intrinsicDef_851
+// definition op||_FuncDef851
+intrinsic op||(// definition x_FuncParamDef839
+x : // reference Bool_837:typeName[Bool_TypeDef16]
+Bool, // definition y_FuncParamDef845
+y : // reference Bool_843:typeName[Bool_TypeDef16]
+Bool)// reference Bool_848:typeName[Bool_TypeDef16]
+Bool
+;
+// scope intrinsicDef_873
+// definition op^^_FuncDef873
+intrinsic op^^(// definition x_FuncParamDef861
+x : // reference Bool_859:typeName[Bool_TypeDef16]
+Bool, // definition y_FuncParamDef867
+y : // reference Bool_865:typeName[Bool_TypeDef16]
+Bool)// reference Bool_870:typeName[Bool_TypeDef16]
 Bool
 ;
 // scope intrinsicDef_895
-// definition op||_FuncDef895
-// type ((Bool Bool) -> : Bool)
-intrinsic op||(// definition x_FuncParamDef882
-// type Bool
-x : // type Bool
-// reference Bool_880:typeName:type[Bool_TypeDef16]
-Bool, // definition y_FuncParamDef888
-// type Bool
-y : // type Bool
-// reference Bool_886:typeName:type[Bool_TypeDef16]
-Bool)// type : Bool
- : // type Bool
-// reference Bool_891:typeName:type[Bool_TypeDef16]
-Bool
-;
-// scope intrinsicDef_918
-// definition op^^_FuncDef918
-// type ((Bool Bool) -> : Bool)
-intrinsic op^^(// definition x_FuncParamDef905
-// type Bool
-x : // type Bool
-// reference Bool_903:typeName:type[Bool_TypeDef16]
-Bool, // definition y_FuncParamDef911
-// type Bool
-y : // type Bool
-// reference Bool_909:typeName:type[Bool_TypeDef16]
-Bool)// type : Bool
- : // type Bool
-// reference Bool_914:typeName:type[Bool_TypeDef16]
-Bool
-;
-// scope intrinsicDef_941
-// definition op.._FuncDef941
-// type ((Int Int) -> : Array)
-intrinsic op..(// definition x_FuncParamDef928
-// type Int
-x : // type Int
-// reference Int_926:typeName:type[Int_TypeDef14]
-Int, // definition y_FuncParamDef934
-// type Int
-y : // type Int
-// reference Int_932:typeName:type[Int_TypeDef14]
-Int)// type : Array
- : // type Array
-// reference Array_937:typeName:type[Array_TypeDef22]
+// definition op.._FuncDef895
+intrinsic op..(// definition x_FuncParamDef883
+x : // reference Int_881:typeName[Int_TypeDef14]
+Int, // definition y_FuncParamDef889
+y : // reference Int_887:typeName[Int_TypeDef14]
+Int)// reference Array_892:typeName[Array_TypeDef22]
 Array
 ;
-// scope intrinsicDef_964
-// definition op[]_FuncDef964
-// type ((Array Int) -> : Any)
-intrinsic op[](// definition x_FuncParamDef951
-// type Array
-x : // type Array
-// reference Array_949:typeName:type[Array_TypeDef22]
-Array, // definition i_FuncParamDef957
-// type Int
-i : // type Int
-// reference Int_955:typeName:type[Int_TypeDef14]
-Int)// type : Any
- : // type Any
-// reference Any_960:typeName:type[Any_TypeDef28]
+// scope intrinsicDef_917
+// definition op[]_FuncDef917
+intrinsic op[](// definition x_FuncParamDef905
+x : // reference Array_903:typeName[Array_TypeDef22]
+Array, // definition i_FuncParamDef911
+i : // reference Int_909:typeName[Int_TypeDef14]
+Int)// reference Any_914:typeName[Any_TypeDef28]
 Any
 ;
-// scope intrinsicDef_980
-// definition op_not_FuncDef980
-// type ((Bool) -> : Bool)
-intrinsic op_not(// definition x_FuncParamDef973
-// type Bool
-x : // type Bool
-// reference Bool_971:typeName:type[Bool_TypeDef16]
-Bool)// type : Bool
- : // type Bool
-// reference Bool_976:typeName:type[Bool_TypeDef16]
+// scope intrinsicDef_932
+// definition op_not_FuncDef932
+intrinsic op_not(// definition x_FuncParamDef926
+x : // reference Bool_924:typeName[Bool_TypeDef16]
+Bool)// reference Bool_929:typeName[Bool_TypeDef16]
 Bool
 ;
-// scope intrinsicDef_996
-// definition op_negate_FuncDef996
-// type ((Float) -> : Float)
-intrinsic op_negate(// definition x_FuncParamDef989
-// type Float
-x : // type Float
-// reference Float_987:typeName:type[Float_TypeDef6]
-Float)// type : Float
- : // type Float
-// reference Float_992:typeName:type[Float_TypeDef6]
+// scope intrinsicDef_947
+// definition op_negate_FuncDef947
+intrinsic op_negate(// definition x_FuncParamDef941
+x : // reference Float_939:typeName[Float_TypeDef6]
+Float)// reference Float_944:typeName[Float_TypeDef6]
 Float
 ;
-// scope intrinsicDef_1018
-// definition array_FuncDef1018
-// type ((Int Function) -> : Array)
-intrinsic array(// definition n_FuncParamDef1005
-// type Int
-n : // type Int
-// reference Int_1003:typeName:type[Int_TypeDef14]
-Int, // definition f_FuncParamDef1011
-// type Function
-f : // type Function
-// reference Function_1009:typeName:type[Function_TypeDef26]
-Function)// type : Array
- : // type Array
-// reference Array_1014:typeName:type[Array_TypeDef22]
+// scope intrinsicDef_968
+// definition array_FuncDef968
+intrinsic array(// definition n_FuncParamDef956
+n : // reference Int_954:typeName[Int_TypeDef14]
+Int, // definition f_FuncParamDef962
+f : // reference Function_960:typeName[Function_TypeDef26]
+Function)// reference Array_965:typeName[Array_TypeDef22]
 Array
 ;
-// scope intrinsicDef_1034
-// definition count_FuncDef1034
-// type ((Array) -> : Int)
-intrinsic count(// definition xs_FuncParamDef1027
-// type Array
-xs : // type Array
-// reference Array_1025:typeName:type[Array_TypeDef22]
-Array)// type : Int
- : // type Int
-// reference Int_1030:typeName:type[Int_TypeDef14]
+// scope intrinsicDef_983
+// definition count_FuncDef983
+intrinsic count(// definition xs_FuncParamDef977
+xs : // reference Array_975:typeName[Array_TypeDef22]
+Array)// reference Int_980:typeName[Int_TypeDef14]
 Int
 ;
-// scope intrinsicDef_1056
-// definition at_FuncDef1056
-// type ((Array Int) -> : Any)
-intrinsic at(// definition xs_FuncParamDef1043
-// type Array
-xs : // type Array
-// reference Array_1041:typeName:type[Array_TypeDef22]
-Array, // definition i_FuncParamDef1049
-// type Int
-i : // type Int
-// reference Int_1047:typeName:type[Int_TypeDef14]
-Int)// type : Any
- : // type Any
-// reference Any_1052:typeName:type[Any_TypeDef28]
+// scope intrinsicDef_1004
+// definition at_FuncDef1004
+intrinsic at(// definition xs_FuncParamDef992
+xs : // reference Array_990:typeName[Array_TypeDef22]
+Array, // definition i_FuncParamDef998
+i : // reference Int_996:typeName[Int_TypeDef14]
+Int)// reference Any_1001:typeName[Any_TypeDef28]
 Any
 ;
-// scope intrinsicDef_1072
-// definition mutable_FuncDef1072
-// type ((Array) -> : ArrayBuilder)
-intrinsic mutable(// definition xs_FuncParamDef1065
-// type Array
-xs : // type Array
-// reference Array_1063:typeName:type[Array_TypeDef22]
-Array)// type : ArrayBuilder
- : // type ArrayBuilder
-// reference ArrayBuilder_1068:typeName:type[ArrayBuilder_TypeDef24]
+// scope intrinsicDef_1019
+// definition mutable_FuncDef1019
+intrinsic mutable(// definition xs_FuncParamDef1013
+xs : // reference Array_1011:typeName[Array_TypeDef22]
+Array)// reference ArrayBuilder_1016:typeName[ArrayBuilder_TypeDef24]
 ArrayBuilder
 ;
-// scope intrinsicDef_1094
-// definition push_FuncDef1094
-// type ((ArrayBuilder Any) -> : ArrayBuilder)
-intrinsic push(// definition xs_FuncParamDef1081
-// type ArrayBuilder
-xs : // type ArrayBuilder
-// reference ArrayBuilder_1079:typeName:type[ArrayBuilder_TypeDef24]
-ArrayBuilder, // definition x_FuncParamDef1087
-// type Any
-x : // type Any
-// reference Any_1085:typeName:type[Any_TypeDef28]
-Any)// type : ArrayBuilder
- : // type ArrayBuilder
-// reference ArrayBuilder_1090:typeName:type[ArrayBuilder_TypeDef24]
+// scope intrinsicDef_1040
+// definition push_FuncDef1040
+intrinsic push(// definition xs_FuncParamDef1028
+xs : // reference ArrayBuilder_1026:typeName[ArrayBuilder_TypeDef24]
+ArrayBuilder, // definition x_FuncParamDef1034
+x : // reference Any_1032:typeName[Any_TypeDef28]
+Any)// reference ArrayBuilder_1037:typeName[ArrayBuilder_TypeDef24]
 ArrayBuilder
 ;
-// scope intrinsicDef_1122
-// definition set_FuncDef1122
-// type ((ArrayBuilder Int Any) -> : ArrayBuilder)
-intrinsic set(// definition xs_FuncParamDef1103
-// type ArrayBuilder
-xs : // type ArrayBuilder
-// reference ArrayBuilder_1101:typeName:type[ArrayBuilder_TypeDef24]
-ArrayBuilder, // definition i_FuncParamDef1109
-// type Int
-i : // type Int
-// reference Int_1107:typeName:type[Int_TypeDef14]
-Int, // definition x_FuncParamDef1115
-// type Any
-x : // type Any
-// reference Any_1113:typeName:type[Any_TypeDef28]
-Any)// type : ArrayBuilder
- : // type ArrayBuilder
-// reference ArrayBuilder_1118:typeName:type[ArrayBuilder_TypeDef24]
+// scope intrinsicDef_1067
+// definition set_FuncDef1067
+intrinsic set(// definition xs_FuncParamDef1049
+xs : // reference ArrayBuilder_1047:typeName[ArrayBuilder_TypeDef24]
+ArrayBuilder, // definition i_FuncParamDef1055
+i : // reference Int_1053:typeName[Int_TypeDef14]
+Int, // definition x_FuncParamDef1061
+x : // reference Any_1059:typeName[Any_TypeDef28]
+Any)// reference ArrayBuilder_1064:typeName[ArrayBuilder_TypeDef24]
 ArrayBuilder
 ;
-// scope intrinsicDef_1138
-// definition array_FuncDef1138
-// type ((ArrayBuilder) -> : Array)
-intrinsic array(// definition xs_FuncParamDef1131
-// type ArrayBuilder
-xs : // type ArrayBuilder
-// reference ArrayBuilder_1129:typeName:type[ArrayBuilder_TypeDef24]
-ArrayBuilder)// type : Array
- : // type Array
-// reference Array_1134:typeName:type[Array_TypeDef22]
+// scope intrinsicDef_1082
+// definition array_FuncDef1082
+intrinsic array(// definition xs_FuncParamDef1076
+xs : // reference ArrayBuilder_1074:typeName[ArrayBuilder_TypeDef24]
+ArrayBuilder)// reference Array_1079:typeName[Array_TypeDef22]
 Array
 ;
-// scope intrinsicDef_1154
-// definition count_FuncDef1154
-// type ((ArrayBuilder) -> : Int)
-intrinsic count(// definition xs_FuncParamDef1147
-// type ArrayBuilder
-xs : // type ArrayBuilder
-// reference ArrayBuilder_1145:typeName:type[ArrayBuilder_TypeDef24]
-ArrayBuilder)// type : Int
- : // type Int
-// reference Int_1150:typeName:type[Int_TypeDef14]
+// scope intrinsicDef_1097
+// definition count_FuncDef1097
+intrinsic count(// definition xs_FuncParamDef1091
+xs : // reference ArrayBuilder_1089:typeName[ArrayBuilder_TypeDef24]
+ArrayBuilder)// reference Int_1094:typeName[Int_TypeDef14]
 Int
 ;
-// scope intrinsicDef_1176
-// definition at_FuncDef1176
-// type ((ArrayBuilder Int) -> : Any)
-intrinsic at(// definition xs_FuncParamDef1163
-// type ArrayBuilder
-xs : // type ArrayBuilder
-// reference ArrayBuilder_1161:typeName:type[ArrayBuilder_TypeDef24]
-ArrayBuilder, // definition i_FuncParamDef1169
-// type Int
-i : // type Int
-// reference Int_1167:typeName:type[Int_TypeDef14]
-Int)// type : Any
- : // type Any
-// reference Any_1172:typeName:type[Any_TypeDef28]
+// scope intrinsicDef_1118
+// definition at_FuncDef1118
+intrinsic at(// definition xs_FuncParamDef1106
+xs : // reference ArrayBuilder_1104:typeName[ArrayBuilder_TypeDef24]
+ArrayBuilder, // definition i_FuncParamDef1112
+i : // reference Int_1110:typeName[Int_TypeDef14]
+Int)// reference Any_1115:typeName[Any_TypeDef28]
 Any
 ;
-// scope funcDef_1201
-// definition array_FuncDef1201
-// type ((Float2) -> Any)
+// scope funcDef_1141
+// definition array_FuncDef1141
 
 /**
 function array(v: Float2) = [v.x, v.y];    
     
 */
-// scope funcDef_1201
-// definition array_FuncDef1201
-// type ((Float2) -> Any)
-function array(// definition v_FuncParamDef1185
-// type Float2
-v : // type Float2
-// reference Float2_1183:typeName:type[Float2_TypeDef8]
+// scope funcDef_1141
+// definition array_FuncDef1141
+function array(// definition v_FuncParamDef1127
+v : // reference Float2_1125:typeName[Float2_TypeDef8]
 Float2)
 // expression ArrayLiteral [x(v),y(v)]
-// type Array
 [// expression FunCall x(v)
-// type Any
-// reference x_1188:varName:var[x_FuncDef66, x_FuncDef126, x_FuncDef208]
+// reference x_1130:varName[x_FuncDef64, x_FuncDef121, x_FuncDef199]
 // expression VarName x
-// type Any
-x(// reference v_1190:varName:var[v_FuncParamDef1185]
+x(// reference v_1132:varName[v_FuncParamDef1127]
 // expression VarName v
-// type Any
 v), // expression FunCall y(v)
-// type Any
-// reference y_1193:varName:var[y_FuncDef82, y_FuncDef142, y_FuncDef224]
+// reference y_1135:varName[y_FuncDef79, y_FuncDef136, y_FuncDef214]
 // expression VarName y
-// type Any
-y(// reference v_1195:varName:var[v_FuncParamDef1185]
+y(// reference v_1137:varName[v_FuncParamDef1127]
 // expression VarName v
-// type Any
-v)]// scope funcDef_1231
-// definition array_FuncDef1231
-// type ((Float3) -> Any)
+v)]// scope funcDef_1169
+// definition array_FuncDef1169
 
 /**
 function array(v: Float3) = [v.x, v.y, v.z];
     
 */
-// scope funcDef_1231
-// definition array_FuncDef1231
-// type ((Float3) -> Any)
-function array(// definition v_FuncParamDef1210
-// type Float3
-v : // type Float3
-// reference Float3_1208:typeName:type[Float3_TypeDef10]
+// scope funcDef_1169
+// definition array_FuncDef1169
+function array(// definition v_FuncParamDef1150
+v : // reference Float3_1148:typeName[Float3_TypeDef10]
 Float3)
 // expression ArrayLiteral [x(v),y(v),z(v)]
-// type Array
 [// expression FunCall x(v)
-// type Any
-// reference x_1213:varName:var[x_FuncDef66, x_FuncDef126, x_FuncDef208]
+// reference x_1153:varName[x_FuncDef64, x_FuncDef121, x_FuncDef199]
 // expression VarName x
-// type Any
-x(// reference v_1215:varName:var[v_FuncParamDef1210]
+x(// reference v_1155:varName[v_FuncParamDef1150]
 // expression VarName v
-// type Any
 v), // expression FunCall y(v)
-// type Any
-// reference y_1218:varName:var[y_FuncDef82, y_FuncDef142, y_FuncDef224]
+// reference y_1158:varName[y_FuncDef79, y_FuncDef136, y_FuncDef214]
 // expression VarName y
-// type Any
-y(// reference v_1220:varName:var[v_FuncParamDef1210]
+y(// reference v_1160:varName[v_FuncParamDef1150]
 // expression VarName v
-// type Any
 v), // expression FunCall z(v)
-// type Any
-// reference z_1223:varName:var[z_FuncDef158, z_FuncDef240]
+// reference z_1163:varName[z_FuncDef151, z_FuncDef229]
 // expression VarName z
-// type Any
-z(// reference v_1225:varName:var[v_FuncParamDef1210]
+z(// reference v_1165:varName[v_FuncParamDef1150]
 // expression VarName v
-// type Any
-v)]// scope funcDef_1266
-// definition array_FuncDef1266
-// type ((Float4) -> Any)
+v)]// scope funcDef_1202
+// definition array_FuncDef1202
 
 /**
 function array(v: Float4) = [v.x, v.y, v.z, v.w];
 
     
 */
-// scope funcDef_1266
-// definition array_FuncDef1266
-// type ((Float4) -> Any)
-function array(// definition v_FuncParamDef1240
-// type Float4
-v : // type Float4
-// reference Float4_1238:typeName:type[Float4_TypeDef12]
+// scope funcDef_1202
+// definition array_FuncDef1202
+function array(// definition v_FuncParamDef1178
+v : // reference Float4_1176:typeName[Float4_TypeDef12]
 Float4)
 // expression ArrayLiteral [x(v),y(v),z(v),w(v)]
-// type Array
 [// expression FunCall x(v)
-// type Any
-// reference x_1243:varName:var[x_FuncDef66, x_FuncDef126, x_FuncDef208]
+// reference x_1181:varName[x_FuncDef64, x_FuncDef121, x_FuncDef199]
 // expression VarName x
-// type Any
-x(// reference v_1245:varName:var[v_FuncParamDef1240]
+x(// reference v_1183:varName[v_FuncParamDef1178]
 // expression VarName v
-// type Any
 v), // expression FunCall y(v)
-// type Any
-// reference y_1248:varName:var[y_FuncDef82, y_FuncDef142, y_FuncDef224]
+// reference y_1186:varName[y_FuncDef79, y_FuncDef136, y_FuncDef214]
 // expression VarName y
-// type Any
-y(// reference v_1250:varName:var[v_FuncParamDef1240]
+y(// reference v_1188:varName[v_FuncParamDef1178]
 // expression VarName v
-// type Any
 v), // expression FunCall z(v)
-// type Any
-// reference z_1253:varName:var[z_FuncDef158, z_FuncDef240]
+// reference z_1191:varName[z_FuncDef151, z_FuncDef229]
 // expression VarName z
-// type Any
-z(// reference v_1255:varName:var[v_FuncParamDef1240]
+z(// reference v_1193:varName[v_FuncParamDef1178]
 // expression VarName v
-// type Any
 v), // expression FunCall w(v)
-// type Any
-// reference w_1258:varName:var[w_FuncDef256]
+// reference w_1196:varName[w_FuncDef244]
 // expression VarName w
-// type Any
-w(// reference v_1260:varName:var[v_FuncParamDef1240]
+w(// reference v_1198:varName[v_FuncParamDef1178]
 // expression VarName v
-// type Any
-v)]// scope funcDef_1293
-// definition float2_FuncDef1293
-// type ((Any) -> Any)
+v)]// scope funcDef_1227
+// definition float2_FuncDef1227
 
 /**
 function float2(xs) = float2(xs[0], xs[1]);
     
 */
-// scope funcDef_1293
-// definition float2_FuncDef1293
-// type ((Any) -> Any)
-function float2(// definition xs_FuncParamDef1272
-// type Any
+// scope funcDef_1227
+// definition float2_FuncDef1227
+function float2(// definition xs_FuncParamDef1208
 xs)
 // expression FunCall float2(op[](xs,0),op[](xs,1))
-// type Any
-// reference float2_1276:varName:var[float2_FuncDef50, float2_FuncDef1293]
+// reference float2_1212:varName[float2_FuncDef49, float2_FuncDef1227]
 // expression VarName float2
-// type Any
 float2(// expression FunCall op[](xs,0)
-// type Any
-// reference op[]_1277:varName:var[op[]_FuncDef964]
+// reference op[]_1213:varName[op[]_FuncDef917]
 // expression VarName op[]
-// type Any
-op[](// reference xs_1279:varName:var[xs_FuncParamDef1272]
+op[](// reference xs_1215:varName[xs_FuncParamDef1208]
 // expression VarName xs
-// type Any
 xs, // expression NumLiteral 0
-// type Num
 0), // expression FunCall op[](xs,1)
-// type Any
-// reference op[]_1283:varName:var[op[]_FuncDef964]
+// reference op[]_1219:varName[op[]_FuncDef917]
 // expression VarName op[]
-// type Any
-op[](// reference xs_1285:varName:var[xs_FuncParamDef1272]
+op[](// reference xs_1221:varName[xs_FuncParamDef1208]
 // expression VarName xs
-// type Any
 xs, // expression NumLiteral 1
-// type Num
-1))// scope funcDef_1326
-// definition float3_FuncDef1326
-// type ((Any) -> Any)
+1))// scope funcDef_1258
+// definition float3_FuncDef1258
 
 /**
 function float3(xs) = float3(xs[0], xs[1], xs[2]);
     
 */
-// scope funcDef_1326
-// definition float3_FuncDef1326
-// type ((Any) -> Any)
-function float3(// definition xs_FuncParamDef1299
-// type Any
+// scope funcDef_1258
+// definition float3_FuncDef1258
+function float3(// definition xs_FuncParamDef1233
 xs)
 // expression FunCall float3(op[](xs,0),op[](xs,1),op[](xs,2))
-// type Any
-// reference float3_1303:varName:var[float3_FuncDef110, float3_FuncDef1326]
+// reference float3_1237:varName[float3_FuncDef106, float3_FuncDef1258]
 // expression VarName float3
-// type Any
 float3(// expression FunCall op[](xs,0)
-// type Any
-// reference op[]_1304:varName:var[op[]_FuncDef964]
+// reference op[]_1238:varName[op[]_FuncDef917]
 // expression VarName op[]
-// type Any
-op[](// reference xs_1306:varName:var[xs_FuncParamDef1299]
+op[](// reference xs_1240:varName[xs_FuncParamDef1233]
 // expression VarName xs
-// type Any
 xs, // expression NumLiteral 0
-// type Num
 0), // expression FunCall op[](xs,1)
-// type Any
-// reference op[]_1310:varName:var[op[]_FuncDef964]
+// reference op[]_1244:varName[op[]_FuncDef917]
 // expression VarName op[]
-// type Any
-op[](// reference xs_1312:varName:var[xs_FuncParamDef1299]
+op[](// reference xs_1246:varName[xs_FuncParamDef1233]
 // expression VarName xs
-// type Any
 xs, // expression NumLiteral 1
-// type Num
 1), // expression FunCall op[](xs,2)
-// type Any
-// reference op[]_1316:varName:var[op[]_FuncDef964]
+// reference op[]_1250:varName[op[]_FuncDef917]
 // expression VarName op[]
-// type Any
-op[](// reference xs_1318:varName:var[xs_FuncParamDef1299]
+op[](// reference xs_1252:varName[xs_FuncParamDef1233]
 // expression VarName xs
-// type Any
 xs, // expression NumLiteral 2
-// type Num
-2))// scope funcDef_1365
-// definition float4_FuncDef1365
-// type ((Any) -> Any)
+2))// scope funcDef_1295
+// definition float4_FuncDef1295
 
 /**
 function float4(xs) = float4(xs[0], xs[1], xs[2], xs[3]);    
@@ -1082,81 +639,52 @@ function float4(xs) = float4(xs[0], xs[1], xs[2], xs[3]);
     // A couple of useful constants 
     
 */
-// scope funcDef_1365
-// definition float4_FuncDef1365
-// type ((Any) -> Any)
-function float4(// definition xs_FuncParamDef1332
-// type Any
+// scope funcDef_1295
+// definition float4_FuncDef1295
+function float4(// definition xs_FuncParamDef1264
 xs)
 // expression FunCall float4(op[](xs,0),op[](xs,1),op[](xs,2),op[](xs,3))
-// type Any
-// reference float4_1336:varName:var[float4_FuncDef192, float4_FuncDef1365]
+// reference float4_1268:varName[float4_FuncDef184, float4_FuncDef1295]
 // expression VarName float4
-// type Any
 float4(// expression FunCall op[](xs,0)
-// type Any
-// reference op[]_1337:varName:var[op[]_FuncDef964]
+// reference op[]_1269:varName[op[]_FuncDef917]
 // expression VarName op[]
-// type Any
-op[](// reference xs_1339:varName:var[xs_FuncParamDef1332]
+op[](// reference xs_1271:varName[xs_FuncParamDef1264]
 // expression VarName xs
-// type Any
 xs, // expression NumLiteral 0
-// type Num
 0), // expression FunCall op[](xs,1)
-// type Any
-// reference op[]_1343:varName:var[op[]_FuncDef964]
+// reference op[]_1275:varName[op[]_FuncDef917]
 // expression VarName op[]
-// type Any
-op[](// reference xs_1345:varName:var[xs_FuncParamDef1332]
+op[](// reference xs_1277:varName[xs_FuncParamDef1264]
 // expression VarName xs
-// type Any
 xs, // expression NumLiteral 1
-// type Num
 1), // expression FunCall op[](xs,2)
-// type Any
-// reference op[]_1349:varName:var[op[]_FuncDef964]
+// reference op[]_1281:varName[op[]_FuncDef917]
 // expression VarName op[]
-// type Any
-op[](// reference xs_1351:varName:var[xs_FuncParamDef1332]
+op[](// reference xs_1283:varName[xs_FuncParamDef1264]
 // expression VarName xs
-// type Any
 xs, // expression NumLiteral 2
-// type Num
 2), // expression FunCall op[](xs,3)
-// type Any
-// reference op[]_1355:varName:var[op[]_FuncDef964]
+// reference op[]_1287:varName[op[]_FuncDef917]
 // expression VarName op[]
-// type Any
-op[](// reference xs_1357:varName:var[xs_FuncParamDef1332]
+op[](// reference xs_1289:varName[xs_FuncParamDef1264]
 // expression VarName xs
-// type Any
 xs, // expression NumLiteral 3
-// type Num
-3))var // definition pi_VarDef1369
-// type Num
+3))var // definition pi_VarDef1299
 pi// expression NumLiteral 3.141592653589793
-// type Num
 3.14159265358979323846;
-var // definition e_VarDef1375
-// type Num
+var // definition e_VarDef1305
 e// expression NumLiteral 2.718281828459045
-// type Num
 2.71828182845904523536;
-// scope intrinsicDef_1386
-// definition print_FuncDef1386
-// type ((Any) -> Any)
-intrinsic print(// definition x_FuncParamDef1383
-// type Any
+// scope intrinsicDef_1316
+// definition print_FuncDef1316
+intrinsic print(// definition x_FuncParamDef1313
 x)
 ;
-// scope intrinsicDef_1398
-// definition assert_FuncDef1398
-// type ((Bool) -> Any)
-intrinsic assert(// definition x_FuncParamDef1395
-// type Bool
-x : // type Bool
-// reference Bool_1393:typeName:type[Bool_TypeDef16]
+// scope intrinsicDef_1328
+// definition assert_FuncDef1328
+intrinsic assert(// definition x_FuncParamDef1325
+x : // reference Bool_1323:typeName[Bool_TypeDef16]
 Bool)
 ;
 }

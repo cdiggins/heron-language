@@ -3,14 +3,9 @@
 // There can be more than one definitions (for examples when dealing with overloaded functions)
 
 import { Myna } from "myna-parser/myna";
-import { Def } from "./heron-defs";
-import { Scope } from "./heron-scope";
+import { Def, VarDef, ForLoopVarDef, TypeDef, TypeParamDef, FuncDef, FuncParamDef } from "./heron-defs";
 import { throwError, HeronAstNode } from "./heron-ast-rewrite";
-
-// The kind of the reference
-export enum RefType { 
-    var, type
-}
+import { Scope } from "./heron-name-analysis";
 
 // A reference to one or more definitions.
 export class Ref 
@@ -19,7 +14,6 @@ export class Ref
         public readonly node: HeronAstNode,
         public readonly name: string,
         public readonly scope: Scope,
-        public readonly refType: RefType,
         public readonly defs: Def[])
     { 
         node.ref = this;
@@ -27,20 +21,73 @@ export class Ref
             throwError(node, 'No definition found for ' + name);
     }
 
-    get refTypeString() {
-        switch (this.refType)
-        {
-            //case RefType.arg: return 'arg';
-            //case RefType.fun: return 'fun';
-            //case RefType.lvalue: return 'lval';
-            //case RefType.rvalue: return 'rval';
-            case RefType.type: return 'type';
-            case RefType.var: return 'var';
-        }
-        throwError(this.node, "Not a handled usage type");
-    }
-
     toString(): string {
-        return this.name + '_' + this.node['id'] + ':' + this.node.name + ':' + this.refTypeString + '[' + this.defs.join(', ') + ']';
+        return this.name + '_' + this.node['id'] + ':' + this.node.name + '[' + this.defs.join(', ') + ']';
     }
+}
+
+export class VarRef extends Ref {
+    constructor(
+        public readonly node: HeronAstNode,
+        public readonly name: string,
+        public readonly scope: Scope,
+        public readonly def: VarDef)
+    { 
+        super(node, name, scope, [def]);
+    }
+}
+
+export class ForLoopVarRef extends Ref {
+    constructor(
+        public readonly node: HeronAstNode,
+        public readonly name: string,
+        public readonly scope: Scope,
+        public readonly def: ForLoopVarDef)
+    { 
+        super(node, name, scope, [def]);
+    }
+}
+
+export class FuncParamRef extends Ref {
+    constructor(
+        public readonly node: HeronAstNode,
+        public readonly name: string,
+        public readonly scope: Scope,
+        public readonly def: FuncParamDef)
+    { 
+        super(node, name, scope, [def]);
+    }
+}
+
+export class TypeRef extends Ref {
+    constructor(
+        public readonly node: HeronAstNode,
+        public readonly name: string,
+        public readonly scope: Scope,
+        public readonly def: TypeDef)
+    { 
+        super(node, name, scope, [def]);
+    }
+}
+
+export class TypeParamRef extends Ref {
+    constructor(
+        public readonly node: HeronAstNode,
+        public readonly name: string,
+        public readonly scope: Scope,
+        public readonly def: TypeParamDef)
+    { 
+        super(node, name, scope, [def]);
+    }
+}
+
+export class FuncRef extends Ref {
+    constructor(
+        public readonly node: HeronAstNode,
+        public readonly name: string,
+        public readonly scope: Scope,
+        public readonly defs: FuncDef[])
+    { 
+        super(node, name, scope, defs);
+    }    
 }

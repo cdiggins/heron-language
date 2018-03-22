@@ -245,10 +245,6 @@ var HeronToJs = /** @class */ (function () {
         state.pushLine('module ');
         this.visitChildren(ast, state);
     };
-    HeronToJs.prototype.visit_recCompoundStatement = function (ast, state) {
-        // recCompoundStatement
-        this.visitChildren(ast, state);
-    };
     HeronToJs.prototype.visit_returnStatement = function (ast, state) {
         // expr[0,1]
         state.push('return ');

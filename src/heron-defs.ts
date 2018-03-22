@@ -4,6 +4,7 @@
 import { Myna } from "myna-parser/myna";
 import { visitAst, validateNode, throwError, HeronAstNode } from "./heron-ast-rewrite";
 import { Expr, createExpr } from "./heron-expr";
+import { Type } from "./type-system";
 
 // This is a definition of a name. It could be a function, variable, type
 export class Def {    
@@ -13,6 +14,9 @@ export class Def {
     )
     { node.def = this; }
 
+    // Added as a post-process step 
+    type: Type;
+    
     toString() {
         return this.name + '_' + this.constructor['name'] + this.node['id'];
     }
@@ -27,6 +31,7 @@ export class FuncDef extends Def
         public readonly retTypeNode: HeronAstNode,
         public readonly params: FuncParamDef[],
         public readonly genericParams: TypeParamDef[],
+        public readonly body: HeronAstNode, 
         )
     { super(node, name); }
 }
@@ -126,7 +131,8 @@ export function createFuncDef(node: HeronAstNode): FuncDef {
     let genericParams = genericParamsNodes.children.map(createTypeParam);
     let params = validateNode(sig.children[2], 'funcParams').children.map(createFuncParamDef);
     let retType = (sig.children.length > 2) ? sig.children[3] : null;
-    return new FuncDef(node, name, retType, params, genericParams);
+    let body = node.children.length > 1  ? node.children[1] : null;
+    return new FuncDef(node, name, retType, params, genericParams, body);
 }
 
 export function createFuncParamDef(node: HeronAstNode): FuncParamDef {

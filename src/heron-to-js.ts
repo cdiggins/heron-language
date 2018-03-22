@@ -2,7 +2,7 @@ import { Myna } from "myna-parser/myna";
 import { preprocessAst, identifierToString, HeronAstNode } from "./heron-ast-rewrite";
 import { CodeBuilder } from "./code-builder";
 import { Package } from "./heron-package";
-import { Type } from "type-inference/type-system";
+import { Type } from "./type-system";
 
 //=====================================
 // Main entry function 
@@ -256,10 +256,6 @@ class HeronToJs
     }
     visit_module(ast, state) {
         state.pushLine('module ');
-        this.visitChildren(ast, state);
-    }
-    visit_recCompoundStatement(ast, state) {
-        // recCompoundStatement
         this.visitChildren(ast, state);
     }
     visit_returnStatement(ast, state) {

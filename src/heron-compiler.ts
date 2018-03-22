@@ -1,13 +1,11 @@
 import { Myna } from "myna-parser/myna";
-import { Scope } from "./heron-scope";
-import { Type } from "type-inference/type-system";
+import { Type } from "./type-system";
 import { preprocessAst, visitAst, HeronAstNode } from "./heron-ast-rewrite";
 import { parseHeron, heronGrammar } from "./heron-parser";
 import { heronToText } from "./heron-to-text";
 import { Def, createDef } from "./heron-defs";
 import { Ref } from "./heron-refs";
 import { Expr, createExpr } from "./heron-expr";
-import { computeType } from "./heron-types";
 import { Package } from "./heron-package";
 
 const g = heronGrammar;

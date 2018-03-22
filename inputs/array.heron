@@ -168,8 +168,6 @@ module heron:std.array:0.1
         = xs[0];
 
     function reduce(xs, acc, f) {
-        // TODO: support 'for' loops as expressions 
-        // TODO: support 'assignment' as expressions. 
         for (var x in xs)
             acc = f(acc, x);
         return acc;

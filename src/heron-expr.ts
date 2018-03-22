@@ -2,6 +2,7 @@ import { Myna } from "myna-parser/myna";
 import { FuncDef, TypeDef, VarDef, FuncParamDef, createFuncParamDef, getDef, Def } from "./heron-defs";
 import { validateNode, visitAst, throwError, HeronAstNode } from "./heron-ast-rewrite";
 import { Ref } from "./heron-refs";
+import { Statement } from "./heron-statement";
 
 // Expressions are either: named function sets, anonymous functions, function calls, variables, or literals.
 // In order to work out the type we need to work out the type of the things it depends on first. 
@@ -11,6 +12,12 @@ export class Expr {
         public readonly node: HeronAstNode,
     )
     { node.expr = this; }
+
+    // When the Expression is an argument to a function this value will get set. 
+    functionArgument: FunCall;
+
+    // When the expression is a function that is invoked, this value will get set. 
+    calledFunction: FunCall;
 
     toString(): string {
         return 'expr' + this.node['id'];        
@@ -46,12 +53,18 @@ export class Lambda extends Expr {
     constructor(
         public readonly node: HeronAstNode,
         public readonly params: FuncParamDef[],
-        public readonly body: Expr,
+        public readonly bodyNode: HeronAstNode,
     )
     { super(node); }
 
     toString(): string {
-        return 'lambda' + this.node['id'] + '(' + this.params.join(',') + ')' + this.body;
+        let body = this.bodyNode.expr 
+            ? this.bodyNode.expr.toString() 
+            : (this.bodyNode.statement)
+                ? this.bodyNode.statement.toString()
+                : "???";
+
+        return '(' + this.params.map(p => p.name).join(',') + ') => ' + body;
     }
 }
 
@@ -150,7 +163,12 @@ export class FunCall extends Expr {
         public readonly func: Expr,
         public readonly args: Expr[],
         )
-    { super(node); }
+    { 
+        super(node); 
+        func.calledFunction = this;
+        for (var arg of args)
+            arg.functionArgument = this;
+    }
 
     toString(): string {
         return this.func + '(' + this.args.join(',') + ')';
@@ -307,7 +325,7 @@ export function createConditionalExpr(node: HeronAstNode): ConditionalExpr {
 export function createLambdaExpr(node: HeronAstNode): Lambda {    
     return new Lambda(validateNode(node, 'lambdaExpr'), 
         node.children[0].children.map(c => getDef<FuncParamDef>(c, 'FuncParamDef')), 
-        createExpr(node.children[1]));
+        node.children[1].children[0]);
 }
 
 export function createNumExpr(node: HeronAstNode): NumLiteral {

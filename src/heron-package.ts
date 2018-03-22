@@ -1,12 +1,11 @@
 import { Myna } from "myna-parser/myna";
 import { HeronAstNode, isExpr, validateNode, throwError, preprocessAst, visitAst } from "./heron-ast-rewrite";
-import { Type } from "type-inference/type-system";
-import { Def, createDef } from "./heron-defs";
-import { Ref, RefType } from "./heron-refs";
-import { Scope } from "./heron-scope";
+import { Type } from "./type-system";
+import { Def, createDef, VarDef, FuncDef, TypeDef, TypeParamDef, FuncParamDef, ForLoopVarDef } from "./heron-defs";
+import { Ref, FuncRef, TypeRef, TypeParamRef, FuncParamRef, VarRef, ForLoopVarRef } from "./heron-refs";
 import { createExpr } from "./heron-expr";
-import { computeType } from "./heron-types";
-import { NameAnalyzer } from "./heron-name-analysis";
+import { NameAnalyzer, Scope } from "./heron-name-analysis";
+import { createStatement, rewriteIfStatements } from "./heron-statement";
 
 // A package is a compiled system. It contains a set of modules in different source files. 
 export class Package 
@@ -39,7 +38,7 @@ export class Package
         let moduleNameURN = this.parseModuleName(moduleNameNode);
         let importNodes = moduleBodyNode.children.filter(c => c.name === 'importStatement');
         let importURNs = importNodes.map(n => this.parseModuleName(n.children[0]));
-        let module = new Module(moduleNode, moduleNameURN, file, importURNs);
+        let module = new Module(moduleNode, moduleNameURN, file, importURNs, moduleBodyNode);
         this.modules.push(module);
     }
 
@@ -92,6 +91,15 @@ export class Package
 
             // Create definitions 
             visitAst(ast, createDef);
+
+            // Create expressions, and add them to the nodes
+            visitAst(ast, createExpr);
+
+            // Create statement, and add them to the nodes
+            visitAst(ast, createStatement);
+            
+            // Rewrite the if statements 
+            visitAst(ast, rewriteIfStatements);
         }
 
         // Firt load all intrinsic definitions into the global scope
@@ -109,17 +117,6 @@ export class Package
             nameAnalyzer.visitNode(m.node, this);            
             this.popScope();
         }
-
-        // Compute expressions and types 
-        for (let m of this.modules) {
-            let ast = m.node;
-
-            // Create expressions, and add them to the nodes
-            visitAst(ast, createExpr);
-
-            // assign types to expressions and definitions
-            visitAst(ast, computeType); 
-        }        
     }
 
     // Resolves links and assures that the language 
@@ -208,9 +205,42 @@ export class Package
             this.scope.defs.push(def);
     }
 
-    addRef(name: string, node: HeronAstNode, refType: RefType) {
-        let ref = new Ref(node, name, this.scope, refType, this.findDefs(name));
+    addRef(name: string, node: HeronAstNode): Ref {
+        let defs = this.findDefs(name);
+        if (defs.length === 0)
+            throwError(node, "Could not find defintiions for " + name);
+        let ref: Ref;
+        if (defs[0] instanceof FuncDef) {
+            if (!defs.every(d => d instanceof FuncDef))
+                throwError(node, "Reference resolved to mix of function definitions and variable definitions: " + name);
+            ref = new FuncRef(node, name, this.scope, defs as FuncDef[]);
+        }
+        else {
+            if (defs.length !== 1)
+                throwError(node, "Reference resolved to multiple variable definitions: " + name);
+            let def = defs[0];
+            if (def instanceof TypeDef) {
+                ref = new TypeRef(node, name, this.scope, def);
+            }
+            else if (def instanceof TypeParamDef) {
+                ref = new TypeParamRef(node, name, this.scope, def);                
+            }
+            else if (def instanceof FuncParamDef) {
+                ref = new FuncParamRef(node, name, this.scope, def);
+            }
+            else if (def instanceof VarDef) {
+                ref = new VarRef(node, name, this.scope, def);
+            }
+            else if (def instanceof ForLoopVarDef) {
+                ref = new ForLoopVarRef(node, name, this.scope, def);
+            }
+            else {
+                throwError(node, "Unrecognized definition type " + def);
+            }
+        }
+        
         this.scope.refs.push(ref);
+        return ref;
     }
 }
 
@@ -234,6 +264,7 @@ export class Module
         public readonly name: string, 
         public readonly file: SourceFile,
         public readonly imports: string[],
+        public readonly body: HeronAstNode,
     )
     { }      
 }

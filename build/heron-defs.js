@@ -29,13 +29,14 @@ exports.Def = Def;
 // Represents the definition of a function 
 var FuncDef = /** @class */ (function (_super) {
     __extends(FuncDef, _super);
-    function FuncDef(node, name, retTypeNode, params, genericParams) {
+    function FuncDef(node, name, retTypeNode, params, genericParams, body) {
         var _this = _super.call(this, node, name) || this;
         _this.node = node;
         _this.name = name;
         _this.retTypeNode = retTypeNode;
         _this.params = params;
         _this.genericParams = genericParams;
+        _this.body = body;
         return _this;
     }
     return FuncDef;
@@ -144,7 +145,8 @@ function createFuncDef(node) {
     var genericParams = genericParamsNodes.children.map(createTypeParam);
     var params = heron_ast_rewrite_1.validateNode(sig.children[2], 'funcParams').children.map(createFuncParamDef);
     var retType = (sig.children.length > 2) ? sig.children[3] : null;
-    return new FuncDef(node, name, retType, params, genericParams);
+    var body = node.children.length > 1 ? node.children[1] : null;
+    return new FuncDef(node, name, retType, params, genericParams, body);
 }
 exports.createFuncDef = createFuncDef;
 function createFuncParamDef(node) {

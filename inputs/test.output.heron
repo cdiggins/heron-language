@@ -1,9 +1,8 @@
-// Generated on Thu Mar 15 2018 19:14:07 GMT-0400 (Eastern Daylight Time)
-heron:std:0.1// scope module_338
+// Generated on Wed Mar 21 2018 20:58:38 GMT-0400 (Eastern Daylight Time)
+heron:std:0.1// scope module_333
 heron:tests:0.1{
-heron:std.array:0.1// scope funcDef_25
-// definition main_FuncDef25
-// type (() -> Any)
+heron:std.array:0.1// scope funcDef_22
+// definition main_FuncDef22
 
 /**
 function main() {
@@ -12,25 +11,18 @@ function main() {
 
     
 */
-// scope funcDef_25
-// definition main_FuncDef25
-// type (() -> Any)
+// scope funcDef_22
+// definition main_FuncDef22
 function main()
-// scope recCompoundStatement_22
-{
 // scope compoundStatement_21
 {
 // expression FunCall simpleTest()
-// type Any
-// reference simpleTest_17:varName:var[simpleTest_FuncDef336]
+// reference simpleTest_17:varName[simpleTest_FuncDef331]
 // expression VarName simpleTest
-// type Any
 simpleTest();
 }
-}
-// scope funcDef_336
-// definition simpleTest_FuncDef336
-// type (() -> Any)
+// scope funcDef_331
+// definition simpleTest_FuncDef331
 
 /**
 function simpleTest() {
@@ -61,266 +53,173 @@ function simpleTest() {
     }
 
 */
-// scope funcDef_336
-// definition simpleTest_FuncDef336
-// type (() -> Any)
+// scope funcDef_331
+// definition simpleTest_FuncDef331
 function simpleTest()
-// scope recCompoundStatement_333
+// scope compoundStatement_330
 {
-// scope compoundStatement_332
-{
-var // definition xs_VarDef37
-// type Array
+var // definition xs_VarDef34
 xs// expression ArrayLiteral [1,11,3]
-// type Array
 [// expression NumLiteral 1
-// type Num
 1, // expression NumLiteral 11
-// type Num
 11, // expression NumLiteral 3
-// type Num
 3];
 // expression FunCall print('Expect [1, 11, 3]')
-// type Any
-// reference print_41:varName:var[print_FuncDef1386]
+// reference print_38:varName[print_FuncDef1316]
 // expression VarName print
-// type Any
 print(// expression StrLiteral 'Expect [1, 11, 3]'
-// type Str
 'Expect [1, 11, 3]');
 // expression FunCall print(xs)
-// type Any
-// reference print_65:varName:var[print_FuncDef1386]
+// reference print_62:varName[print_FuncDef1316]
 // expression VarName print
-// type Any
-print(// reference xs_67:varName:var[xs_VarDef37]
+print(// reference xs_64:varName[xs_VarDef34]
 // expression VarName xs
-// type Any
 xs);
 // expression FunCall print('Expect 1, 11, 3')
-// type Any
-// reference print_72:varName:var[print_FuncDef1386]
+// reference print_69:varName[print_FuncDef1316]
 // expression VarName print
-// type Any
 print(// expression StrLiteral 'Expect 1, 11, 3'
-// type Str
 'Expect 1, 11, 3');
-// scope forLoop_103
-// definition x_ForLoopVarDef103
-// type Any
-for (x in // reference xs_95:varName:var[xs_VarDef37]
+// scope forLoop_101
+// definition x_ForLoopVarDef101
+for (x in // reference xs_92:varName[xs_VarDef34]
 // expression VarName xs
-// type Any
 xs)
+// scope compoundStatement_100
+{
 // expression FunCall print(x)
-// type Any
-// reference print_97:varName:var[print_FuncDef1386]
+// reference print_94:varName[print_FuncDef1316]
 // expression VarName print
-// type Any
-print(// reference x_99:varName:var[x_ForLoopVarDef103]
+print(// reference x_96:varName[x_ForLoopVarDef101]
 // expression VarName x
-// type Any
 x);
+}
 // expression FunCall print('Expect 1')
-// type Any
-// reference print_105:varName:var[print_FuncDef1386]
+// reference print_103:varName[print_FuncDef1316]
 // expression VarName print
-// type Any
 print(// expression StrLiteral 'Expect 1'
-// type Str
 'Expect 1');
 // expression FunCall print(op[](xs,0))
-// type Any
-// reference print_120:varName:var[print_FuncDef1386]
+// reference print_118:varName[print_FuncDef1316]
 // expression VarName print
-// type Any
 print(// expression FunCall op[](xs,0)
-// type Any
-// reference op[]_121:varName:var[op[]_FuncDef964]
+// reference op[]_119:varName[op[]_FuncDef917]
 // expression VarName op[]
-// type Any
-op[](// reference xs_123:varName:var[xs_VarDef37]
+op[](// reference xs_121:varName[xs_VarDef34]
 // expression VarName xs
-// type Any
 xs, // expression NumLiteral 0
-// type Num
 0));
 // expression FunCall print('Expect 3')
-// type Any
-// reference print_131:varName:var[print_FuncDef1386]
+// reference print_129:varName[print_FuncDef1316]
 // expression VarName print
-// type Any
 print(// expression StrLiteral 'Expect 3'
-// type Str
 'Expect 3');
 // expression FunCall print(count(xs))
-// type Any
-// reference print_146:varName:var[print_FuncDef1386]
+// reference print_144:varName[print_FuncDef1316]
 // expression VarName print
-// type Any
 print(// expression FunCall count(xs)
-// type Any
-// reference count_147:varName:var[count_FuncDef463]
+// reference count_145:varName[count_FuncDef435]
 // expression VarName count
-// type Any
-count(// reference xs_149:varName:var[xs_VarDef37]
+count(// reference xs_147:varName[xs_VarDef34]
 // expression VarName xs
-// type Any
 xs));
 // expression FunCall print('Expect 1')
-// type Any
-// reference print_156:varName:var[print_FuncDef1386]
+// reference print_154:varName[print_FuncDef1316]
 // expression VarName print
-// type Any
 print(// expression StrLiteral 'Expect 1'
-// type Str
 'Expect 1');
 // expression FunCall print(first(xs))
-// type Any
-// reference print_171:varName:var[print_FuncDef1386]
+// reference print_169:varName[print_FuncDef1316]
 // expression VarName print
-// type Any
 print(// expression FunCall first(xs)
-// type Any
-// reference first_172:varName:var[first_FuncDef1816]
+// reference first_170:varName[first_FuncDef1735]
 // expression VarName first
-// type Any
-first(// reference xs_174:varName:var[xs_VarDef37]
+first(// reference xs_172:varName[xs_VarDef34]
 // expression VarName xs
-// type Any
 xs));
 // expression FunCall print('Expect 3')
-// type Any
-// reference print_181:varName:var[print_FuncDef1386]
+// reference print_179:varName[print_FuncDef1316]
 // expression VarName print
-// type Any
 print(// expression StrLiteral 'Expect 3'
-// type Str
 'Expect 3');
 // expression FunCall print(last(xs))
-// type Any
-// reference print_196:varName:var[print_FuncDef1386]
+// reference print_194:varName[print_FuncDef1316]
 // expression VarName print
-// type Any
 print(// expression FunCall last(xs)
-// type Any
-// reference last_197:varName:var[last_FuncDef1799]
+// reference last_195:varName[last_FuncDef1720]
 // expression VarName last
-// type Any
-last(// reference xs_199:varName:var[xs_VarDef37]
+last(// reference xs_197:varName[xs_VarDef34]
 // expression VarName xs
-// type Any
 xs));
 // expression FunCall print('Expect 1')
-// type Any
-// reference print_206:varName:var[print_FuncDef1386]
+// reference print_204:varName[print_FuncDef1316]
 // expression VarName print
-// type Any
 print(// expression StrLiteral 'Expect 1'
-// type Str
 'Expect 1');
 // expression FunCall print(min(xs))
-// type Any
-// reference print_221:varName:var[print_FuncDef1386]
+// reference print_219:varName[print_FuncDef1316]
 // expression VarName print
-// type Any
 print(// expression FunCall min(xs)
-// type Any
-// reference min_222:varName:var[min_FuncDef84]
+// reference min_220:varName[min_FuncDef78]
 // expression VarName min
-// type Any
-min(// reference xs_224:varName:var[xs_VarDef37]
+min(// reference xs_222:varName[xs_VarDef34]
 // expression VarName xs
-// type Any
 xs));
 // expression FunCall print('Expect 11')
-// type Any
-// reference print_231:varName:var[print_FuncDef1386]
+// reference print_229:varName[print_FuncDef1316]
 // expression VarName print
-// type Any
 print(// expression StrLiteral 'Expect 11'
-// type Str
 'Expect 11');
 // expression FunCall print(max(xs))
-// type Any
-// reference print_247:varName:var[print_FuncDef1386]
+// reference print_245:varName[print_FuncDef1316]
 // expression VarName print
-// type Any
 print(// expression FunCall max(xs)
-// type Any
-// reference max_248:varName:var[max_FuncDef111]
+// reference max_246:varName[max_FuncDef103]
 // expression VarName max
-// type Any
-max(// reference xs_250:varName:var[xs_VarDef37]
+max(// reference xs_248:varName[xs_VarDef34]
 // expression VarName xs
-// type Any
 xs));
 // expression FunCall print('Expect 3')
-// type Any
-// reference print_257:varName:var[print_FuncDef1386]
+// reference print_255:varName[print_FuncDef1316]
 // expression VarName print
-// type Any
 print(// expression StrLiteral 'Expect 3'
-// type Str
 'Expect 3');
 // expression FunCall print(median(xs))
-// type Any
-// reference print_272:varName:var[print_FuncDef1386]
+// reference print_270:varName[print_FuncDef1316]
 // expression VarName print
-// type Any
 print(// expression FunCall median(xs)
-// type Any
-// reference median_273:varName:var[median_FuncDef1741]
+// reference median_271:varName[median_FuncDef1666]
 // expression VarName median
-// type Any
-median(// reference xs_275:varName:var[xs_VarDef37]
+median(// reference xs_273:varName[xs_VarDef34]
 // expression VarName xs
-// type Any
 xs));
 // expression FunCall print('Expect 15')
-// type Any
-// reference print_282:varName:var[print_FuncDef1386]
+// reference print_280:varName[print_FuncDef1316]
 // expression VarName print
-// type Any
 print(// expression StrLiteral 'Expect 15'
-// type Str
 'Expect 15');
 // expression FunCall print(sum(xs))
-// type Any
-// reference print_298:varName:var[print_FuncDef1386]
+// reference print_296:varName[print_FuncDef1316]
 // expression VarName print
-// type Any
 print(// expression FunCall sum(xs)
-// type Any
-// reference sum_299:varName:var[sum_FuncDef1264]
+// reference sum_297:varName[sum_FuncDef1203]
 // expression VarName sum
-// type Any
-sum(// reference xs_301:varName:var[xs_VarDef37]
+sum(// reference xs_299:varName[xs_VarDef34]
 // expression VarName xs
-// type Any
 xs));
 // expression FunCall print('Expect 5')
-// type Any
-// reference print_308:varName:var[print_FuncDef1386]
+// reference print_306:varName[print_FuncDef1316]
 // expression VarName print
-// type Any
 print(// expression StrLiteral 'Expect 5'
-// type Str
 'Expect 5');
 // expression FunCall print(average(xs))
-// type Any
-// reference print_323:varName:var[print_FuncDef1386]
+// reference print_321:varName[print_FuncDef1316]
 // expression VarName print
-// type Any
 print(// expression FunCall average(xs)
-// type Any
-// reference average_324:varName:var[average_FuncDef1308]
+// reference average_322:varName[average_FuncDef1243]
 // expression VarName average
-// type Any
-average(// reference xs_326:varName:var[xs_VarDef37]
+average(// reference xs_324:varName[xs_VarDef34]
 // expression VarName xs
-// type Any
 xs));
-}
 }
 }

@@ -3,15 +3,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var heron_ast_rewrite_1 = require("./heron-ast-rewrite");
 var heron_defs_1 = require("./heron-defs");
 var heron_refs_1 = require("./heron-refs");
-var heron_scope_1 = require("./heron-scope");
 var heron_expr_1 = require("./heron-expr");
-var heron_types_1 = require("./heron-types");
 var heron_name_analysis_1 = require("./heron-name-analysis");
+var heron_statement_1 = require("./heron-statement");
 // A package is a compiled system. It contains a set of modules in different source files. 
 var Package = /** @class */ (function () {
     function Package() {
         this.modules = [];
-        this.scope = new heron_scope_1.Scope(null);
+        this.scope = new heron_name_analysis_1.Scope(null);
         this.scopes = [this.scope];
         this.files = [];
     }
@@ -44,7 +43,7 @@ var Package = /** @class */ (function () {
         var moduleNameURN = this.parseModuleName(moduleNameNode);
         var importNodes = moduleBodyNode.children.filter(function (c) { return c.name === 'importStatement'; });
         var importURNs = importNodes.map(function (n) { return _this.parseModuleName(n.children[0]); });
-        var module = new Module(moduleNode, moduleNameURN, file, importURNs);
+        var module = new Module(moduleNode, moduleNameURN, file, importURNs, moduleBodyNode);
         this.modules.push(module);
     };
     // Given a URN 
@@ -90,6 +89,12 @@ var Package = /** @class */ (function () {
             heron_ast_rewrite_1.preprocessAst(ast, m.file);
             // Create definitions 
             heron_ast_rewrite_1.visitAst(ast, heron_defs_1.createDef);
+            // Create expressions, and add them to the nodes
+            heron_ast_rewrite_1.visitAst(ast, heron_expr_1.createExpr);
+            // Create statement, and add them to the nodes
+            heron_ast_rewrite_1.visitAst(ast, heron_statement_1.createStatement);
+            // Rewrite the if statements 
+            heron_ast_rewrite_1.visitAst(ast, heron_statement_1.rewriteIfStatements);
         }
         // Firt load all intrinsic definitions into the global scope
         for (var _b = 0, _c = this.modules; _b < _c.length; _b++) {
@@ -106,15 +111,6 @@ var Package = /** @class */ (function () {
             this.loadModuleDefs(m);
             nameAnalyzer.visitNode(m.node, this);
             this.popScope();
-        }
-        // Compute expressions and types 
-        for (var _f = 0, _g = this.modules; _f < _g.length; _f++) {
-            var m = _g[_f];
-            var ast = m.node;
-            // Create expressions, and add them to the nodes
-            heron_ast_rewrite_1.visitAst(ast, heron_expr_1.createExpr);
-            // assign types to expressions and definitions
-            heron_ast_rewrite_1.visitAst(ast, heron_types_1.computeType);
         }
     };
     // Resolves links and assures that the language 
@@ -174,7 +170,7 @@ var Package = /** @class */ (function () {
     //=============================================
     // These functions are used by the visitor to incrementally build the package  
     Package.prototype.pushScope = function (node) {
-        var scope = new heron_scope_1.Scope(node);
+        var scope = new heron_name_analysis_1.Scope(node);
         scope.id = this.scopes.length;
         this.scopes.push(scope);
         this.scope.children.push(scope);
@@ -191,9 +187,41 @@ var Package = /** @class */ (function () {
         if (def && this.scope.defs.indexOf(def) < 0)
             this.scope.defs.push(def);
     };
-    Package.prototype.addRef = function (name, node, refType) {
-        var ref = new heron_refs_1.Ref(node, name, this.scope, refType, this.findDefs(name));
+    Package.prototype.addRef = function (name, node) {
+        var defs = this.findDefs(name);
+        if (defs.length === 0)
+            heron_ast_rewrite_1.throwError(node, "Could not find defintiions for " + name);
+        var ref;
+        if (defs[0] instanceof heron_defs_1.FuncDef) {
+            if (!defs.every(function (d) { return d instanceof heron_defs_1.FuncDef; }))
+                heron_ast_rewrite_1.throwError(node, "Reference resolved to mix of function definitions and variable definitions: " + name);
+            ref = new heron_refs_1.FuncRef(node, name, this.scope, defs);
+        }
+        else {
+            if (defs.length !== 1)
+                heron_ast_rewrite_1.throwError(node, "Reference resolved to multiple variable definitions: " + name);
+            var def = defs[0];
+            if (def instanceof heron_defs_1.TypeDef) {
+                ref = new heron_refs_1.TypeRef(node, name, this.scope, def);
+            }
+            else if (def instanceof heron_defs_1.TypeParamDef) {
+                ref = new heron_refs_1.TypeParamRef(node, name, this.scope, def);
+            }
+            else if (def instanceof heron_defs_1.FuncParamDef) {
+                ref = new heron_refs_1.FuncParamRef(node, name, this.scope, def);
+            }
+            else if (def instanceof heron_defs_1.VarDef) {
+                ref = new heron_refs_1.VarRef(node, name, this.scope, def);
+            }
+            else if (def instanceof heron_defs_1.ForLoopVarDef) {
+                ref = new heron_refs_1.ForLoopVarRef(node, name, this.scope, def);
+            }
+            else {
+                heron_ast_rewrite_1.throwError(node, "Unrecognized definition type " + def);
+            }
+        }
         this.scope.refs.push(ref);
+        return ref;
     };
     return Package;
 }());
@@ -212,11 +240,12 @@ var SourceFile = /** @class */ (function () {
 exports.SourceFile = SourceFile;
 // Represents the definition of a module
 var Module = /** @class */ (function () {
-    function Module(node, name, file, imports) {
+    function Module(node, name, file, imports, body) {
         this.node = node;
         this.name = name;
         this.file = file;
         this.imports = imports;
+        this.body = body;
     }
     return Module;
 }());
