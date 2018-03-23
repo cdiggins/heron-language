@@ -3,6 +3,7 @@ import { FuncDef, TypeDef, VarDef, FuncParamDef, createFuncParamDef, getDef, Def
 import { validateNode, visitAst, throwError, HeronAstNode } from "./heron-ast-rewrite";
 import { Ref } from "./heron-refs";
 import { Statement } from "./heron-statement";
+import { Type } from "./type-system";
 
 // Expressions are either: named function sets, anonymous functions, function calls, variables, or literals.
 // In order to work out the type we need to work out the type of the things it depends on first. 
@@ -22,6 +23,9 @@ export class Expr {
     toString(): string {
         return 'expr' + this.node['id'];        
     }
+
+    // Set manually by the type evaluator
+    type: Type;
 }
 
 export class PostfixDec extends Expr {

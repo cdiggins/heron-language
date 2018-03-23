@@ -70,6 +70,7 @@ function valBoolean(x: boolean): Val { return new Val(x, Types.BoolType); }
 function valFunc(x: FuncDef): Val { return new Val(x, Types.FuncType); }
 function valLambda(x: Lambda): Val { return new Val(x, Types.LambdaType); }
 function valArray(x: Val[]): Val { return new Val(x, Types.ArrayType); }
+function valFromType(x: Type): Val { return new Val(null, x); }
 
 /**
  * Contains the bindings for the current scope. 
@@ -174,51 +175,8 @@ export class Evaluator
         }
         throw new Error("Could not find var " + name);
     }
-    
-    canPassType(arg: Val, typeNode: HeronAstNode) {
-        if (typeNode === null)
-            return true;        
-
-        let srcType = arg.type;
-        let destType = Types.getType(typeNode);
-        let srcTypeStr = srcType.toString();
-        let destTypeStr = destType.toString();
-        if (srcTypeStr === destTypeStr)
-            return true;
-        if (destTypeStr == 'Any')
-            return true;
-
-        let casts: {[name: string]: string[] } =
-        { 
-            Float: ['Int', 'Bool'],
-            Float2: ['Float', 'Int', 'Bool'],
-            Float3: ['Float', 'Float2', 'Int', 'Bool'],
-            Float4: ['Float', 'Float2', 'Float3', 'Int', 'Bool'],
-        };
-
-        // NOTE: this is not the best way to do casts. 
-
-        if (destTypeStr in casts) {
-            if (casts[destTypeStr].indexOf(srcTypeStr))
-                return true;
-        }
-
-        // TODOO: throw new Erro
-    }
-    
+       
     evalFunc(f: FuncDef, args: Val[] = []): Val {
-        // Check the number of the parameters. 
-        if (f.params.length !== args.length) 
-            return null;
-            
-        for (var i=0; i < args.length; ++i) 
-            if (!this.canPassType(args[i], f.params[i].typeNode))
-                return null;
-            
-        this.pushEnv();
-        for (var p of f.params)
-            this.bindVar(p.node, p.name, args[0]);
-            
         let r: Val = valVoid;
         
         if (!f.body) {
@@ -241,15 +199,7 @@ export class Evaluator
         return r;
     }
     
-    evalLambda(f: Lambda, args: Val[]): Val {
-        // Check the number of the parameters. 
-        if (f.params.length !== args.length) 
-            return null;
-            
-        for (var i=0; i < args.length; ++i) 
-            if (!this.canPassType(args[i], f.params[i].typeNode))
-                return null;
-            
+    evalLambda(f: Lambda, args: Val[]): Val {            
         this.pushEnv();
         for (var p of f.params)
             this.bindVar(p.node, p.name, args[0]);
@@ -273,6 +223,9 @@ export class Evaluator
 
     evalFuncSet(node: HeronAstNode, fs: FuncDef[], args: Val[]): Val {
         // Try calling each function. 
+        
+        // TODO: find function from result.
+
         let results = fs.map(def => this.evalFunc(def, args));
         let validResults = results.filter(r => r != null);
         if (validResults.length === 0) {
@@ -386,7 +339,6 @@ export class Evaluator
         return r;
     }
 }
-
 
 export function findFunc(mod: Module, name: string): FuncDef {
     let defs = mod.body.children.map(c => c.def).filter(d => d instanceof FuncDef);
@@ -516,108 +468,3 @@ export function analyzeFunctions(pkg: Package) {
     // * Should the trait have "T1" / "T2" or somethiin
 }
 
-export type TypeOrString = HeronType | Type | string;
-
-/** A wrapper around the system level type to help with writing algorithms */
-export class HeronType {
-    constructor(public readonly type: Type) { }
-}
-
-export class HeronConstantType extends HeronType {
-    constructor(public readonly type: TypeConstant) { super(type); }
-}
-
-export class HeronVarType extends HeronType {
-    constructor(public readonly type: TypeVariable) { super(type); }
-}
-
-export class HeronPolyType extends HeronType {
-    constructor(public readonly type: TypeArray) { super(type); }
-    get types() { return this.type.types.map(heronType); }
-}
-
-export class HeronFunctionType extends HeronPolyType {
-    get args() { return this.types[1] as HeronPolyType; }
-    get ret() { return this.types[2]; }
-}
-
-export class HeronArrayType extends HeronPolyType {
-    get element() { return this.types[1]; }
-}
-
-function systemToHeronType(t: Type): HeronType {
-    if (t instanceof TypeArray) {
-        if (isFunctionType(t))
-            return new HeronFunctionType(t);
-        else if (t.types.length === 2 && isTypeConstant(t.types[0], 'array')) {
-            return new HeronArrayType(t);
-        }
-        else {
-            return new HeronPolyType(t);
-        }
-    }
-    else if (t instanceof TypeVariable) {
-        return new HeronVarType(t);
-    }
-    else if (t instanceof TypeConstant) {
-        return new HeronConstantType(t);
-    }
-}
-
-export function parseType(s: string): HeronType {
-    throw new Error("Not implemented yet");
-}
-
-export function heronType(t: TypeOrString): HeronType {
-    if (t instanceof HeronType)
-        return t;
-    else if (typeof(t) === 'string')
-        return parseType(t);
-    else if (t instanceof Type)
-        return systemToHeronType(t);
-    else 
-        throw new Error("Not reachable");
-}
-
-export function heronFunctionType(returnType: TypeOrString, ...argTypes: TypeOrString[]): HeronFunctionType {
-    return new HeronFunctionType(functionType(typeArray(argTypes.map(at => heronType(at).type)), heronType(returnType).type));
-}
-
-export function heronArrayType(elementType: TypeOrString): HeronArrayType {
-    return new HeronArrayType(typeArray([typeConstant('array'), heronType(elementType).type]));
-}
-
-export function heronTypeConstant(name: string): HeronConstantType {
-    return new HeronConstantType(typeConstant(name));
-}
-
-export function heronTypeVar(name: string): HeronVarType {
-    return new HeronVarType(typeVariable(name));
-}
-
-export function genericFuncType(nArgCount: number): TypeArray {
-    let args = new Array(nArgCount).map((x, i) => typeVariable('T' + i));
-    return heronFunctionType(heronTypeVar('R'), ...args);
-} 
-
-export function heronTypeFromNode(node: HeronAstNode): HeronType {
-
-} 
-
-export function computeFuncType(f: FuncDef): Type {
-    // Step1: create a generic function type ... I could 
-    let gfType = heronGenericFuncType(f.params.length);
-
-    // Create a unifier 
-    let u = new Unifier();
-
-    // First level of unification: if there are declared types, we work them out.
-    for (var i=0; i < f.params.length; ++i) {
-        let pType = f.params[i].type;
-        if (pType) 
-            u.unifyTypes(gfType.args[i], pType);
-    }
-
-    u.
-    return new HeronFunctionType(u.getUnifiedType(gfType.type, [], {}));
-}

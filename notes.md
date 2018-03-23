@@ -181,4 +181,9 @@ Eval will be useful with the current test code to figure out the tests.
 1. I don't think I need the union.
 1. Using "constants" might not be necessary? 
 
+//==
 
+* If a lambda expression was the same as a func def, some of my job would be easier. 
+* I see no reason not to do that. 
+* One possibility is to create a funcDef once I encounter a lambda expression.
+* THe other possibility is to convert func def bodies into lambdas. 
