@@ -14,6 +14,7 @@ export function heronToText(ast: HeronAstNode): string {
 }
 
 function outputDetails(node: HeronAstNode, state: CodeBuilder) {
+    /*
     if (node.scope) 
         state.pushLine('// scope ' + node.scope);
     if (node.ref) 
@@ -24,6 +25,11 @@ function outputDetails(node: HeronAstNode, state: CodeBuilder) {
         state.pushLine('// expression ' + node.expr.constructor['name'] + ' ' + node.expr);
     if (node.type) 
         state.pushLine('// type ' + node.type);
+    */
+    if (node.expr) 
+        state.pushLine('// expression type ' + node.expr.type);
+    if (node.def) 
+        state.pushLine('// definition type ' + node.def.type);
 }
 
 // A visitor class for generating Heron code. 

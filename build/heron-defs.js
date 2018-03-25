@@ -26,6 +26,12 @@ var Def = /** @class */ (function () {
     return Def;
 }());
 exports.Def = Def;
+function typeNodeToStr(node) {
+    if (!node || !node.allText)
+        return "any";
+    return node.allText;
+}
+exports.typeNodeToStr = typeNodeToStr;
 // Represents the definition of a function 
 var FuncDef = /** @class */ (function (_super) {
     __extends(FuncDef, _super);
@@ -39,6 +45,9 @@ var FuncDef = /** @class */ (function (_super) {
         _this.body = body;
         return _this;
     }
+    FuncDef.prototype.toString = function () {
+        return this.name + "(" + this.params.join(", ") + ") : " + typeNodeToStr(this.retTypeNode);
+    };
     return FuncDef;
 }(Def));
 exports.FuncDef = FuncDef;
@@ -52,6 +61,9 @@ var FuncParamDef = /** @class */ (function (_super) {
         _this.typeNode = typeNode;
         return _this;
     }
+    FuncParamDef.prototype.toString = function () {
+        return this.name + " : " + typeNodeToStr(this.typeNode);
+    };
     return FuncParamDef;
 }(Def));
 exports.FuncParamDef = FuncParamDef;

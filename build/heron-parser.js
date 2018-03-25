@@ -85,9 +85,9 @@ var g = new function () {
     this.langVer = this.urn.ast;
     this.moduleName = this.urn.ast;
     // Type information 
-    this.recType = myna_parser_1.Myna.delay(function () { return _this.type; });
-    this.typeParam = this.recType.ast;
-    this.typeParamList = guardedWsDelimSeq('<', commaDelimited(this.typeParam), '>').ast;
+    this.recType = myna_parser_1.Myna.delay(function () { return _this.typeExpr; });
+    this.typeParam = this.recType;
+    this.typeParamList = guardedWsDelimSeq('<', commaDelimited(this.typeParam), '>');
     this.typeName = this.identifier.ast;
     this.typeExpr = this.typeName.then(this.typeParamList.opt).ast;
     // Postfix expressions

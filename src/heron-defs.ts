@@ -22,6 +22,11 @@ export class Def {
     }
 }
 
+export function typeNodeToStr(node: HeronAstNode): string {
+    if (!node || !node.allText) return "any";
+    return node.allText;
+}
+
 // Represents the definition of a function 
 export class FuncDef extends Def 
 {    
@@ -34,6 +39,10 @@ export class FuncDef extends Def
         public readonly body: HeronAstNode, 
         )
     { super(node, name); }
+    
+    toString(): string {
+        return this.name + "(" + this.params.join(", ") + ") : " + typeNodeToStr(this.retTypeNode);
+    }
 }
 
 // Represent a parameter to a function or a lambda expression 
@@ -45,6 +54,10 @@ export class FuncParamDef extends Def
         public readonly typeNode: HeronAstNode,
     )
     { super(node, name); }
+
+    toString(): string {
+        return this.name +  " : " + typeNodeToStr(this.typeNode);
+    }
 }
 
 // Represents the definition of a variable. 

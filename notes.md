@@ -187,3 +187,32 @@ Eval will be useful with the current test code to figure out the tests.
 * I see no reason not to do that. 
 * One possibility is to create a funcDef once I encounter a lambda expression.
 * THe other possibility is to convert func def bodies into lambdas. 
+
+//==
+
+* I need to update how funcs are encoded. It is inconsistent from the old to new method.
+* I need to change how unions are unified. I can't use the present system. 
+* 
+
+
+/** Converts a type variable to a constant: A => `A  */ 
+export function typeVarToConstant(t: Type, vars: Lookup<TypeVariable>): Type {
+    if (t instanceof TypeVariable) {
+        vars[t.name] = t;
+        return typeConstant('`' + t.name);
+    }
+}
+
+/** Assuming a type has been converted using typeVarToConstant, 
+ * this will put convert typeConstants back to variables  */
+export function typeConstantToVar(t: Type, vars: Lookup<TypeVariable>): Type {
+    if (t instanceof TypeConstant) {
+        if (t.name && t.name[0] === '`') 
+        {
+            const varName = t.name.slice(1);
+            if (varName in vars)
+                return vars[varName];
+        }
+    }
+    return t;
+}

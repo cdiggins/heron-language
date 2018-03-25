@@ -453,4 +453,4 @@ function analyzeFunctions(pkg) {
     // * Should the trait have "T1" / "T2" or somethiin
 }
 exports.analyzeFunctions = analyzeFunctions;
-//# sourceMappingURL=heron-eval.js.map
+//# sourceMappingURL=OLD-heron-eval.js.map

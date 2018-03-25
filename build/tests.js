@@ -4,9 +4,8 @@ var Myna = require("myna-parser");
 var heron_parser_1 = require("./heron-parser");
 var heron_ast_rewrite_1 = require("./heron-ast-rewrite");
 var heron_compiler_1 = require("./heron-compiler");
-var heron_defs_1 = require("./heron-defs");
-var heron_eval_1 = require("./heron-eval");
-var type_system_1 = require("./type-system");
+var heron_traits_1 = require("./heron-traits");
+var heron_types_1 = require("./heron-types");
 var m = Myna.Myna;
 var g = heron_parser_1.heronGrammar;
 var assert = require('assert');
@@ -129,127 +128,26 @@ function outputPackageStats(pkg) {
         console.log(refDetails(d));
     }
 }
-function findFunc(mod, name) {
-    var defs = mod.body.children.map(function (c) { return c.def; }).filter(function (d) { return d instanceof heron_defs_1.FuncDef; });
-    for (var _i = 0, defs_1 = defs; _i < defs_1.length; _i++) {
-        var d = defs_1[_i];
-        if (d.name === name)
-            return d;
-    }
-    return null;
-}
-function getAllFuncDefs(pkg) {
-    var r = [];
-    for (var _i = 0, _a = pkg.modules; _i < _a.length; _i++) {
-        var m_1 = _a[_i];
-        for (var _b = 0, _c = m_1.body.children; _b < _c.length; _b++) {
-            var c = _c[_b];
-            if (c.def instanceof heron_defs_1.FuncDef)
-                r.push(c.def);
+function outputTraits(pkg) {
+    var traits = heron_traits_1.getTraits(pkg);
+    for (var _i = 0, traits_1 = traits; _i < traits_1.length; _i++) {
+        var t = traits_1[_i];
+        console.log("Trait " + t.type);
+        for (var _a = 0, _b = t.funcs; _a < _b.length; _a++) {
+            var f = _b[_a];
+            console.log("  " + f.toString());
         }
     }
-    r.sort(function (d1, d2) { return (d1.name < d2.name) ? -1 : (d1.name > d2.name ? 1 : 0); });
-    return r;
 }
-function getAllRefs(node) {
-    var refs = [];
-    heron_ast_rewrite_1.visitAst(node, function (n) { return !n.ref || refs.push(n.ref); });
-    return refs;
-}
-function argumentIndex(f, x) {
-    return f.args.indexOf(x);
-}
-function getFuncParamType(f, n) {
-    var type = getFuncType(f);
-    var inputs = type_system_1.functionInput(type);
-    if (!(inputs instanceof type_system_1.TypeArray))
-        throw new Error("Function input must be a TypeArray");
-    return inputs.types[n];
-}
-function getFuncReturnType(f) {
-    var type = getFuncType(f);
-    return type_system_1.functionOutput(type);
-}
-function funcTypeWithNArgs(n) {
-    var params = [];
-    for (var i = 0; i < n; ++i)
-        params.push(type_system_1.typeVariable('T' + i));
-    return type_system_1.functionType(type_system_1.typeArray(params), type_system_1.typeVariable('R'));
-}
-function typeUnion(types) {
-    var tmp = {};
-    for (var _i = 0, types_1 = types; _i < types_1.length; _i++) {
-        var t = types_1[_i];
-        tmp[t.toString()] = t;
-    }
-    var r = [];
-    for (var k in tmp)
-        r.push(tmp[k]);
-    if (r.length === 0)
-        return heron_eval_1.Types.VoidType;
-    if (r.length === 1)
-        return r[0];
-    return type_system_1.typeArray([type_system_1.typeConstant('union'), type_system_1.typeArray(r)]);
-}
-function getParamType(refs, p) {
-    if (p.type)
-        return p.type;
-    if (p.typeNode)
-        return p.type = heron_eval_1.Types.getType(p.typeNode);
-    var paramRefs = refs.filter(function (r) { return r.defs.indexOf(p) >= 0; });
-    var types = [];
-    for (var _i = 0, paramRefs_1 = paramRefs; _i < paramRefs_1.length; _i++) {
-        var pr = paramRefs_1[_i];
-        var expr = pr.node.expr;
-        if (!expr)
-            throw new Error("A parameter reference, must be an expression");
-        var f = expr.functionArgument;
-        if (f) {
-            // Recursively analyze called functions. 
-            var ref = f.func.node.ref;
-            var n = argumentIndex(f, expr);
-            if (ref) {
-                for (var _a = 0, _b = ref.defs; _a < _b.length; _a++) {
-                    var d = _b[_a];
-                    if (d instanceof heron_defs_1.FuncDef && d.params.length > n)
-                        types.push(getFuncParamType(d, n));
-                }
-            }
-        }
-        f = expr.calledFunction;
-        if (f) {
-            var n = f.args.length;
-            types.push(funcTypeWithNArgs(n));
+function outputFunctionTypes(pkg) {
+    for (var _i = 0, _a = pkg.allFuncDefs; _i < _a.length; _i++) {
+        var f = _a[_i];
+        var t = heron_types_1.computeFuncType(f);
+        if (f.body) {
+            console.log(f.toString());
+            console.log(" : " + t);
         }
     }
-    return p.type = typeUnion(types);
-}
-function getFuncType(f) {
-    if (f.type)
-        return f.type;
-    // This is a temporary.
-    f.type = funcTypeWithNArgs(f.params.length);
-    var refs = getAllRefs(f.body);
-    var paramTypes = f.params.map(function (p) { return getParamType(refs, p); });
-    var retType = f.retTypeNode ? heron_eval_1.Types.getType(f.retTypeNode) : heron_eval_1.Types.AnyType;
-    var inputType = type_system_1.typeArray(paramTypes);
-    return f.type = type_system_1.functionType(inputType, retType);
-}
-function analyzeFunctions(pkg) {
-    var funcs = getAllFuncDefs(pkg);
-    for (var _i = 0, funcs_1 = funcs; _i < funcs_1.length; _i++) {
-        var f = funcs_1[_i];
-        var t = getFuncType(f);
-        console.log(f.name + ' : ' + t.toString());
-    }
-    // * Get all of the functions from all of the modules. 
-    // * Look at how they are all used
-    // * Do they have a type signature? 
-    // * If not what would their type signature be? T0, T1, T2: T3
-    // * So what are the constraints on the various type signatures? 
-    // * There are a lot of functions called on each one. 
-    // * basically what is the trait. 
-    // * Should the trait have "T1" / "T2" or somethiin
 }
 function tests() {
     var inputFiles = ['geometry-vector3', 'array', 'test'];
@@ -260,14 +158,18 @@ function tests() {
     var mainMod = pkg.getModule(modName);
     if (!mainMod)
         throw new Error("Could not find module: " + modName);
-    var mainFunc = findFunc(mainMod, 'main');
-    if (!mainFunc)
-        throw new Error("Could not find entry point function " + modName + "." + mainFunc);
-    var evaluator = new heron_eval_1.Evaluator();
+    //let mainFunc = findFunc(mainMod, 'main');
+    //if (!mainFunc)
+    //   throw new Error("Could not find entry point function " + modName + "." + mainFunc);
+    // let evaluator = new Evaluator();
     // Try to figure out the value of all the called functions. 
     //evaluator.evalFunc(mainFunc);
     // Look at the usages of each parameter in each function.
-    analyzeFunctions(pkg);
+    // analyzeFunctions(pkg);
+    // AN experiemnt for guessing Traits. 
+    // I have decided that traits need to be declared. 
+    //outputTraits(pkg);
+    outputFunctionTypes(pkg);
     console.log('Done');
 }
 /*

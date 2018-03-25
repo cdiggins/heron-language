@@ -4,8 +4,9 @@
 // Copyright 2017 by Christopher Diggins 
 // Licensed under the MIT License
 
-// Turn on for debugging purposes
-export var trace = false;
+let trace = false;
+
+/** Turn on debug tracing */
 export function setTrace(b: boolean) {
     trace = b;
 }
@@ -22,275 +23,140 @@ export function newTypeVar() : TypeVariable {
 }
 
 //=========================================
+// Helper interfaces 
+
+/** Generic lookup type. */
+export interface Lookup<T> { [_:string]:T };
+
+/** Given a type variable name finds the type set */
+export interface TypeUnifiers extends Lookup<TypeUnifier> { }
+
+/** Associates type names with type expressions */
+export interface Types extends Lookup<Type> { } 
+
+/** Associates type variables names with type expressions */
+export interface TypeSchema extends Lookup<TypeVariable> { }
+
+/** Called when the type unfiication process fails.  */
+export class TypeUnificationError extends Error {
+    constructor(
+        public readonly u: TypeResolver, 
+        public readonly a: Type, 
+        public readonly b: Type, 
+        public readonly msg: string = "") 
+    {
+        super("Unification failed between type " + a + " and " + b + " " + msg)
+    }
+}
+
+//=========================================
 // Classes that represent kinds of types  
 
-// Base class of a type: either a TypeArray, TypeVariable, or TypeConstant
-export class Type { 
-    // All type varible referenced somewhere by the type, or the type itself if it is a TypeVariable.
-    typeVars : TypeVariable[] = [];            
-    
-    clone(newTypes:ITypeLookup) : Type {
-        throw new Error("Clone must be overridden in derived class");
-    }
-}
+/** Base class of a type: either a PolyType, TypeVariable, or TypeConstant */
+export class Type {  }
 
-// A collection of a fixed number of types can be used to represent function types or tuple types. 
-// A list of types is usually encoded as a nested set of type pairs (TypeArrays with two elements).
-// If a TypeArray has Type parameters, quantified unbound type variables, it is considered a "PolyType".
-// Binding type variables is done through the clone function 
-export class TypeArray extends Type
+/** A collection of a fixed number of types can be used to represent function types or tuple types. 
+ * A list of types is usually encoded as a nested set of type pairs (PolyTypes with two elements).
+ * The schama is a list of universally quantified variables. 
+ */
+export class PolyType extends Type
 {
     constructor(
-        public types : Type[], computeParameters:boolean)
+        public readonly types: Type[], 
+        public readonly schema: TypeSchema)
     { 
         super(); 
-
-        // Compute all referenced types 
-        for (var t of types) 
-            this.typeVars = this.typeVars.concat(t.typeVars);       
-            
-        // Given just a type with type variables the sete of type parameters 
-        // can be inferred based on where they occur in the type tree
-        if (computeParameters)
-            this.computeParameters();
     }
 
-    // A helper function to copy a parameter list 
-    cloneParameters(dest:TypeArray, from:TypeVariable[], newTypes:ITypeLookup) {
-        var params = [];
-        for (var tv of from) {
-            var param = newTypes[tv.name];
-            if (param == undefined)
-                throw new Error("Could not find type parameter: " + tv.name);
-            params.push(param);
-        }
-        dest.typeParameterVars = params;
+    typeSchemaString(): string {
+        const r = values(this.schema).join("!");
+        return r ?  "!" + r + "." : r;
     }
 
-    // Returns a copy of the type array, substituting type variables using the lookup table.        
-    clone(newTypes:ITypeLookup) : TypeArray {
-        var r = new TypeArray(this.types.map(t => t.clone(newTypes)), false);
-        this.cloneParameters(r, this.typeParameterVars, newTypes);
-        return r;
-    }
-
-    freshVariableNames(id:number) : TypeArray {
-        var newTypes:ITypeLookup = {};
-        for (var t of descendantTypes(this))
-            if (t instanceof TypeVariable)
-                newTypes[t.name] = newTypeVar();
-        return this.clone(newTypes);
-    }
-        
-    // Returns a copy of the type array creating new parameter names. 
-    freshParameterNames() : TypeArray {
-        // Create a lookup table for the type parameters with new names 
-        var newTypes:ITypeLookup = {};
-        for (var tp of this.typeParameterNames)
-            newTypes[tp] = newTypeVar();
-        
-        // Clone all of the types.             
-        var types = this.types.map(t => t.clone(newTypes));
-
-        // Recursively call "freshParameterNames" on child type arrays as needed. 
-        types = types.map(t => t instanceof TypeArray ? t.freshParameterNames() : t);
-        var r = new TypeArray(types, false);
-
-        // Now recreate the type parameter list
-        this.cloneParameters(r, this.typeParameterVars, newTypes);
-        
-        return r;
-    }
-
-    // A list of the parameter names (without repetition)
-    get typeParameterNames() : string[] {
-        return uniqueStrings(this.typeParameterVars.map(tv => tv.name)).sort();
-    }
-        
-    // Infer which type variables are actually type parameters (universally quantified) 
-    // based on their position. Mutates in place.
-    computeParameters() : TypeArray {
-        this.typeParameterVars = [];
-
-        // Recursively compute the parameters for base types
-        this.types.forEach(t => { if (t instanceof TypeArray) t.computeParameters(); });
-
-        for (var i=0; i < this.types.length; ++i) {
-            var child = this.types[i];
-
-            // Individual type variables are part of this scheme 
-            if (child instanceof TypeVariable) 
-                _reassignAllTypeVars(child.name, this);
-            else 
-            if (child instanceof TypeArray) {
-                // Get the vars of the child type. 
-                // If any of them show up in multiple child arrays, then they 
-                // are part of the parent's child 
-                for (var childVar of child.typeVars)
-                    if (_isTypeVarUsedElsewhere(this, childVar.name, i))
-                        _reassignAllTypeVars(childVar.name, this);                
-            }
-        }
-
-        // Implementation validation step:
-        // Assure that the type scheme variables are all in the typeVars 
-        for (var v of this.typeParameterVars) {
-            var i = this.typeVars.indexOf(v);
-            if (i < 0) 
-                throw new Error("Internal error: type scheme references a variable that is not marked as referenced by the type variable")
-        }
-
-        return this;
-    }
-
-    // The type variables that are bound to this TypeArray. 
-    // Always a subset of typeVars. This could have the same type variable repeated twice. 
-    typeParameterVars : TypeVariable[] = [];        
-
-    // Provides a user friendly representation of the type scheme (list of type parameters)
-    get typeParametersToString() : string {
-        return this.isPolyType 
-            ? "!" + this.typeParameterNames.join("!") + "."
-            : "";
-    }
-
-    // Returns true if there is at least one type parameter associated with this type array
-    get isPolyType() : boolean {
-        return this.typeParameterVars.length > 0;
-    }
-
-    //  A user friendly name 
-    toString() : string { 
-        return this.typeParametersToString + "(" + this.types.join(' ') + ")"; 
+    toString(): string {
+        return this.typeSchemaString + "(" + this.types.join(" ") + ")";
     }
 }
 
-// A type variable is used for generics (e.g. T0, TR). 
-// The type variable must belong to a type scheme of a polytype. This is like a "scope" for type variables.
-// Computing the type schema is done in an external function.
-export class TypeVariable extends Type
-{
-    constructor(
-        public name : string) 
-    {   
-        super(); 
-        this.typeVars.push(this);
-    }
-
-    clone(newTypes:ITypeLookup) : Type {
-        return this.name in newTypes 
-            ? newTypes[this.name] as TypeVariable
-            : newTypes[this.name] = new TypeVariable(this.name);
-    }
-    
-    toString() : string { 
-        return this.name;
-    }
+/** A MonoType is either a Type variable or a type constant: not a PolyType. */
+export class MonoType extends Type 
+{ 
+    constructor(public readonly name : string) { super(); }
 }
 
-// A type constant is a fixed type (e.g. int, function). Also called a MonoType.
-export class TypeConstant extends Type
+/** A type variable is used for generics (e.g. T0, TR). 
+ * The type variable must belong to a type scheme of a polytype. This is like a "scope" for type variables.
+ * Computing the type schema is done in an external function.
+ */
+export class TypeVariable extends MonoType
 {
-    constructor(
-        public name : string)
-    { super(); }
+    constructor(name : string) { super(name); }
+    toString() : string { return "'" + this.name; }
+}
 
-    toString() : string { 
-        return this.name;
-    }
-
-    clone(newTypes:ITypeLookup) : TypeConstant {
-        return new TypeConstant(this.name);
-    }        
+/** A type constant is a fixed type (e.g. int, function). . */
+export class TypeConstant extends MonoType
+{
+    constructor(name : string) { super(name); }
+    toString() : string { return this.name;}
 }
 
 //============================================================================
 // Helper classes and interfaces 
 
-// A type unifier is a mapping from a type variable to a best-fit type
+/** A type unifier is a best-fit type. It has a name, which is the original variable name. */ 
 export class TypeUnifier
 {
     constructor(
-        public name:string,
-        public unifier:Type)
+        public readonly name:string,
+        public readonly unifier:Type)
     { }
-}
-
-// Given a type variable name finds the type set
-export interface ITypeUnifierLookup {
-    [typeVarName:string] : TypeUnifier;
-}
-
-// Associates variable names with type expressions 
-export interface ITypeLookup {
-    [varName:string] : Type;
 }
 
 //=======================================================================
 // Various functions
 
-// This is helper function helps determine whether a type variable should belong 
-export function _isTypeVarUsedElsewhere(t:TypeArray, varName:string, pos:number) : boolean {
-    for (var i=0; i < t.types.length; ++i) 
+/** This is helper function helps determine whether a type variable should belong */
+export function _isTypeVarUsedElsewhere(t:PolyType, varName:string, pos:number) : boolean {
+    for (const i=0; i < t.types.length; ++i) 
         if (i != pos && t.types[i].typeVars.some(v => v.name == varName))
             return true;
     return false;
-}
-
-// Associate the variable with a new type scheme. Removing it from the previous varScheme 
-export function _reassignVarScheme(v:TypeVariable, t:TypeArray) {
-    // Remove the variable from all other type schemes below the given one. 
-    for (var x of descendantTypes(t)) 
-        if (x instanceof TypeArray) 
-            x.typeParameterVars = x.typeParameterVars.filter(vd => vd.name != v.name);
-    t.typeParameterVars.push(v);
-}
-    
-// Associate all variables of the given name in the TypeArray with the TypeArray's scheme
-export function _reassignAllTypeVars(varName:string, t:TypeArray) {
-    t.typeVars.filter(v => v.name == varName).forEach(v => _reassignVarScheme(v, t));
-}
-
-export function replaceVarWithType(root:TypeArray, v:TypeVariable, r:Type) {
-    // TODO: look for the variable in t. That would be recursive.
-    if (root instanceof TypeArray) {
-        // If we are replacing a "type parameter"
-        root.typeParameterVars = root.typeParameterVars.filter(pv => !isTypeVariable(pv, v.name));
-        for (var i=0; i < root.types.length; ++i) {
-            const t = root.types[i];
-            if (isTypeVariable(t, v.name))
-                root.types[i] = freshParameterNames(r);
-            else 
-            if (t instanceof TypeArray) 
-                replaceVarWithType(t, v, r);
-        }
-    }
 }
     
 //================================================
 // A classes used to implement unification.
 
-// Use this class to unify types that are constrained together.
-export class Unifier
+/** Find a unified type. */
+export class TypeResolver
 {
-    // Given a type variable name find the unifier. Multiple type variables will map to the same unifier 
-    unifiers : ITypeUnifierLookup = {};
+    /* Given a type variable name find the unifier. Multiple type variables will map to the same unifier. */
+    readonly unifiers : TypeUnifiers = {};
 
-    // Unify both types, returning the most specific type possible. 
-    // When a type variable is unified with something the new unifier is stored. 
-    // Note: TypeFunctions and TypePairs ar handled as TypeArrays
-    // * Constants are preferred over lists and variables
-    // * Lists are preferred over variables
-    // * Given two variables, the first one is chosen. 
+    /** The consumer of the class has to provide a startegy for choosing the best unifier 
+     * when the unifier encounters different type constants. Examples strategies are: 
+     * - throw an error. 
+     * - see if one is a sub-type of another
+     * - look for an appropriate type-cast
+     * This is a great place to add logging as well, to have insights into the unification process. 
+     */
+    constructor(
+        public readonly chooseTypeStrategy: (a: TypeConstant, b: TypeConstant) => TypeConstant)
+    { }
+
+    /** Unify both types, returning the most specific type possible. 
+     * When a type variable is unified with something the new unifier is stored. 
+     * - Constants are preferred over lists and variables
+     * - Lists are preferred over variables
+     * - Given two variables, the first one is chosen. 
+     * - given two different constants, the unifier uses the provided strategy
+     */
     unifyTypes(t1:Type, t2:Type, depth:number=0) : Type {            
         if (!t1 || !t2) 
-        {
             throw new Error("Missing type expression");
-        }
         if (t1 === t2)
-        {
             return t1;
-        }
+
         if (t1 instanceof TypeVariable) 
         {
             let r = this._updateUnifier(t1, t2, depth);
@@ -305,32 +171,27 @@ export class Unifier
         }
         else if (t1 instanceof TypeConstant && t2 instanceof TypeConstant)
         {
-            if (t1.name != t2.name)
-                return sumType([t1, t2]);
-            else 
-                return t1;
+            if (t1.name != t2.name)            
+                return this.chooseTypeStrategy(t1, t2);
+            return t1;
         }
         else if (t1 instanceof TypeConstant || t2 instanceof TypeConstant)
         {
-            return sumType([t1, t2]);
+            throw new TypeUnificationError(this, t1, t2);
         }
-        else if (t1 instanceof TypeArray && t2 instanceof TypeArray)
+        else if (t1 instanceof PolyType && t2 instanceof PolyType)
         {             
-            if (isSumType(t1) || isSumType(t2)) {
-                return sumType([t1, t2]);
-            }
-            
             return this._unifyLists(t1, t2, depth+1);
         }
-        throw new Error("Internal error, unexpected code path: " + t1 + " and " + t2);
+        assert(false, "unexpected code path: " + t1 + " and " + t2);
     }
         
-    // Debug function that dumps prints out a representation of the engine state. 
+    /** Debug function that dumps prints out a representation of the engine state. */
     get state() : string {
-        var results = [];
-        for (var k in this.unifiers) {
-            var u = this.unifiers[k];
-            var t = u.unifier;
+        const results = [];
+        for (const k in this.unifiers) {
+            const u = this.unifiers[k];
+            const t = u.unifier;
             results.push(`type unifier for ${ k }, unifier name ${ u.name }, unifying type ${t}`);
         }
         return results.join('\n');
@@ -338,15 +199,15 @@ export class Unifier
 
     // Replaces all variables in a type expression with the unified version
     // The previousVars variable allows detection of cyclical references
-    getUnifiedType(expr:Type, previousVars:string[], unifiedVars:any) : Type {
+    getUnifiedType(expr:Type, previousVars:string[] = [], unifiedVars:any = {}) : Type {
         if (expr instanceof TypeConstant)
             return expr;
         else if (expr instanceof TypeVariable) {
             // If we encountered the type variable previously, it meant that there is a recursive relation
-            for (var i=0; i < previousVars.length; ++i) 
+            for (const i=0; i < previousVars.length; ++i) 
                 if (previousVars[i] == expr.name) 
                     return recursiveType(i);
-            var u = this.unifiers[expr.name];
+            const u = this.unifiers[expr.name];
             if (!u)
                 return expr;
             // If the unifier is a type variable, we are done. 
@@ -354,11 +215,11 @@ export class Unifier
                 return u.unifier;
             else if (u.unifier instanceof TypeConstant)
                 return u.unifier;
-            else if (u.unifier instanceof TypeArray) {
+            else if (u.unifier instanceof PolyType) {
                 // TODO: this logic has to move into the unification step. 
                 if (u.name in unifiedVars) {
-                    // We have already seen this unified var before
-                    var u2 = u.unifier.freshParameterNames();
+                    // We have already seen this unified const before
+                    const u2 = u.unifier.freshParameterNames();
                     return this.getUnifiedType(u2, [expr.name].concat(previousVars), unifiedVars);
                 }
                 else {
@@ -369,36 +230,33 @@ export class Unifier
             else 
                 throw new Error("Unhandled kind of type " + expr);
         }
-        else if (expr instanceof TypeArray) {
-            var types = expr.types.map(t => this.getUnifiedType(t, previousVars, unifiedVars));
-            var r = new TypeArray(types, false);
+        else if (expr instanceof PolyType) {
+            const types = expr.types.map(t => this.getUnifiedType(t, previousVars, unifiedVars));
+            const r = new PolyType(types, false);
             return r;
         }
         else
             throw new Error("Unrecognized kind of type expression " + expr);
     }
 
-    // Choose one of two unifiers, or continue the unification process if necessary
+    /** Choose one of two unifiers, or continue the unification process if necessary */
     _chooseBestUnifier(t1:Type, t2:Type, depth:number) : Type {
-        var r:Type;
         if (t1 instanceof TypeVariable && t2 instanceof TypeVariable)
-            r = t1;
+            return t1;
         else if (t1 instanceof TypeVariable)
-            r = t2;
+            return t2;
         else if (t2 instanceof TypeVariable)
-            r = t1;
+            return t1;
         else 
-            r = this.unifyTypes(t1, t2, depth+1);
-        //if (trace) console.log(`Chose type for unification ${r} between ${t1} and ${t2} at depth ${depth}`)
-        return r;
+            return this.unifyTypes(t1, t2, depth+1);
     }
 
     // Unifying lists involves unifying each element
-    _unifyLists(list1:TypeArray, list2:TypeArray, depth:number) : TypeArray {
+    _unifyLists(list1:PolyType, list2:PolyType, depth:number) : PolyType {
         if (list1.types.length != list2.types.length) 
             throw new Error("Cannot unify differently sized lists: " + list1 + " and " + list2);
-        var rtypes : Type[] = [];
-        for (var i=0; i < list1.types.length; ++i)
+        const rtypes : Type[] = [];
+        for (const i=0; i < list1.types.length; ++i)
             rtypes.push(this.unifyTypes(list1.types[i], list2.types[i], depth));
         // We just return the first list for now. 
         return list1; 
@@ -406,8 +264,8 @@ export class Unifier
 
     // All unifiers that refer to varName as the unifier are pointed to the new unifier 
     _updateVariableUnifiers(varName:string, u:TypeUnifier) {            
-        for (var x in this.unifiers) {
-            var t = this.unifiers[x].unifier;
+        for (const x in this.unifiers) {
+            const t = this.unifiers[x].unifier;
             if (t instanceof TypeVariable) 
                 if (t.name == varName)
                     this.unifiers[x] = u;
@@ -425,7 +283,7 @@ export class Unifier
             return target;
 
         // Create new parameter names as needed 
-        if (replace instanceof TypeArray)
+        if (replace instanceof PolyType)
         {
             if (replace.isPolyType) {
                 // Get some new parameters for the poly type
@@ -443,7 +301,7 @@ export class Unifier
         else if (target instanceof TypeConstant) {
             return target;
         }
-        else if (target instanceof TypeArray) {
+        else if (target instanceof PolyType) {
             // TODO?: look at the parameters. Am I replacing a parameter? If so, throw it out. 
             // BUT!!: I don't think I have to do this step, because at the end the type will be constructed correctly.
             return target.clone({varName:replace});
@@ -455,8 +313,8 @@ export class Unifier
 
     // Returns all of the unifiers as an array 
     get _allUnifiers() : TypeUnifier[] {
-        var r : TypeUnifier[] = [];
-        for (var k in this.unifiers) 
+        const r : TypeUnifier[] = [];
+        for (const k in this.unifiers) 
             r.push(this.unifiers[k]);
         return r;
     }
@@ -464,14 +322,14 @@ export class Unifier
     // Update all unifiers once I am making a replacement 
     _updateAllUnifiers(a:string, t:Type) 
     {
-        for (var tu of this._allUnifiers)
+        for (const tu of this._allUnifiers)
             tu.unifier = this._replaceVarWithType(tu.unifier, a, t);
     }   
                 
     // Computes the best unifier between the current unifier and the new variable.        
     // Updates all unifiers which point to a (or to t if t is a TypeVar) to use the new type. 
     _updateUnifier(a:TypeVariable, t:Type, depth:number) : Type {            
-        var u = this._getOrCreateUnifier(a);          
+        const u = this._getOrCreateUnifier(a);          
         if (t instanceof TypeVariable) 
             t = this._getOrCreateUnifier(t).unifier;
 
@@ -507,20 +365,20 @@ export function rowPolymorphicList(types:Type[]) : Type {
             throw new Error("Expected a row variable in the final position");
     }
     else 
-        return typeArray([types[0], rowPolymorphicList(types.slice(1))]);
+        return polyType([types[0], rowPolymorphicList(types.slice(1))]);
 }
 
 // Creates a row-polymorphic function type: adding the implicit row variable 
-export function rowPolymorphicFunction(inputs:Type[], outputs:Type[]) : TypeArray {
-    var row = typeVariable('_');
+export function rowPolymorphicFunction(inputs:Type[], outputs:Type[]) : PolyType {
+    const row = typeVariable('_');
     inputs.push(row); 
     outputs.push(row);
     return functionType(rowPolymorphicList(inputs), rowPolymorphicList(outputs));
 }
 
 // Creates a type array from an array of types
-export function typeArray(types:Type[]) : TypeArray {        
-    return new TypeArray(types, true);
+export function polyType(types:Type[]) : PolyType {        
+    return new PolyType(types, true);
 }
 
 // Creates a type constant 
@@ -533,37 +391,37 @@ export function typeVariable(name:string) : TypeVariable {
     return new TypeVariable(name);
 }
 
-// Creates a function type, as a special kind of a TypeArray 
-export function functionType(input: Type, output: Type) : TypeArray {
-    return typeArray([input, typeConstant('->'), output]);    
+// Creates a function type, as a special kind of a PolyType 
+export function functionType(input: Type, output: Type) : PolyType {
+    return polyType([input, typeConstant('->'), output]);    
 }    
 
 // Creates a sum type. If any of the types in the array are a sumType, it is flattened.  
-export function sumType(types: Type[]) : TypeArray {
+export function sumType(types: Type[]) : PolyType {
     let r: Type[] = [];
     for (let t of types) 
         if (isSumType(t)) 
             r.push(...sumTypeOptions(t));
         else
             r.push(t);
-    return typeArray([typeConstant('|'), typeArray(r)]);    
+    return polyType([typeConstant('|'), polyType(r)]);    
 }    
 
-// Creates an array type, as a special kind of TypeArray
-export function arrayType(element:Type) : TypeArray {
-    return typeArray([element, typeConstant('[]')]);    
+// Creates an array type, as a special kind of PolyType
+export function arrayType(element:Type) : PolyType {
+    return polyType([element, typeConstant('[]')]);    
 }
 
-// Creates a list type, as a special kind of TypeArray
-export function listType(element:Type) : TypeArray {
-    return typeArray([element, typeConstant('*')]);    
+// Creates a list type, as a special kind of PolyType
+export function listType(element:Type) : PolyType {
+    return polyType([element, typeConstant('*')]);    
 }
 
-// Creates a recursive type, as a special kind of TypeArray. The numberical value 
-// refers to the depth of the recursion: how many TypeArrays you have to go up 
+// Creates a recursive type, as a special kind of PolyType. The numberical value 
+// refers to the depth of the recursion: how many PolyTypes you have to go up 
 // to find the recurison base case. 
-export function recursiveType(depth:Number) : TypeArray {
-    return typeArray([typeConstant('rec'), typeConstant(depth.toString())]);    
+export function recursiveType(depth:Number) : PolyType {
+    return polyType([typeConstant('rec'), typeConstant(depth.toString())]);    
 }
 
 // Returns true if and only if the type is a type constant with the specified name
@@ -582,48 +440,48 @@ export function variableOccurs(name:string, type:Type) : boolean {
 }
 
 // Returns true if and only if the type is a type constant with the specified name
-export function isTypeArray(t:Type, name:string) : boolean {
-    return t instanceof TypeArray && t.types.length == 2 && isTypeConstant(t.types[1], '[]');
+export function isPolyType(t:Type, name:string) : boolean {
+    return t instanceof PolyType && t.types.length == 2 && isTypeConstant(t.types[1], '[]');
 }
 
 // Returns true iff the type is a TypeArary representing a function type
 export function isFunctionType(t:Type) : boolean {        
-    return t instanceof TypeArray && t.types.length == 3 && isTypeConstant(t.types[1], '->');
+    return t instanceof PolyType && t.types.length == 3 && isTypeConstant(t.types[1], '->');
 }
 
 // Returns true iff the type is a TypeArary representing a sum type
 export function isSumType(t:Type) : boolean {        
-    return t instanceof TypeArray && t.types.length == 2 && isTypeConstant(t.types[0], '|');
+    return t instanceof PolyType && t.types.length == 2 && isTypeConstant(t.types[0], '|');
 }
 
 export function sumTypeOptions(t:Type): Type[] {
     if (!isSumType(t)) throw new Error("Expected a sum type");
-    return ((t as TypeArray).types[1] as TypeArray).types; 
+    return ((t as PolyType).types[1] as PolyType).types; 
 } 
 
-// Returns the input types (argument types) of a TypeArray representing a function type
+// Returns the input types (argument types) of a PolyType representing a function type
 export function functionInput(t:Type) : Type {        
     if (!isFunctionType(t)) throw new Error("Expected a function type");
-    return (t as TypeArray).types[0];
+    return (t as PolyType).types[0];
 }
 
-// Returns the output types (return types) of a TypeArray representing a function type
+// Returns the output types (return types) of a PolyType representing a function type
 export function functionOutput(t:Type) : Type {        
     if (!isFunctionType(t)) throw new Error("Expected a function type");
-    return (t as TypeArray).types[2];
+    return (t as PolyType).types[2];
 }
 
 // Returns all types contained in this type
 export function descendantTypes(t:Type, r:Type[] = []) : Type[] {
     r.push(t);
-    if (t instanceof TypeArray) 
+    if (t instanceof PolyType) 
         t.types.forEach(t2 => descendantTypes(t2, r));
     return r;
 }
 
 // Returns true if the type is a polytype
 export function isPolyType(t:Type) {
-    return t instanceof TypeArray && t.typeParameterVars.length > 0;
+    return t instanceof PolyType && t.typeParameterVars.length > 0;
 }
 
 // Returns true if the type is a function that generates a polytype.
@@ -635,16 +493,16 @@ export function generatesPolytypes(t:Type) : boolean {
 
 // Global function for fresh variable names
 export function freshVariableNames(t:Type, id:number) : Type {
-    return (t instanceof TypeArray) ? t.freshVariableNames(id) : t;
+    return (t instanceof PolyType) ? t.freshVariableNames(id) : t;
 }
     
 // Global function for fresh parameter names
 export function freshParameterNames(t:Type) : Type {
-    return (t instanceof TypeArray) ? t.freshParameterNames() : t;
+    return (t instanceof PolyType) ? t.freshParameterNames() : t;
 }
 
 export function computeParameters(t:Type) : Type {
-    return (t instanceof TypeArray) ? t.computeParameters() : t;
+    return (t instanceof PolyType) ? t.computeParameters() : t;
 }
     
 //========================================================
@@ -652,9 +510,9 @@ export function computeParameters(t:Type) : Type {
 
 // Rename all type variables os that they follow T0..TN according to the order the show in the tree. 
 export function normalizeVarNames(t:Type) : Type {
-    var names = {};
-    var count = 0;
-    for (var dt of descendantTypes(t)) 
+    const names = {};
+    const count = 0;
+    for (const dt of descendantTypes(t)) 
         if (dt instanceof TypeVariable) 
             if (!(dt.name in names))
                 names[dt.name] = typeVariable("t" + count++);
@@ -668,9 +526,9 @@ function numberToLetters(n:number) : string {
 
 // Rename all type variables so that they are alphabetical in the order they occur in the tree
 export function alphabetizeVarNames(t:Type) : Type {
-    var names = {};
-    var count = 0;
-    for (var dt of descendantTypes(t)) 
+    const names = {};
+    const count = 0;
+    for (const dt of descendantTypes(t)) 
         if (dt instanceof TypeVariable) 
             if (!(dt.name in names))
                 names[dt.name] = typeVariable(numberToLetters(count++));
@@ -679,15 +537,15 @@ export function alphabetizeVarNames(t:Type) : Type {
 
 // Compares whether two types are the same after normalizing the type variables. 
 export function areTypesSame(t1:Type, t2:Type) {
-    var s1 = normalizeVarNames(t1).toString();
-    var s2 = normalizeVarNames(t2).toString();
+    const s1 = normalizeVarNames(t1).toString();
+    const s2 = normalizeVarNames(t2).toString();
     return s1 === s2;
 }
 
-export function variableOccursOnInput(varName:string, type:TypeArray) {
-    for (var t of descendantTypes(type)) {
+export function variableOccursOnInput(varName:string, type:PolyType) {
+    for (const t of descendantTypes(type)) {
         if (isFunctionType(t)) {
-            var input = functionInput(type);            
+            const input = functionInput(type);            
             if (variableOccurs(varName, input)) {
                 return true;
             }
@@ -697,13 +555,13 @@ export function variableOccursOnInput(varName:string, type:TypeArray) {
 
 // Returns true if and only if the type is valid 
 export function isValid(type:Type) {
-    for (var t of descendantTypes(type)) {
+    for (const t of descendantTypes(type)) {
         if (isTypeConstant(t, "rec")) {
             return false;
         }
-        else if (t instanceof TypeArray) {
+        else if (t instanceof PolyType) {
             if (isFunctionType(t)) 
-                for (var p of t.typeParameterNames)
+                for (const p of t.typeParameterNames)
                     if (!variableOccursOnInput(p, t))
                         return false;                
         }
@@ -717,29 +575,29 @@ export function isValid(type:Type) {
 // - Quotation
 
 // Returns the function type that results by composing two function types
-export function composeFunctions(f:TypeArray, g:TypeArray) : TypeArray {
+export function composeFunctions(f:PolyType, g:PolyType) : PolyType {
     if (!isFunctionType(f)) throw new Error("Expected a function type for f");
     if (!isFunctionType(g)) throw new Error("Expected a function type for g");
     
-    f = f.freshVariableNames(0) as TypeArray;
-    g = g.freshVariableNames(1) as TypeArray;
+    f = f.freshVariableNames(0) as PolyType;
+    g = g.freshVariableNames(1) as PolyType;
 
     if (trace) {
         console.log("f: " + f);
         console.log("g: " + g);
     }
 
-    var inF = functionInput(f);
-    var outF = functionOutput(f);
-    var inG = functionInput(g);
-    var outG = functionOutput(g);
+    const inF = functionInput(f);
+    const outF = functionOutput(f);
+    const inG = functionInput(g);
+    const outG = functionOutput(g);
 
-    var e = new Unifier();
+    const e = new TypeResolver();
     e.unifyTypes(outF, inG);
-    var input = e.getUnifiedType(inF, [], {});
-    var output = e.getUnifiedType(outG, [], {});
+    const input = e.getUnifiedType(inF, [], {});
+    const output = e.getUnifiedType(outG, [], {});
 
-    var r = functionType(input, output);
+    const r = functionType(input, output);
     if (trace) {
         console.log(e.state);
         console.log("Intermediate result: " + r)
@@ -750,12 +608,12 @@ export function composeFunctions(f:TypeArray, g:TypeArray) : TypeArray {
     if (trace) {
         console.log("Final result: " + r);
     }
-    r = normalizeVarNames(r) as TypeArray;
+    r = normalizeVarNames(r) as PolyType;
     return r;        
 }
 
 // Composes a chain of functions
-export function composeFunctionChain(fxns:TypeArray[]) : TypeArray {
+export function composeFunctionChain(fxns:PolyType[]) : PolyType {
     if (fxns.length == 0)
         return idFunction();                
     let t = fxns[0];
@@ -765,7 +623,7 @@ export function composeFunctionChain(fxns:TypeArray[]) : TypeArray {
 }
 
 // Composes a chain of functions in reverse. Should give the same result 
-export function composeFunctionChainReverse(fxns:TypeArray[]) : TypeArray {
+export function composeFunctionChainReverse(fxns:PolyType[]) : PolyType {
     if (fxns.length == 0)
         return idFunction();                
     let t = fxns[fxns.length - 1];
@@ -773,39 +631,11 @@ export function composeFunctionChainReverse(fxns:TypeArray[]) : TypeArray {
         t = composeFunctions(fxns[i], t);
     return t;
 }
-
-// Creates a function type that generates the given type.
-// If given no type returns the empty quotation.
-export function quotation(x: Type) : TypeArray {
-    const row = typeVariable('_');
-    x = freshParameterNames(x);
-    var r = functionType(row, x ? typeArray([x, row]) : row);
-    r.computeParameters();
-    r = normalizeVarNames(r) as TypeArray;
-    return r;
-}
-
-// Returns the type of the id function 
-export function idFunction() : TypeArray {
-    return quotation(null);
-}
-
-//=====================================================================
-// General purpose utility functions
-
-// Returns only the uniquely named strings
-export function uniqueStrings(xs:string[]) : string[] {
-    var r = {};
-    for (var x of xs)
-        r[x] = true;
-    return Object.keys(r);
-}
-
 //================================================================
 // Pretty type formatting. 
 
 function flattenFunctionIO(t: Type): Type[] {
-    if (t instanceof TypeArray) {
+    if (t instanceof PolyType) {
         return [t.types[0], ...flattenFunctionIO(t.types[1])];
     }
     else {
@@ -831,7 +661,61 @@ export function typeToString(t: Type): string {
     else if (t instanceof TypeConstant) {
         return t.name;
     }
-    else if (t instanceof TypeArray) {
+    else if (t instanceof PolyType) {
         return "[" + t.types.map(typeToString).join(' ') + "]";
     }
+}
+
+//================================================
+// Helper functions
+
+/** Given a variable name remapping function creates new types.  */
+export function clone(t: Type, remapper: (_: string) => string) : Type {
+    if (t instanceof TypeVariable) {
+        return new TypeVariable(remapper(t.name));
+    }
+    else if (t instanceof TypeConstant) {
+        return t;
+    }
+    else if (t instanceof PolyType) {
+        const schema: TypeSchema = {};
+        for (let k of keys(t.schema))
+            schema[remapper(k)] = clone(t.schema[k], remapper) as TypeVariable;
+        const types = t.types.map(x => clone(x, remapper));
+    }
+} 
+
+/** Returns the keys of any object.  */
+export function keys(obj: any): string[] {
+    return Object.keys(obj);
+}
+
+/** Returns the values of any object.  */
+export function values(obj: any): any[] {
+    return keys(obj).map(k => obj[k]);
+}
+
+/** Given an array of values creates a lookup.  */
+export function toLookup<T>(vals: T[], nameFunc: (_:T) => string): Lookup<T> {
+    const r: Lookup<T> = {};
+    for (const v of vals) 
+        r[nameFunc(v)] = v;
+    return r;
+}
+
+/** Creates a type lookup.  */
+export function toTypeLookup<T extends MonoType>(vals: T[]): Lookup<T> {
+    return toLookup(vals, v => v.name);
+}
+
+/** Things that should never happen. This is used primarily to catch refactoring errors, 
+ * and to help the reader understand the code. 
+*/
+export function assert(condition: boolean, msg: string) {
+    if (!condition) throw new Error("Internal error: " + msg);
+}
+
+/** Creates a unique string list. */
+export function uniqueStrings(xs:string[]) : string[] {
+    return keys(toLookup(xs, _ => _));    
 }

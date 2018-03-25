@@ -1,48 +1,41 @@
-// Generated on Wed Mar 21 2018 20:58:38 GMT-0400 (Eastern Daylight Time)
-heron:std:0.1// scope module_573
-heron:geometry.vector:0.1{
-var // definition origin_VarDef14
-origin// expression FunCall vector(0,0,0)
-// reference vector_8:varName[vector_FuncDef98, vector_FuncDef120, vector_FuncDef148, vector_FuncDef182]
-// expression VarName vector
-vector(// expression NumLiteral 0
-0, // expression NumLiteral 0
-0, // expression NumLiteral 0
+// Generated on Sat Mar 24 2018 16:42:23 GMT-0400 (Eastern Daylight Time)
+heron:std:0.1heron:geometry.vector:0.1{
+var // definition type undefined
+origin// expression type undefined
+// expression type undefined
+vector(// expression type undefined
+0, // expression type undefined
+0, // expression type undefined
 0);
-var // definition ones_VarDef26
-ones// expression FunCall vector(1,1,1)
-// reference vector_20:varName[vector_FuncDef98, vector_FuncDef120, vector_FuncDef148, vector_FuncDef182]
-// expression VarName vector
-vector(// expression NumLiteral 1
-1, // expression NumLiteral 1
-1, // expression NumLiteral 1
+var // definition type undefined
+ones// expression type undefined
+// expression type undefined
+vector(// expression type undefined
+1, // expression type undefined
+1, // expression type undefined
 1);
-var // definition xaxis_VarDef38
-xaxis// expression FunCall vector(1,0,0)
-// reference vector_32:varName[vector_FuncDef98, vector_FuncDef120, vector_FuncDef148, vector_FuncDef182]
-// expression VarName vector
-vector(// expression NumLiteral 1
-1, // expression NumLiteral 0
-0, // expression NumLiteral 0
+var // definition type undefined
+xaxis// expression type undefined
+// expression type undefined
+vector(// expression type undefined
+1, // expression type undefined
+0, // expression type undefined
 0);
-var // definition yaxis_VarDef50
-yaxis// expression FunCall vector(0,1,0)
-// reference vector_44:varName[vector_FuncDef98, vector_FuncDef120, vector_FuncDef148, vector_FuncDef182]
-// expression VarName vector
-vector(// expression NumLiteral 0
-0, // expression NumLiteral 1
-1, // expression NumLiteral 0
+var // definition type undefined
+yaxis// expression type undefined
+// expression type undefined
+vector(// expression type undefined
+0, // expression type undefined
+1, // expression type undefined
 0);
-var // definition zaxis_VarDef62
-zaxis// expression FunCall vector(0,0,1)
-// reference vector_56:varName[vector_FuncDef98, vector_FuncDef120, vector_FuncDef148, vector_FuncDef182]
-// expression VarName vector
-vector(// expression NumLiteral 0
-0, // expression NumLiteral 0
-0, // expression NumLiteral 1
+var // definition type undefined
+zaxis// expression type undefined
+// expression type undefined
+vector(// expression type undefined
+0, // expression type undefined
+0, // expression type undefined
 1);
-// scope funcDef_98
-// definition vector_FuncDef98
+// definition type (Func Float Float Float R)
 
 /**
 function vector(x: Float, y: Float, z: Float) 
@@ -50,26 +43,17 @@ function vector(x: Float, y: Float, z: Float)
 
     
 */
-// scope funcDef_98
-// definition vector_FuncDef98
-function vector(// definition x_FuncParamDef73
-x : // reference Float_71:typeName[Float_TypeDef6]
-Float, // definition y_FuncParamDef79
-y : // reference Float_77:typeName[Float_TypeDef6]
-Float, // definition z_FuncParamDef85
-z : // reference Float_83:typeName[Float_TypeDef6]
-Float)
-// expression FunCall float3(x,y,z)
-// reference float3_89:varName[float3_FuncDef106, float3_FuncDef1258]
-// expression VarName float3
-float3(// reference x_91:varName[x_FuncParamDef73]
-// expression VarName x
-x, // reference y_93:varName[y_FuncParamDef79]
-// expression VarName y
-y, // reference z_95:varName[z_FuncParamDef85]
-// expression VarName z
-z)// scope funcDef_120
-// definition vector_FuncDef120
+// definition type (Func Float Float Float R)
+function vector(// definition type Float
+x : Float, // definition type Float
+y : Float, // definition type Float
+z : Float)
+// expression type Error
+// expression type (FuncSet ((Func Float Float Float Float3) (Func Float R)))
+float3(// expression type Float
+x, // expression type Float
+y, // expression type Float
+z)// definition type (Func Float R)
 
 /**
 function vector(x: Float)
@@ -77,22 +61,15 @@ function vector(x: Float)
 
     
 */
-// scope funcDef_120
-// definition vector_FuncDef120
-function vector(// definition x_FuncParamDef107
-x : // reference Float_105:typeName[Float_TypeDef6]
-Float)
-// expression FunCall vector(x,x,x)
-// reference vector_111:varName[vector_FuncDef98, vector_FuncDef120, vector_FuncDef148, vector_FuncDef182]
-// expression VarName vector
-vector(// reference x_113:varName[x_FuncParamDef107]
-// expression VarName x
-x, // reference x_115:varName[x_FuncParamDef107]
-// expression VarName x
-x, // reference x_117:varName[x_FuncParamDef107]
-// expression VarName x
-x)// scope funcDef_148
-// definition vector_FuncDef148
+// definition type (Func Float R)
+function vector(// definition type Float
+x : Float)
+// expression type Error
+// expression type (FuncSet ((Func Float Float Float R) (Func Float R) (Func Float R) (Func Array R)))
+vector(// expression type Float
+x, // expression type Float
+x, // expression type Float
+x)// definition type !T0.(Func T0 R)
 
 /**
 function vector(v)
@@ -100,30 +77,21 @@ function vector(v)
 
     
 */
-// scope funcDef_148
-// definition vector_FuncDef148
-function vector(// definition v_FuncParamDef126
+// definition type !T0.(Func T0 R)
+function vector(// definition type T0
 v)
-// expression FunCall vector(x(v),y(v),z(v))
-// reference vector_130:varName[vector_FuncDef98, vector_FuncDef120, vector_FuncDef148, vector_FuncDef182]
-// expression VarName vector
-vector(// expression FunCall x(v)
-// reference x_131:varName[x_FuncDef64, x_FuncDef121, x_FuncDef199]
-// expression VarName x
-x(// reference v_133:varName[v_FuncParamDef126]
-// expression VarName v
-v), // expression FunCall y(v)
-// reference y_136:varName[y_FuncDef79, y_FuncDef136, y_FuncDef214]
-// expression VarName y
-y(// reference v_138:varName[v_FuncParamDef126]
-// expression VarName v
-v), // expression FunCall z(v)
-// reference z_141:varName[z_FuncDef151, z_FuncDef229]
-// expression VarName z
-z(// reference v_143:varName[v_FuncParamDef126]
-// expression VarName v
-v))// scope funcDef_182
-// definition vector_FuncDef182
+// expression type Error
+// expression type Error
+vector(// expression type Error
+// expression type Error
+x(// expression type T0
+v), // expression type Error
+// expression type Error
+y(// expression type T0
+v), // expression type Error
+// expression type Error
+z(// expression type T0
+v))// definition type (Func Array R)
 
 /**
 function vector(xs: Array)
@@ -131,34 +99,24 @@ function vector(xs: Array)
 
     
 */
-// scope funcDef_182
-// definition vector_FuncDef182
-function vector(// definition xs_FuncParamDef157
-xs : // reference Array_155:typeName[Array_TypeDef22]
-Array)
-// expression FunCall vector(op[](xs,0),op[](xs,1),op[](xs,2))
-// reference vector_161:varName[vector_FuncDef98, vector_FuncDef120, vector_FuncDef148, vector_FuncDef182]
-// expression VarName vector
-vector(// expression FunCall op[](xs,0)
-// reference op[]_162:varName[op[]_FuncDef917]
-// expression VarName op[]
-op[](// reference xs_164:varName[xs_FuncParamDef157]
-// expression VarName xs
-xs, // expression NumLiteral 0
-0), // expression FunCall op[](xs,1)
-// reference op[]_168:varName[op[]_FuncDef917]
-// expression VarName op[]
-op[](// reference xs_170:varName[xs_FuncParamDef157]
-// expression VarName xs
-xs, // expression NumLiteral 1
-1), // expression FunCall op[](xs,2)
-// reference op[]_174:varName[op[]_FuncDef917]
-// expression VarName op[]
-op[](// reference xs_176:varName[xs_FuncParamDef157]
-// expression VarName xs
-xs, // expression NumLiteral 2
-2))// scope funcDef_207
-// definition array_FuncDef207
+// definition type (Func Array R)
+function vector(// definition type Array
+xs : Array)
+// expression type Error
+// expression type Error
+vector(// expression type Error
+// expression type (Func (Array T) Int T)
+op[](// expression type Array
+xs, // expression type Num
+0), // expression type Error
+// expression type (Func (Array T) Int T)
+op[](// expression type Array
+xs, // expression type Num
+1), // expression type Error
+// expression type (Func (Array T) Int T)
+op[](// expression type Array
+xs, // expression type Num
+2))// definition type (Func T0 R)
 
 /**
 function array(v) 
@@ -166,28 +124,20 @@ function array(v)
 
     
 */
-// scope funcDef_207
-// definition array_FuncDef207
-function array(// definition v_FuncParamDef188
+// definition type (Func T0 R)
+function array(// definition type T0
 v)
-// expression ArrayLiteral [x(v),y(v),z(v)]
-[// expression FunCall x(v)
-// reference x_191:varName[x_FuncDef64, x_FuncDef121, x_FuncDef199]
-// expression VarName x
-x(// reference v_193:varName[v_FuncParamDef188]
-// expression VarName v
-v), // expression FunCall y(v)
-// reference y_196:varName[y_FuncDef79, y_FuncDef136, y_FuncDef214]
-// expression VarName y
-y(// reference v_198:varName[v_FuncParamDef188]
-// expression VarName v
-v), // expression FunCall z(v)
-// reference z_201:varName[z_FuncDef151, z_FuncDef229]
-// expression VarName z
-z(// reference v_203:varName[v_FuncParamDef188]
-// expression VarName v
-v)]// scope funcDef_237
-// definition sum_FuncDef237
+// expression type (Array Float)
+[// expression type Float
+// expression type (FuncSet ((Func Float2 Float) (Func Float3 Float) (Func Float4 Float)))
+x(// expression type T0
+v), // expression type Float
+// expression type (FuncSet ((Func Float2 Float) (Func Float3 Float) (Func Float4 Float)))
+y(// expression type T0
+v), // expression type Float
+// expression type (FuncSet ((Func Float3 Float) (Func Float4 Float)))
+z(// expression type T0
+v)]// definition type (Func T0 R)
 
 /**
 function sum(v) 
@@ -195,33 +145,23 @@ function sum(v)
     
     
 */
-// scope funcDef_237
-// definition sum_FuncDef237
-function sum(// definition v_FuncParamDef213
+// definition type (Func T0 R)
+function sum(// definition type T0
 v)
-// expression FunCall op+(op+(x(v),y(v)),z(v))
-// reference op+_216:varName[op+_FuncDef587]
-// expression VarName op+
-op+(// expression FunCall op+(x(v),y(v))
-// reference op+_217:varName[op+_FuncDef587]
-// expression VarName op+
-op+(// expression FunCall x(v)
-// reference x_218:varName[x_FuncDef64, x_FuncDef121, x_FuncDef199]
-// expression VarName x
-x(// reference v_220:varName[v_FuncParamDef213]
-// expression VarName v
-v), // expression FunCall y(v)
-// reference y_223:varName[y_FuncDef79, y_FuncDef136, y_FuncDef214]
-// expression VarName y
-y(// reference v_225:varName[v_FuncParamDef213]
-// expression VarName v
-v)), // expression FunCall z(v)
-// reference z_230:varName[z_FuncDef151, z_FuncDef229]
-// expression VarName z
-z(// reference v_232:varName[v_FuncParamDef213]
-// expression VarName v
-v))// scope funcDef_260
-// definition dot_FuncDef260
+// expression type Error
+// expression type (Func Float Float Float)
+op+(// expression type Error
+// expression type (Func Float Float Float)
+op+(// expression type Float
+// expression type (FuncSet ((Func Float2 Float) (Func Float3 Float) (Func Float4 Float)))
+x(// expression type T0
+v), // expression type Float
+// expression type (FuncSet ((Func Float2 Float) (Func Float3 Float) (Func Float4 Float)))
+y(// expression type T0
+v)), // expression type Float
+// expression type (FuncSet ((Func Float3 Float) (Func Float4 Float)))
+z(// expression type T0
+v))// definition type (Func T0 T1 R)
 
 /**
 function dot(a, b) 
@@ -229,23 +169,17 @@ function dot(a, b)
     
     
 */
-// scope funcDef_260
-// definition dot_FuncDef260
-function dot(// definition a_FuncParamDef243
-a, // definition b_FuncParamDef246
+// definition type (Func T0 T1 R)
+function dot(// definition type T0
+a, // definition type T1
 b)
-// expression FunCall sum(op*(a,b))
-// reference sum_250:varName[sum_FuncDef237]
-// expression VarName sum
-sum(// expression FunCall op*(a,b)
-// reference op*_251:varName[op*_FuncDef631]
-// expression VarName op*
-op*(// reference a_253:varName[a_FuncParamDef243]
-// expression VarName a
-a, // reference b_255:varName[b_FuncParamDef246]
-// expression VarName b
-b))// scope funcDef_278
-// definition length_FuncDef278
+// expression type Error
+// expression type (Func T0 R)
+sum(// expression type Error
+// expression type (Func Float Float Float)
+op*(// expression type T0
+a, // expression type T1
+b))// definition type (Func T0 R)
 
 /**
 function length(v) 
@@ -253,20 +187,15 @@ function length(v)
     
     
 */
-// scope funcDef_278
-// definition length_FuncDef278
-function length(// definition v_FuncParamDef266
+// definition type (Func T0 R)
+function length(// definition type T0
 v)
-// expression FunCall sqrt(length2(v))
-// reference sqrt_270:varName[sqrt_FuncDef550]
-// expression VarName sqrt
-sqrt(// expression FunCall length2(v)
-// reference length2_271:varName[length2_FuncDef294]
-// expression VarName length2
-length2(// reference v_273:varName[v_FuncParamDef266]
-// expression VarName v
-v))// scope funcDef_294
-// definition length2_FuncDef294
+// expression type Error
+// expression type (Func Float Float)
+sqrt(// expression type Error
+// expression type (Func T0 R)
+length2(// expression type T0
+v))// definition type (Func T0 R)
 
 /**
 function length2(v) 
@@ -274,19 +203,14 @@ function length2(v)
 
     
 */
-// scope funcDef_294
-// definition length2_FuncDef294
-function length2(// definition v_FuncParamDef284
+// definition type (Func T0 R)
+function length2(// definition type T0
 v)
-// expression FunCall dot(v,v)
-// reference dot_287:varName[dot_FuncDef260]
-// expression VarName dot
-dot(// reference v_289:varName[v_FuncParamDef284]
-// expression VarName v
-v, // reference v_291:varName[v_FuncParamDef284]
-// expression VarName v
-v)// scope funcDef_317
-// definition distance_FuncDef317
+// expression type Error
+// expression type (Func T0 T1 R)
+dot(// expression type T0
+v, // expression type T0
+v)// definition type (Func T0 T1 R)
 
 /**
 function distance(a, b)
@@ -294,24 +218,18 @@ function distance(a, b)
 
     
 */
-// scope funcDef_317
-// definition distance_FuncDef317
-function distance(// definition a_FuncParamDef300
-a, // definition b_FuncParamDef303
+// definition type (Func T0 T1 R)
+function distance(// definition type T0
+a, // definition type T1
 b)
-// expression FunCall length(op-(a,b))
-// reference length_306:varName[length_FuncDef278]
-// expression VarName length
-length(// expression FunCall op-(a,b)
-(// expression FunCall op-(a,b)
-// reference op-_307:varName[op-_FuncDef609]
-// expression VarName op-
-op-(// reference a_309:varName[a_FuncParamDef300]
-// expression VarName a
-a, // reference b_311:varName[b_FuncParamDef303]
-// expression VarName b
-b)))// scope funcDef_340
-// definition distance2_FuncDef340
+// expression type Error
+// expression type (Func T0 R)
+length(// expression type Error
+(// expression type Error
+// expression type (Func Float Float Float)
+op-(// expression type T0
+a, // expression type T1
+b)))// definition type (Func T0 T1 R)
 
 /**
 function distance2(a, b)
@@ -319,24 +237,18 @@ function distance2(a, b)
 
     
 */
-// scope funcDef_340
-// definition distance2_FuncDef340
-function distance2(// definition a_FuncParamDef323
-a, // definition b_FuncParamDef326
+// definition type (Func T0 T1 R)
+function distance2(// definition type T0
+a, // definition type T1
 b)
-// expression FunCall length2(op-(a,b))
-// reference length2_329:varName[length2_FuncDef294]
-// expression VarName length2
-length2(// expression FunCall op-(a,b)
-(// expression FunCall op-(a,b)
-// reference op-_330:varName[op-_FuncDef609]
-// expression VarName op-
-op-(// reference a_332:varName[a_FuncParamDef323]
-// expression VarName a
-a, // reference b_334:varName[b_FuncParamDef326]
-// expression VarName b
-b)))// scope funcDef_359
-// definition normal_FuncDef359
+// expression type Error
+// expression type (Func T0 R)
+length2(// expression type Error
+(// expression type Error
+// expression type (Func Float Float Float)
+op-(// expression type T0
+a, // expression type T1
+b)))// definition type (Func T0 R)
 
 /**
 function normal(v) 
@@ -344,22 +256,16 @@ function normal(v)
 
     
 */
-// scope funcDef_359
-// definition normal_FuncDef359
-function normal(// definition v_FuncParamDef346
+// definition type (Func T0 R)
+function normal(// definition type T0
 v)
-// expression FunCall op/(v,length(v))
-// reference op/_349:varName[op/_FuncDef653]
-// expression VarName op/
-op/(// reference v_351:varName[v_FuncParamDef346]
-// expression VarName v
-v, // expression FunCall length(v)
-// reference length_352:varName[length_FuncDef278]
-// expression VarName length
-length(// reference v_354:varName[v_FuncParamDef346]
-// expression VarName v
-v))// scope funcDef_462
-// definition cross_FuncDef462
+// expression type Error
+// expression type (Func Float Float Float)
+op/(// expression type T0
+v, // expression type Error
+// expression type (Func T0 R)
+length(// expression type T0
+v))// definition type (Func T0 T1 R)
 
 /**
 function cross(a, b)
@@ -367,103 +273,67 @@ function cross(a, b)
 
     
 */
-// scope funcDef_462
-// definition cross_FuncDef462
-function cross(// definition a_FuncParamDef365
-a, // definition b_FuncParamDef368
+// definition type (Func T0 T1 R)
+function cross(// definition type T0
+a, // definition type T1
 b)
-// expression FunCall vector(op-(op*(y(a),z(b)),op*(z(a),y(b))),op-(op*(z(a),x(b)),op*(x(a),z(b))),op-(op*(x(a),y(b)),op*(y(a),x(b))))
-// reference vector_372:varName[vector_FuncDef98, vector_FuncDef120, vector_FuncDef148, vector_FuncDef182]
-// expression VarName vector
-vector(// expression FunCall op-(op*(y(a),z(b)),op*(z(a),y(b)))
-// reference op-_373:varName[op-_FuncDef609]
-// expression VarName op-
-op-(// expression FunCall op*(y(a),z(b))
-// reference op*_374:varName[op*_FuncDef631]
-// expression VarName op*
-op*(// expression FunCall y(a)
-// reference y_375:varName[y_FuncDef79, y_FuncDef136, y_FuncDef214]
-// expression VarName y
-y(// reference a_377:varName[a_FuncParamDef365]
-// expression VarName a
-a), // expression FunCall z(b)
-// reference z_380:varName[z_FuncDef151, z_FuncDef229]
-// expression VarName z
-z(// reference b_382:varName[b_FuncParamDef368]
-// expression VarName b
-b)), // expression FunCall op*(z(a),y(b))
-// reference op*_387:varName[op*_FuncDef631]
-// expression VarName op*
-op*(// expression FunCall z(a)
-// reference z_388:varName[z_FuncDef151, z_FuncDef229]
-// expression VarName z
-z(// reference a_390:varName[a_FuncParamDef365]
-// expression VarName a
-a), // expression FunCall y(b)
-// reference y_393:varName[y_FuncDef79, y_FuncDef136, y_FuncDef214]
-// expression VarName y
-y(// reference b_395:varName[b_FuncParamDef368]
-// expression VarName b
-b))), // expression FunCall op-(op*(z(a),x(b)),op*(x(a),z(b)))
-// reference op-_402:varName[op-_FuncDef609]
-// expression VarName op-
-op-(// expression FunCall op*(z(a),x(b))
-// reference op*_403:varName[op*_FuncDef631]
-// expression VarName op*
-op*(// expression FunCall z(a)
-// reference z_404:varName[z_FuncDef151, z_FuncDef229]
-// expression VarName z
-z(// reference a_406:varName[a_FuncParamDef365]
-// expression VarName a
-a), // expression FunCall x(b)
-// reference x_409:varName[x_FuncDef64, x_FuncDef121, x_FuncDef199]
-// expression VarName x
-x(// reference b_411:varName[b_FuncParamDef368]
-// expression VarName b
-b)), // expression FunCall op*(x(a),z(b))
-// reference op*_416:varName[op*_FuncDef631]
-// expression VarName op*
-op*(// expression FunCall x(a)
-// reference x_417:varName[x_FuncDef64, x_FuncDef121, x_FuncDef199]
-// expression VarName x
-x(// reference a_419:varName[a_FuncParamDef365]
-// expression VarName a
-a), // expression FunCall z(b)
-// reference z_422:varName[z_FuncDef151, z_FuncDef229]
-// expression VarName z
-z(// reference b_424:varName[b_FuncParamDef368]
-// expression VarName b
-b))), // expression FunCall op-(op*(x(a),y(b)),op*(y(a),x(b)))
-// reference op-_431:varName[op-_FuncDef609]
-// expression VarName op-
-op-(// expression FunCall op*(x(a),y(b))
-// reference op*_432:varName[op*_FuncDef631]
-// expression VarName op*
-op*(// expression FunCall x(a)
-// reference x_433:varName[x_FuncDef64, x_FuncDef121, x_FuncDef199]
-// expression VarName x
-x(// reference a_435:varName[a_FuncParamDef365]
-// expression VarName a
-a), // expression FunCall y(b)
-// reference y_438:varName[y_FuncDef79, y_FuncDef136, y_FuncDef214]
-// expression VarName y
-y(// reference b_440:varName[b_FuncParamDef368]
-// expression VarName b
-b)), // expression FunCall op*(y(a),x(b))
-// reference op*_445:varName[op*_FuncDef631]
-// expression VarName op*
-op*(// expression FunCall y(a)
-// reference y_446:varName[y_FuncDef79, y_FuncDef136, y_FuncDef214]
-// expression VarName y
-y(// reference a_448:varName[a_FuncParamDef365]
-// expression VarName a
-a), // expression FunCall x(b)
-// reference x_451:varName[x_FuncDef64, x_FuncDef121, x_FuncDef199]
-// expression VarName x
-x(// reference b_453:varName[b_FuncParamDef368]
-// expression VarName b
-b))))// scope funcDef_497
-// definition reflect_FuncDef497
+// expression type Error
+// expression type (FuncSet ((Func Float Float Float R) (Func Float R) (Func T0 R) (Func Array R)))
+vector(// expression type Error
+// expression type (Func Float Float Float)
+op-(// expression type Error
+// expression type (Func Float Float Float)
+op*(// expression type Float
+// expression type (FuncSet ((Func Float2 Float) (Func Float3 Float) (Func Float4 Float)))
+y(// expression type T0
+a), // expression type Float
+// expression type (FuncSet ((Func Float3 Float) (Func Float4 Float)))
+z(// expression type T1
+b)), // expression type Error
+// expression type (Func Float Float Float)
+op*(// expression type Float
+// expression type (FuncSet ((Func Float3 Float) (Func Float4 Float)))
+z(// expression type T0
+a), // expression type Float
+// expression type (FuncSet ((Func Float2 Float) (Func Float3 Float) (Func Float4 Float)))
+y(// expression type T1
+b))), // expression type Error
+// expression type (Func Float Float Float)
+op-(// expression type Error
+// expression type (Func Float Float Float)
+op*(// expression type Float
+// expression type (FuncSet ((Func Float3 Float) (Func Float4 Float)))
+z(// expression type T0
+a), // expression type Float
+// expression type (FuncSet ((Func Float2 Float) (Func Float3 Float) (Func Float4 Float)))
+x(// expression type T1
+b)), // expression type Error
+// expression type (Func Float Float Float)
+op*(// expression type Float
+// expression type (FuncSet ((Func Float2 Float) (Func Float3 Float) (Func Float4 Float)))
+x(// expression type T0
+a), // expression type Float
+// expression type (FuncSet ((Func Float3 Float) (Func Float4 Float)))
+z(// expression type T1
+b))), // expression type Error
+// expression type (Func Float Float Float)
+op-(// expression type Error
+// expression type (Func Float Float Float)
+op*(// expression type Float
+// expression type (FuncSet ((Func Float2 Float) (Func Float3 Float) (Func Float4 Float)))
+x(// expression type T0
+a), // expression type Float
+// expression type (FuncSet ((Func Float2 Float) (Func Float3 Float) (Func Float4 Float)))
+y(// expression type T1
+b)), // expression type Error
+// expression type (Func Float Float Float)
+op*(// expression type Float
+// expression type (FuncSet ((Func Float2 Float) (Func Float3 Float) (Func Float4 Float)))
+y(// expression type T0
+a), // expression type Float
+// expression type (FuncSet ((Func Float2 Float) (Func Float3 Float) (Func Float4 Float)))
+x(// expression type T1
+b))))// definition type (Func T0 T1 R)
 
 /**
 function reflect(v, n)
@@ -471,35 +341,25 @@ function reflect(v, n)
 
     
 */
-// scope funcDef_497
-// definition reflect_FuncDef497
-function reflect(// definition v_FuncParamDef468
-v, // definition n_FuncParamDef471
+// definition type (Func T0 T1 R)
+function reflect(// definition type T0
+v, // definition type T1
 n)
-// expression FunCall op-(v,op*(op*(n,dot(v,n)),2))
-// reference op-_474:varName[op-_FuncDef609]
-// expression VarName op-
-op-(// reference v_476:varName[v_FuncParamDef468]
-// expression VarName v
-v, // expression FunCall op*(op*(n,dot(v,n)),2)
-(// expression FunCall op*(op*(n,dot(v,n)),2)
-// reference op*_477:varName[op*_FuncDef631]
-// expression VarName op*
-op*(// expression FunCall op*(n,dot(v,n))
-// reference op*_478:varName[op*_FuncDef631]
-// expression VarName op*
-op*(// reference n_480:varName[n_FuncParamDef471]
-// expression VarName n
-n, // expression FunCall dot(v,n)
-// reference dot_482:varName[dot_FuncDef260]
-// expression VarName dot
-dot(// reference v_484:varName[v_FuncParamDef468]
-// expression VarName v
-v, // reference n_486:varName[n_FuncParamDef471]
-// expression VarName n
-n)), // expression NumLiteral 2
-2.0)))// scope funcDef_534
-// definition lerp_FuncDef534
+// expression type Error
+// expression type (Func Float Float Float)
+op-(// expression type T0
+v, // expression type Error
+(// expression type Error
+// expression type (Func Float Float Float)
+op*(// expression type Error
+// expression type (Func Float Float Float)
+op*(// expression type T1
+n, // expression type Error
+// expression type (Func T0 T1 R)
+dot(// expression type T0
+v, // expression type T1
+n)), // expression type Num
+2.0)))// definition type (Func T0 T1 T2 R)
 
 /**
 function lerp(a, b, x)
@@ -507,71 +367,50 @@ function lerp(a, b, x)
 
     
 */
-// scope funcDef_534
-// definition lerp_FuncDef534
-function lerp(// definition a_FuncParamDef503
-a, // definition b_FuncParamDef506
-b, // definition x_FuncParamDef509
+// definition type (Func T0 T1 T2 R)
+function lerp(// definition type T0
+a, // definition type T1
+b, // definition type T2
 x)
-// expression FunCall op+(op*(a,op-(1,x)),op*(b,x))
-// reference op+_512:varName[op+_FuncDef587]
-// expression VarName op+
-op+(// expression FunCall op*(a,op-(1,x))
-// reference op*_513:varName[op*_FuncDef631]
-// expression VarName op*
-op*(// reference a_515:varName[a_FuncParamDef503]
-// expression VarName a
-a, // expression FunCall op-(1,x)
-(// expression FunCall op-(1,x)
-// reference op-_516:varName[op-_FuncDef609]
-// expression VarName op-
-op-(// expression NumLiteral 1
-1.0, // reference x_519:varName[x_FuncParamDef509]
-// expression VarName x
-x))), // expression FunCall op*(b,x)
-// reference op*_525:varName[op*_FuncDef631]
-// expression VarName op*
-op*(// reference b_527:varName[b_FuncParamDef506]
-// expression VarName b
-b, // reference x_529:varName[x_FuncParamDef509]
-// expression VarName x
-x))// scope funcDef_571
-// definition negate_FuncDef571
+// expression type Error
+// expression type (Func Float Float Float)
+op+(// expression type Error
+// expression type (Func Float Float Float)
+op*(// expression type T0
+a, // expression type Error
+(// expression type Error
+// expression type (Func Float Float Float)
+op-(// expression type Num
+1.0, // expression type T2
+x))), // expression type Error
+// expression type (Func Float Float Float)
+op*(// expression type T1
+b, // expression type T2
+x))// definition type (Func T0 R)
 
 /**
 function negate(v)
         = vector(-v.x, -v.y, -v.z);
 
 */
-// scope funcDef_571
-// definition negate_FuncDef571
-function negate(// definition v_FuncParamDef540
+// definition type (Func T0 R)
+function negate(// definition type T0
 v)
-// expression FunCall vector(op_negate(x(v)),op_negate(y(v)),op_negate(z(v)))
-// reference vector_544:varName[vector_FuncDef98, vector_FuncDef120, vector_FuncDef148, vector_FuncDef182]
-// expression VarName vector
-vector(// expression FunCall op_negate(x(v))
-// reference op_negate_545:varName[op_negate_FuncDef947]
-// expression VarName op_negate
-op_negate(// expression FunCall x(v)
-// reference x_546:varName[x_FuncDef64, x_FuncDef121, x_FuncDef199]
-// expression VarName x
-x(// reference v_548:varName[v_FuncParamDef540]
-// expression VarName v
-v)), // expression FunCall op_negate(y(v))
-// reference op_negate_553:varName[op_negate_FuncDef947]
-// expression VarName op_negate
-op_negate(// expression FunCall y(v)
-// reference y_554:varName[y_FuncDef79, y_FuncDef136, y_FuncDef214]
-// expression VarName y
-y(// reference v_556:varName[v_FuncParamDef540]
-// expression VarName v
-v)), // expression FunCall op_negate(z(v))
-// reference op_negate_561:varName[op_negate_FuncDef947]
-// expression VarName op_negate
-op_negate(// expression FunCall z(v)
-// reference z_562:varName[z_FuncDef151, z_FuncDef229]
-// expression VarName z
-z(// reference v_564:varName[v_FuncParamDef540]
-// expression VarName v
+// expression type Error
+// expression type (FuncSet ((Func Float Float Float R) (Func Float R) (Func T0 R) (Func Array R)))
+vector(// expression type Error
+// expression type (Func Float Float)
+op_negate(// expression type Float
+// expression type (FuncSet ((Func Float2 Float) (Func Float3 Float) (Func Float4 Float)))
+x(// expression type T0
+v)), // expression type Error
+// expression type (Func Float Float)
+op_negate(// expression type Float
+// expression type (FuncSet ((Func Float2 Float) (Func Float3 Float) (Func Float4 Float)))
+y(// expression type T0
+v)), // expression type Error
+// expression type (Func Float Float)
+op_negate(// expression type Float
+// expression type (FuncSet ((Func Float3 Float) (Func Float4 Float)))
+z(// expression type T0
 v)))}

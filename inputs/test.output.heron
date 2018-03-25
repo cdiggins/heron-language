@@ -1,8 +1,6 @@
-// Generated on Wed Mar 21 2018 20:58:38 GMT-0400 (Eastern Daylight Time)
-heron:std:0.1// scope module_333
-heron:tests:0.1{
-heron:std.array:0.1// scope funcDef_22
-// definition main_FuncDef22
+// Generated on Sat Mar 24 2018 16:42:23 GMT-0400 (Eastern Daylight Time)
+heron:std:0.1heron:tests:0.1{
+heron:std.array:0.1// definition type (Func R)
 
 /**
 function main() {
@@ -11,18 +9,14 @@ function main() {
 
     
 */
-// scope funcDef_22
-// definition main_FuncDef22
+// definition type (Func R)
 function main()
-// scope compoundStatement_21
 {
-// expression FunCall simpleTest()
-// reference simpleTest_17:varName[simpleTest_FuncDef331]
-// expression VarName simpleTest
+// expression type $916
+// expression type (Func R)
 simpleTest();
 }
-// scope funcDef_331
-// definition simpleTest_FuncDef331
+// definition type (Func R)
 
 /**
 function simpleTest() {
@@ -53,173 +47,126 @@ function simpleTest() {
     }
 
 */
-// scope funcDef_331
-// definition simpleTest_FuncDef331
+// definition type (Func R)
 function simpleTest()
-// scope compoundStatement_330
 {
-var // definition xs_VarDef34
-xs// expression ArrayLiteral [1,11,3]
-[// expression NumLiteral 1
-1, // expression NumLiteral 11
-11, // expression NumLiteral 3
+var // definition type (Array Num)
+xs// expression type (Array Num)
+[// expression type Num
+1, // expression type Num
+11, // expression type Num
 3];
-// expression FunCall print('Expect [1, 11, 3]')
-// reference print_38:varName[print_FuncDef1316]
-// expression VarName print
-print(// expression StrLiteral 'Expect [1, 11, 3]'
+// expression type Error
+// expression type (Func T0 R)
+print(// expression type Str
 'Expect [1, 11, 3]');
-// expression FunCall print(xs)
-// reference print_62:varName[print_FuncDef1316]
-// expression VarName print
-print(// reference xs_64:varName[xs_VarDef34]
-// expression VarName xs
+// expression type Error
+// expression type (Func T0 R)
+print(// expression type (Array Num)
 xs);
-// expression FunCall print('Expect 1, 11, 3')
-// reference print_69:varName[print_FuncDef1316]
-// expression VarName print
-print(// expression StrLiteral 'Expect 1, 11, 3'
+// expression type Error
+// expression type (Func T0 R)
+print(// expression type Str
 'Expect 1, 11, 3');
-// scope forLoop_101
-// definition x_ForLoopVarDef101
-for (x in // reference xs_92:varName[xs_VarDef34]
-// expression VarName xs
+// definition type $2999
+for (x in // expression type (Array Num)
 xs)
-// scope compoundStatement_100
 {
-// expression FunCall print(x)
-// reference print_94:varName[print_FuncDef1316]
-// expression VarName print
-print(// reference x_96:varName[x_ForLoopVarDef101]
-// expression VarName x
+// expression type undefined
+// expression type undefined
+print(// expression type undefined
 x);
 }
-// expression FunCall print('Expect 1')
-// reference print_103:varName[print_FuncDef1316]
-// expression VarName print
-print(// expression StrLiteral 'Expect 1'
+// expression type Error
+// expression type (Func T0 R)
+print(// expression type Str
 'Expect 1');
-// expression FunCall print(op[](xs,0))
-// reference print_118:varName[print_FuncDef1316]
-// expression VarName print
-print(// expression FunCall op[](xs,0)
-// reference op[]_119:varName[op[]_FuncDef917]
-// expression VarName op[]
-op[](// reference xs_121:varName[xs_VarDef34]
-// expression VarName xs
-xs, // expression NumLiteral 0
+// expression type Error
+// expression type (Func T0 R)
+print(// expression type Error
+// expression type (Func (Array T) Int T)
+op[](// expression type (Array Num)
+xs, // expression type Num
 0));
-// expression FunCall print('Expect 3')
-// reference print_129:varName[print_FuncDef1316]
-// expression VarName print
-print(// expression StrLiteral 'Expect 3'
+// expression type Error
+// expression type (Func T0 R)
+print(// expression type Str
 'Expect 3');
-// expression FunCall print(count(xs))
-// reference print_144:varName[print_FuncDef1316]
-// expression VarName print
-print(// expression FunCall count(xs)
-// reference count_145:varName[count_FuncDef435]
-// expression VarName count
-count(// reference xs_147:varName[xs_VarDef34]
-// expression VarName xs
+// expression type Error
+// expression type (Func T0 R)
+print(// expression type Int
+// expression type (FuncSet ((Func (Array T) Int) (Func (ArrayBuilder T) Int) (Func T0 T1 R)))
+count(// expression type (Array Num)
 xs));
-// expression FunCall print('Expect 1')
-// reference print_154:varName[print_FuncDef1316]
-// expression VarName print
-print(// expression StrLiteral 'Expect 1'
+// expression type Error
+// expression type (Func T0 R)
+print(// expression type Str
 'Expect 1');
-// expression FunCall print(first(xs))
-// reference print_169:varName[print_FuncDef1316]
-// expression VarName print
-print(// expression FunCall first(xs)
-// reference first_170:varName[first_FuncDef1735]
-// expression VarName first
-first(// reference xs_172:varName[xs_VarDef34]
-// expression VarName xs
+// expression type Error
+// expression type (Func T0 R)
+print(// expression type Error
+// expression type (Func T0 R)
+first(// expression type (Array Num)
 xs));
-// expression FunCall print('Expect 3')
-// reference print_179:varName[print_FuncDef1316]
-// expression VarName print
-print(// expression StrLiteral 'Expect 3'
+// expression type Error
+// expression type (Func T0 R)
+print(// expression type Str
 'Expect 3');
-// expression FunCall print(last(xs))
-// reference print_194:varName[print_FuncDef1316]
-// expression VarName print
-print(// expression FunCall last(xs)
-// reference last_195:varName[last_FuncDef1720]
-// expression VarName last
-last(// reference xs_197:varName[xs_VarDef34]
-// expression VarName xs
+// expression type Error
+// expression type (Func T0 R)
+print(// expression type Error
+// expression type (Func T0 R)
+last(// expression type (Array Num)
 xs));
-// expression FunCall print('Expect 1')
-// reference print_204:varName[print_FuncDef1316]
-// expression VarName print
-print(// expression StrLiteral 'Expect 1'
+// expression type Error
+// expression type (Func T0 R)
+print(// expression type Str
 'Expect 1');
-// expression FunCall print(min(xs))
-// reference print_219:varName[print_FuncDef1316]
-// expression VarName print
-print(// expression FunCall min(xs)
-// reference min_220:varName[min_FuncDef78]
-// expression VarName min
-min(// reference xs_222:varName[xs_VarDef34]
-// expression VarName xs
+// expression type Error
+// expression type (Func T0 R)
+print(// expression type Error
+// expression type (FuncSet ((Func Float Float Float) (Func T0 T0 R)))
+min(// expression type (Array Num)
 xs));
-// expression FunCall print('Expect 11')
-// reference print_229:varName[print_FuncDef1316]
-// expression VarName print
-print(// expression StrLiteral 'Expect 11'
+// expression type Error
+// expression type (Func T0 R)
+print(// expression type Str
 'Expect 11');
-// expression FunCall print(max(xs))
-// reference print_245:varName[print_FuncDef1316]
-// expression VarName print
-print(// expression FunCall max(xs)
-// reference max_246:varName[max_FuncDef103]
-// expression VarName max
-max(// reference xs_248:varName[xs_VarDef34]
-// expression VarName xs
+// expression type Error
+// expression type (Func T0 R)
+print(// expression type Error
+// expression type (FuncSet ((Func Float Float Float) (Func T0 T0 R)))
+max(// expression type (Array Num)
 xs));
-// expression FunCall print('Expect 3')
-// reference print_255:varName[print_FuncDef1316]
-// expression VarName print
-print(// expression StrLiteral 'Expect 3'
+// expression type Error
+// expression type (Func T0 R)
+print(// expression type Str
 'Expect 3');
-// expression FunCall print(median(xs))
-// reference print_270:varName[print_FuncDef1316]
-// expression VarName print
-print(// expression FunCall median(xs)
-// reference median_271:varName[median_FuncDef1666]
-// expression VarName median
-median(// reference xs_273:varName[xs_VarDef34]
-// expression VarName xs
+// expression type Error
+// expression type (Func T0 R)
+print(// expression type Error
+// expression type (Func T0 Error)
+median(// expression type (Array Num)
 xs));
-// expression FunCall print('Expect 15')
-// reference print_280:varName[print_FuncDef1316]
-// expression VarName print
-print(// expression StrLiteral 'Expect 15'
+// expression type Error
+// expression type (Func T0 R)
+print(// expression type Str
 'Expect 15');
-// expression FunCall print(sum(xs))
-// reference print_296:varName[print_FuncDef1316]
-// expression VarName print
-print(// expression FunCall sum(xs)
-// reference sum_297:varName[sum_FuncDef1203]
-// expression VarName sum
-sum(// reference xs_299:varName[xs_VarDef34]
-// expression VarName xs
+// expression type Error
+// expression type (Func T0 R)
+print(// expression type Error
+// expression type (Func T0 R)
+sum(// expression type (Array Num)
 xs));
-// expression FunCall print('Expect 5')
-// reference print_306:varName[print_FuncDef1316]
-// expression VarName print
-print(// expression StrLiteral 'Expect 5'
+// expression type Error
+// expression type (Func T0 R)
+print(// expression type Str
 'Expect 5');
-// expression FunCall print(average(xs))
-// reference print_321:varName[print_FuncDef1316]
-// expression VarName print
-print(// expression FunCall average(xs)
-// reference average_322:varName[average_FuncDef1243]
-// expression VarName average
-average(// reference xs_324:varName[xs_VarDef34]
-// expression VarName xs
+// expression type Error
+// expression type (Func T0 R)
+print(// expression type Error
+// expression type (Func T0 R)
+average(// expression type (Array Num)
 xs));
 }
 }

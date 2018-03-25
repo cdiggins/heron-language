@@ -7,6 +7,7 @@ import { Def, createDef } from "./heron-defs";
 import { Ref } from "./heron-refs";
 import { Expr, createExpr } from "./heron-expr";
 import { Package } from "./heron-package";
+import { computeFuncType } from "./heron-types";
 
 const g = heronGrammar;
 
@@ -40,6 +41,15 @@ export function createPackage(moduleNames: string[]): Package {
 
     // The package is doing the heavy lifting 
     pkg.processModules();
+    
+    // Compute types 
+    for (const f of pkg.allFuncDefs) {
+        let t = computeFuncType(f);
+        if (f.body) {
+            console.log(f.toString());
+            console.log(" : " + t);
+        }
+    }
     
     for (let sf of pkg.files) {
         let outputPath = sf.filePath.substr(0, sf.filePath.lastIndexOf('.')) + '.output.heron';

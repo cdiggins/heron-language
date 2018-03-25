@@ -15,10 +15,10 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-// Turn on for debugging purposes
-exports.trace = false;
+var trace = false;
+/** Turn on debug tracing */
 function setTrace(b) {
-    exports.trace = b;
+    trace = b;
 }
 exports.setTrace = setTrace;
 //=========================================
@@ -30,195 +30,90 @@ function newTypeVar() {
     return typeVariable("$" + id++);
 }
 exports.newTypeVar = newTypeVar;
+;
+/** Called when the type unfiication process fails.  */
+var TypeUnificationError = /** @class */ (function (_super) {
+    __extends(TypeUnificationError, _super);
+    function TypeUnificationError(u, a, b, msg) {
+        if (msg === void 0) { msg = ""; }
+        var _this = _super.call(this, "Unification failed between type " + a + " and " + b + " " + msg) || this;
+        _this.u = u;
+        _this.a = a;
+        _this.b = b;
+        _this.msg = msg;
+        return _this;
+    }
+    return TypeUnificationError;
+}(Error));
+exports.TypeUnificationError = TypeUnificationError;
 //=========================================
 // Classes that represent kinds of types  
-// Base class of a type: either a TypeArray, TypeVariable, or TypeConstant
+/** Base class of a type: either a PolyType, TypeVariable, or TypeConstant */
 var Type = /** @class */ (function () {
     function Type() {
-        // All type varible referenced somewhere by the type, or the type itself if it is a TypeVariable.
-        this.typeVars = [];
     }
-    Type.prototype.clone = function (newTypes) {
-        throw new Error("Clone must be overridden in derived class");
-    };
     return Type;
 }());
 exports.Type = Type;
-// A collection of a fixed number of types can be used to represent function types or tuple types. 
-// A list of types is usually encoded as a nested set of type pairs (TypeArrays with two elements).
-// If a TypeArray has Type parameters, quantified unbound type variables, it is considered a "PolyType".
-// Binding type variables is done through the clone function 
-var TypeArray = /** @class */ (function (_super) {
-    __extends(TypeArray, _super);
-    function TypeArray(types, computeParameters) {
+/** A collection of a fixed number of types can be used to represent function types or tuple types.
+ * A list of types is usually encoded as a nested set of type pairs (PolyTypes with two elements).
+ * The schama is a list of universally quantified variables.
+ */
+var PolyType = /** @class */ (function (_super) {
+    __extends(PolyType, _super);
+    function PolyType(types, schema) {
         var _this = _super.call(this) || this;
         _this.types = types;
-        // The type variables that are bound to this TypeArray. 
-        // Always a subset of typeVars. This could have the same type variable repeated twice. 
-        _this.typeParameterVars = [];
-        // Compute all referenced types 
-        for (var _i = 0, types_1 = types; _i < types_1.length; _i++) {
-            var t = types_1[_i];
-            _this.typeVars = _this.typeVars.concat(t.typeVars);
-        }
-        // Given just a type with type variables the sete of type parameters 
-        // can be inferred based on where they occur in the type tree
-        if (computeParameters)
-            _this.computeParameters();
+        _this.schema = schema;
         return _this;
     }
-    // A helper function to copy a parameter list 
-    TypeArray.prototype.cloneParameters = function (dest, from, newTypes) {
-        var params = [];
-        for (var _i = 0, from_1 = from; _i < from_1.length; _i++) {
-            var tv = from_1[_i];
-            var param = newTypes[tv.name];
-            if (param == undefined)
-                throw new Error("Could not find type parameter: " + tv.name);
-            params.push(param);
-        }
-        dest.typeParameterVars = params;
+    PolyType.prototype.typeSchemaString = function () {
+        var r = values(this.schema).join("!");
+        return r ? "!" + r + "." : r;
     };
-    // Returns a copy of the type array, substituting type variables using the lookup table.        
-    TypeArray.prototype.clone = function (newTypes) {
-        var r = new TypeArray(this.types.map(function (t) { return t.clone(newTypes); }), false);
-        this.cloneParameters(r, this.typeParameterVars, newTypes);
-        return r;
+    PolyType.prototype.toString = function () {
+        return this.typeSchemaString + "(" + this.types.join(" ") + ")";
     };
-    TypeArray.prototype.freshVariableNames = function (id) {
-        var newTypes = {};
-        for (var _i = 0, _a = descendantTypes(this); _i < _a.length; _i++) {
-            var t = _a[_i];
-            if (t instanceof TypeVariable)
-                newTypes[t.name] = newTypeVar();
-        }
-        return this.clone(newTypes);
-    };
-    // Returns a copy of the type array creating new parameter names. 
-    TypeArray.prototype.freshParameterNames = function () {
-        // Create a lookup table for the type parameters with new names 
-        var newTypes = {};
-        for (var _i = 0, _a = this.typeParameterNames; _i < _a.length; _i++) {
-            var tp = _a[_i];
-            newTypes[tp] = newTypeVar();
-        }
-        // Clone all of the types.             
-        var types = this.types.map(function (t) { return t.clone(newTypes); });
-        // Recursively call "freshParameterNames" on child type arrays as needed. 
-        types = types.map(function (t) { return t instanceof TypeArray ? t.freshParameterNames() : t; });
-        var r = new TypeArray(types, false);
-        // Now recreate the type parameter list
-        this.cloneParameters(r, this.typeParameterVars, newTypes);
-        return r;
-    };
-    Object.defineProperty(TypeArray.prototype, "typeParameterNames", {
-        // A list of the parameter names (without repetition)
-        get: function () {
-            return uniqueStrings(this.typeParameterVars.map(function (tv) { return tv.name; })).sort();
-        },
-        enumerable: true,
-        configurable: true
-    });
-    // Infer which type variables are actually type parameters (universally quantified) 
-    // based on their position. Mutates in place.
-    TypeArray.prototype.computeParameters = function () {
-        this.typeParameterVars = [];
-        // Recursively compute the parameters for base types
-        this.types.forEach(function (t) { if (t instanceof TypeArray)
-            t.computeParameters(); });
-        for (var i = 0; i < this.types.length; ++i) {
-            var child = this.types[i];
-            // Individual type variables are part of this scheme 
-            if (child instanceof TypeVariable)
-                _reassignAllTypeVars(child.name, this);
-            else if (child instanceof TypeArray) {
-                // Get the vars of the child type. 
-                // If any of them show up in multiple child arrays, then they 
-                // are part of the parent's child 
-                for (var _i = 0, _a = child.typeVars; _i < _a.length; _i++) {
-                    var childVar = _a[_i];
-                    if (_isTypeVarUsedElsewhere(this, childVar.name, i))
-                        _reassignAllTypeVars(childVar.name, this);
-                }
-            }
-        }
-        // Implementation validation step:
-        // Assure that the type scheme variables are all in the typeVars 
-        for (var _b = 0, _c = this.typeParameterVars; _b < _c.length; _b++) {
-            var v = _c[_b];
-            var i = this.typeVars.indexOf(v);
-            if (i < 0)
-                throw new Error("Internal error: type scheme references a variable that is not marked as referenced by the type variable");
-        }
-        return this;
-    };
-    Object.defineProperty(TypeArray.prototype, "typeParametersToString", {
-        // Provides a user friendly representation of the type scheme (list of type parameters)
-        get: function () {
-            return this.isPolyType
-                ? "!" + this.typeParameterNames.join("!") + "."
-                : "";
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(TypeArray.prototype, "isPolyType", {
-        // Returns true if there is at least one type parameter associated with this type array
-        get: function () {
-            return this.typeParameterVars.length > 0;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    //  A user friendly name 
-    TypeArray.prototype.toString = function () {
-        return this.typeParametersToString + "(" + this.types.join(' ') + ")";
-    };
-    return TypeArray;
+    return PolyType;
 }(Type));
-exports.TypeArray = TypeArray;
-// A type variable is used for generics (e.g. T0, TR). 
-// The type variable must belong to a type scheme of a polytype. This is like a "scope" for type variables.
-// Computing the type schema is done in an external function.
+exports.PolyType = PolyType;
+/** A MonoType is either a Type variable or a type constant: not a PolyType. */
+var MonoType = /** @class */ (function (_super) {
+    __extends(MonoType, _super);
+    function MonoType(name) {
+        var _this = _super.call(this) || this;
+        _this.name = name;
+        return _this;
+    }
+    return MonoType;
+}(Type));
+exports.MonoType = MonoType;
+/** A type variable is used for generics (e.g. T0, TR).
+ * The type variable must belong to a type scheme of a polytype. This is like a "scope" for type variables.
+ * Computing the type schema is done in an external function.
+ */
 var TypeVariable = /** @class */ (function (_super) {
     __extends(TypeVariable, _super);
     function TypeVariable(name) {
-        var _this = _super.call(this) || this;
-        _this.name = name;
-        _this.typeVars.push(_this);
-        return _this;
+        return _super.call(this, name) || this;
     }
-    TypeVariable.prototype.clone = function (newTypes) {
-        return this.name in newTypes
-            ? newTypes[this.name]
-            : newTypes[this.name] = new TypeVariable(this.name);
-    };
-    TypeVariable.prototype.toString = function () {
-        return this.name;
-    };
+    TypeVariable.prototype.toString = function () { return "'" + this.name; };
     return TypeVariable;
-}(Type));
+}(MonoType));
 exports.TypeVariable = TypeVariable;
-// A type constant is a fixed type (e.g. int, function). Also called a MonoType.
+/** A type constant is a fixed type (e.g. int, function). . */
 var TypeConstant = /** @class */ (function (_super) {
     __extends(TypeConstant, _super);
     function TypeConstant(name) {
-        var _this = _super.call(this) || this;
-        _this.name = name;
-        return _this;
+        return _super.call(this, name) || this;
     }
-    TypeConstant.prototype.toString = function () {
-        return this.name;
-    };
-    TypeConstant.prototype.clone = function (newTypes) {
-        return new TypeConstant(this.name);
-    };
+    TypeConstant.prototype.toString = function () { return this.name; };
     return TypeConstant;
-}(Type));
+}(MonoType));
 exports.TypeConstant = TypeConstant;
 //============================================================================
 // Helper classes and interfaces 
-// A type unifier is a mapping from a type variable to a best-fit type
+/** A type unifier is a best-fit type. It has a name, which is the original variable name. */
 var TypeUnifier = /** @class */ (function () {
     function TypeUnifier(name, unifier) {
         this.name = name;
@@ -229,7 +124,7 @@ var TypeUnifier = /** @class */ (function () {
 exports.TypeUnifier = TypeUnifier;
 //=======================================================================
 // Various functions
-// This is helper function helps determine whether a type variable should belong 
+/** This is helper function helps determine whether a type variable should belong */
 function _isTypeVarUsedElsewhere(t, varName, pos) {
     for (var i = 0; i < t.types.length; ++i)
         if (i != pos && t.types[i].typeVars.some(function (v) { return v.name == varName; }))
@@ -237,59 +132,35 @@ function _isTypeVarUsedElsewhere(t, varName, pos) {
     return false;
 }
 exports._isTypeVarUsedElsewhere = _isTypeVarUsedElsewhere;
-// Associate the variable with a new type scheme. Removing it from the previous varScheme 
-function _reassignVarScheme(v, t) {
-    // Remove the variable from all other type schemes below the given one. 
-    for (var _i = 0, _a = descendantTypes(t); _i < _a.length; _i++) {
-        var x = _a[_i];
-        if (x instanceof TypeArray)
-            x.typeParameterVars = x.typeParameterVars.filter(function (vd) { return vd.name != v.name; });
-    }
-    t.typeParameterVars.push(v);
-}
-exports._reassignVarScheme = _reassignVarScheme;
-// Associate all variables of the given name in the TypeArray with the TypeArray's scheme
-function _reassignAllTypeVars(varName, t) {
-    t.typeVars.filter(function (v) { return v.name == varName; }).forEach(function (v) { return _reassignVarScheme(v, t); });
-}
-exports._reassignAllTypeVars = _reassignAllTypeVars;
-function replaceVarWithType(root, v, r) {
-    // TODO: look for the variable in t. That would be recursive.
-    if (root instanceof TypeArray) {
-        // If we are replacing a "type parameter"
-        root.typeParameterVars = root.typeParameterVars.filter(function (pv) { return !isTypeVariable(pv, v.name); });
-        for (var i = 0; i < root.types.length; ++i) {
-            var t = root.types[i];
-            if (isTypeVariable(t, v.name))
-                root.types[i] = freshParameterNames(r);
-            else if (t instanceof TypeArray)
-                replaceVarWithType(t, v, r);
-        }
-    }
-}
-exports.replaceVarWithType = replaceVarWithType;
 //================================================
 // A classes used to implement unification.
-// Use this class to unify types that are constrained together.
-var Unifier = /** @class */ (function () {
-    function Unifier() {
-        // Given a type variable name find the unifier. Multiple type variables will map to the same unifier 
+/** Find a unified type. */
+var TypeResolver = /** @class */ (function () {
+    /** The consumer of the class has to provide a startegy for choosing the best unifier
+     * when the unifier encounters different type constants. Examples strategies are:
+     * - throw an error.
+     * - see if one is a sub-type of another
+     * - look for an appropriate type-cast
+     * This is a great place to add logging as well, to have insights into the unification process.
+     */
+    function TypeResolver(chooseTypeStrategy) {
+        this.chooseTypeStrategy = chooseTypeStrategy;
+        /* Given a type variable name find the unifier. Multiple type variables will map to the same unifier. */
         this.unifiers = {};
     }
-    // Unify both types, returning the most specific type possible. 
-    // When a type variable is unified with something the new unifier is stored. 
-    // Note: TypeFunctions and TypePairs ar handled as TypeArrays
-    // * Constants are preferred over lists and variables
-    // * Lists are preferred over variables
-    // * Given two variables, the first one is chosen. 
-    Unifier.prototype.unifyTypes = function (t1, t2, depth) {
+    /** Unify both types, returning the most specific type possible.
+     * When a type variable is unified with something the new unifier is stored.
+     * - Constants are preferred over lists and variables
+     * - Lists are preferred over variables
+     * - Given two variables, the first one is chosen.
+     * - given two different constants, the unifier uses the provided strategy
+     */
+    TypeResolver.prototype.unifyTypes = function (t1, t2, depth) {
         if (depth === void 0) { depth = 0; }
-        if (!t1 || !t2) {
+        if (!t1 || !t2)
             throw new Error("Missing type expression");
-        }
-        if (t1 === t2) {
+        if (t1 === t2)
             return t1;
-        }
         if (t1 instanceof TypeVariable) {
             var r = this._updateUnifier(t1, t2, depth);
             this._updateAllUnifiers(t1.name, t2);
@@ -302,23 +173,19 @@ var Unifier = /** @class */ (function () {
         }
         else if (t1 instanceof TypeConstant && t2 instanceof TypeConstant) {
             if (t1.name != t2.name)
-                return sumType([t1, t2]);
-            else
-                return t1;
+                return this.chooseTypeStrategy(t1, t2);
+            return t1;
         }
         else if (t1 instanceof TypeConstant || t2 instanceof TypeConstant) {
-            return sumType([t1, t2]);
+            throw new TypeUnificationError(this, t1, t2);
         }
-        else if (t1 instanceof TypeArray && t2 instanceof TypeArray) {
-            if (isSumType(t1) || isSumType(t2)) {
-                return sumType([t1, t2]);
-            }
+        else if (t1 instanceof PolyType && t2 instanceof PolyType) {
             return this._unifyLists(t1, t2, depth + 1);
         }
-        throw new Error("Internal error, unexpected code path: " + t1 + " and " + t2);
+        assert(false, "unexpected code path: " + t1 + " and " + t2);
     };
-    Object.defineProperty(Unifier.prototype, "state", {
-        // Debug function that dumps prints out a representation of the engine state. 
+    Object.defineProperty(TypeResolver.prototype, "state", {
+        /** Debug function that dumps prints out a representation of the engine state. */
         get: function () {
             var results = [];
             for (var k in this.unifiers) {
@@ -333,8 +200,10 @@ var Unifier = /** @class */ (function () {
     });
     // Replaces all variables in a type expression with the unified version
     // The previousVars variable allows detection of cyclical references
-    Unifier.prototype.getUnifiedType = function (expr, previousVars, unifiedVars) {
+    TypeResolver.prototype.getUnifiedType = function (expr, previousVars, unifiedVars) {
         var _this = this;
+        if (previousVars === void 0) { previousVars = []; }
+        if (unifiedVars === void 0) { unifiedVars = {}; }
         if (expr instanceof TypeConstant)
             return expr;
         else if (expr instanceof TypeVariable) {
@@ -349,10 +218,10 @@ var Unifier = /** @class */ (function () {
                 return u.unifier;
             else if (u.unifier instanceof TypeConstant)
                 return u.unifier;
-            else if (u.unifier instanceof TypeArray) {
+            else if (u.unifier instanceof PolyType) {
                 // TODO: this logic has to move into the unification step. 
                 if (u.name in unifiedVars) {
-                    // We have already seen this unified var before
+                    // We have already seen this unified const before
                     var u2 = u.unifier.freshParameterNames();
                     return this.getUnifiedType(u2, [expr.name].concat(previousVars), unifiedVars);
                 }
@@ -364,30 +233,27 @@ var Unifier = /** @class */ (function () {
             else
                 throw new Error("Unhandled kind of type " + expr);
         }
-        else if (expr instanceof TypeArray) {
+        else if (expr instanceof PolyType) {
             var types = expr.types.map(function (t) { return _this.getUnifiedType(t, previousVars, unifiedVars); });
-            var r = new TypeArray(types, false);
+            var r = new PolyType(types, false);
             return r;
         }
         else
             throw new Error("Unrecognized kind of type expression " + expr);
     };
-    // Choose one of two unifiers, or continue the unification process if necessary
-    Unifier.prototype._chooseBestUnifier = function (t1, t2, depth) {
-        var r;
+    /** Choose one of two unifiers, or continue the unification process if necessary */
+    TypeResolver.prototype._chooseBestUnifier = function (t1, t2, depth) {
         if (t1 instanceof TypeVariable && t2 instanceof TypeVariable)
-            r = t1;
+            return t1;
         else if (t1 instanceof TypeVariable)
-            r = t2;
+            return t2;
         else if (t2 instanceof TypeVariable)
-            r = t1;
+            return t1;
         else
-            r = this.unifyTypes(t1, t2, depth + 1);
-        //if (trace) console.log(`Chose type for unification ${r} between ${t1} and ${t2} at depth ${depth}`)
-        return r;
+            return this.unifyTypes(t1, t2, depth + 1);
     };
     // Unifying lists involves unifying each element
-    Unifier.prototype._unifyLists = function (list1, list2, depth) {
+    TypeResolver.prototype._unifyLists = function (list1, list2, depth) {
         if (list1.types.length != list2.types.length)
             throw new Error("Cannot unify differently sized lists: " + list1 + " and " + list2);
         var rtypes = [];
@@ -397,7 +263,7 @@ var Unifier = /** @class */ (function () {
         return list1;
     };
     // All unifiers that refer to varName as the unifier are pointed to the new unifier 
-    Unifier.prototype._updateVariableUnifiers = function (varName, u) {
+    TypeResolver.prototype._updateVariableUnifiers = function (varName, u) {
         for (var x in this.unifiers) {
             var t = this.unifiers[x].unifier;
             if (t instanceof TypeVariable)
@@ -407,14 +273,14 @@ var Unifier = /** @class */ (function () {
     };
     // Go through a type and replace all instances of a variable with the new type
     // unless the new type is a variable. 
-    Unifier.prototype._replaceVarWithType = function (target, varName, replace) {
+    TypeResolver.prototype._replaceVarWithType = function (target, varName, replace) {
         //if (trace) console.log("Replacing variable " + varName + " in target  " + target + " with " + replace);
         // Just leave it as is. 
         // Replacing a variable with a variable is kind of meaningless.
         if (replace instanceof TypeVariable)
             return target;
         // Create new parameter names as needed 
-        if (replace instanceof TypeArray) {
+        if (replace instanceof PolyType) {
             if (replace.isPolyType) {
                 // Get some new parameters for the poly type
                 replace = freshParameterNames(replace);
@@ -430,7 +296,7 @@ var Unifier = /** @class */ (function () {
         else if (target instanceof TypeConstant) {
             return target;
         }
-        else if (target instanceof TypeArray) {
+        else if (target instanceof PolyType) {
             // TODO?: look at the parameters. Am I replacing a parameter? If so, throw it out. 
             // BUT!!: I don't think I have to do this step, because at the end the type will be constructed correctly.
             return target.clone({ varName: replace });
@@ -439,7 +305,7 @@ var Unifier = /** @class */ (function () {
             throw new Error("Unrecognized kind of type " + target);
         }
     };
-    Object.defineProperty(Unifier.prototype, "_allUnifiers", {
+    Object.defineProperty(TypeResolver.prototype, "_allUnifiers", {
         // Returns all of the unifiers as an array 
         get: function () {
             var r = [];
@@ -451,7 +317,7 @@ var Unifier = /** @class */ (function () {
         configurable: true
     });
     // Update all unifiers once I am making a replacement 
-    Unifier.prototype._updateAllUnifiers = function (a, t) {
+    TypeResolver.prototype._updateAllUnifiers = function (a, t) {
         for (var _i = 0, _a = this._allUnifiers; _i < _a.length; _i++) {
             var tu = _a[_i];
             tu.unifier = this._replaceVarWithType(tu.unifier, a, t);
@@ -459,7 +325,7 @@ var Unifier = /** @class */ (function () {
     };
     // Computes the best unifier between the current unifier and the new variable.        
     // Updates all unifiers which point to a (or to t if t is a TypeVar) to use the new type. 
-    Unifier.prototype._updateUnifier = function (a, t, depth) {
+    TypeResolver.prototype._updateUnifier = function (a, t, depth) {
         var u = this._getOrCreateUnifier(a);
         if (t instanceof TypeVariable)
             t = this._getOrCreateUnifier(t).unifier;
@@ -470,15 +336,15 @@ var Unifier = /** @class */ (function () {
         return u.unifier;
     };
     // Gets or creates a type unifiers for a type variables
-    Unifier.prototype._getOrCreateUnifier = function (t) {
+    TypeResolver.prototype._getOrCreateUnifier = function (t) {
         if (!(t.name in this.unifiers))
             return this.unifiers[t.name] = new TypeUnifier(t.name, t);
         else
             return this.unifiers[t.name];
     };
-    return Unifier;
+    return TypeResolver;
 }());
-exports.Unifier = Unifier;
+exports.TypeResolver = TypeResolver;
 //======================================================================================
 // Helper functions 
 // Creates a type list as nested pairs ("cons" cells ala lisp). 
@@ -493,7 +359,7 @@ function rowPolymorphicList(types) {
             throw new Error("Expected a row variable in the final position");
     }
     else
-        return typeArray([types[0], rowPolymorphicList(types.slice(1))]);
+        return polyType([types[0], rowPolymorphicList(types.slice(1))]);
 }
 exports.rowPolymorphicList = rowPolymorphicList;
 // Creates a row-polymorphic function type: adding the implicit row variable 
@@ -505,10 +371,10 @@ function rowPolymorphicFunction(inputs, outputs) {
 }
 exports.rowPolymorphicFunction = rowPolymorphicFunction;
 // Creates a type array from an array of types
-function typeArray(types) {
-    return new TypeArray(types, true);
+function polyType(types) {
+    return new PolyType(types, true);
 }
-exports.typeArray = typeArray;
+exports.polyType = polyType;
 // Creates a type constant 
 function typeConstant(name) {
     return new TypeConstant(name);
@@ -519,39 +385,39 @@ function typeVariable(name) {
     return new TypeVariable(name);
 }
 exports.typeVariable = typeVariable;
-// Creates a function type, as a special kind of a TypeArray 
+// Creates a function type, as a special kind of a PolyType 
 function functionType(input, output) {
-    return typeArray([input, typeConstant('->'), output]);
+    return polyType([input, typeConstant('->'), output]);
 }
 exports.functionType = functionType;
 // Creates a sum type. If any of the types in the array are a sumType, it is flattened.  
 function sumType(types) {
     var r = [];
-    for (var _i = 0, types_2 = types; _i < types_2.length; _i++) {
-        var t = types_2[_i];
+    for (var _i = 0, types_1 = types; _i < types_1.length; _i++) {
+        var t = types_1[_i];
         if (isSumType(t))
             r.push.apply(r, sumTypeOptions(t));
         else
             r.push(t);
     }
-    return typeArray([typeConstant('|'), typeArray(r)]);
+    return polyType([typeConstant('|'), polyType(r)]);
 }
 exports.sumType = sumType;
-// Creates an array type, as a special kind of TypeArray
+// Creates an array type, as a special kind of PolyType
 function arrayType(element) {
-    return typeArray([element, typeConstant('[]')]);
+    return polyType([element, typeConstant('[]')]);
 }
 exports.arrayType = arrayType;
-// Creates a list type, as a special kind of TypeArray
+// Creates a list type, as a special kind of PolyType
 function listType(element) {
-    return typeArray([element, typeConstant('*')]);
+    return polyType([element, typeConstant('*')]);
 }
 exports.listType = listType;
-// Creates a recursive type, as a special kind of TypeArray. The numberical value 
-// refers to the depth of the recursion: how many TypeArrays you have to go up 
+// Creates a recursive type, as a special kind of PolyType. The numberical value 
+// refers to the depth of the recursion: how many PolyTypes you have to go up 
 // to find the recurison base case. 
 function recursiveType(depth) {
-    return typeArray([typeConstant('rec'), typeConstant(depth.toString())]);
+    return polyType([typeConstant('rec'), typeConstant(depth.toString())]);
 }
 exports.recursiveType = recursiveType;
 // Returns true if and only if the type is a type constant with the specified name
@@ -570,18 +436,18 @@ function variableOccurs(name, type) {
 }
 exports.variableOccurs = variableOccurs;
 // Returns true if and only if the type is a type constant with the specified name
-function isTypeArray(t, name) {
-    return t instanceof TypeArray && t.types.length == 2 && isTypeConstant(t.types[1], '[]');
+function isPolyType(t, name) {
+    return t instanceof PolyType && t.types.length == 2 && isTypeConstant(t.types[1], '[]');
 }
-exports.isTypeArray = isTypeArray;
+exports.isPolyType = isPolyType;
 // Returns true iff the type is a TypeArary representing a function type
 function isFunctionType(t) {
-    return t instanceof TypeArray && t.types.length == 3 && isTypeConstant(t.types[1], '->');
+    return t instanceof PolyType && t.types.length == 3 && isTypeConstant(t.types[1], '->');
 }
 exports.isFunctionType = isFunctionType;
 // Returns true iff the type is a TypeArary representing a sum type
 function isSumType(t) {
-    return t instanceof TypeArray && t.types.length == 2 && isTypeConstant(t.types[0], '|');
+    return t instanceof PolyType && t.types.length == 2 && isTypeConstant(t.types[0], '|');
 }
 exports.isSumType = isSumType;
 function sumTypeOptions(t) {
@@ -590,14 +456,14 @@ function sumTypeOptions(t) {
     return t.types[1].types;
 }
 exports.sumTypeOptions = sumTypeOptions;
-// Returns the input types (argument types) of a TypeArray representing a function type
+// Returns the input types (argument types) of a PolyType representing a function type
 function functionInput(t) {
     if (!isFunctionType(t))
         throw new Error("Expected a function type");
     return t.types[0];
 }
 exports.functionInput = functionInput;
-// Returns the output types (return types) of a TypeArray representing a function type
+// Returns the output types (return types) of a PolyType representing a function type
 function functionOutput(t) {
     if (!isFunctionType(t))
         throw new Error("Expected a function type");
@@ -608,14 +474,14 @@ exports.functionOutput = functionOutput;
 function descendantTypes(t, r) {
     if (r === void 0) { r = []; }
     r.push(t);
-    if (t instanceof TypeArray)
+    if (t instanceof PolyType)
         t.types.forEach(function (t2) { return descendantTypes(t2, r); });
     return r;
 }
 exports.descendantTypes = descendantTypes;
 // Returns true if the type is a polytype
 function isPolyType(t) {
-    return t instanceof TypeArray && t.typeParameterVars.length > 0;
+    return t instanceof PolyType && t.typeParameterVars.length > 0;
 }
 exports.isPolyType = isPolyType;
 // Returns true if the type is a function that generates a polytype.
@@ -627,16 +493,16 @@ function generatesPolytypes(t) {
 exports.generatesPolytypes = generatesPolytypes;
 // Global function for fresh variable names
 function freshVariableNames(t, id) {
-    return (t instanceof TypeArray) ? t.freshVariableNames(id) : t;
+    return (t instanceof PolyType) ? t.freshVariableNames(id) : t;
 }
 exports.freshVariableNames = freshVariableNames;
 // Global function for fresh parameter names
 function freshParameterNames(t) {
-    return (t instanceof TypeArray) ? t.freshParameterNames() : t;
+    return (t instanceof PolyType) ? t.freshParameterNames() : t;
 }
 exports.freshParameterNames = freshParameterNames;
 function computeParameters(t) {
-    return (t instanceof TypeArray) ? t.computeParameters() : t;
+    return (t instanceof PolyType) ? t.computeParameters() : t;
 }
 exports.computeParameters = computeParameters;
 //========================================================
@@ -697,7 +563,7 @@ function isValid(type) {
         if (isTypeConstant(t, "rec")) {
             return false;
         }
-        else if (t instanceof TypeArray) {
+        else if (t instanceof PolyType) {
             if (isFunctionType(t))
                 for (var _b = 0, _c = t.typeParameterNames; _b < _c.length; _b++) {
                     var p = _c[_b];
@@ -721,7 +587,7 @@ function composeFunctions(f, g) {
         throw new Error("Expected a function type for g");
     f = f.freshVariableNames(0);
     g = g.freshVariableNames(1);
-    if (exports.trace) {
+    if (trace) {
         console.log("f: " + f);
         console.log("g: " + g);
     }
@@ -729,18 +595,18 @@ function composeFunctions(f, g) {
     var outF = functionOutput(f);
     var inG = functionInput(g);
     var outG = functionOutput(g);
-    var e = new Unifier();
+    var e = new TypeResolver();
     e.unifyTypes(outF, inG);
     var input = e.getUnifiedType(inF, [], {});
     var output = e.getUnifiedType(outG, [], {});
     var r = functionType(input, output);
-    if (exports.trace) {
+    if (trace) {
         console.log(e.state);
         console.log("Intermediate result: " + r);
     }
     // Recompute parameters.
     r.computeParameters();
-    if (exports.trace) {
+    if (trace) {
         console.log("Final result: " + r);
     }
     r = normalizeVarNames(r);
@@ -767,38 +633,10 @@ function composeFunctionChainReverse(fxns) {
     return t;
 }
 exports.composeFunctionChainReverse = composeFunctionChainReverse;
-// Creates a function type that generates the given type.
-// If given no type returns the empty quotation.
-function quotation(x) {
-    var row = typeVariable('_');
-    x = freshParameterNames(x);
-    var r = functionType(row, x ? typeArray([x, row]) : row);
-    r.computeParameters();
-    r = normalizeVarNames(r);
-    return r;
-}
-exports.quotation = quotation;
-// Returns the type of the id function 
-function idFunction() {
-    return quotation(null);
-}
-exports.idFunction = idFunction;
-//=====================================================================
-// General purpose utility functions
-// Returns only the uniquely named strings
-function uniqueStrings(xs) {
-    var r = {};
-    for (var _i = 0, xs_1 = xs; _i < xs_1.length; _i++) {
-        var x = xs_1[_i];
-        r[x] = true;
-    }
-    return Object.keys(r);
-}
-exports.uniqueStrings = uniqueStrings;
 //================================================================
 // Pretty type formatting. 
 function flattenFunctionIO(t) {
-    if (t instanceof TypeArray) {
+    if (t instanceof PolyType) {
         return [t.types[0]].concat(flattenFunctionIO(t.types[1]));
     }
     else {
@@ -821,9 +659,67 @@ function typeToString(t) {
     else if (t instanceof TypeConstant) {
         return t.name;
     }
-    else if (t instanceof TypeArray) {
+    else if (t instanceof PolyType) {
         return "[" + t.types.map(typeToString).join(' ') + "]";
     }
 }
 exports.typeToString = typeToString;
+//================================================
+// Helper functions
+/** Given a variable name remapping function creates new types.  */
+function clone(t, remapper) {
+    if (t instanceof TypeVariable) {
+        return new TypeVariable(remapper(t.name));
+    }
+    else if (t instanceof TypeConstant) {
+        return t;
+    }
+    else if (t instanceof PolyType) {
+        var schema = {};
+        for (var _i = 0, _a = keys(t.schema); _i < _a.length; _i++) {
+            var k = _a[_i];
+            schema[remapper(k)] = clone(t.schema[k], remapper);
+        }
+        var types = t.types.map(function (x) { return clone(x, remapper); });
+    }
+}
+exports.clone = clone;
+/** Returns the keys of any object.  */
+function keys(obj) {
+    return Object.keys(obj);
+}
+exports.keys = keys;
+/** Returns the values of any object.  */
+function values(obj) {
+    return keys(obj).map(function (k) { return obj[k]; });
+}
+exports.values = values;
+/** Given an array of values creates a lookup.  */
+function toLookup(vals, nameFunc) {
+    var r = {};
+    for (var _i = 0, vals_1 = vals; _i < vals_1.length; _i++) {
+        var v = vals_1[_i];
+        r[nameFunc(v)] = v;
+    }
+    return r;
+}
+exports.toLookup = toLookup;
+/** Creates a type lookup.  */
+function toTypeLookup(vals) {
+    return toLookup(vals, function (v) { return v.name; });
+}
+exports.toTypeLookup = toTypeLookup;
+/** Things that should never happen. This is used primarily to catch refactoring errors,
+ * and to help the reader understand the code.
+*/
+function assert(condition, msg) {
+    if (!condition)
+        throw new Error("Internal error: " + msg);
+}
+exports.assert = assert;
+/** Creates a unique string list. */
+function uniqueStrings(xs) {
+    return keys(toLookup(xs, function (_) { return _; }));
+}
+exports.uniqueStrings = uniqueStrings;
 //# sourceMappingURL=type-system.js.map

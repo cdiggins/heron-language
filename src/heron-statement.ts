@@ -3,12 +3,16 @@ import { FuncDef, VarDef, FuncParamDef, createFuncParamDef, getDef, Def } from "
 import { validateNode, visitAst, throwError, HeronAstNode, wrapInCompoundStatement } from "./heron-ast-rewrite";
 import { Ref } from "./heron-refs";
 import { Expr, createExpr } from "./heron-expr";
+import { Type } from "./type-system";
 
 export class Statement {
     constructor(
         public node: HeronAstNode, 
     )
     { node.statement = this; }
+
+    // Added as a post-process step. 
+    type: Type;
 }
 
 export class CompoundStatement extends Statement {

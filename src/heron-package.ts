@@ -23,6 +23,16 @@ export class Package
         return this.scope.allRefs();
     }
     
+    get allFuncDefs(): FuncDef[] {
+        let r: FuncDef[] = [];
+        for (let m of this.modules) 
+            for (let c of m.body.children)
+                if (c.def instanceof FuncDef)
+                    r.push(c.def);
+        r.sort((d1, d2) => (d1.name < d2.name) ? -1 : (d1.name > d2.name ? 1 : 0));
+        return r;
+    }
+
     // When done adding files call "processModules" to sort the dependencies 
     addFile(node: HeronAstNode, intrinsic: boolean, filePath: string) {        
         validateNode(node, 'file');
@@ -102,16 +112,15 @@ export class Package
             visitAst(ast, rewriteIfStatements);
         }
 
-        // Firt load all intrinsic definitions into the global scope
-        for (let m of this.modules) 
-            if (m.file.intrinsic)
-                this.loadModuleDefs(m);                
-                
         // Analyze names for each module.
         let moduleScopes = {};
         for (let m of this.modules) 
         {
             this.pushScope(m.node);
+            // Firt load all intrinsic definitions into the global scope
+            for (let m of this.modules) 
+                if (m.file.intrinsic)
+                    this.loadModuleDefs(m);                                    
             this.loadModuleDependencies(m);
             this.loadModuleDefs(m);                
             nameAnalyzer.visitNode(m.node, this);            

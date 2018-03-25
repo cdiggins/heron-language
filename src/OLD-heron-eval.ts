@@ -3,7 +3,7 @@ import { Statement, CompoundStatement, IfStatement, EmptyStatement, VarDeclState
 import { throwError, HeronAstNode, validateNode, visitAst } from "./heron-ast-rewrite";
 import { FuncDef, FuncParamDef } from "./heron-defs";
 import { FuncRef, TypeRef, TypeParamRef, Ref } from "./heron-refs";
-import { typeConstant, typeArray, functionType, Type, functionInput, TypeArray, functionOutput, typeVariable, TypeVariable, TypeConstant, isFunctionType, isTypeConstant, Unifier } from "./type-system";
+import { typeConstant, typeArray, functionType, Type, functionInput, TypeArray, functionOutput, typeVariable, TypeVariable, TypeConstant, isFunctionType, isTypeConstant, TypeResolver } from "./type-system";
 import { Module, Package } from "./heron-package";
 
 export module Types 
@@ -348,16 +348,6 @@ export function findFunc(mod: Module, name: string): FuncDef {
     return null;
 }
 
-export function getAllFuncDefs(pkg: Package): FuncDef[] {
-    let r: FuncDef[] = [];
-    for (let m of pkg.modules) 
-        for (let c of m.body.children)
-            if (c.def instanceof FuncDef)
-                r.push(c.def);
-    r.sort((d1, d2) => (d1.name < d2.name) ? -1 : (d1.name > d2.name ? 1 : 0));
-    return r;
-}
-
 export function getAllRefs(node: HeronAstNode): Ref[] {
     let refs: Ref[] = [];
     visitAst(node, n => !n.ref || refs.push(n.ref));
@@ -369,7 +359,7 @@ export function argumentIndex(f: FunCall, x: Expr): number {
 }
 
 export function getFuncParamType(f: FuncDef, n: number): Type {
-    let type = getFuncType(f);
+    let type = computeFuncType(f);
     let inputs = functionInput(type);
     if (!(inputs instanceof TypeArray)) 
         throw new Error("Function input must be a TypeArray");
@@ -377,7 +367,7 @@ export function getFuncParamType(f: FuncDef, n: number): Type {
 }
 
 export function getFuncReturnType(f: FuncDef): Type {
-    let type = getFuncType(f);
+    let type = computeFuncType(f);
     return functionOutput(type);
 }
 
@@ -441,7 +431,7 @@ export function getParamType(refs: Ref[], p: FuncParamDef): Type {
     return p.type = typeUnion(types);
 }
 
-export function getFuncType(f: FuncDef): Type {
+export function computeFuncType(f: FuncDef): Type {
     if (f.type) return f.type;
     // This is a temporary.
     f.type = funcTypeWithNArgs(f.params.length);
@@ -453,9 +443,9 @@ export function getFuncType(f: FuncDef): Type {
 }
 
 export function analyzeFunctions(pkg: Package) {
-    let funcs = getAllFuncDefs(pkg);
+    let funcs = pkg.allFuncDefs;
     for (let f of funcs) {
-        let t = getFuncType(f);
+        let t = computeFuncType(f);
         console.log(f.name + ' : ' + t.toString())
     }
     // * Get all of the functions from all of the modules. 

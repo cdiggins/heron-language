@@ -7,8 +7,10 @@ import { parseFile, parseModule, createPackage } from "./heron-compiler";
 import { Ref } from "./heron-refs";
 import { Package, Module } from "./heron-package";
 import { FuncDef, FuncParamDef } from "./heron-defs";
-import { Evaluator, Types, union, analyzeFunctions, findFunc } from "./heron-eval";
+//import { Evaluator, Types, union, analyzeFunctions, findFunc } from "./heron-eval";
 import { FunCall, Expr } from "./heron-expr";
+import { getTraits } from "./heron-traits";
+import { computeFuncType } from "./heron-types";
 
 const m = Myna.Myna;
 const g = heronGrammar;
@@ -148,6 +150,27 @@ function outputPackageStats(pkg: Package) {
     for (var d of multiDefs)
         console.log(refDetails(d));
 }
+
+function outputTraits(pkg: Package) {
+    const traits = getTraits(pkg);
+    for (const t of traits) {
+        console.log("Trait " + t.type);
+        for (const f of t.funcs) {
+            console.log("  " +f.toString())
+        }
+    }
+}
+
+function outputFunctionTypes(pkg: Package) {
+    for (const f of pkg.allFuncDefs) {
+        let t = computeFuncType(f);
+        if (f.body) {
+            console.log(f.toString());
+            console.log(" : " + t);
+        }
+    }
+}
+
 function tests() {
     let inputFiles = ['geometry-vector3', 'array', 'test'];
     let pkg = createPackage(inputFiles);
@@ -157,16 +180,23 @@ function tests() {
     let mainMod = pkg.getModule(modName);
     if (!mainMod)
         throw new Error("Could not find module: " + modName);
-    let mainFunc = findFunc(mainMod, 'main');
-    if (!mainFunc)
-        throw new Error("Could not find entry point function " + modName + "." + mainFunc);
-    let evaluator = new Evaluator();
+    
+    //let mainFunc = findFunc(mainMod, 'main');
+    //if (!mainFunc)
+    //   throw new Error("Could not find entry point function " + modName + "." + mainFunc);
+    // let evaluator = new Evaluator();
     
     // Try to figure out the value of all the called functions. 
     //evaluator.evalFunc(mainFunc);
 
     // Look at the usages of each parameter in each function.
-    analyzeFunctions(pkg);
+    // analyzeFunctions(pkg);
+
+    // AN experiemnt for guessing Traits. 
+    // I have decided that traits need to be declared. 
+    //outputTraits(pkg);
+
+    outputFunctionTypes(pkg);
 
     console.log('Done');
 }

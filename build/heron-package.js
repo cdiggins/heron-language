@@ -28,6 +28,23 @@ var Package = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(Package.prototype, "allFuncDefs", {
+        get: function () {
+            var r = [];
+            for (var _i = 0, _a = this.modules; _i < _a.length; _i++) {
+                var m = _a[_i];
+                for (var _b = 0, _c = m.body.children; _b < _c.length; _b++) {
+                    var c = _c[_b];
+                    if (c.def instanceof heron_defs_1.FuncDef)
+                        r.push(c.def);
+                }
+            }
+            r.sort(function (d1, d2) { return (d1.name < d2.name) ? -1 : (d1.name > d2.name ? 1 : 0); });
+            return r;
+        },
+        enumerable: true,
+        configurable: true
+    });
     // When done adding files call "processModules" to sort the dependencies 
     Package.prototype.addFile = function (node, intrinsic, filePath) {
         var _this = this;
@@ -96,17 +113,17 @@ var Package = /** @class */ (function () {
             // Rewrite the if statements 
             heron_ast_rewrite_1.visitAst(ast, heron_statement_1.rewriteIfStatements);
         }
-        // Firt load all intrinsic definitions into the global scope
-        for (var _b = 0, _c = this.modules; _b < _c.length; _b++) {
-            var m = _c[_b];
-            if (m.file.intrinsic)
-                this.loadModuleDefs(m);
-        }
         // Analyze names for each module.
         var moduleScopes = {};
-        for (var _d = 0, _e = this.modules; _d < _e.length; _d++) {
-            var m = _e[_d];
+        for (var _b = 0, _c = this.modules; _b < _c.length; _b++) {
+            var m = _c[_b];
             this.pushScope(m.node);
+            // Firt load all intrinsic definitions into the global scope
+            for (var _d = 0, _e = this.modules; _d < _e.length; _d++) {
+                var m_1 = _e[_d];
+                if (m_1.file.intrinsic)
+                    this.loadModuleDefs(m_1);
+            }
             this.loadModuleDependencies(m);
             this.loadModuleDefs(m);
             nameAnalyzer.visitNode(m.node, this);

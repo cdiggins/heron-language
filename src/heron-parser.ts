@@ -96,9 +96,9 @@ const g = new function() {
     this.moduleName = this.urn.ast;
 
     // Type information 
-    this.recType        = m.delay(() => _this.type);
-    this.typeParam      = this.recType.ast;
-    this.typeParamList  = guardedWsDelimSeq('<', commaDelimited(this.typeParam), '>').ast;
+    this.recType        = m.delay(() => _this.typeExpr);
+    this.typeParam      = this.recType;
+    this.typeParamList  = guardedWsDelimSeq('<', commaDelimited(this.typeParam), '>');
     this.typeName       = this.identifier.ast;
     this.typeExpr       = this.typeName.then(this.typeParamList.opt).ast;
     

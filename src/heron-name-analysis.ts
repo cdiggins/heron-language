@@ -1,7 +1,7 @@
 import { Myna } from "myna-parser/myna";
 import { HeronAstNode, isExpr, validateNode, throwError, preprocessAst, visitAst } from "./heron-ast-rewrite";
 import { Type } from "./type-system";
-import { Def, createDef } from "./heron-defs";
+import { Def, createDef, FuncDef } from "./heron-defs";
 import { Ref } from "./heron-refs";
 import { createExpr } from "./heron-expr";
 import { Package } from "./heron-package";

@@ -10,11 +10,9 @@ module heron:intrinsics:0.1
     type Float4; 
     type Int;
     type Bool; 
-    type String;
-    type StringBuilder;
     type Array; 
     type ArrayBuilder;
-    type Function;
+    type Func;
     type Any;
 
     // Intrinsic (built-in) functions. 
@@ -79,25 +77,25 @@ module heron:intrinsics:0.1
     intrinsic op^^ (x: Bool, y: Bool): Bool;
 
     // Array operators (range and indexing)
-    intrinsic op.. (x: Int, y: Int): Array;
-    intrinsic op[] (x: Array, i: Int): Any;
+    intrinsic op.. (x: Int, y: Int): Array<Int>;
+    intrinsic op[] <T>(x: Array<T>, i: Int): T;
 
     // Non-binary operators. These have identifier names.
     intrinsic op_not(x: Bool): Bool;
     intrinsic op_negate(x: Float): Float;
 
     // Array functions 
-    intrinsic array(n: Int, f: Function): Array;
-    intrinsic count(xs: Array): Int;
-    intrinsic at(xs: Array, i: Int): Any;     
+    intrinsic array<T>(n: Int, f: Func<Int, T>): Array<T>;
+    intrinsic count<T>(xs: Array<T>): Int;
+    intrinsic at<T>(xs: Array<T>, i: Int): T;     
 
     // Array builder functions
-    intrinsic mutable(xs: Array): ArrayBuilder;
-    intrinsic push(xs: ArrayBuilder, x: Any): ArrayBuilder;
-    intrinsic set(xs: ArrayBuilder, i: Int, x: Any): ArrayBuilder;
-    intrinsic array(xs: ArrayBuilder): Array;
-    intrinsic count(xs: ArrayBuilder): Int;
-    intrinsic at(xs: ArrayBuilder, i: Int): Any;
+    intrinsic mutable<T>(xs: Array<T>): ArrayBuilder<T>;
+    intrinsic push<T>(xs: ArrayBuilder<T>, x: T): ArrayBuilder<T>;
+    intrinsic set<T>(xs: ArrayBuilder<T>, i: Int, x: T): ArrayBuilder<T>;
+    intrinsic array<T>(xs: ArrayBuilder<T>): Array<T>;
+    intrinsic count<T>(xs: ArrayBuilder<T>): Int;
+    intrinsic at<T>(xs: ArrayBuilder<T>, i: Int): T;
     
     // Some helpers (todo: move to a separate library)
     function array(v: Float2) = [v.x, v.y];    

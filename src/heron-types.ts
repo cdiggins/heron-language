@@ -1,10 +1,18 @@
 import { VarName, FunCall, ConditionalExpr, ObjectLiteral, ArrayLiteral, BoolLiteral, NumLiteral, StrLiteral, VarExpr, PostfixDec, Lambda, PostfixInc, Expr, ObjectField } from "./heron-expr";
 import { Statement, CompoundStatement, IfStatement, EmptyStatement, VarDeclStatement, WhileStatement, DoStatement, ForStatement, ExprStatement, ContinueStatement, ReturnStatement } from "./heron-statement";
 import { throwError, HeronAstNode, validateNode, visitAst } from "./heron-ast-rewrite";
-import { FuncDef, FuncParamDef, ForLoopVarDef } from "./heron-defs";
-import { FuncRef, TypeRef, TypeParamRef, Ref } from "./heron-refs";
-import { typeConstant, typeArray, functionType, Type, functionInput, TypeArray, functionOutput, typeVariable, TypeVariable, TypeConstant, isFunctionType, isTypeConstant, Unifier } from "./type-system";
+import { FuncDef, FuncParamDef, ForLoopVarDef, VarDef } from "./heron-defs";
+import { FuncRef, TypeRef, TypeParamRef, Ref, FuncParamRef, VarRef, ForLoopVarRef } from "./heron-refs";
+import { typeConstant, polyType, Type, PolyType, typeVariable, TypeVariable, TypeConstant, isTypeConstant, TypeResolver, newTypeVar, freshVariableNames, typeVarToConstant, Lookup, typeConstantToVar } from "./type-system";
 import { Module, Package } from "./heron-package";
+
+export function assure<T>(t: T): T {
+    if (!t)
+        throw new Error("Value was not defined");
+    return t;
+}
+
+let id = 0;
 
 export module Types 
 {
@@ -18,36 +26,47 @@ export module Types
     export const StrType = typeConstant('Str');
     export const LambdaType = typeConstant('Lambda');
     export const VoidType = typeConstant('Void');
+    export const ErrorType = typeConstant('Error');
     export const NeverType = typeConstant('Never');
     export const TypeType = typeConstant('Type');
     export const FuncType = typeConstant('Func');
 }
 
-export function typeFromNode(node: HeronAstNode): Type {
-    // TODO: make a generic type!!!! 
-
+export function typeFromNode(node: HeronAstNode, typeParams: string[]): Type {
     if (!node) return null;
     validateNode(node, "typeExpr", "typeName");
-    return typeConstant(node.allText);
+    if (node.name === "typeExpr") {
+        if (node.children.length === 1) 
+            return typeFromNode(node.children[0], typeParams);
+        return polyType(node.children.map(c => typeFromNode(c, typeParams)));
+    }
+    else if (node.name === "typeName") {
+        let text = node.allText;
+        if (typeParams.indexOf(text) >= 0) 
+            return typeVariable(text);
+        else             
+            return typeConstant(text);
+    }
 }
 
 // This class computes the type for a function
 export class TypeEvaluator 
 {
-    unifier: Unifier = new Unifier();
-    function: TypeArray;
+    unifier: TypeResolver = new TypeResolver();
+    function: PolyType;
 
     constructor(
         public readonly params: FuncParamDef[],
+        public readonly typeParams: string[],
         public readonly bodyNode: HeronAstNode,
         public readonly retTypeNode: HeronAstNode
     )
     { 
-        this.function = makeGenericFuncType(params.length);
+        this.function = genericFuncType(params.length);
 
         for (var i=0; i < params.length; ++i) {
             let param = params[i];
-            let paramType = typeFromNode(params[i].typeNode);
+            let paramType = typeFromNode(params[i].typeNode, typeParams);
             if (paramType !== null) {
                 param.type = paramType;
                 this.unify(this.getArgType(i), paramType);
@@ -57,7 +76,7 @@ export class TypeEvaluator
             }
         }
 
-        let retType = typeFromNode(retTypeNode);
+        let retType = typeFromNode(retTypeNode, typeParams);
         if (retType)
             this.unifyReturn(retType);
 
@@ -67,33 +86,46 @@ export class TypeEvaluator
             this.getType(bodyNode.expr);
     }
 
-    getArgType(n: number) {
-        return getArgTypes(this.function)[n];
+    get numArgs(): number{
+        return getNumArgTypes(this.function);
     }
 
-    getReturnType() {
-        return functionOutput(this.function);
+    getArgType(n: number): Type {
+        return getArgType(this.function, n);
     }
 
-    getFinalResult() : TypeArray {
-        let result = this.unifier.getUnifiedType(this.function, [], {});
-        if (!isFunctionType(result))
-            throw new Error("Expected final result to be a type array");
-        return result as TypeArray;
+    getReturnType(): Type {
+        return getReturnType(this.function);
+    }
+
+    getFinalResult() : PolyType {
+        return this.unifier.getUnifiedType(this.function, [], {}) as PolyType;
     }
 
     getType(x: Statement | Expr): Type
-    {       
-        if (x instanceof Statement) {
-            this.getStatementType(x);
-            return Types.VoidType;
+    {     
+        if (x.type)
+            return x.type;
+
+        try {  
+            if (x instanceof Statement) {
+                this.getStatementType(x);
+                return x.type = Types.VoidType;
+            }
+            else if (x instanceof Expr) {
+                return x.type = this.unifier.getUnifiedType(this.getExpressionType(x));
+            }
         }
-        else if (x instanceof Expr) 
-            return x.type = this.getExpressionType(x);        
+        catch (e) {
+            return x.type = Types.ErrorType;
+        }
     }
 
     getStatementType(statement: Statement)
     {
+        if (statement.type)
+            return statement.type; 
+
         if (statement instanceof CompoundStatement) 
         {
             for (var st of statement.statements)
@@ -158,30 +190,49 @@ export class TypeEvaluator
             return expr.type;
 
         if (expr instanceof VarName) {
-            if (expr.node.ref instanceof FuncRef) {
-                return makeFunctionSet(expr.node.ref.defs.map(d => d.type));
+            if (!expr.node.ref) 
+                throwError(expr.node, "Missing ref");
+                
+            const ref = expr.node.ref;
+            if (ref instanceof FuncRef) {
+                return makeFunctionSet(ref.defs.map(computeFuncType));
             }
-            if (expr.node.ref instanceof TypeRef || expr.node.ref instanceof TypeParamRef) {
+            else if (ref instanceof VarRef) {
+                return assure(ref.def.type);
+            }
+            else if (ref instanceof FuncParamRef) {
+                return assure(ref.def.type);
+            }
+            else if (ref instanceof ForLoopVarRef) {
+                return assure(ref.def.type);
+            }
+            else if (ref instanceof TypeRef || ref instanceof TypeParamRef) {
                 // TODO: eventually we might want to support 
                 throwError(expr.node, "Type names are not allowed in expressions: " + expr.name);
             }
             // TODO: the reference could be to something else
             //return this.findVar(expr.name);
-            throw new Error("Uncroegnized expression");
+            throw new Error("Unrecoggnized expression");
         }
         else if (expr instanceof FunCall) {
             let func = this.getType(expr.func);
             let args = expr.args.map(a => this.getType(a));
-            if (func instanceof TypeArray) {
+            if (func instanceof PolyType) {
                 if (isFunctionSet(func))
-                    return this.callFunction(func, args);
+                    return this.callFunctionSet(func, args);
                 else if (isFunctionType(func))
+                    // We have to create new Type variable names when calling a
                     return this.callFunction(func, args);
                 else 
                     throw new Error("Can't call " + func);
             }
+            else if (func instanceof TypeVariable) {
+                const funcType = genericFuncTypeFromArgs(args);
+                this.unify(func, funcType);
+                return getReturnType(funcType);
+            }
             else {
-                throw new Error("Not an invokable function " + func);
+                throw new Error("Can't call " + func);
             }
         }
         else if (expr instanceof ConditionalExpr) {
@@ -252,21 +303,35 @@ export class TypeEvaluator
         return this.unify(x, this.getReturnType());
     }
 
-    callFunction(fun: TypeArray, args: Type[]): Type {
-        let params = getArgTypes(fun);
-        if (params.length !== args.length)
-            throw new Error("Mismatched number of arguments was " + args.length + " expected " + params.length);
-        for (let i=0; args.length; ++i) 
-            this.unify(params[i], args[i]);
-        return getReturnType(fun);
+    callFunction(funOriginal: PolyType, argTypes: Type[]): Type {        
+        
+        // We have to create fresh variable names.
+
+        // BUT I need to assure that those names have a lower priority then the 
+        // ones we have now. This might happen automatically, but I am not 100% sure.
+        const fun = freshVariableNames(funOriginal, id++) as PolyType;
+        var u = new TypeResolver();
+        let paramTypes = getArgTypes(fun); 
+        let returnType = getReturnType(fun);
+
+        // Parameters should match the number of arguments given to it. 
+        if (paramTypes.length !== argTypes.length)
+            throw new Error("Mismatched number of arguments was " + argTypes.length + " expected " + paramTypes.length);
+        
+        // Unify the passed arguments with the parameter types.         
+        for (let i=0; argTypes.length; ++i) 
+            u.unifyTypes(paramTypes[i], argTypes[i]);
+
+        // We return the unified version of the return type.
+        return u.getUnifiedType(returnType);
     }
            
-    callFunctionSet(funset: TypeArray, args: Type[]): Type {
-        let funcs = funset.types[1] as TypeArray;
-        let results: TypeArray[] = [];
+    callFunctionSet(funset: PolyType, args: Type[]): Type {
+        let funcs = funset.types[1] as PolyType;
+        let results: PolyType[] = [];
         for (var i=0; i < funcs.types.length; ++i) {
-            let func = funcs[i];
-            if (!isFunctionType(func))
+            let func = funcs.types[i];
+            if (!(func instanceof PolyType) || !isFunctionType(func))
                 throw new Error("Expected a function type");
 
             let paramTypes = getArgTypes(func);  
@@ -279,60 +344,50 @@ export class TypeEvaluator
             if (canCallFunc(func, args))
                 results.push(func);
         }
-
-        // TODO: unify some of these types with the arguments. 
-        // What is tricky: if there are N functions, we have to know which one we are calling. 
-        // if we don't, well we aren't really unifying anything.
-        
-        // BUT notice: sometimes the arguments are all the same. 
-        // In other cases, we can end up with intersection types or discriminated union types
-
-
         if (results.length === 0)
             throw new Error("Could not find a function that matches the types");
 
         if (results.length === 1)
             return this.callFunction(results[0], args);
+
+        // TODO: maybe unify types if we can. 
         
         return makeUnionType(results.map(getReturnType));           
-    }
-        
+    }        
 }
 
-export function getFuncType(f: FuncDef): TypeArray {
+export function computeFuncType(f: FuncDef): PolyType {
     if (!f.type) {
-        var te = new TypeEvaluator(f.params, f.body, f.retTypeNode);
+        const sigNode = validateNode(f.node.children[0], "funcSig");
+        const genParamsNode = validateNode(sigNode.children[1], "genericParams");
+        const genParams = genParamsNode.children.map(p => p.allText);
+        const te = new TypeEvaluator(f.params, genParams, f.body, f.retTypeNode);
         f.type = te.getFinalResult();
     }
-    return f.type as TypeArray;
+    return f.type as PolyType;
 }
 
-export function getLambdaType(l: Lambda): TypeArray {
+export function getLambdaType(l: Lambda): PolyType {
     if (!l.type) {
-        var te = new TypeEvaluator(l.params, l.bodyNode, null);
+        var te = new TypeEvaluator(l.params, [], l.bodyNode, null);
         l.type = te.getFinalResult();
     }
-    return l.type as TypeArray;
+    return l.type as PolyType;
 }
 
-export function getFuncParamType(f: FuncDef, n: number): Type {
-    let type = getFuncType(f);
-    let inputs = functionInput(type);
-    if (!(inputs instanceof TypeArray)) 
-        throw new Error("Function input must be a TypeArray");
-    return inputs.types[n];
+export function funcType(args: Type[], ret: Type): PolyType {
+    return polyType([typeConstant('Func'), ...args, ret]);
 }
 
-export function getFuncReturnType(f: FuncDef): Type {
-    let type = getFuncType(f);
-    return functionOutput(type);
-}
-
-export function funcTypeWithNArgs(n: number): Type {
-    let params:Type[] = [];
-    for (var i=0; i < n; ++i)
+export function genericFuncType(n: number): PolyType {
+    const params: Type[] = [];
+    for (let i=0; i < n; ++i)
         params.push(typeVariable('T' + i))
-    return functionType(typeArray(params), typeVariable('R'));
+    return funcType(params, typeVariable('R'));
+}
+
+export function genericFuncTypeFromArgs(args: Type[]): PolyType {
+    return funcType(args, newTypeVar());
 }
 
 export function typeUnion(types: Type[]): Type {
@@ -349,32 +404,26 @@ export function typeUnion(types: Type[]): Type {
     if (r.length === 1)
         return r[0];
         
-    return typeArray([typeConstant('union'), typeArray(r)]);
+    return polyType([typeConstant('union'), polyType(r)]);
 }
 
-export function makeGenericFuncType(nArgCount: number): TypeArray {
-    let args = new Array(nArgCount).map((x, i) => typeVariable('T' + i));
-    return functionType(typeArray(args), typeVariable('R'));
-} 
-
-export function makeArrayType(elementType: Type): TypeArray {
-    return typeArray([typeConstant('array'), elementType]);
+export function makeArrayType(elementType: Type): PolyType {
+    return polyType([typeConstant('Array'), elementType]);
 }
 
-let n = 0;
 export function makeNewTypeVar() {
-    return new TypeVariable('T$' + n++);
+    return new TypeVariable('$' + id++);
 }
 
 export function makeNewArrayType() {
     return makeArrayType(makeNewTypeVar());
 }
 
-export function getArrayElementType(t: TypeArray) {
+export function getArrayElementType(t: PolyType) {
     return t.types[1];
 }
 
-export function makeUnionType(types: Type[]): TypeArray {
+export function makeUnionType(types: Type[]): PolyType {
     let tmp = {};
     for (var t of types) {
         if (isUnionType(t)) {
@@ -387,22 +436,32 @@ export function makeUnionType(types: Type[]): TypeArray {
     let r = [];
     for (var k in tmp)
         r.push(tmp[k])    
-    return typeArray([typeConstant('union'), typeArray(types)]);
+    if (r.length === 1)
+        return r[0];
+    return polyType([typeConstant('union'), polyType(r)]);
 }
 
-export function makeFunctionSet(types: Type[]): TypeArray {    
+export function makeFunctionSet(types: PolyType[]): PolyType {    
+    if (types.length === 0)
+        throw new Error("Not enough types");
+    if (types.length === 1)
+        return types[0];
     for (var t of types)
         if (!isFunctionType(t))
             throw new Error("Only function types can be used to make a function set");
-    return typeArray([typeConstant('funset'), typeArray(types)]);
+    return polyType([typeConstant('FuncSet'), polyType(types)]);
 }
 
-export function isFunctionSet(type: TypeArray): boolean {
-    return isTypeConstant(type.types[0], 'funset');
+export function isFunctionSet(type: PolyType): boolean {
+    return isTypeConstant(type.types[0], 'FuncSet');
+}
+
+export function isFunctionType(type: Type): boolean {    
+    return (type instanceof PolyType) && isTypeConstant(type.types[0], 'Func');
 }
 
 export function isUnionType(type: Type): boolean {
-    if (!(type instanceof TypeArray))
+    if (!(type instanceof PolyType))
         return false;
     return isTypeConstant(type.types[0], 'union');
 }
@@ -410,18 +469,26 @@ export function isUnionType(type: Type): boolean {
 export function getTypesInUnion(type: Type): Type[] {
     if (!isUnionType(type))
         throw new Error("Not a union type");
-    return ((type as TypeArray).types[1] as TypeArray).types;
+    return ((type as PolyType).types[1] as PolyType).types;
 }
 
-export function getArgTypes(f: TypeArray): Type[] {
-    return ((functionInput(f)) as TypeArray).types;
+export function getNumArgTypes(f: PolyType): number {
+    return f.types.length - 2;
 }
 
-export function getReturnType(f: TypeArray): Type {
-    return functionOutput(f);
+export function getArgType(f: PolyType, n: number): Type {
+    return getArgTypes(f)[n];
 }
 
-export function canCallFunc(f: TypeArray, args: Type[]): boolean {
+export function getArgTypes(f: PolyType): Type[] {
+    return f.types.slice(1, f.types.length - 1);
+}
+
+export function getReturnType(f: PolyType): Type {
+    return f.types[f.types.length-1];
+}
+
+export function canCallFunc(f: PolyType, args: Type[]): boolean {
     // TODO: can I pass the arg type to the function type, and other shit.
     return true;
 }
