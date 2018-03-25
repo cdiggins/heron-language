@@ -47,6 +47,10 @@ function typeFromNode(node, typeParams) {
     }
 }
 exports.typeFromNode = typeFromNode;
+function typeStrategy(a, b) {
+    throw new Error("Failed to resolve type constants: " + a + " and " + b);
+}
+exports.typeStrategy = typeStrategy;
 // This class computes the type for a function
 var TypeEvaluator = /** @class */ (function () {
     function TypeEvaluator(params, typeParams, bodyNode, retTypeNode) {
@@ -54,7 +58,7 @@ var TypeEvaluator = /** @class */ (function () {
         this.typeParams = typeParams;
         this.bodyNode = bodyNode;
         this.retTypeNode = retTypeNode;
-        this.unifier = new type_system_1.TypeResolver();
+        this.unifier = new type_system_1.TypeResolver(typeStrategy);
         this.function = genericFuncType(params.length);
         for (var i = 0; i < params.length; ++i) {
             var param = params[i];
@@ -89,7 +93,7 @@ var TypeEvaluator = /** @class */ (function () {
         return getReturnType(this.function);
     };
     TypeEvaluator.prototype.getFinalResult = function () {
-        return this.unifier.getUnifiedType(this.function, [], {});
+        return this.unifier.getUnifiedType(this.function);
     };
     TypeEvaluator.prototype.getType = function (x) {
         if (x.type)
@@ -289,8 +293,8 @@ var TypeEvaluator = /** @class */ (function () {
         // We have to create fresh variable names.
         // BUT I need to assure that those names have a lower priority then the 
         // ones we have now. This might happen automatically, but I am not 100% sure.
-        var fun = type_system_1.freshVariableNames(funOriginal, id++);
-        var u = new type_system_1.TypeResolver();
+        var fun = type_system_1.freshVariableNames(funOriginal);
+        var u = new type_system_1.TypeResolver(typeStrategy);
         var paramTypes = getArgTypes(fun);
         var returnType = getReturnType(fun);
         // Parameters should match the number of arguments given to it. 

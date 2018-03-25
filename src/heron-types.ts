@@ -3,7 +3,7 @@ import { Statement, CompoundStatement, IfStatement, EmptyStatement, VarDeclState
 import { throwError, HeronAstNode, validateNode, visitAst } from "./heron-ast-rewrite";
 import { FuncDef, FuncParamDef, ForLoopVarDef, VarDef } from "./heron-defs";
 import { FuncRef, TypeRef, TypeParamRef, Ref, FuncParamRef, VarRef, ForLoopVarRef } from "./heron-refs";
-import { typeConstant, polyType, Type, PolyType, typeVariable, TypeVariable, TypeConstant, isTypeConstant, TypeResolver, newTypeVar, freshVariableNames, typeVarToConstant, Lookup, typeConstantToVar } from "./type-system";
+import { typeConstant, polyType, Type, PolyType, typeVariable, TypeVariable, TypeConstant, isTypeConstant, TypeResolver, newTypeVar, Lookup, freshVariableNames } from "./type-system";
 import { Module, Package } from "./heron-package";
 
 export function assure<T>(t: T): T {
@@ -49,10 +49,14 @@ export function typeFromNode(node: HeronAstNode, typeParams: string[]): Type {
     }
 }
 
+export function typeStrategy(a: TypeConstant, b: TypeConstant): TypeConstant {
+    throw new Error("Failed to resolve type constants: " + a + " and " + b);
+}
+
 // This class computes the type for a function
 export class TypeEvaluator 
 {
-    unifier: TypeResolver = new TypeResolver();
+    unifier: TypeResolver = new TypeResolver(typeStrategy);
     function: PolyType;
 
     constructor(
@@ -99,7 +103,7 @@ export class TypeEvaluator
     }
 
     getFinalResult() : PolyType {
-        return this.unifier.getUnifiedType(this.function, [], {}) as PolyType;
+        return this.unifier.getUnifiedType(this.function) as PolyType;
     }
 
     getType(x: Statement | Expr): Type
@@ -309,8 +313,8 @@ export class TypeEvaluator
 
         // BUT I need to assure that those names have a lower priority then the 
         // ones we have now. This might happen automatically, but I am not 100% sure.
-        const fun = freshVariableNames(funOriginal, id++) as PolyType;
-        var u = new TypeResolver();
+        const fun = freshVariableNames(funOriginal) as PolyType;
+        var u = new TypeResolver(typeStrategy);
         let paramTypes = getArgTypes(fun); 
         let returnType = getReturnType(fun);
 
