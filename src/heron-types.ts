@@ -392,6 +392,7 @@ export function callFunction(funOriginal: PolyType, argTypes: Type[]): Type {
 
 export function computeFuncType(f: FuncDef): PolyType {
     if (!f.type) {
+        f.type = genericFuncType(f.params.length);
         console.log("Computing type for " + f.toString());
         const sigNode = validateNode(f.node.children[0], "funcSig");
         const genParamsNode = validateNode(sigNode.children[1], "genericParams");
@@ -417,10 +418,10 @@ export function funcType(args: Type[], ret: Type): PolyType {
 }
 
 export function genericFuncType(n: number): PolyType {
-    const params: Type[] = [];
+    const args: Type[] = [];
     for (let i=0; i < n; ++i)
-        params.push(typeVariable('T' + i))
-    return funcType(params, typeVariable('R'));
+        args.push(newTypeVar());
+    return genericFuncTypeFromArgs(args);
 }
 
 export function genericFuncTypeFromArgs(args: Type[]): PolyType {

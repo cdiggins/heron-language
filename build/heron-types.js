@@ -365,6 +365,7 @@ function callFunction(funOriginal, argTypes) {
 exports.callFunction = callFunction;
 function computeFuncType(f) {
     if (!f.type) {
+        f.type = genericFuncType(f.params.length);
         console.log("Computing type for " + f.toString());
         var sigNode = heron_ast_rewrite_1.validateNode(f.node.children[0], "funcSig");
         var genParamsNode = heron_ast_rewrite_1.validateNode(sigNode.children[1], "genericParams");
@@ -390,10 +391,10 @@ function funcType(args, ret) {
 }
 exports.funcType = funcType;
 function genericFuncType(n) {
-    var params = [];
+    var args = [];
     for (var i = 0; i < n; ++i)
-        params.push(type_system_1.typeVariable('T' + i));
-    return funcType(params, type_system_1.typeVariable('R'));
+        args.push(type_system_1.newTypeVar());
+    return genericFuncTypeFromArgs(args);
 }
 exports.genericFuncType = genericFuncType;
 function genericFuncTypeFromArgs(args) {

@@ -25,7 +25,7 @@ module heron:geometry.vector:0.1
     function vector(v)
         = vector(v.x, v.y, v.z);
 
-    function vector(xs: Array)
+    function vector(xs)
         = vector(xs[0], xs[1], xs[2]);
 
     function array(v) 

@@ -89,6 +89,11 @@ var MonoType = /** @class */ (function (_super) {
         _this.name = name;
         return _this;
     }
+    Object.defineProperty(MonoType.prototype, "_str", {
+        get: function () { return this.toString(); },
+        enumerable: true,
+        configurable: true
+    });
     return MonoType;
 }(Type));
 exports.MonoType = MonoType;

@@ -73,6 +73,7 @@ export class PolyType extends Type
 export class MonoType extends Type 
 { 
     constructor(public readonly name : string) { super(); }
+    get _str(): string { return this.toString(); }
 }
 
 /** A type variable is used for generics (e.g. T0, TR). 

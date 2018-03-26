@@ -73,7 +73,7 @@ module heron:std.array:0.1
         = xs.indices.map(i => i > 0 ? xs[i] - xs[i-1] : xs[i]);
     
     function slice(xs, from, to) 
-        = (from .. to).map(xs.at);    
+        = (from .. to).map(i => xs.at(i));    
 
     function stride(xs, n) 
         = (0 .. xs.count / n).map(i => xs[i * n]);    
@@ -117,10 +117,10 @@ module heron:std.array:0.1
     function average(xs) 
         = xs.sum / xs.count;    
 
-    function minElement(xs) 
+    function min(xs) 
         = xs.reduce(xs[0], min);    
 
-    function maxElement(xs) 
+    function max(xs) 
         = xs.reduce(xs[0], max);
 
     function partition(a, lo, hi) {

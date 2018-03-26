@@ -216,3 +216,7 @@ export function typeConstantToVar(t: Type, vars: Lookup<TypeVariable>): Type {
     }
     return t;
 }
+
+//==
+
+I see that "vector(xs :any): any" isn't working. 
