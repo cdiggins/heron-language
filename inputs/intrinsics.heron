@@ -21,14 +21,9 @@ module heron:intrinsics:0.1
     intrinsic y(v: Float2): Float;
     
     intrinsic float3(x: Float, y: Float, z: Float): Float3;
-    intrinsic x(v: Float3): Float;
-    intrinsic y(v: Float3): Float;
     intrinsic z(v: Float3): Float;
 
-    intrinsic float4(x: Float, y: Float, z: Float, w: Float): Float4;
-    intrinsic x(v: Float4): Float;
-    intrinsic y(v: Float4): Float;
-    intrinsic z(v: Float4): Float;
+    intrinsic float4(x: Float, y: Float, z: Float, w: Float): Float4;    
     intrinsic w(v: Float4): Float;    
 
     // Todo: eventually provide Float2, Float3, Float4 versions of these.
@@ -94,8 +89,6 @@ module heron:intrinsics:0.1
     intrinsic push<T>(xs: ArrayBuilder<T>, x: T): ArrayBuilder<T>;
     intrinsic set<T>(xs: ArrayBuilder<T>, i: Int, x: T): ArrayBuilder<T>;
     intrinsic array<T>(xs: ArrayBuilder<T>): Array<T>;
-    intrinsic count<T>(xs: ArrayBuilder<T>): Int;
-    intrinsic at<T>(xs: ArrayBuilder<T>, i: Int): T;
     
     // Some helpers (todo: move to a separate library)
     function array(v: Float2) = [v.x, v.y];    

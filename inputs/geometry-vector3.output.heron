@@ -1,4 +1,4 @@
-// Generated on Sat Mar 24 2018 16:42:23 GMT-0400 (Eastern Daylight Time)
+// Generated on Sun Mar 25 2018 22:31:32 GMT-0400 (Eastern Daylight Time)
 heron:std:0.1heron:geometry.vector:0.1{
 var // definition type undefined
 origin// expression type undefined
@@ -35,7 +35,7 @@ vector(// expression type undefined
 0, // expression type undefined
 0, // expression type undefined
 1);
-// definition type (Func Float Float Float R)
+// definition type undefined
 
 /**
 function vector(x: Float, y: Float, z: Float) 
@@ -43,17 +43,17 @@ function vector(x: Float, y: Float, z: Float)
 
     
 */
-// definition type (Func Float Float Float R)
+// definition type undefined
 function vector(// definition type Float
 x : Float, // definition type Float
 y : Float, // definition type Float
 z : Float)
 // expression type Error
-// expression type (FuncSet ((Func Float Float Float Float3) (Func Float R)))
+// expression type Error
 float3(// expression type Float
 x, // expression type Float
 y, // expression type Float
-z)// definition type (Func Float R)
+z)// definition type undefined
 
 /**
 function vector(x: Float)
@@ -61,15 +61,15 @@ function vector(x: Float)
 
     
 */
-// definition type (Func Float R)
+// definition type undefined
 function vector(// definition type Float
 x : Float)
 // expression type Error
-// expression type (FuncSet ((Func Float Float Float R) (Func Float R) (Func Float R) (Func Array R)))
-vector(// expression type Float
-x, // expression type Float
-x, // expression type Float
-x)// definition type !T0.(Func T0 R)
+// expression type Error
+vector(// expression type Error
+x, // expression type Error
+x, // expression type Error
+x)// definition type undefined
 
 /**
 function vector(v)
@@ -77,21 +77,21 @@ function vector(v)
 
     
 */
-// definition type !T0.(Func T0 R)
-function vector(// definition type T0
+// definition type undefined
+function vector(// definition type 'T0
 v)
 // expression type Error
 // expression type Error
 vector(// expression type Error
-// expression type Error
-x(// expression type T0
+// expression type undefined
+x(// expression type undefined
 v), // expression type Error
-// expression type Error
-y(// expression type T0
+// expression type undefined
+y(// expression type undefined
 v), // expression type Error
-// expression type Error
-z(// expression type T0
-v))// definition type (Func Array R)
+// expression type undefined
+z(// expression type undefined
+v))// definition type undefined
 
 /**
 function vector(xs: Array)
@@ -99,24 +99,24 @@ function vector(xs: Array)
 
     
 */
-// definition type (Func Array R)
+// definition type undefined
 function vector(// definition type Array
 xs : Array)
 // expression type Error
 // expression type Error
 vector(// expression type Error
-// expression type (Func (Array T) Int T)
-op[](// expression type Array
-xs, // expression type Num
+// expression type undefined
+op[](// expression type undefined
+xs, // expression type undefined
 0), // expression type Error
-// expression type (Func (Array T) Int T)
-op[](// expression type Array
-xs, // expression type Num
+// expression type undefined
+op[](// expression type undefined
+xs, // expression type undefined
 1), // expression type Error
-// expression type (Func (Array T) Int T)
-op[](// expression type Array
-xs, // expression type Num
-2))// definition type (Func T0 R)
+// expression type undefined
+op[](// expression type undefined
+xs, // expression type undefined
+2))// definition type undefined
 
 /**
 function array(v) 
@@ -124,20 +124,20 @@ function array(v)
 
     
 */
-// definition type (Func T0 R)
-function array(// definition type T0
+// definition type undefined
+function array(// definition type 'T0
 v)
-// expression type (Array Float)
-[// expression type Float
-// expression type (FuncSet ((Func Float2 Float) (Func Float3 Float) (Func Float4 Float)))
-x(// expression type T0
-v), // expression type Float
-// expression type (FuncSet ((Func Float2 Float) (Func Float3 Float) (Func Float4 Float)))
-y(// expression type T0
-v), // expression type Float
-// expression type (FuncSet ((Func Float3 Float) (Func Float4 Float)))
-z(// expression type T0
-v)]// definition type (Func T0 R)
+// expression type undefined
+[// expression type Error
+// expression type Error
+x(// expression type 'T0
+v), // expression type Error
+// expression type Error
+y(// expression type 'T0
+v), // expression type Error
+// expression type Error
+z(// expression type 'T0
+v)]// definition type undefined
 
 /**
 function sum(v) 
@@ -145,23 +145,23 @@ function sum(v)
     
     
 */
-// definition type (Func T0 R)
-function sum(// definition type T0
+// definition type undefined
+function sum(// definition type 'T0
 v)
 // expression type Error
-// expression type (Func Float Float Float)
+// expression type undefined
 op+(// expression type Error
-// expression type (Func Float Float Float)
-op+(// expression type Float
-// expression type (FuncSet ((Func Float2 Float) (Func Float3 Float) (Func Float4 Float)))
-x(// expression type T0
-v), // expression type Float
-// expression type (FuncSet ((Func Float2 Float) (Func Float3 Float) (Func Float4 Float)))
-y(// expression type T0
-v)), // expression type Float
-// expression type (FuncSet ((Func Float3 Float) (Func Float4 Float)))
-z(// expression type T0
-v))// definition type (Func T0 T1 R)
+// expression type undefined
+op+(// expression type Error
+// expression type Error
+x(// expression type 'T0
+v), // expression type Error
+// expression type Error
+y(// expression type 'T0
+v)), // expression type Error
+// expression type Error
+z(// expression type 'T0
+v))// definition type undefined
 
 /**
 function dot(a, b) 
@@ -169,17 +169,17 @@ function dot(a, b)
     
     
 */
-// definition type (Func T0 T1 R)
-function dot(// definition type T0
-a, // definition type T1
+// definition type undefined
+function dot(// definition type 'T0
+a, // definition type 'T1
 b)
 // expression type Error
-// expression type (Func T0 R)
+// expression type undefined
 sum(// expression type Error
-// expression type (Func Float Float Float)
-op*(// expression type T0
-a, // expression type T1
-b))// definition type (Func T0 R)
+// expression type undefined
+op*(// expression type 'T0
+a, // expression type 'T1
+b))// definition type undefined
 
 /**
 function length(v) 
@@ -187,15 +187,15 @@ function length(v)
     
     
 */
-// definition type (Func T0 R)
-function length(// definition type T0
+// definition type undefined
+function length(// definition type 'T0
 v)
 // expression type Error
-// expression type (Func Float Float)
+// expression type undefined
 sqrt(// expression type Error
-// expression type (Func T0 R)
-length2(// expression type T0
-v))// definition type (Func T0 R)
+// expression type undefined
+length2(// expression type 'T0
+v))// definition type undefined
 
 /**
 function length2(v) 
@@ -203,14 +203,14 @@ function length2(v)
 
     
 */
-// definition type (Func T0 R)
-function length2(// definition type T0
+// definition type undefined
+function length2(// definition type 'T0
 v)
 // expression type Error
-// expression type (Func T0 T1 R)
-dot(// expression type T0
-v, // expression type T0
-v)// definition type (Func T0 T1 R)
+// expression type undefined
+dot(// expression type 'T0
+v, // expression type 'T0
+v)// definition type undefined
 
 /**
 function distance(a, b)
@@ -218,18 +218,18 @@ function distance(a, b)
 
     
 */
-// definition type (Func T0 T1 R)
-function distance(// definition type T0
-a, // definition type T1
+// definition type undefined
+function distance(// definition type 'T0
+a, // definition type 'T1
 b)
 // expression type Error
-// expression type (Func T0 R)
+// expression type undefined
 length(// expression type Error
 (// expression type Error
-// expression type (Func Float Float Float)
-op-(// expression type T0
-a, // expression type T1
-b)))// definition type (Func T0 T1 R)
+// expression type undefined
+op-(// expression type 'T0
+a, // expression type 'T1
+b)))// definition type undefined
 
 /**
 function distance2(a, b)
@@ -237,18 +237,18 @@ function distance2(a, b)
 
     
 */
-// definition type (Func T0 T1 R)
-function distance2(// definition type T0
-a, // definition type T1
+// definition type undefined
+function distance2(// definition type 'T0
+a, // definition type 'T1
 b)
 // expression type Error
-// expression type (Func T0 R)
+// expression type undefined
 length2(// expression type Error
 (// expression type Error
-// expression type (Func Float Float Float)
-op-(// expression type T0
-a, // expression type T1
-b)))// definition type (Func T0 R)
+// expression type undefined
+op-(// expression type 'T0
+a, // expression type 'T1
+b)))// definition type undefined
 
 /**
 function normal(v) 
@@ -256,16 +256,16 @@ function normal(v)
 
     
 */
-// definition type (Func T0 R)
-function normal(// definition type T0
+// definition type undefined
+function normal(// definition type 'T0
 v)
 // expression type Error
-// expression type (Func Float Float Float)
-op/(// expression type T0
+// expression type undefined
+op/(// expression type 'T0
 v, // expression type Error
-// expression type (Func T0 R)
-length(// expression type T0
-v))// definition type (Func T0 T1 R)
+// expression type undefined
+length(// expression type 'T0
+v))// definition type undefined
 
 /**
 function cross(a, b)
@@ -273,67 +273,67 @@ function cross(a, b)
 
     
 */
-// definition type (Func T0 T1 R)
-function cross(// definition type T0
-a, // definition type T1
+// definition type undefined
+function cross(// definition type 'T0
+a, // definition type 'T1
 b)
 // expression type Error
-// expression type (FuncSet ((Func Float Float Float R) (Func Float R) (Func T0 R) (Func Array R)))
+// expression type Error
 vector(// expression type Error
-// expression type (Func Float Float Float)
+// expression type undefined
 op-(// expression type Error
-// expression type (Func Float Float Float)
-op*(// expression type Float
-// expression type (FuncSet ((Func Float2 Float) (Func Float3 Float) (Func Float4 Float)))
-y(// expression type T0
-a), // expression type Float
-// expression type (FuncSet ((Func Float3 Float) (Func Float4 Float)))
-z(// expression type T1
+// expression type undefined
+op*(// expression type Error
+// expression type Error
+y(// expression type 'T0
+a), // expression type Error
+// expression type Error
+z(// expression type 'T1
 b)), // expression type Error
-// expression type (Func Float Float Float)
-op*(// expression type Float
-// expression type (FuncSet ((Func Float3 Float) (Func Float4 Float)))
-z(// expression type T0
-a), // expression type Float
-// expression type (FuncSet ((Func Float2 Float) (Func Float3 Float) (Func Float4 Float)))
-y(// expression type T1
+// expression type undefined
+op*(// expression type Error
+// expression type Error
+z(// expression type 'T0
+a), // expression type Error
+// expression type Error
+y(// expression type 'T1
 b))), // expression type Error
-// expression type (Func Float Float Float)
+// expression type undefined
 op-(// expression type Error
-// expression type (Func Float Float Float)
-op*(// expression type Float
-// expression type (FuncSet ((Func Float3 Float) (Func Float4 Float)))
-z(// expression type T0
-a), // expression type Float
-// expression type (FuncSet ((Func Float2 Float) (Func Float3 Float) (Func Float4 Float)))
-x(// expression type T1
+// expression type undefined
+op*(// expression type Error
+// expression type Error
+z(// expression type 'T0
+a), // expression type Error
+// expression type Error
+x(// expression type 'T1
 b)), // expression type Error
-// expression type (Func Float Float Float)
-op*(// expression type Float
-// expression type (FuncSet ((Func Float2 Float) (Func Float3 Float) (Func Float4 Float)))
-x(// expression type T0
-a), // expression type Float
-// expression type (FuncSet ((Func Float3 Float) (Func Float4 Float)))
-z(// expression type T1
+// expression type undefined
+op*(// expression type Error
+// expression type Error
+x(// expression type 'T0
+a), // expression type Error
+// expression type Error
+z(// expression type 'T1
 b))), // expression type Error
-// expression type (Func Float Float Float)
+// expression type undefined
 op-(// expression type Error
-// expression type (Func Float Float Float)
-op*(// expression type Float
-// expression type (FuncSet ((Func Float2 Float) (Func Float3 Float) (Func Float4 Float)))
-x(// expression type T0
-a), // expression type Float
-// expression type (FuncSet ((Func Float2 Float) (Func Float3 Float) (Func Float4 Float)))
-y(// expression type T1
+// expression type undefined
+op*(// expression type Error
+// expression type Error
+x(// expression type 'T0
+a), // expression type Error
+// expression type Error
+y(// expression type 'T1
 b)), // expression type Error
-// expression type (Func Float Float Float)
-op*(// expression type Float
-// expression type (FuncSet ((Func Float2 Float) (Func Float3 Float) (Func Float4 Float)))
-y(// expression type T0
-a), // expression type Float
-// expression type (FuncSet ((Func Float2 Float) (Func Float3 Float) (Func Float4 Float)))
-x(// expression type T1
-b))))// definition type (Func T0 T1 R)
+// expression type undefined
+op*(// expression type Error
+// expression type Error
+y(// expression type 'T0
+a), // expression type Error
+// expression type Error
+x(// expression type 'T1
+b))))// definition type undefined
 
 /**
 function reflect(v, n)
@@ -341,25 +341,25 @@ function reflect(v, n)
 
     
 */
-// definition type (Func T0 T1 R)
-function reflect(// definition type T0
-v, // definition type T1
+// definition type undefined
+function reflect(// definition type 'T0
+v, // definition type 'T1
 n)
 // expression type Error
-// expression type (Func Float Float Float)
-op-(// expression type T0
+// expression type undefined
+op-(// expression type 'T0
 v, // expression type Error
 (// expression type Error
-// expression type (Func Float Float Float)
+// expression type undefined
 op*(// expression type Error
-// expression type (Func Float Float Float)
-op*(// expression type T1
+// expression type undefined
+op*(// expression type 'T1
 n, // expression type Error
-// expression type (Func T0 T1 R)
-dot(// expression type T0
-v, // expression type T1
+// expression type undefined
+dot(// expression type 'T0
+v, // expression type 'T1
 n)), // expression type Num
-2.0)))// definition type (Func T0 T1 T2 R)
+2.0)))// definition type undefined
 
 /**
 function lerp(a, b, x)
@@ -367,50 +367,50 @@ function lerp(a, b, x)
 
     
 */
-// definition type (Func T0 T1 T2 R)
-function lerp(// definition type T0
-a, // definition type T1
-b, // definition type T2
+// definition type undefined
+function lerp(// definition type 'T0
+a, // definition type 'T1
+b, // definition type 'T2
 x)
 // expression type Error
-// expression type (Func Float Float Float)
+// expression type undefined
 op+(// expression type Error
-// expression type (Func Float Float Float)
-op*(// expression type T0
+// expression type undefined
+op*(// expression type 'T0
 a, // expression type Error
 (// expression type Error
-// expression type (Func Float Float Float)
+// expression type undefined
 op-(// expression type Num
-1.0, // expression type T2
+1.0, // expression type 'T2
 x))), // expression type Error
-// expression type (Func Float Float Float)
-op*(// expression type T1
-b, // expression type T2
-x))// definition type (Func T0 R)
+// expression type undefined
+op*(// expression type 'T1
+b, // expression type 'T2
+x))// definition type undefined
 
 /**
 function negate(v)
         = vector(-v.x, -v.y, -v.z);
 
 */
-// definition type (Func T0 R)
-function negate(// definition type T0
+// definition type undefined
+function negate(// definition type 'T0
 v)
 // expression type Error
-// expression type (FuncSet ((Func Float Float Float R) (Func Float R) (Func T0 R) (Func Array R)))
+// expression type Error
 vector(// expression type Error
-// expression type (Func Float Float)
-op_negate(// expression type Float
-// expression type (FuncSet ((Func Float2 Float) (Func Float3 Float) (Func Float4 Float)))
-x(// expression type T0
+// expression type undefined
+op_negate(// expression type Error
+// expression type Error
+x(// expression type 'T0
 v)), // expression type Error
-// expression type (Func Float Float)
-op_negate(// expression type Float
-// expression type (FuncSet ((Func Float2 Float) (Func Float3 Float) (Func Float4 Float)))
-y(// expression type T0
+// expression type undefined
+op_negate(// expression type Error
+// expression type Error
+y(// expression type 'T0
 v)), // expression type Error
-// expression type (Func Float Float)
-op_negate(// expression type Float
-// expression type (FuncSet ((Func Float3 Float) (Func Float4 Float)))
-z(// expression type T0
+// expression type undefined
+op_negate(// expression type Error
+// expression type Error
+z(// expression type 'T0
 v)))}

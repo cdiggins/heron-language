@@ -10,7 +10,9 @@ import { FuncDef, FuncParamDef } from "./heron-defs";
 //import { Evaluator, Types, union, analyzeFunctions, findFunc } from "./heron-eval";
 import { FunCall, Expr } from "./heron-expr";
 import { getTraits } from "./heron-traits";
-import { computeFuncType } from "./heron-types";
+import { computeFuncType, callFunction } from "./heron-types";
+import { parseType } from "./type-parser";
+import { PolyType } from "./type-system";
 
 const m = Myna.Myna;
 const g = heronGrammar;
@@ -107,9 +109,6 @@ function testParsingRules() {
     }
 }
 
-// TEMP: this needs to be uncommented
-testParsingRules()
-
 declare var require;
 const fs = require('fs');
 
@@ -171,7 +170,48 @@ function outputFunctionTypes(pkg: Package) {
     }
 }
 
+function testParseType(expr: string) {
+    const t = parseType(expr);
+    console.log(expr);
+    console.log(" : " + t);
+}
+
+function testParseTypes() {
+    const typeStrings = [
+        "(Num Num)",
+        "(Func 'T0 'T1 R)",
+        "(Array Num)",
+        "(Array (Func 'T0 Num))",
+        "(Func (Array 'T) (Func 'T 'U) (Array 'U))",
+        "(Func (Array 'T) (Array 'U) (Func 'T 'U 'V) (Array 'V))",
+        "(Func (Array 'T) (Array 'U) (Func 'T 'U Int 'V) (Array 'V))",
+    ];
+    for (const ts of typeStrings)
+        testParseType(ts);
+}
+
+function testCallFunctions() {
+    const map = "(Func (Array 'A) (Func 'A 'B) (Array 'B))";
+    const tests = [
+        ["(Func 'A 'A)", "(Num)"],
+        ["(Func 'A 'B ('B 'A))", "(Num Bool)"],
+        [map, "((Array Num) (Func Num Str))"],        
+    ];
+    for (const t of tests) {
+        const f = parseType(t[0]) as PolyType;
+        const args = parseType(t[1]) as PolyType;
+        const r = callFunction(f, args.types);
+        console.log("func   : " + f);
+        console.log("args   : " + args);
+        console.log("result : " + r);
+    }
+}
+
 function tests() {
+    //testParsingRules();
+    //testParseTypes();
+    //testCallFunctions();
+
     let inputFiles = ['geometry-vector3', 'array', 'test'];
     let pkg = createPackage(inputFiles);
     //outputPackageStats(pkg);
@@ -180,7 +220,7 @@ function tests() {
     let mainMod = pkg.getModule(modName);
     if (!mainMod)
         throw new Error("Could not find module: " + modName);
-    
+   
     //let mainFunc = findFunc(mainMod, 'main');
     //if (!mainFunc)
     //   throw new Error("Could not find entry point function " + modName + "." + mainFunc);
@@ -190,10 +230,10 @@ function tests() {
     //evaluator.evalFunc(mainFunc);
 
     // Look at the usages of each parameter in each function.
-    // analyzeFunctions(pkg);
+    //analyzeFunctions(pkg);
 
-    // AN experiemnt for guessing Traits. 
-    // I have decided that traits need to be declared. 
+    // An experiemnt for guessing Traits. 
+    // I shave decided that traits need to be declared. 
     //outputTraits(pkg);
 
     outputFunctionTypes(pkg);

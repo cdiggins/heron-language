@@ -14,6 +14,14 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __assign = (this && this.__assign) || Object.assign || function(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+    }
+    return t;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var trace = false;
 /** Turn on debug tracing */
@@ -59,10 +67,14 @@ var PolyType = /** @class */ (function (_super) {
         _this.scheme = {};
         return _this;
     }
-    PolyType.prototype.typeSchemeString = function () {
-        var r = values(this.scheme).join("!");
-        return r ? "!" + r + "." : r;
-    };
+    Object.defineProperty(PolyType.prototype, "typeSchemeString", {
+        get: function () {
+            var r = values(this.scheme).join("!");
+            return r ? "!" + r + "." : r;
+        },
+        enumerable: true,
+        configurable: true
+    });
     PolyType.prototype.toString = function () {
         return this.typeSchemeString + "(" + this.types.join(" ") + ")";
     };
@@ -170,10 +182,36 @@ var TypeResolver = /** @class */ (function () {
             ? freshParameterNames(this.unifiers[v.name])
             : v;
     };
-    /** Returns a unified version of the type. */
-    TypeResolver.prototype.getUnifiedType = function (expr) {
+    /** Returns a unified version of the type.
+     * TODO: check for and handle recursion.
+    */
+    TypeResolver.prototype.getUnifiedType = function (expr, seenVars, depth) {
         var _this = this;
-        return clone(expr, function (v) { return _this.getUnifier(v); });
+        if (seenVars === void 0) { seenVars = {}; }
+        if (depth === void 0) { depth = 0; }
+        if (expr instanceof TypeConstant)
+            return expr;
+        else if (expr instanceof TypeVariable) {
+            if (expr.name in seenVars)
+                return recursiveType(depth - seenVars[expr.name]);
+            seenVars = __assign({}, seenVars, (_a = {}, _a[expr.name] = depth, _a));
+            if (expr.name in this.unifiers) {
+                var u = this.unifiers[expr.name];
+                if (u instanceof TypeVariable)
+                    return u;
+                else if (u instanceof TypeConstant)
+                    return u;
+                else if (u instanceof PolyType)
+                    return this.getUnifiedType(u, seenVars, depth + 1);
+            }
+            else {
+                return expr;
+            }
+        }
+        else if (expr instanceof PolyType) {
+            return clone(expr, function (v) { return _this.getUnifiedType(v, seenVars, depth); });
+        }
+        var _a;
     };
     /** Choose one of two unifiers, or continue the unification process if necessary */
     TypeResolver.prototype._chooseBestUnifier = function (t1, t2, depth) {
@@ -348,10 +386,7 @@ function freshVariableNames(t) {
 exports.freshVariableNames = freshVariableNames;
 /** Provides unique names for the type scheme types only.*/
 function freshParameterNames(t) {
-    if (t instanceof TypeVariable) {
-        return t;
-    }
-    else if (t instanceof TypeConstant) {
+    if (t instanceof MonoType) {
         return t;
     }
     else if (t instanceof PolyType) {
@@ -398,14 +433,8 @@ function clone(t, remapper) {
         return t;
     }
     else if (t instanceof PolyType) {
-        var scheme = {};
-        // Remap the schema
-        for (var _i = 0, _a = keys(t.scheme); _i < _a.length; _i++) {
-            var k = _a[_i];
-            var v = clone(t.scheme[k], remapper);
-            scheme[v.name] = v;
-        }
         var types = t.types.map(function (x) { return clone(x, remapper); });
+        return polyType(types);
     }
 }
 exports.clone = clone;
@@ -425,7 +454,7 @@ function _reassignVarScheme(typeVar, t) {
     for (var _i = 0, _a = containedTypes(t); _i < _a.length; _i++) {
         var x = _a[_i];
         if (x instanceof PolyType && typeVar.name in x.scheme)
-            x.scheme[typeVar.name] = undefined;
+            delete (x.scheme[typeVar.name]);
     }
     t.scheme[typeVar.name] = typeVar;
 }
@@ -441,28 +470,20 @@ function computeScheme(t) {
         if (x instanceof PolyType)
             computeScheme(x);
     }
-    for (var i_1 = 0; i_1 < t.types.length; ++i_1) {
-        var child = t.types[i_1];
+    for (var i = 0; i < t.types.length; ++i) {
+        var child = t.types[i];
         // Individual type variables are part of this scheme 
         if (child instanceof TypeVariable)
             t.scheme[child.name] = child;
         else if (child instanceof PolyType) {
             for (var _b = 0, _c = values(typeVars(child)); _b < _c.length; _b++) {
                 var childVar = _c[_b];
-                if (_isTypeVarUsedElsewhere(this, childVar.name, i_1))
+                if (_isTypeVarUsedElsewhere(child.types, childVar.name, i))
                     _reassignVarScheme(childVar, t);
             }
         }
     }
-    // Implementation validation step:
-    // Assure that the type scheme variables are all in the typeVars 
-    for (var _d = 0, _e = this.typeParameterVars; _d < _e.length; _d++) {
-        var v = _e[_d];
-        var i = this.typeVars.indexOf(v);
-        if (i < 0)
-            throw new Error("Internal error: type scheme references a variable that is not marked as referenced by the type variable");
-    }
-    return this;
+    return t;
 }
 exports.computeScheme = computeScheme;
 //===============================================================
@@ -484,7 +505,7 @@ function toLookup(vals, keyFunc, valFunc) {
     var i = 0;
     for (var _i = 0, vals_1 = vals; _i < vals_1.length; _i++) {
         var v = vals_1[_i];
-        r[keyFunc(v)] = valFunc(v, i);
+        r[keyFunc(v)] = valFunc(v, i++);
     }
     return r;
 }

@@ -1,6 +1,6 @@
-// Generated on Sat Mar 24 2018 16:42:23 GMT-0400 (Eastern Daylight Time)
+// Generated on Sun Mar 25 2018 22:31:32 GMT-0400 (Eastern Daylight Time)
 heron:std:0.1heron:std.array:0.1{
-// definition type (Func T0 R)
+// definition type undefined
 
 /**
 function unit(x) 
@@ -8,12 +8,12 @@ function unit(x)
 
     
 */
-// definition type (Func T0 R)
-function unit(// definition type T0
+// definition type undefined
+function unit(// definition type 'T0
 x)
-// expression type (Array T0)
-[// expression type T0
-x]// definition type (Func T0 T1 R)
+// expression type undefined
+[// expression type 'T0
+x]// definition type undefined
 
 /**
 function map(xs, f)
@@ -21,24 +21,24 @@ function map(xs, f)
 
     
 */
-// definition type (Func T0 T1 R)
-function map(// definition type T0
-xs, // definition type T1
+// definition type undefined
+function map(// definition type 'T0
+xs, // definition type 'T1
 f)
 // expression type Error
-// expression type (FuncSet ((Func Int (Func Int T) (Array T)) (Func (ArrayBuilder T) (Array T)) (Func Float2 R) (Func Float3 R) (Func Float4 R)))
-array(// expression type Int
-// expression type (FuncSet ((Func (Array T) Int) (Func (ArrayBuilder T) Int) (Func T0 T1 R)))
-count(// expression type T0
-xs), // expression type (Func T0 R)
-(// definition type T0
-i) => // expression type $21
-// expression type T1
+// expression type Error
+array(// expression type Error
+// expression type Error
+count(// expression type 'T0
+xs), // expression type undefined
+(// definition type 'T0
+i) => // expression type '@1
+// expression type 'T1
 f(// expression type Error
-// expression type (Func (Array T) Int T)
-op[](// expression type T0
-xs, // expression type T0
-i)))// definition type !R!T0.(Func T0 T0 R)
+// expression type undefined
+op[](// expression type 'T0
+xs, // expression type 'T0
+i)))// definition type undefined
 
 /**
 function min(x, y) 
@@ -46,18 +46,18 @@ function min(x, y)
 
     
 */
-// definition type !R!T0.(Func T0 T0 R)
-function min(// definition type T0
-x, // definition type T1
+// definition type undefined
+function min(// definition type 'T0
+x, // definition type 'T1
 y)
-// expression type T0
 // expression type Error
-// expression type (Func Float Float Bool)
-op<=(// expression type T0
-x, // expression type T1
-y) ? // expression type T0
-x// expression type T1
-y// definition type !R!T0.(Func T0 T0 R)
+// expression type Error
+// expression type undefined
+op<=(// expression type 'T0
+x, // expression type 'T1
+y) ? // expression type undefined
+x// expression type undefined
+y// definition type undefined
 
 /**
 function max(x, y) 
@@ -65,18 +65,18 @@ function max(x, y)
    
     
 */
-// definition type !R!T0.(Func T0 T0 R)
-function max(// definition type T0
-x, // definition type T1
+// definition type undefined
+function max(// definition type 'T0
+x, // definition type 'T1
 y)
-// expression type T0
 // expression type Error
-// expression type (Func Float Float Bool)
-op<=(// expression type T0
-x, // expression type T1
-y) ? // expression type T0
-x// expression type T1
-y// definition type (Func T0 T0 R)
+// expression type Error
+// expression type undefined
+op<=(// expression type 'T0
+x, // expression type 'T1
+y) ? // expression type undefined
+x// expression type undefined
+y// definition type undefined
 
 /**
 function shorter(xs, ys) 
@@ -84,22 +84,22 @@ function shorter(xs, ys)
    
     
 */
-// definition type (Func T0 T0 R)
-function shorter(// definition type T0
-xs, // definition type T1
+// definition type undefined
+function shorter(// definition type 'T0
+xs, // definition type 'T1
 ys)
-// expression type T0
 // expression type Error
-// expression type (Func Float Float Bool)
-op<=(// expression type Int
-// expression type (FuncSet ((Func (Array T) Int) (Func (ArrayBuilder T) Int) (Func T0 T1 R)))
-count(// expression type T0
-xs), // expression type Int
-// expression type (FuncSet ((Func (Array T) Int) (Func (ArrayBuilder T) Int) (Func T0 T1 R)))
-count(// expression type T1
-ys)) ? // expression type T0
-xs// expression type T1
-ys// definition type (Func T0 T0 R)
+// expression type Error
+// expression type undefined
+op<=(// expression type Error
+// expression type Error
+count(// expression type 'T0
+xs), // expression type Error
+// expression type Error
+count(// expression type 'T1
+ys)) ? // expression type undefined
+xs// expression type undefined
+ys// definition type undefined
 
 /**
 function longer(xs, ys) 
@@ -107,22 +107,22 @@ function longer(xs, ys)
 
     
 */
-// definition type (Func T0 T0 R)
-function longer(// definition type T0
-xs, // definition type T1
+// definition type undefined
+function longer(// definition type 'T0
+xs, // definition type 'T1
 ys)
-// expression type T0
 // expression type Error
-// expression type (Func Float Float Bool)
-op>=(// expression type Int
-// expression type (FuncSet ((Func (Array T) Int) (Func (ArrayBuilder T) Int) (Func T0 T1 R)))
-count(// expression type T0
-xs), // expression type Int
-// expression type (FuncSet ((Func (Array T) Int) (Func (ArrayBuilder T) Int) (Func T0 T1 R)))
-count(// expression type T1
-ys)) ? // expression type T0
-xs// expression type T1
-ys// definition type (Func T0 R)
+// expression type Error
+// expression type undefined
+op>=(// expression type Error
+// expression type Error
+count(// expression type 'T0
+xs), // expression type Error
+// expression type Error
+count(// expression type 'T1
+ys)) ? // expression type undefined
+xs// expression type undefined
+ys// definition type undefined
 
 /**
 function empty(xs) 
@@ -130,16 +130,16 @@ function empty(xs)
 
     
 */
-// definition type (Func T0 R)
-function empty(// definition type T0
+// definition type undefined
+function empty(// definition type 'T0
 xs)
 // expression type Error
-// expression type (Func Float Float Bool)
-op==(// expression type Int
-// expression type (FuncSet ((Func (Array T) Int) (Func (ArrayBuilder T) Int) (Func T0 T1 R)))
-count(// expression type T0
+// expression type undefined
+op==(// expression type Error
+// expression type Error
+count(// expression type 'T0
 xs), // expression type Num
-0)// definition type !R!T0!T1.(Func T0 T1 R)
+0)// definition type undefined
 
 /**
 function at(xs, i) 
@@ -147,15 +147,15 @@ function at(xs, i)
 
     
 */
-// definition type !R!T0!T1.(Func T0 T1 R)
-function at(// definition type T0
-xs, // definition type T1
+// definition type undefined
+function at(// definition type 'T0
+xs, // definition type 'T1
 i)
 // expression type Error
-// expression type (Func (Array T) Int T)
-op[](// expression type T0
-xs, // expression type T1
-i)// definition type (Func T0 T1 R)
+// expression type undefined
+op[](// expression type 'T0
+xs, // expression type 'T1
+i)// definition type undefined
 
 /**
 function selectByIndex(xs, indices) 
@@ -163,17 +163,17 @@ function selectByIndex(xs, indices)
 
     
 */
-// definition type (Func T0 T1 R)
-function selectByIndex(// definition type T0
-xs, // definition type T1
+// definition type undefined
+function selectByIndex(// definition type 'T0
+xs, // definition type 'T1
 indices)
 // expression type Error
-// expression type (Func T0 T1 R)
-map(// expression type T1
+// expression type undefined
+map(// expression type 'T1
 indices, // expression type Error
-// expression type (FuncSet ((Func (Array T) Int T) (Func (ArrayBuilder T) Int T) (Func T0 T1 R)))
-at(// expression type T0
-xs))// definition type (Func T0 R)
+// expression type Error
+at(// expression type 'T0
+xs))// definition type undefined
 
 /**
 function indices(xs) 
@@ -181,16 +181,16 @@ function indices(xs)
 
     
 */
-// definition type (Func T0 R)
-function indices(// definition type T0
+// definition type undefined
+function indices(// definition type 'T0
 xs)
 // expression type Error
-// expression type (Func Int Int (Array Int))
+// expression type undefined
 op..(// expression type Num
-0, // expression type Int
-// expression type (FuncSet ((Func (Array T) Int) (Func (ArrayBuilder T) Int) (Func T0 T1 R)))
-count(// expression type T0
-xs))// definition type (Func T0 T1 T2 R)
+0, // expression type Error
+// expression type Error
+count(// expression type 'T0
+xs))// definition type undefined
 
 /**
 function zip(xs, ys, f) 
@@ -200,47 +200,47 @@ function zip(xs, ys, f)
 
     
 */
-// definition type (Func T0 T1 T2 R)
-function zip(// definition type T0
-xs, // definition type T1
-ys, // definition type T2
+// definition type undefined
+function zip(// definition type 'T0
+xs, // definition type 'T1
+ys, // definition type 'T2
 f)
 // expression type Error
 // expression type Error
-// expression type (Func Float Float Bool)
-op<=(// expression type Int
-// expression type (FuncSet ((Func (Array T) Int) (Func (ArrayBuilder T) Int) (Func T0 T1 R)))
-count(// expression type T0
-xs), // expression type Int
-// expression type (FuncSet ((Func (Array T) Int) (Func (ArrayBuilder T) Int) (Func T0 T1 R)))
-count(// expression type T1
-ys)) ? // expression type Error
-// expression type (Func T0 T1 R)
-map(// expression type T0
-xs, // expression type (Func T0 T1 R)
-(// definition type T0
-x, // definition type T1
-i) => // expression type $998
-// expression type T2
-f(// expression type T0
-x, // expression type Error
-// expression type (Func (Array T) Int T)
-op[](// expression type T1
-ys, // expression type T1
-i)))// expression type Error
-// expression type (Func T0 T1 R)
-map(// expression type T1
-ys, // expression type (Func T0 T1 R)
-(// definition type T0
-y, // definition type T1
-i) => // expression type $1006
-// expression type T2
-f(// expression type Error
-// expression type (Func (Array T) Int T)
-op[](// expression type T0
-xs, // expression type T1
-i), // expression type T0
-y))// definition type (Func T0 T1 R)
+// expression type undefined
+op<=(// expression type Error
+// expression type Error
+count(// expression type 'T0
+xs), // expression type Error
+// expression type Error
+count(// expression type 'T1
+ys)) ? // expression type undefined
+// expression type undefined
+map(// expression type undefined
+xs, // expression type undefined
+(// definition type undefined
+x, // definition type undefined
+i) => // expression type undefined
+// expression type undefined
+f(// expression type undefined
+x, // expression type undefined
+// expression type undefined
+op[](// expression type undefined
+ys, // expression type undefined
+i)))// expression type undefined
+// expression type undefined
+map(// expression type undefined
+ys, // expression type undefined
+(// definition type undefined
+y, // definition type undefined
+i) => // expression type undefined
+// expression type undefined
+f(// expression type undefined
+// expression type undefined
+op[](// expression type undefined
+xs, // expression type undefined
+i), // expression type undefined
+y))// definition type undefined
 
 /**
 function all(xs, p) 
@@ -248,24 +248,24 @@ function all(xs, p)
 
     
 */
-// definition type (Func T0 T1 R)
-function all(// definition type T0
-xs, // definition type T1
+// definition type undefined
+function all(// definition type 'T0
+xs, // definition type 'T1
 p)
 // expression type Error
-// expression type (Func (Array $4) T1 T2 T1)
-reduce(// expression type T0
+// expression type undefined
+reduce(// expression type 'T0
 xs, // expression type Bool
-true, // expression type (Func T0 (Func (rec 0) $36) R)
-(// definition type T0
-prev, // definition type T1
+true, // expression type undefined
+(// definition type 'T0
+prev, // definition type 'T1
 x) => // expression type Error
-// expression type (Func Bool Bool Bool)
-op&&(// expression type T0
-prev, // expression type $36
-// expression type T1
-p(// expression type T1
-x)))// definition type (Func T0 T1 R)
+// expression type undefined
+op&&(// expression type 'T0
+prev, // expression type '@2
+// expression type 'T1
+p(// expression type 'T1
+x)))// definition type undefined
 
 /**
 function any(xs, p) 
@@ -273,24 +273,24 @@ function any(xs, p)
 
     
 */
-// definition type (Func T0 T1 R)
-function any(// definition type T0
-xs, // definition type T1
+// definition type undefined
+function any(// definition type 'T0
+xs, // definition type 'T1
 p)
 // expression type Error
-// expression type (Func (Array $4) T1 T2 T1)
-reduce(// expression type T0
+// expression type undefined
+reduce(// expression type 'T0
 xs, // expression type Bool
-false, // expression type (Func T0 (Func (rec 0) $43) R)
-(// definition type T0
-prev, // definition type T1
+false, // expression type undefined
+(// definition type 'T0
+prev, // definition type 'T1
 x) => // expression type Error
-// expression type (Func Bool Bool Bool)
-op||(// expression type T0
-prev, // expression type $43
-// expression type T1
-p(// expression type T1
-x)))// definition type !R!T0!T1.(Func T0 T1 R)
+// expression type undefined
+op||(// expression type 'T0
+prev, // expression type '@3
+// expression type 'T1
+p(// expression type 'T1
+x)))// definition type undefined
 
 /**
 function count(xs, p) 
@@ -298,27 +298,27 @@ function count(xs, p)
 
     
 */
-// definition type !R!T0!T1.(Func T0 T1 R)
-function count(// definition type T0
-xs, // definition type T1
+// definition type undefined
+function count(// definition type 'T0
+xs, // definition type 'T1
 p)
 // expression type Error
-// expression type (Func (Array $4) T1 T2 T1)
-reduce(// expression type T0
+// expression type undefined
+reduce(// expression type 'T0
 xs, // expression type Num
-0, // expression type (Func Error (Func (rec 0) Bool) R)
-(// definition type T0
-prev, // definition type T1
+0, // expression type undefined
+(// definition type 'T0
+prev, // definition type 'T1
 x) => // expression type Error
-// expression type $11
-// expression type T1
-p(// expression type T1
+// expression type '@0
+// expression type 'T1
+p(// expression type 'T1
 x) ? // expression type Error
-// expression type (Func Float Float Float)
-op+(// expression type T0
+// expression type undefined
+op+(// expression type 'T0
 prev, // expression type Num
-1)// expression type T0
-prev)// definition type (Func T0 T1 R)
+1)// expression type 'T0
+prev)// definition type undefined
 
 /**
 function eq(xs, ys) 
@@ -326,19 +326,19 @@ function eq(xs, ys)
 
     
 */
-// definition type (Func T0 T1 R)
-function eq(// definition type T0
-xs, // definition type T1
+// definition type undefined
+function eq(// definition type 'T0
+xs, // definition type 'T1
 ys)
 // expression type Error
-// expression type (Func Float Float Bool)
-op==(// expression type Int
-// expression type (FuncSet ((Func (Array T) Int) (Func (ArrayBuilder T) Int) (Func T0 T1 R)))
-count(// expression type T0
-xs), // expression type Int
-// expression type (FuncSet ((Func (Array T) Int) (Func (ArrayBuilder T) Int) (Func T0 T1 R)))
-count(// expression type T1
-ys))// definition type (Func (Array $1504) T1 Error)
+// expression type undefined
+op==(// expression type Error
+// expression type Error
+count(// expression type 'T0
+xs), // expression type Error
+// expression type Error
+count(// expression type 'T1
+ys))// definition type undefined
 
 /**
 function filter(xs, p) {
@@ -352,21 +352,21 @@ function filter(xs, p) {
 
     
 */
-// definition type (Func (Array $1504) T1 Error)
-function filter(// definition type T0
-xs, // definition type T1
+// definition type undefined
+function filter(// definition type 'T0
+xs, // definition type 'T1
 p)
 {
 var // definition type Error
 ys// expression type Error
-// expression type (Func (Array T) (ArrayBuilder T))
-mutable(// expression type T0
+// expression type undefined
+mutable(// expression type 'T0
 xs);
 var // definition type Num
 i// expression type Num
 0;
-// definition type $1504
-for (x in // expression type T0
+// definition type '$8
+for (x in // expression type 'T0
 xs)
 {
 if (// expression type undefined
@@ -383,14 +383,14 @@ i++, // expression type undefined
 x);
 }
 return // expression type Error
-// expression type (Func (Array $1504) T1 R)
-take(// expression type (union ((Array T) R))
-// expression type (FuncSet ((Func Int (Func Int T) (Array T)) (Func (ArrayBuilder T) !T.(Array T)) (Func Float2 R) (Func Float3 R) (Func Float4 R)))
+// expression type undefined
+take(// expression type Error
+// expression type Error
 array(// expression type Error
 ys), // expression type Num
 i);
 }
-// definition type (Func T0 T1 R)
+// definition type undefined
 
 /**
 function repeat(x, n) 
@@ -398,21 +398,21 @@ function repeat(x, n)
 
     
 */
-// definition type (Func T0 T1 R)
-function repeat(// definition type T0
-x, // definition type T1
+// definition type undefined
+function repeat(// definition type 'T0
+x, // definition type 'T1
 n)
 // expression type Error
-// expression type (Func T0 T1 R)
+// expression type undefined
 map(// expression type Error
 (// expression type Error
-// expression type (Func Int Int (Array Int))
+// expression type undefined
 op..(// expression type Num
-0, // expression type T1
-n)), // expression type (Func T0 R)
-(// definition type T0
-i) => // expression type T0
-x)// definition type (Func T0 T1 R)
+0, // expression type 'T1
+n)), // expression type undefined
+(// definition type 'T0
+i) => // expression type 'T0
+x)// definition type undefined
 
 /**
 function prefixScan(xs, op) {
@@ -425,9 +425,9 @@ function prefixScan(xs, op) {
 
     
 */
-// definition type (Func T0 T1 R)
-function prefixScan(// definition type T0
-xs, // definition type T1
+// definition type undefined
+function prefixScan(// definition type 'T0
+xs, // definition type 'T1
 op)
 {
 {
@@ -489,7 +489,7 @@ return // expression type undefined
 array(// expression type undefined
 ys);
 }
-// definition type (Func T0 R)
+// definition type undefined
 
 /**
 function adjacentDifferences(xs) 
@@ -497,39 +497,39 @@ function adjacentDifferences(xs)
     
     
 */
-// definition type (Func T0 R)
-function adjacentDifferences(// definition type T0
+// definition type undefined
+function adjacentDifferences(// definition type 'T0
 xs)
 // expression type Error
-// expression type (Func T0 T1 R)
+// expression type undefined
 map(// expression type Error
-// expression type (Func T0 R)
-indices(// expression type T0
-xs), // expression type (Func T0 R)
-(// definition type T0
+// expression type undefined
+indices(// expression type 'T0
+xs), // expression type undefined
+(// definition type 'T0
 i) => // expression type Error
 // expression type Error
-// expression type (Func Float Float Bool)
-op>(// expression type T0
+// expression type undefined
+op>(// expression type 'T0
 i, // expression type Num
-0) ? // expression type Error
-// expression type (Func Float Float Float)
-op-(// expression type Error
-// expression type (Func (Array T) Int T)
-op[](// expression type T0
-xs, // expression type T0
-i), // expression type Error
-// expression type (Func (Array T) Int T)
-op[](// expression type T0
-xs, // expression type Error
-// expression type (Func Float Float Float)
-op-(// expression type T0
-i, // expression type Num
-1)))// expression type Error
-// expression type (Func (Array T) Int T)
-op[](// expression type T0
-xs, // expression type T0
-i))// definition type (Func T0 T1 T2 R)
+0) ? // expression type undefined
+// expression type undefined
+op-(// expression type undefined
+// expression type undefined
+op[](// expression type undefined
+xs, // expression type undefined
+i), // expression type undefined
+// expression type undefined
+op[](// expression type undefined
+xs, // expression type undefined
+// expression type undefined
+op-(// expression type undefined
+i, // expression type undefined
+1)))// expression type undefined
+// expression type undefined
+op[](// expression type undefined
+xs, // expression type undefined
+i))// definition type undefined
 
 /**
 function slice(xs, from, to) 
@@ -537,22 +537,22 @@ function slice(xs, from, to)
 
     
 */
-// definition type (Func T0 T1 T2 R)
-function slice(// definition type T0
-xs, // definition type T1
-from, // definition type T2
+// definition type undefined
+function slice(// definition type 'T0
+xs, // definition type 'T1
+from, // definition type 'T2
 to)
 // expression type Error
-// expression type (Func T0 T1 R)
+// expression type undefined
 map(// expression type Error
 (// expression type Error
-// expression type (Func Int Int (Array Int))
-op..(// expression type T1
-from, // expression type T2
+// expression type undefined
+op..(// expression type 'T1
+from, // expression type 'T2
 to)), // expression type Error
-// expression type (FuncSet ((Func (Array T) Int T) (Func (ArrayBuilder T) Int T) (Func T0 T1 R)))
-at(// expression type T0
-xs))// definition type (Func T0 T1 R)
+// expression type Error
+at(// expression type 'T0
+xs))// definition type undefined
 
 /**
 function stride(xs, n) 
@@ -560,32 +560,32 @@ function stride(xs, n)
 
     
 */
-// definition type (Func T0 T1 R)
-function stride(// definition type T0
-xs, // definition type T1
+// definition type undefined
+function stride(// definition type 'T0
+xs, // definition type 'T1
 n)
 // expression type Error
-// expression type (Func T0 T1 R)
+// expression type undefined
 map(// expression type Error
 (// expression type Error
-// expression type (Func Int Int (Array Int))
+// expression type undefined
 op..(// expression type Num
 0, // expression type Error
-// expression type (Func Float Float Float)
-op/(// expression type Int
-// expression type (FuncSet ((Func (Array T) Int) (Func (ArrayBuilder T) Int) (Func T0 T1 R)))
-count(// expression type T0
-xs), // expression type T1
-n))), // expression type (Func T0 R)
-(// definition type T0
+// expression type undefined
+op/(// expression type Error
+// expression type Error
+count(// expression type 'T0
+xs), // expression type 'T1
+n))), // expression type undefined
+(// definition type 'T0
 i) => // expression type Error
-// expression type (Func (Array T) Int T)
-op[](// expression type T0
+// expression type undefined
+op[](// expression type 'T0
 xs, // expression type Error
-// expression type (Func Float Float Float)
-op*(// expression type T0
-i, // expression type T1
-n)))// definition type (Func T0 T1 R)
+// expression type undefined
+op*(// expression type 'T0
+i, // expression type 'T1
+n)))// definition type undefined
 
 /**
 function slices(xs, n) 
@@ -593,35 +593,35 @@ function slices(xs, n)
 
     
 */
-// definition type (Func T0 T1 R)
-function slices(// definition type T0
-xs, // definition type T1
+// definition type undefined
+function slices(// definition type 'T0
+xs, // definition type 'T1
 n)
 // expression type Error
-// expression type (Func T0 T1 R)
+// expression type undefined
 map(// expression type Error
 (// expression type Error
-// expression type (Func Int Int (Array Int))
+// expression type undefined
 op..(// expression type Num
-0, // expression type T1
-n)), // expression type (Func T0 R)
-(// definition type T0
+0, // expression type 'T1
+n)), // expression type undefined
+(// definition type 'T0
 i) => // expression type Error
-// expression type (Func T0 T1 T2 R)
-slice(// expression type T0
+// expression type undefined
+slice(// expression type 'T0
 xs, // expression type Error
-// expression type (Func Float Float Float)
-op*(// expression type T0
-i, // expression type T1
+// expression type undefined
+op*(// expression type 'T0
+i, // expression type 'T1
 n), // expression type Error
-// expression type (Func Float Float Float)
+// expression type undefined
 op*(// expression type Error
 (// expression type Error
-// expression type (Func Float Float Float)
-op+(// expression type T0
+// expression type undefined
+op+(// expression type 'T0
 i, // expression type Num
-1)), // expression type T1
-n)))// definition type (Func T0 T1 R)
+1)), // expression type 'T1
+n)))// definition type undefined
 
 /**
 function take(xs, n) 
@@ -629,16 +629,16 @@ function take(xs, n)
 
     
 */
-// definition type (Func T0 T1 R)
-function take(// definition type T0
-xs, // definition type T1
+// definition type undefined
+function take(// definition type 'T0
+xs, // definition type 'T1
 n)
 // expression type Error
-// expression type (Func T0 T1 T2 R)
-slice(// expression type T0
+// expression type undefined
+slice(// expression type 'T0
 xs, // expression type Num
-0, // expression type T1
-n)// definition type (Func T0 T1 R)
+0, // expression type 'T1
+n)// definition type undefined
 
 /**
 function skip(xs, n) 
@@ -646,21 +646,21 @@ function skip(xs, n)
 
     
 */
-// definition type (Func T0 T1 R)
-function skip(// definition type T0
-xs, // definition type T1
+// definition type undefined
+function skip(// definition type 'T0
+xs, // definition type 'T1
 n)
 // expression type Error
-// expression type (Func T0 T1 T2 R)
-slice(// expression type T0
-xs, // expression type T1
+// expression type undefined
+slice(// expression type 'T0
+xs, // expression type 'T1
 n, // expression type Error
-// expression type (Func Float Float Float)
-op-(// expression type Int
-// expression type (FuncSet ((Func (Array T) Int) (Func (ArrayBuilder T) Int) (Func T0 T1 R)))
-count(// expression type T0
-xs), // expression type T1
-n))// definition type (Func T0 T1 R)
+// expression type undefined
+op-(// expression type Error
+// expression type Error
+count(// expression type 'T0
+xs), // expression type 'T1
+n))// definition type undefined
 
 /**
 function dropSuffix(xs, n) 
@@ -668,20 +668,20 @@ function dropSuffix(xs, n)
 
     
 */
-// definition type (Func T0 T1 R)
-function dropSuffix(// definition type T0
-xs, // definition type T1
+// definition type undefined
+function dropSuffix(// definition type 'T0
+xs, // definition type 'T1
 n)
 // expression type Error
-// expression type (Func T0 T1 R)
-take(// expression type T0
+// expression type undefined
+take(// expression type 'T0
 xs, // expression type Error
-// expression type (Func Float Float Float)
-op-(// expression type Int
-// expression type (FuncSet ((Func (Array T) Int) (Func (ArrayBuilder T) Int) (Func T0 T1 R)))
-count(// expression type T0
-xs), // expression type T1
-n))// definition type (Func T0 T1 R)
+// expression type undefined
+op-(// expression type Error
+// expression type Error
+count(// expression type 'T0
+xs), // expression type 'T1
+n))// definition type undefined
 
 /**
 function suffix(xs, n) 
@@ -689,20 +689,20 @@ function suffix(xs, n)
 
     
 */
-// definition type (Func T0 T1 R)
-function suffix(// definition type T0
-xs, // definition type T1
+// definition type undefined
+function suffix(// definition type 'T0
+xs, // definition type 'T1
 n)
 // expression type Error
-// expression type (Func T0 T1 R)
-skip(// expression type T0
+// expression type undefined
+skip(// expression type 'T0
 xs, // expression type Error
-// expression type (Func Float Float Float)
-op-(// expression type Int
-// expression type (FuncSet ((Func (Array T) Int) (Func (ArrayBuilder T) Int) (Func T0 T1 R)))
-count(// expression type T0
-xs), // expression type T1
-n))// definition type (Func T0 T1 R)
+// expression type undefined
+op-(// expression type Error
+// expression type Error
+count(// expression type 'T0
+xs), // expression type 'T1
+n))// definition type undefined
 
 /**
 function reverse(xs, n) 
@@ -710,30 +710,30 @@ function reverse(xs, n)
 
     
 */
-// definition type (Func T0 T1 R)
-function reverse(// definition type T0
-xs, // definition type T1
+// definition type undefined
+function reverse(// definition type 'T0
+xs, // definition type 'T1
 n)
 // expression type Error
-// expression type (Func T0 T1 R)
+// expression type undefined
 map(// expression type Error
-// expression type (Func T0 R)
-indices(// expression type T0
-xs), // expression type (Func T0 R)
-(// definition type T0
+// expression type undefined
+indices(// expression type 'T0
+xs), // expression type undefined
+(// definition type 'T0
 i) => // expression type Error
-// expression type (Func (Array T) Int T)
-op[](// expression type T0
+// expression type undefined
+op[](// expression type 'T0
 xs, // expression type Error
-// expression type (Func Float Float Float)
+// expression type undefined
 op-(// expression type Error
-// expression type (Func Float Float Float)
-op-(// expression type Int
-// expression type (FuncSet ((Func (Array T) Int) (Func (ArrayBuilder T) Int) (Func T0 T1 R)))
-count(// expression type T0
+// expression type undefined
+op-(// expression type Error
+// expression type Error
+count(// expression type 'T0
 xs), // expression type Num
-1), // expression type T0
-i)))// definition type (Func T0 T1 R)
+1), // expression type 'T0
+i)))// definition type undefined
 
 /**
 function gen(cnt, f) 
@@ -741,19 +741,19 @@ function gen(cnt, f)
 
     
 */
-// definition type (Func T0 T1 R)
-function gen(// definition type T0
-cnt, // definition type T1
+// definition type undefined
+function gen(// definition type 'T0
+cnt, // definition type 'T1
 f)
 // expression type Error
-// expression type (Func T0 T1 R)
+// expression type undefined
 map(// expression type Error
 (// expression type Error
-// expression type (Func Int Int (Array Int))
+// expression type undefined
 op..(// expression type Num
-0, // expression type T0
-cnt)), // expression type T1
-f)// definition type (Func T0 T1 R)
+0, // expression type 'T0
+cnt)), // expression type 'T1
+f)// definition type undefined
 
 /**
 function concat(xs, ys) 
@@ -761,43 +761,43 @@ function concat(xs, ys)
 
     
 */
-// definition type (Func T0 T1 R)
-function concat(// definition type T0
-xs, // definition type T1
+// definition type undefined
+function concat(// definition type 'T0
+xs, // definition type 'T1
 ys)
 // expression type Error
-// expression type (Func T0 T1 R)
+// expression type undefined
 gen(// expression type Error
-// expression type (Func Float Float Float)
-op+(// expression type Int
-// expression type (FuncSet ((Func (Array T) Int) (Func (ArrayBuilder T) Int) (Func T0 T1 R)))
-count(// expression type T0
-xs), // expression type Int
-// expression type (FuncSet ((Func (Array T) Int) (Func (ArrayBuilder T) Int) (Func T0 T1 R)))
-count(// expression type T1
-ys)), // expression type (Func T0 R)
-(// definition type T0
+// expression type undefined
+op+(// expression type Error
+// expression type Error
+count(// expression type 'T0
+xs), // expression type Error
+// expression type Error
+count(// expression type 'T1
+ys)), // expression type undefined
+(// definition type 'T0
 i) => // expression type Error
 // expression type Error
-// expression type (Func Float Float Bool)
-op<(// expression type T0
-i, // expression type Int
-// expression type (FuncSet ((Func (Array T) Int) (Func (ArrayBuilder T) Int) (Func T0 T1 R)))
-count(// expression type T0
-xs)) ? // expression type Error
-// expression type (Func (Array T) Int T)
-op[](// expression type T0
-xs, // expression type T0
-i)// expression type Error
-// expression type (Func (Array T) Int T)
-op[](// expression type T1
-ys, // expression type Error
-// expression type (Func Float Float Float)
-op-(// expression type T0
-i, // expression type Int
-// expression type (FuncSet ((Func (Array T) Int) (Func (ArrayBuilder T) Int) (Func T0 T1 R)))
-count(// expression type T0
-xs))))// definition type (Func T0 T1 T2 R)
+// expression type undefined
+op<(// expression type 'T0
+i, // expression type Error
+// expression type Error
+count(// expression type 'T0
+xs)) ? // expression type undefined
+// expression type undefined
+op[](// expression type undefined
+xs, // expression type undefined
+i)// expression type undefined
+// expression type undefined
+op[](// expression type undefined
+ys, // expression type undefined
+// expression type undefined
+op-(// expression type undefined
+i, // expression type undefined
+// expression type undefined
+count(// expression type undefined
+xs))))// definition type undefined
 
 /**
 function cut(xs, from, n) 
@@ -805,38 +805,38 @@ function cut(xs, from, n)
 
     
 */
-// definition type (Func T0 T1 T2 R)
-function cut(// definition type T0
-xs, // definition type T1
-from, // definition type T2
+// definition type undefined
+function cut(// definition type 'T0
+xs, // definition type 'T1
+from, // definition type 'T2
 n)
 // expression type Error
-// expression type (Func T0 T1 R)
+// expression type undefined
 gen(// expression type Error
-// expression type (Func Float Float Float)
-op-(// expression type Int
-// expression type (FuncSet ((Func (Array T) Int) (Func (ArrayBuilder T) Int) (Func T0 T1 R)))
-count(// expression type T0
-xs), // expression type T2
-n), // expression type (Func T0 R)
-(// definition type T0
+// expression type undefined
+op-(// expression type Error
+// expression type Error
+count(// expression type 'T0
+xs), // expression type 'T2
+n), // expression type undefined
+(// definition type 'T0
 i) => // expression type Error
 // expression type Error
-// expression type (Func Float Float Bool)
-op<(// expression type T0
-i, // expression type T1
-from) ? // expression type Error
-// expression type (Func (Array T) Int T)
-op[](// expression type T0
-xs, // expression type T0
-i)// expression type Error
-// expression type (Func (Array T) Int T)
-op[](// expression type T0
-xs, // expression type Error
-// expression type (Func Float Float Float)
-op+(// expression type T0
-i, // expression type T2
-n)))// definition type (Func T0 T1 T2 R)
+// expression type undefined
+op<(// expression type 'T0
+i, // expression type 'T1
+from) ? // expression type undefined
+// expression type undefined
+op[](// expression type undefined
+xs, // expression type undefined
+i)// expression type undefined
+// expression type undefined
+op[](// expression type undefined
+xs, // expression type undefined
+// expression type undefined
+op+(// expression type undefined
+i, // expression type undefined
+n)))// definition type undefined
 
 /**
 function splice(xs, from, ys) 
@@ -844,25 +844,25 @@ function splice(xs, from, ys)
 
     
 */
-// definition type (Func T0 T1 T2 R)
-function splice(// definition type T0
-xs, // definition type T1
-from, // definition type T2
+// definition type undefined
+function splice(// definition type 'T0
+xs, // definition type 'T1
+from, // definition type 'T2
 ys)
 // expression type Error
-// expression type (Func T0 T1 R)
+// expression type undefined
 concat(// expression type Error
-// expression type (Func T0 T1 R)
+// expression type undefined
 concat(// expression type Error
-// expression type (Func T0 T1 R)
-take(// expression type T0
-xs, // expression type T1
-from), // expression type T2
+// expression type undefined
+take(// expression type 'T0
+xs, // expression type 'T1
+from), // expression type 'T2
 ys), // expression type Error
-// expression type (Func T0 T1 R)
-skip(// expression type T0
-xs, // expression type T1
-from))// definition type (Func T0 R)
+// expression type undefined
+skip(// expression type 'T0
+xs, // expression type 'T1
+from))// definition type undefined
 
 /**
 function sum(xs) 
@@ -870,15 +870,15 @@ function sum(xs)
 
     
 */
-// definition type (Func T0 R)
-function sum(// definition type T0
+// definition type undefined
+function sum(// definition type 'T0
 xs)
 // expression type Error
-// expression type (Func (Array $4) T1 T2 T1)
-reduce(// expression type T0
+// expression type undefined
+reduce(// expression type 'T0
 xs, // expression type Num
-0, // expression type (Func Float Float Float)
-op+)// definition type (Func T0 R)
+0, // expression type undefined
+op+)// definition type undefined
 
 /**
 function product(xs) 
@@ -886,15 +886,15 @@ function product(xs)
     
     
 */
-// definition type (Func T0 R)
-function product(// definition type T0
+// definition type undefined
+function product(// definition type 'T0
 xs)
 // expression type Error
-// expression type (Func (Array $4) T1 T2 T1)
-reduce(// expression type T0
+// expression type undefined
+reduce(// expression type 'T0
 xs, // expression type Num
-1, // expression type (Func Float Float Float)
-op*)// definition type (Func T0 R)
+1, // expression type undefined
+op*)// definition type undefined
 
 /**
 function average(xs) 
@@ -902,18 +902,18 @@ function average(xs)
 
     
 */
-// definition type (Func T0 R)
-function average(// definition type T0
+// definition type undefined
+function average(// definition type 'T0
 xs)
 // expression type Error
-// expression type (Func Float Float Float)
+// expression type undefined
 op/(// expression type Error
-// expression type (Func T0 R)
-sum(// expression type T0
-xs), // expression type Int
-// expression type (FuncSet ((Func (Array T) Int) (Func (ArrayBuilder T) Int) (Func T0 T1 R)))
-count(// expression type T0
-xs))// definition type (Func T0 R)
+// expression type undefined
+sum(// expression type 'T0
+xs), // expression type Error
+// expression type Error
+count(// expression type 'T0
+xs))// definition type undefined
 
 /**
 function minElement(xs) 
@@ -921,18 +921,18 @@ function minElement(xs)
 
     
 */
-// definition type (Func T0 R)
-function minElement(// definition type T0
+// definition type undefined
+function minElement(// definition type 'T0
 xs)
 // expression type Error
-// expression type (Func (Array $4) T1 T2 T1)
-reduce(// expression type T0
+// expression type undefined
+reduce(// expression type 'T0
 xs, // expression type Error
-// expression type (Func (Array T) Int T)
-op[](// expression type T0
+// expression type undefined
+op[](// expression type 'T0
 xs, // expression type Num
-0), // expression type (FuncSet ((Func Float Float Float) (Func T0 T0 R)))
-min)// definition type (Func T0 R)
+0), // expression type Error
+min)// definition type undefined
 
 /**
 function maxElement(xs) 
@@ -940,18 +940,18 @@ function maxElement(xs)
 
     
 */
-// definition type (Func T0 R)
-function maxElement(// definition type T0
+// definition type undefined
+function maxElement(// definition type 'T0
 xs)
 // expression type Error
-// expression type (Func (Array $4) T1 T2 T1)
-reduce(// expression type T0
+// expression type undefined
+reduce(// expression type 'T0
 xs, // expression type Error
-// expression type (Func (Array T) Int T)
-op[](// expression type T0
+// expression type undefined
+op[](// expression type 'T0
 xs, // expression type Num
-0), // expression type (FuncSet ((Func Float Float Float) (Func T0 T0 R)))
-max)// definition type (Func T0 T1 T2 T0)
+0), // expression type Error
+max)// definition type undefined
 
 /**
 function partition(a, lo, hi) {
@@ -971,28 +971,28 @@ function partition(a, lo, hi) {
 
     
 */
-// definition type (Func T0 T1 T2 T0)
-function partition(// definition type T0
-a, // definition type T1
-lo, // definition type T2
+// definition type undefined
+function partition(// definition type 'T0
+a, // definition type 'T1
+lo, // definition type 'T2
 hi)
 {
 var // definition type Error
 pivot// expression type Error
-// expression type (Func (Array T) Int T)
-op[](// expression type T0
-a, // expression type T1
+// expression type undefined
+op[](// expression type 'T0
+a, // expression type 'T1
 lo);
 var // definition type Error
 i// expression type Error
-// expression type (Func Float Float Float)
-op-(// expression type T1
+// expression type undefined
+op-(// expression type 'T1
 lo, // expression type Num
 1);
 var // definition type Error
 j// expression type Error
-// expression type (Func Float Float Float)
-op+(// expression type T2
+// expression type undefined
+op+(// expression type 'T2
 hi, // expression type Num
 1);
 while (while (// expression type undefined
@@ -1138,10 +1138,10 @@ a, // expression type undefined
 j, // expression type undefined
 tmp);
 }
-return // expression type T0
+return // expression type 'T0
 a;
 }
-// definition type (Func T0 T1 T2 R)
+// definition type undefined
 
 /**
 function qsort(a, lo, hi) {
@@ -1156,10 +1156,10 @@ function qsort(a, lo, hi) {
 
     
 */
-// definition type (Func T0 T1 T2 R)
-function qsort(// definition type T0
-a, // definition type T1
-lo, // definition type T2
+// definition type undefined
+function qsort(// definition type 'T0
+a, // definition type 'T1
+lo, // definition type 'T2
 hi)
 {
 {
@@ -1208,7 +1208,7 @@ hi);
 return // expression type undefined
 a;
 }
-// definition type (Func T0 R)
+// definition type undefined
 
 /**
 function sort(xs) 
@@ -1216,24 +1216,24 @@ function sort(xs)
 
     
 */
-// definition type (Func T0 R)
-function sort(// definition type T0
+// definition type undefined
+function sort(// definition type 'T0
 xs)
-// expression type (union ((Array T) R))
-// expression type (FuncSet ((Func Int (Func Int T) (Array T)) (Func (ArrayBuilder T) !T.(Array T)) (Func Float2 R) (Func Float3 R) (Func Float4 R)))
+// expression type Error
+// expression type Error
 array(// expression type Error
-// expression type (Func T0 T1 T2 R)
+// expression type undefined
 qsort(// expression type Error
-// expression type (Func (Array T) (ArrayBuilder T))
-mutable(// expression type T0
+// expression type undefined
+mutable(// expression type 'T0
 xs), // expression type Num
 0, // expression type Error
-// expression type (Func Float Float Float)
-op-(// expression type Int
-// expression type (FuncSet ((Func (Array T) Int) (Func (ArrayBuilder T) Int) (Func T0 T1 R)))
-count(// expression type T0
+// expression type undefined
+op-(// expression type Error
+// expression type Error
+count(// expression type 'T0
 xs), // expression type Num
-1)))// definition type (Func T0 Error)
+1)))// definition type undefined
 
 /**
 function median(xs) {        
@@ -1245,66 +1245,66 @@ function median(xs) {
 
     
 */
-// definition type (Func T0 Error)
-function median(// definition type T0
+// definition type undefined
+function median(// definition type 'T0
 xs)
 {
 var // definition type Error
 ys// expression type Error
-// expression type (Func T0 R)
-sort(// expression type T0
+// expression type undefined
+sort(// expression type 'T0
 xs);
 return // expression type Error
 // expression type Error
-// expression type (Func Float Float Bool)
+// expression type undefined
 op==(// expression type Error
-// expression type (Func Float Float Float)
-op%(// expression type Int
-// expression type (FuncSet ((Func (Array T) Int) (Func (ArrayBuilder T) Int) (Func T0 T1 R)))
+// expression type undefined
+op%(// expression type Error
+// expression type Error
 count(// expression type Error
 ys), // expression type Num
 2), // expression type Num
-0) ? // expression type Error
-// expression type (Func (Array T) Int T)
-op[](// expression type Error
-ys, // expression type Error
-// expression type (Func Float Float Float)
-op/(// expression type Int
-// expression type (FuncSet ((Func (Array T) Int) (Func (ArrayBuilder T) Int) (Func T0 T1 R)))
-count(// expression type Error
-ys), // expression type Num
-2))// expression type Error
-// expression type (Func Float Float Float)
-op+(// expression type Error
-// expression type (Func (Array T) Int T)
-op[](// expression type Error
-ys, // expression type Error
-// expression type (Func Float Float Float)
-op-(// expression type Error
-// expression type (Func Float Float Float)
-op/(// expression type Int
-// expression type (FuncSet ((Func (Array T) Int) (Func (ArrayBuilder T) Int) (Func T0 T1 R)))
-count(// expression type Error
-ys), // expression type Num
-2), // expression type Num
-1)), // expression type Error
-// expression type (Func Float Float Float)
-op/(// expression type Error
-// expression type (Func (Array T) Int T)
-op[](// expression type Error
-ys, // expression type Error
-// expression type (Func Float Float Float)
-op+(// expression type Error
-// expression type (Func Float Float Float)
-op/(// expression type Int
-// expression type (FuncSet ((Func (Array T) Int) (Func (ArrayBuilder T) Int) (Func T0 T1 R)))
-count(// expression type Error
-ys), // expression type Num
-2), // expression type Num
-1)), // expression type Num
+0) ? // expression type undefined
+// expression type undefined
+op[](// expression type undefined
+ys, // expression type undefined
+// expression type undefined
+op/(// expression type undefined
+// expression type undefined
+count(// expression type undefined
+ys), // expression type undefined
+2))// expression type undefined
+// expression type undefined
+op+(// expression type undefined
+// expression type undefined
+op[](// expression type undefined
+ys, // expression type undefined
+// expression type undefined
+op-(// expression type undefined
+// expression type undefined
+op/(// expression type undefined
+// expression type undefined
+count(// expression type undefined
+ys), // expression type undefined
+2), // expression type undefined
+1)), // expression type undefined
+// expression type undefined
+op/(// expression type undefined
+// expression type undefined
+op[](// expression type undefined
+ys, // expression type undefined
+// expression type undefined
+op+(// expression type undefined
+// expression type undefined
+op/(// expression type undefined
+// expression type undefined
+count(// expression type undefined
+ys), // expression type undefined
+2), // expression type undefined
+1)), // expression type undefined
 2));
 }
-// definition type (Func T0 T1 R)
+// definition type undefined
 
 /**
 function inRange(xs, n) 
@@ -1312,23 +1312,23 @@ function inRange(xs, n)
 
     
 */
-// definition type (Func T0 T1 R)
-function inRange(// definition type T0
-xs, // definition type T1
+// definition type undefined
+function inRange(// definition type 'T0
+xs, // definition type 'T1
 n)
 // expression type Error
-// expression type (Func Bool Bool Bool)
+// expression type undefined
 op&&(// expression type Error
-// expression type (Func Float Float Bool)
-op>=(// expression type T1
+// expression type undefined
+op>=(// expression type 'T1
 n, // expression type Num
 0), // expression type Error
-// expression type (Func Float Float Bool)
-op<(// expression type T1
-n, // expression type Int
-// expression type (FuncSet ((Func (Array T) Int) (Func (ArrayBuilder T) Int) (Func T0 T1 R)))
-count(// expression type T0
-xs)))// definition type (Func T0 R)
+// expression type undefined
+op<(// expression type 'T1
+n, // expression type Error
+// expression type Error
+count(// expression type 'T0
+xs)))// definition type undefined
 
 /**
 function last(xs) 
@@ -1336,19 +1336,19 @@ function last(xs)
 
     
 */
-// definition type (Func T0 R)
-function last(// definition type T0
+// definition type undefined
+function last(// definition type 'T0
 xs)
 // expression type Error
-// expression type (Func (Array T) Int T)
-op[](// expression type T0
+// expression type undefined
+op[](// expression type 'T0
 xs, // expression type Error
-// expression type (Func Float Float Float)
-op-(// expression type Int
-// expression type (FuncSet ((Func (Array T) Int) (Func (ArrayBuilder T) Int) (Func T0 T1 R)))
-count(// expression type T0
+// expression type undefined
+op-(// expression type Error
+// expression type Error
+count(// expression type 'T0
 xs), // expression type Num
-1))// definition type (Func T0 R)
+1))// definition type undefined
 
 /**
 function first(xs) 
@@ -1356,14 +1356,14 @@ function first(xs)
 
     
 */
-// definition type (Func T0 R)
-function first(// definition type T0
+// definition type undefined
+function first(// definition type 'T0
 xs)
 // expression type Error
-// expression type (Func (Array T) Int T)
-op[](// expression type T0
+// expression type undefined
+op[](// expression type 'T0
 xs, // expression type Num
-0)// definition type (Func (Array $4) T1 T2 T1)
+0)// definition type undefined
 
 /**
 function reduce(xs, acc, f) {
@@ -1374,14 +1374,14 @@ function reduce(xs, acc, f) {
 
     
 */
-// definition type (Func (Array $4) T1 T2 T1)
-function reduce(// definition type T0
-xs, // definition type T1
-acc, // definition type T2
+// definition type undefined
+function reduce(// definition type 'T0
+xs, // definition type 'T1
+acc, // definition type 'T2
 f)
 {
-// definition type $4
-for (x in // expression type T0
+// definition type '$3
+for (x in // expression type 'T0
 xs)
 {
 // expression type undefined
@@ -1392,10 +1392,10 @@ f(// expression type undefined
 acc, // expression type undefined
 x);
 }
-return // expression type T1
+return // expression type 'T1
 acc;
 }
-// definition type (Func T0 R)
+// definition type undefined
 
 /**
 function flatten(xs)
@@ -1403,29 +1403,29 @@ function flatten(xs)
 
     
 */
-// definition type (Func T0 R)
-function flatten(// definition type T0
+// definition type undefined
+function flatten(// definition type 'T0
 xs)
 // expression type Error
-// expression type (Func (Array $4) T1 T2 T1)
-reduce(// expression type T0
-xs, // expression type (Array $1507)
-[], // expression type (Func T0 T1 R)
-concat)// definition type (Func T0 T1 R)
+// expression type undefined
+reduce(// expression type 'T0
+xs, // expression type undefined
+[], // expression type undefined
+concat)// definition type undefined
 
 /**
 function flatMap(xs, f)       
         = xs.map(f).flatten;
 
 */
-// definition type (Func T0 T1 R)
-function flatMap(// definition type T0
-xs, // definition type T1
+// definition type undefined
+function flatMap(// definition type 'T0
+xs, // definition type 'T1
 f)
 // expression type Error
-// expression type (Func T0 R)
+// expression type undefined
 flatten(// expression type Error
-// expression type (Func T0 T1 R)
-map(// expression type T0
-xs, // expression type T1
+// expression type undefined
+map(// expression type 'T0
+xs, // expression type 'T1
 f))}

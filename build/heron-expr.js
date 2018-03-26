@@ -130,14 +130,22 @@ var BoolLiteral = /** @class */ (function (_super) {
     return BoolLiteral;
 }(Literal));
 exports.BoolLiteral = BoolLiteral;
-var NumLiteral = /** @class */ (function (_super) {
-    __extends(NumLiteral, _super);
-    function NumLiteral() {
+var IntLiteral = /** @class */ (function (_super) {
+    __extends(IntLiteral, _super);
+    function IntLiteral() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    return NumLiteral;
+    return IntLiteral;
 }(Literal));
-exports.NumLiteral = NumLiteral;
+exports.IntLiteral = IntLiteral;
+var FloatLiteral = /** @class */ (function (_super) {
+    __extends(FloatLiteral, _super);
+    function FloatLiteral() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    return FloatLiteral;
+}(Literal));
+exports.FloatLiteral = FloatLiteral;
 var StrLiteral = /** @class */ (function (_super) {
     __extends(StrLiteral, _super);
     function StrLiteral() {
@@ -363,8 +371,12 @@ function createLambdaExpr(node) {
 }
 exports.createLambdaExpr = createLambdaExpr;
 function createNumExpr(node) {
+    heron_ast_rewrite_1.validateNode(node, 'number');
     var value = parseFloat(node.allText);
-    return new NumLiteral(heron_ast_rewrite_1.validateNode(node, 'number'), value);
+    if (node.allText.indexOf('.') >= 0 || node.allText.indexOf('f') >= 0)
+        return new FloatLiteral(node, value);
+    else
+        return new IntLiteral(node, value);
 }
 exports.createNumExpr = createNumExpr;
 function createStrExpr(node) {
@@ -391,6 +403,7 @@ function createVarAssignmentExpr(node) {
     if (op !== '=')
         heron_ast_rewrite_1.throwError(node, 'All assignment operators are supposed to be rewritten: found ' + op);
     var rvalue = node.children[1].children[1];
+    // TODO: add 
     return new VarAssignmentExpr(node, lvalue, createExpr(rvalue));
 }
 exports.createVarAssignmentExpr = createVarAssignmentExpr;

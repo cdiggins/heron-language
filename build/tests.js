@@ -6,6 +6,7 @@ var heron_ast_rewrite_1 = require("./heron-ast-rewrite");
 var heron_compiler_1 = require("./heron-compiler");
 var heron_traits_1 = require("./heron-traits");
 var heron_types_1 = require("./heron-types");
+var type_parser_1 = require("./type-parser");
 var m = Myna.Myna;
 var g = heron_parser_1.heronGrammar;
 var assert = require('assert');
@@ -97,8 +98,6 @@ function testParsingRules() {
         }
     }
 }
-// TEMP: this needs to be uncommented
-testParsingRules();
 var fs = require('fs');
 // TODO: add parent pointers to each node, and an ID, and a reverse index lookup. 
 // after the rewrite phase
@@ -149,7 +148,47 @@ function outputFunctionTypes(pkg) {
         }
     }
 }
+function testParseType(expr) {
+    var t = type_parser_1.parseType(expr);
+    console.log(expr);
+    console.log(" : " + t);
+}
+function testParseTypes() {
+    var typeStrings = [
+        "(Num Num)",
+        "(Func 'T0 'T1 R)",
+        "(Array Num)",
+        "(Array (Func 'T0 Num))",
+        "(Func (Array 'T) (Func 'T 'U) (Array 'U))",
+        "(Func (Array 'T) (Array 'U) (Func 'T 'U 'V) (Array 'V))",
+        "(Func (Array 'T) (Array 'U) (Func 'T 'U Int 'V) (Array 'V))",
+    ];
+    for (var _i = 0, typeStrings_1 = typeStrings; _i < typeStrings_1.length; _i++) {
+        var ts = typeStrings_1[_i];
+        testParseType(ts);
+    }
+}
+function testCallFunctions() {
+    var map = "(Func (Array 'A) (Func 'A 'B) (Array 'B))";
+    var tests = [
+        ["(Func 'A 'A)", "(Num)"],
+        ["(Func 'A 'B ('B 'A))", "(Num Bool)"],
+        [map, "((Array Num) (Func Num Str))"],
+    ];
+    for (var _i = 0, tests_1 = tests; _i < tests_1.length; _i++) {
+        var t = tests_1[_i];
+        var f = type_parser_1.parseType(t[0]);
+        var args = type_parser_1.parseType(t[1]);
+        var r = heron_types_1.callFunction(f, args.types);
+        console.log("func   : " + f);
+        console.log("args   : " + args);
+        console.log("result : " + r);
+    }
+}
 function tests() {
+    //testParsingRules();
+    //testParseTypes();
+    //testCallFunctions();
     var inputFiles = ['geometry-vector3', 'array', 'test'];
     var pkg = heron_compiler_1.createPackage(inputFiles);
     //outputPackageStats(pkg);
@@ -165,9 +204,9 @@ function tests() {
     // Try to figure out the value of all the called functions. 
     //evaluator.evalFunc(mainFunc);
     // Look at the usages of each parameter in each function.
-    // analyzeFunctions(pkg);
-    // AN experiemnt for guessing Traits. 
-    // I have decided that traits need to be declared. 
+    //analyzeFunctions(pkg);
+    // An experiemnt for guessing Traits. 
+    // I shave decided that traits need to be declared. 
     //outputTraits(pkg);
     outputFunctionTypes(pkg);
     console.log('Done');

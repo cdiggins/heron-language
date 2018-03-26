@@ -116,7 +116,10 @@ export class Literal<T> extends Expr {
 export class BoolLiteral extends Literal<boolean> {    
 }
 
-export class NumLiteral extends Literal<number> {    
+export class IntLiteral extends Literal<number> {    
+}
+
+export class FloatLiteral extends Literal<number> {    
 }
 
 export class StrLiteral extends Literal<string> {
@@ -332,9 +335,13 @@ export function createLambdaExpr(node: HeronAstNode): Lambda {
         node.children[1].children[0]);
 }
 
-export function createNumExpr(node: HeronAstNode): NumLiteral {
+export function createNumExpr(node: HeronAstNode): IntLiteral|FloatLiteral {
+    validateNode(node, 'number');
     let value = parseFloat(node.allText);
-    return new NumLiteral(validateNode(node, 'number'), value);
+    if (node.allText.indexOf('.') >= 0 || node.allText.indexOf('f') >= 0)
+        return new FloatLiteral(node, value);
+    else
+        return new IntLiteral(node, value);
 }
 
 export function createStrExpr(node: HeronAstNode): StrLiteral {
@@ -359,5 +366,6 @@ export function createVarAssignmentExpr(node: HeronAstNode): VarAssignmentExpr {
     if (node.children[1].children.length !== 2) throwError(node, 'Expected two children on right side of assignment expression');
     if (op !== '=') throwError(node, 'All assignment operators are supposed to be rewritten: found ' + op);
     let rvalue = node.children[1].children[1];
+    // TODO: add 
     return new VarAssignmentExpr(node, lvalue, createExpr(rvalue));
 }

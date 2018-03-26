@@ -59,7 +59,7 @@ export class PolyType extends Type
         super(); 
     }
 
-    typeSchemeString(): string {
+    get typeSchemeString(): string {
         const r = values(this.scheme).join("!");
         return r ?  "!" + r + "." : r;
     }
@@ -167,9 +167,32 @@ export class TypeResolver
             : v;
     }
 
-    /** Returns a unified version of the type. */
-    getUnifiedType(expr:Type) : Type {
-        return clone(expr, v => this.getUnifier(v));
+    /** Returns a unified version of the type. 
+     * TODO: check for and handle recursion.     
+    */
+    getUnifiedType(expr:Type, seenVars: Lookup<number> = {}, depth=0) : Type {
+        if (expr instanceof TypeConstant) 
+            return expr;
+        else if (expr instanceof TypeVariable) {
+            if (expr.name in seenVars)
+                return recursiveType(depth - seenVars[expr.name])
+            seenVars = {...seenVars, [expr.name]: depth };
+            if (expr.name in this.unifiers) {
+                const u = this.unifiers[expr.name];
+                if (u instanceof TypeVariable) 
+                    return u;
+                else if (u instanceof TypeConstant) 
+                    return u;
+                else if (u instanceof PolyType)
+                    return this.getUnifiedType(u, seenVars, depth + 1);
+            }
+            else {
+                return expr;
+            }
+        }
+        else if (expr instanceof PolyType) {
+            return clone(expr, v => this.getUnifiedType(v, seenVars, depth));
+        }
     }
 
     /** Choose one of two unifiers, or continue the unification process if necessary */
@@ -352,10 +375,7 @@ export function freshVariableNames(t:Type) : Type {
 
 /** Provides unique names for the type scheme types only.*/
 export function freshParameterNames(t:Type) : Type {    
-    if (t instanceof TypeVariable) {
-        return t;
-    }
-    else if (t instanceof TypeConstant) {
+    if (t instanceof MonoType) {
         return t;
     }
     else if (t instanceof PolyType) {
@@ -404,13 +424,8 @@ export function clone(t: Type, remapper: (_: TypeVariable) => Type) : Type {
         return t;
     }
     else if (t instanceof PolyType) {
-        const scheme: TypeScheme = {};
-        // Remap the schema
-        for (let k of keys(t.scheme)) {
-            const v = clone(t.scheme[k], remapper) as TypeVariable;
-            scheme[v.name] = v;
-        }
         const types = t.types.map(x => clone(x, remapper));
+        return polyType(types);
     }
 } 
 
@@ -431,7 +446,7 @@ function _isTypeVarUsedElsewhere(types: Type[], varName:string, pos:number) : bo
 export function _reassignVarScheme(typeVar: TypeVariable, t:PolyType) {
     for (const x of containedTypes(t)) 
         if (x instanceof PolyType && typeVar.name in x.scheme) 
-            x.scheme[typeVar.name] = undefined;
+            delete(x.scheme[typeVar.name]);
     t.scheme[typeVar.name] = typeVar;
 }
     
@@ -441,7 +456,7 @@ export function _reassignVarScheme(typeVar: TypeVariable, t:PolyType) {
  * allows us to figure out exactly where the quanitfication happens.  */
 export function computeScheme(t:  PolyType) {
     // Recursively compute the parameters for base types
-    for (var x of t.types)
+    for (const x of t.types)
         if (x instanceof PolyType) 
             computeScheme(x);
 
@@ -454,21 +469,12 @@ export function computeScheme(t:  PolyType) {
         else 
         if (child instanceof PolyType) {
             for (const childVar of values(typeVars(child))) {
-                if (_isTypeVarUsedElsewhere(this, childVar.name, i))
+                if (_isTypeVarUsedElsewhere(child.types, childVar.name, i))
                     _reassignVarScheme(childVar, t);                
             }
         }
     }
-
-    // Implementation validation step:
-    // Assure that the type scheme variables are all in the typeVars 
-    for (var v of this.typeParameterVars) {
-        var i = this.typeVars.indexOf(v);
-        if (i < 0) 
-            throw new Error("Internal error: type scheme references a variable that is not marked as referenced by the type variable")
-    }
-
-    return this;
+    return t;
 }
 
 //===============================================================
@@ -490,7 +496,7 @@ export function toLookup<T, U>(vals: T[], keyFunc: (_:T) => string, valFunc: (_:
     const r: Lookup<U> = {};
     let i = 0;
     for (const v of vals) 
-        r[keyFunc(v)] = valFunc(v, i);
+        r[keyFunc(v)] = valFunc(v, i++);
     return r;
 }
 

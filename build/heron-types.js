@@ -19,13 +19,12 @@ var Types;
     Types.AnyType = type_system_1.typeConstant('Any');
     Types.ArrayType = type_system_1.typeConstant('Array');
     Types.ObjectType = type_system_1.typeConstant('Object');
-    Types.NumType = type_system_1.typeConstant('Num');
+    Types.IntType = type_system_1.typeConstant('Int');
+    Types.FloatType = type_system_1.typeConstant('Float');
     Types.BoolType = type_system_1.typeConstant('Bool');
     Types.StrType = type_system_1.typeConstant('Str');
     Types.LambdaType = type_system_1.typeConstant('Lambda');
     Types.VoidType = type_system_1.typeConstant('Void');
-    Types.ErrorType = type_system_1.typeConstant('Error');
-    Types.NeverType = type_system_1.typeConstant('Never');
     Types.TypeType = type_system_1.typeConstant('Type');
     Types.FuncType = type_system_1.typeConstant('Func');
 })(Types = exports.Types || (exports.Types = {}));
@@ -48,6 +47,17 @@ function typeFromNode(node, typeParams) {
 }
 exports.typeFromNode = typeFromNode;
 function typeStrategy(a, b) {
+    var casts = {
+        'Float': ['Int'],
+        'Array': ['ArrayBuilder', 'Float2', 'Float3', 'Float4'],
+        'Float4': ['Float', 'Float2', 'Float3'],
+        'Float3': ['Float', 'Float2'],
+        'Float2': ['Float'],
+    };
+    if ((casts[a.name] || []).indexOf(b.name) >= 0)
+        return a;
+    if ((casts[b.name] || []).indexOf(a.name) >= 0)
+        return b;
     throw new Error("Failed to resolve type constants: " + a + " and " + b);
 }
 exports.typeStrategy = typeStrategy;
@@ -76,8 +86,10 @@ var TypeEvaluator = /** @class */ (function () {
             this.unifyReturn(retType);
         if (bodyNode && bodyNode.statement)
             this.getType(bodyNode.statement);
-        else if (bodyNode && bodyNode.expr)
-            this.getType(bodyNode.expr);
+        else if (bodyNode && bodyNode.expr) {
+            var bodyType = this.getType(bodyNode.expr);
+            this.unifyReturn(bodyType);
+        }
     }
     Object.defineProperty(TypeEvaluator.prototype, "numArgs", {
         get: function () {
@@ -108,7 +120,7 @@ var TypeEvaluator = /** @class */ (function () {
             }
         }
         catch (e) {
-            return x.type = Types.ErrorType;
+            heron_ast_rewrite_1.throwError(x.node, e.message);
         }
     };
     TypeEvaluator.prototype.getStatementType = function (statement) {
@@ -148,6 +160,7 @@ var TypeEvaluator = /** @class */ (function () {
             else
                 forLoopVar.type = elementType;
             this.unify(statement.array, arrayType);
+            this.getType(statement.loop);
         }
         else if (statement instanceof heron_statement_1.DoStatement) {
             this.getType(statement.body);
@@ -207,17 +220,17 @@ var TypeEvaluator = /** @class */ (function () {
             var args = expr.args.map(function (a) { return _this.getType(a); });
             if (func instanceof type_system_1.PolyType) {
                 if (isFunctionSet(func))
-                    return this.callFunctionSet(func, args);
+                    return callFunctionSet(func, args);
                 else if (isFunctionType(func))
                     // We have to create new Type variable names when calling a
-                    return this.callFunction(func, args);
+                    return callFunction(func, args);
                 else
                     throw new Error("Can't call " + func);
             }
             else if (func instanceof type_system_1.TypeVariable) {
-                var funcType_1 = genericFuncTypeFromArgs(args);
-                this.unify(func, funcType_1);
-                return getReturnType(funcType_1);
+                var genFunc = genericFuncTypeFromArgs(args);
+                this.unify(func, genFunc);
+                return callFunction(genFunc, args);
             }
             else {
                 throw new Error("Can't call " + func);
@@ -244,8 +257,11 @@ var TypeEvaluator = /** @class */ (function () {
         else if (expr instanceof heron_expr_1.BoolLiteral) {
             return Types.BoolType;
         }
-        else if (expr instanceof heron_expr_1.NumLiteral) {
-            return Types.NumType;
+        else if (expr instanceof heron_expr_1.IntLiteral) {
+            return Types.IntType;
+        }
+        else if (expr instanceof heron_expr_1.FloatLiteral) {
+            return Types.FloatType;
         }
         else if (expr instanceof heron_expr_1.StrLiteral) {
             return Types.StrType;
@@ -264,10 +280,21 @@ var TypeEvaluator = /** @class */ (function () {
             return getLambdaType(expr);
         }
         else if (expr instanceof heron_expr_1.PostfixDec) {
-            return this.unifyNumber(expr.lvalue);
+            return this.unifyInt(expr.lvalue);
         }
         else if (expr instanceof heron_expr_1.PostfixInc) {
-            return this.unifyNumber(expr.lvalue);
+            return this.unifyInt(expr.lvalue);
+        }
+        else if (expr instanceof heron_expr_1.VarAssignmentExpr) {
+            var ref = expr.node.children[0].ref;
+            if (!ref)
+                heron_ast_rewrite_1.throwError(expr.node, "Variable assignment is missing reference");
+            if (ref.defs.length > 1)
+                heron_ast_rewrite_1.throwError(expr.node, "Multiple defs found");
+            if (ref.defs.length < 1)
+                heron_ast_rewrite_1.throwError(expr.node, "No defs found");
+            var def = ref.defs[0];
+            return this.unify(def.type, expr.value);
         }
         else {
             throw new Error("Not a recognized expression " + expr);
@@ -283,61 +310,69 @@ var TypeEvaluator = /** @class */ (function () {
     TypeEvaluator.prototype.unifyBool = function (x) {
         return this.unify(x, Types.BoolType);
     };
-    TypeEvaluator.prototype.unifyNumber = function (x) {
-        return this.unify(x, Types.NumType);
+    TypeEvaluator.prototype.unifyInt = function (x) {
+        return this.unify(x, Types.IntType);
     };
     TypeEvaluator.prototype.unifyReturn = function (x) {
         return this.unify(x, this.getReturnType());
     };
-    TypeEvaluator.prototype.callFunction = function (funOriginal, argTypes) {
-        // We have to create fresh variable names.
-        // BUT I need to assure that those names have a lower priority then the 
-        // ones we have now. This might happen automatically, but I am not 100% sure.
-        var fun = type_system_1.freshVariableNames(funOriginal);
-        var u = new type_system_1.TypeResolver(typeStrategy);
-        var paramTypes = getArgTypes(fun);
-        var returnType = getReturnType(fun);
-        // Parameters should match the number of arguments given to it. 
-        if (paramTypes.length !== argTypes.length)
-            throw new Error("Mismatched number of arguments was " + argTypes.length + " expected " + paramTypes.length);
-        // Unify the passed arguments with the parameter types.         
-        for (var i = 0; argTypes.length; ++i)
-            u.unifyTypes(paramTypes[i], argTypes[i]);
-        // We return the unified version of the return type.
-        return u.getUnifiedType(returnType);
-    };
-    TypeEvaluator.prototype.callFunctionSet = function (funset, args) {
-        var funcs = funset.types[1];
-        var results = [];
-        for (var i = 0; i < funcs.types.length; ++i) {
-            var func = funcs.types[i];
-            if (!(func instanceof type_system_1.PolyType) || !isFunctionType(func))
-                throw new Error("Expected a function type");
-            var paramTypes = getArgTypes(func);
-            // Not providing enough parameters: continue          
-            if (args.length !== paramTypes.length)
-                continue;
-            // Are the types compatible?
-            if (canCallFunc(func, args))
-                results.push(func);
-        }
-        if (results.length === 0)
-            throw new Error("Could not find a function that matches the types");
-        if (results.length === 1)
-            return this.callFunction(results[0], args);
-        // TODO: maybe unify types if we can. 
-        return makeUnionType(results.map(getReturnType));
-    };
     return TypeEvaluator;
 }());
 exports.TypeEvaluator = TypeEvaluator;
+function callFunctionSet(funset, args) {
+    var funcs = funset.types[1];
+    var results = [];
+    for (var i = 0; i < funcs.types.length; ++i) {
+        var func = funcs.types[i];
+        if (!(func instanceof type_system_1.PolyType) || !isFunctionType(func))
+            throw new Error("Expected a function type");
+        var paramTypes = getArgTypes(func);
+        // Not providing enough parameters: continue          
+        if (args.length !== paramTypes.length)
+            continue;
+        // Are the types compatible?
+        if (canCallFunc(func, args))
+            results.push(func);
+    }
+    if (results.length === 0)
+        throw new Error("Could not find a function that matches the types");
+    if (results.length === 1)
+        return callFunction(results[0], args);
+    // TODO: maybe unify types if we can. 
+    return makeUnionType(results.map(getReturnType));
+}
+exports.callFunctionSet = callFunctionSet;
+function callFunction(funOriginal, argTypes) {
+    // We have to create fresh variable names.
+    // BUT I need to assure that those names have a lower priority then the 
+    // ones we have now. This might happen automatically, but I am not 100% sure.
+    var fun = type_system_1.freshVariableNames(funOriginal);
+    var u = new type_system_1.TypeResolver(typeStrategy);
+    var paramTypes = getArgTypes(fun);
+    var returnType = getReturnType(fun);
+    // Parameters should match the number of arguments given to it. 
+    if (paramTypes.length !== argTypes.length)
+        throw new Error("Mismatched number of arguments was " + argTypes.length + " expected " + paramTypes.length);
+    // Unify the passed arguments with the parameter types.         
+    for (var i = 0; i < argTypes.length; ++i)
+        u.unifyTypes(paramTypes[i], argTypes[i]);
+    // DEBUG:
+    //console.log("Unifier state:");
+    //console.log(u.state);
+    // We return the unified version of the return type.
+    return u.getUnifiedType(returnType);
+}
+exports.callFunction = callFunction;
 function computeFuncType(f) {
     if (!f.type) {
+        console.log("Computing type for " + f.toString());
         var sigNode = heron_ast_rewrite_1.validateNode(f.node.children[0], "funcSig");
         var genParamsNode = heron_ast_rewrite_1.validateNode(sigNode.children[1], "genericParams");
         var genParams = genParamsNode.children.map(function (p) { return p.allText; });
         var te = new TypeEvaluator(f.params, genParams, f.body, f.retTypeNode);
         f.type = te.getFinalResult();
+        console.log("Type for " + f.toString());
+        console.log(" is " + f.type);
     }
     return f.type;
 }

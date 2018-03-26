@@ -1,6 +1,6 @@
-// Generated on Sat Mar 24 2018 16:42:23 GMT-0400 (Eastern Daylight Time)
+// Generated on Sun Mar 25 2018 22:31:32 GMT-0400 (Eastern Daylight Time)
 heron:std:0.1heron:tests:0.1{
-heron:std.array:0.1// definition type (Func R)
+heron:std.array:0.1// definition type undefined
 
 /**
 function main() {
@@ -9,14 +9,14 @@ function main() {
 
     
 */
-// definition type (Func R)
+// definition type undefined
 function main()
 {
-// expression type $916
-// expression type (Func R)
+// expression type Error
+// expression type undefined
 simpleTest();
 }
-// definition type (Func R)
+// definition type undefined
 
 /**
 function simpleTest() {
@@ -47,29 +47,29 @@ function simpleTest() {
     }
 
 */
-// definition type (Func R)
+// definition type undefined
 function simpleTest()
 {
-var // definition type (Array Num)
-xs// expression type (Array Num)
+var // definition type undefined
+xs// expression type undefined
 [// expression type Num
 1, // expression type Num
 11, // expression type Num
 3];
 // expression type Error
-// expression type (Func T0 R)
+// expression type undefined
 print(// expression type Str
 'Expect [1, 11, 3]');
 // expression type Error
-// expression type (Func T0 R)
-print(// expression type (Array Num)
+// expression type undefined
+print(// expression type Error
 xs);
 // expression type Error
-// expression type (Func T0 R)
+// expression type undefined
 print(// expression type Str
 'Expect 1, 11, 3');
-// definition type $2999
-for (x in // expression type (Array Num)
+// definition type '$14
+for (x in // expression type Error
 xs)
 {
 // expression type undefined
@@ -78,95 +78,95 @@ print(// expression type undefined
 x);
 }
 // expression type Error
-// expression type (Func T0 R)
+// expression type undefined
 print(// expression type Str
 'Expect 1');
 // expression type Error
-// expression type (Func T0 R)
+// expression type undefined
 print(// expression type Error
-// expression type (Func (Array T) Int T)
-op[](// expression type (Array Num)
+// expression type undefined
+op[](// expression type Error
 xs, // expression type Num
 0));
 // expression type Error
-// expression type (Func T0 R)
+// expression type undefined
 print(// expression type Str
 'Expect 3');
 // expression type Error
-// expression type (Func T0 R)
-print(// expression type Int
-// expression type (FuncSet ((Func (Array T) Int) (Func (ArrayBuilder T) Int) (Func T0 T1 R)))
-count(// expression type (Array Num)
+// expression type undefined
+print(// expression type Error
+// expression type Error
+count(// expression type Error
 xs));
 // expression type Error
-// expression type (Func T0 R)
+// expression type undefined
 print(// expression type Str
 'Expect 1');
 // expression type Error
-// expression type (Func T0 R)
+// expression type undefined
 print(// expression type Error
-// expression type (Func T0 R)
-first(// expression type (Array Num)
+// expression type undefined
+first(// expression type Error
 xs));
 // expression type Error
-// expression type (Func T0 R)
+// expression type undefined
 print(// expression type Str
 'Expect 3');
 // expression type Error
-// expression type (Func T0 R)
+// expression type undefined
 print(// expression type Error
-// expression type (Func T0 R)
-last(// expression type (Array Num)
+// expression type undefined
+last(// expression type Error
 xs));
 // expression type Error
-// expression type (Func T0 R)
+// expression type undefined
 print(// expression type Str
 'Expect 1');
 // expression type Error
-// expression type (Func T0 R)
+// expression type undefined
 print(// expression type Error
-// expression type (FuncSet ((Func Float Float Float) (Func T0 T0 R)))
-min(// expression type (Array Num)
+// expression type Error
+min(// expression type Error
 xs));
 // expression type Error
-// expression type (Func T0 R)
+// expression type undefined
 print(// expression type Str
 'Expect 11');
 // expression type Error
-// expression type (Func T0 R)
+// expression type undefined
 print(// expression type Error
-// expression type (FuncSet ((Func Float Float Float) (Func T0 T0 R)))
-max(// expression type (Array Num)
+// expression type Error
+max(// expression type Error
 xs));
 // expression type Error
-// expression type (Func T0 R)
+// expression type undefined
 print(// expression type Str
 'Expect 3');
 // expression type Error
-// expression type (Func T0 R)
+// expression type undefined
 print(// expression type Error
-// expression type (Func T0 Error)
-median(// expression type (Array Num)
+// expression type undefined
+median(// expression type Error
 xs));
 // expression type Error
-// expression type (Func T0 R)
+// expression type undefined
 print(// expression type Str
 'Expect 15');
 // expression type Error
-// expression type (Func T0 R)
+// expression type undefined
 print(// expression type Error
-// expression type (Func T0 R)
-sum(// expression type (Array Num)
+// expression type undefined
+sum(// expression type Error
 xs));
 // expression type Error
-// expression type (Func T0 R)
+// expression type undefined
 print(// expression type Str
 'Expect 5');
 // expression type Error
-// expression type (Func T0 R)
+// expression type undefined
 print(// expression type Error
-// expression type (Func T0 R)
-average(// expression type (Array Num)
+// expression type undefined
+average(// expression type Error
 xs));
 }
 }
