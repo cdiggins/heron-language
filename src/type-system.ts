@@ -363,7 +363,7 @@ export function typeVarsInScheme(t: PolyType): Lookup<TypeVariable> {
 // Variable name functions
 
 /** Rename all type variables os that they follow T0..TN according to the order the show in the tree. */
-export function normalizeVarNames(t:Type) : Type {
+export function normalizeType(t:Type) : Type {
     const indices = lookupToIndices(typeVars(t));
     return clone(t, v => v.name + "T" + indices[v.name]);
 }
@@ -408,8 +408,8 @@ export function alphabetizeVarNames(t:Type) : Type {
 
 /** Compares whether two types are the same by normalizing the type variables and comparing the strings. */ 
 export function compareTypes(t1:Type, t2:Type) {
-    const s1 = normalizeVarNames(t1).toString();
-    const s2 = normalizeVarNames(t2).toString();
+    const s1 = normalizeType(t1).toString();
+    const s2 = normalizeType(t2).toString();
     return s1 === s2;
 }
 
@@ -428,6 +428,7 @@ export function clone(t: Type, remapper: (_: TypeVariable) => Type) : Type {
         const types = t.types.map(x => clone(x, remapper));
         return polyType(types);
     }
+    throw new Error("Not a recognized type: " + t);
 } 
 
 /** Used for generating new names */

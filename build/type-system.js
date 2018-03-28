@@ -378,11 +378,11 @@ exports.typeVarsInScheme = typeVarsInScheme;
 //========================================================
 // Variable name functions
 /** Rename all type variables os that they follow T0..TN according to the order the show in the tree. */
-function normalizeVarNames(t) {
+function normalizeType(t) {
     var indices = lookupToIndices(typeVars(t));
     return clone(t, function (v) { return v.name + "T" + indices[v.name]; });
 }
-exports.normalizeVarNames = normalizeVarNames;
+exports.normalizeType = normalizeType;
 /** Provides unique names for the type scheme types only.*/
 function freshVariableNames(t) {
     var lookup = map(typeVars(t), newTypeVar);
@@ -422,8 +422,8 @@ function alphabetizeVarNames(t) {
 exports.alphabetizeVarNames = alphabetizeVarNames;
 /** Compares whether two types are the same by normalizing the type variables and comparing the strings. */
 function compareTypes(t1, t2) {
-    var s1 = normalizeVarNames(t1).toString();
-    var s2 = normalizeVarNames(t2).toString();
+    var s1 = normalizeType(t1).toString();
+    var s2 = normalizeType(t2).toString();
     return s1 === s2;
 }
 exports.compareTypes = compareTypes;
@@ -441,6 +441,7 @@ function clone(t, remapper) {
         var types = t.types.map(function (x) { return clone(x, remapper); });
         return polyType(types);
     }
+    throw new Error("Not a recognized type: " + t);
 }
 exports.clone = clone;
 /** Used for generating new names */

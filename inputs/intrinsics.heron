@@ -40,8 +40,6 @@ module heron:intrinsics:0.1
     intrinsic exp(x: Float): Float;
     intrinsic floor(x: Float): Float;
     intrinsic log(x: Float): Float;
-    intrinsic max(x: Float, y: Float): Float;
-    intrinsic min(x: Float, y: Float): Float;
     intrinsic pow(x: Float, y: Float): Float;
     intrinsic round(x: Float): Float;
     intrinsic sin(x: Float): Float;

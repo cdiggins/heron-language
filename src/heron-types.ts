@@ -3,7 +3,7 @@ import { Statement, CompoundStatement, IfStatement, EmptyStatement, VarDeclState
 import { throwError, HeronAstNode, validateNode, visitAst } from "./heron-ast-rewrite";
 import { FuncDef, FuncParamDef, ForLoopVarDef, VarDef } from "./heron-defs";
 import { FuncRef, TypeRef, TypeParamRef, Ref, FuncParamRef, VarRef, ForLoopVarRef } from "./heron-refs";
-import { typeConstant, polyType, Type, PolyType, typeVariable, TypeVariable, TypeConstant, isTypeConstant, TypeResolver, newTypeVar, Lookup, freshVariableNames, MonoType } from "./type-system";
+import { typeConstant, polyType, Type, PolyType, typeVariable, TypeVariable, TypeConstant, isTypeConstant, TypeResolver, newTypeVar, Lookup, freshVariableNames, MonoType, normalizeType } from "./type-system";
 import { Module, Package } from "./heron-package";
 
 export function assure<T>(t: T): T {
@@ -235,17 +235,17 @@ export class TypeEvaluator
             const args = expr.args.map(a => this.getType(a));
             if (func instanceof PolyType) {
                 if (isFunctionSet(func))
-                    return callFunctionSet(func, args);
+                    return callFunctionSet(func, args, this.unifier);
                 else if (isFunctionType(func))
                     // We have to create new Type variable names when calling a
-                    return callFunction(func, args);
+                    return callFunction(func, args, this.unifier);
                 else 
                     throw new Error("Can't call " + func);
             }
             else if (func instanceof TypeVariable) {
                 const genFunc = genericFuncTypeFromArgs(args);
                 this.unify(func, genFunc);
-                return callFunction(genFunc, args);
+                return callFunction(genFunc, args, this.unifier);
             }
             else {
                 throw new Error("Can't call " + func);
@@ -334,7 +334,7 @@ export class TypeEvaluator
     }
 }
 
-export function callFunctionSet(funset: PolyType, args: Type[]): Type {
+export function callFunctionSet(funset: PolyType, args: Type[], unifier: TypeResolver): Type {
     const funcs = funset.types[1] as PolyType;
     const results: PolyType[] = [];
     for (let i=0; i < funcs.types.length; ++i) {
@@ -356,14 +356,14 @@ export function callFunctionSet(funset: PolyType, args: Type[]): Type {
         throw new Error("Could not find a function that matches the types");
 
     if (results.length === 1)
-        return callFunction(results[0], args);
+        return callFunction(results[0], args, unifier);
 
     // TODO: maybe unify types if we can. 
     
     return makeUnionType(results.map(getReturnType));           
 }        
 
-export function callFunction(funOriginal: PolyType, argTypes: Type[]): Type {                
+export function callFunction(funOriginal: PolyType, argTypes: Type[], mainUnifier: TypeResolver): Type {                
     // We have to create fresh variable names.
 
     // BUT I need to assure that those names have a lower priority then the 
@@ -375,11 +375,25 @@ export function callFunction(funOriginal: PolyType, argTypes: Type[]): Type {
 
     // Parameters should match the number of arguments given to it. 
     if (paramTypes.length !== argTypes.length)
-        throw new Error("Mismatched number of arguments was " + argTypes.length + " expected " + paramTypes.length);
-    
-    // Unify the passed arguments with the parameter types.         
-    for (let i=0; i < argTypes.length; ++i) 
-        u.unifyTypes(paramTypes[i], argTypes[i]);
+        throw new Error("Mismatched number of arguments was " + argTypes.length + " expected " + paramTypes.length);    
+
+    // Unify the passed arguments with the parameter types.    
+    for (let i=0; i < argTypes.length; ++i) {        
+        let argType = argTypes[i];
+        const paramType = paramTypes[i];
+
+        if (argType instanceof PolyType && isFunctionSet(argType)) {
+            // We have to figure out which type is the best here. 
+            console.log("We have a function set as an argument.")
+            const bestMatch = chooseBestFunction(paramType, argType);
+            argType = bestMatch;
+        }
+
+        // Do the local unification to get the proper return type
+        u.unifyTypes(paramType, argType);
+        // Do the unification of the arguments with the types.
+        mainUnifier.unifyTypes(argTypes[i], paramTypes[i]);
+    }
 
     // DEBUG:
     //console.log("Unifier state:");
@@ -387,20 +401,21 @@ export function callFunction(funOriginal: PolyType, argTypes: Type[]): Type {
 
     // We return the unified version of the return type.
     return u.getUnifiedType(returnType);
-}
-       
+}    
 
 export function computeFuncType(f: FuncDef): PolyType {
     if (!f.type) {
+        if (f.name === "min")
+            console.log("min");
         f.type = genericFuncType(f.params.length);
-        console.log("Computing type for " + f.toString());
+        //console.log("Computing type for " + f.toString());
         const sigNode = validateNode(f.node.children[0], "funcSig");
         const genParamsNode = validateNode(sigNode.children[1], "genericParams");
         const genParams = genParamsNode.children.map(p => p.allText);
         const te = new TypeEvaluator(f.params, genParams, f.body, f.retTypeNode);
         f.type = te.getFinalResult();
-        console.log("Type for " + f.toString());
-        console.log(" is " + f.type);
+        console.log("Type for " + f);
+        console.log(" is " + normalizeType(f.type));
     }
     return f.type as PolyType;
 }
@@ -527,6 +542,33 @@ export function getReturnType(f: PolyType): Type {
 }
 
 export function canCallFunc(f: PolyType, args: Type[]): boolean {
-    // TODO: can I pass the arg type to the function type, and other shit.
+    // TODO: can I pass the arg type to the function type, and other stuff
     return true;
+}
+
+// Given a function set, choose the best one to pass to the arg, or throw an error 
+export function chooseBestFunction(arg: Type, funcSet: PolyType): PolyType {
+    if (!isFunctionType(arg))
+        throw new Error("Argument is not a function");
+    const n = chooseBestFunctionIndex(arg as PolyType, funcSet);
+    return (funcSet.types[1] as PolyType).types[1] as PolyType;
+}
+
+export function functionSetOptions(f: PolyType): PolyType[] {
+    return (f.types[1] as PolyType).types.map(t => t as PolyType);
+}
+
+export function chooseBestFunctionIndex(f: PolyType, funcSet: PolyType): number {
+    const args = getArgTypes(f);
+    let r = -1;
+    for (const g of functionSetOptions(funcSet)) {
+        const argsG = getArgTypes(g);
+        // TODO: replace with a more sophisticated algorithm        
+        if (argsG.length === args.length) 
+            if (r < 0)
+                 r = 0;
+            else 
+                throw new Error("Multiple options found");
+    }
+    return r;
 }

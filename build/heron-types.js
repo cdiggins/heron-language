@@ -220,17 +220,17 @@ var TypeEvaluator = /** @class */ (function () {
             var args = expr.args.map(function (a) { return _this.getType(a); });
             if (func instanceof type_system_1.PolyType) {
                 if (isFunctionSet(func))
-                    return callFunctionSet(func, args);
+                    return callFunctionSet(func, args, this.unifier);
                 else if (isFunctionType(func))
                     // We have to create new Type variable names when calling a
-                    return callFunction(func, args);
+                    return callFunction(func, args, this.unifier);
                 else
                     throw new Error("Can't call " + func);
             }
             else if (func instanceof type_system_1.TypeVariable) {
                 var genFunc = genericFuncTypeFromArgs(args);
                 this.unify(func, genFunc);
-                return callFunction(genFunc, args);
+                return callFunction(genFunc, args, this.unifier);
             }
             else {
                 throw new Error("Can't call " + func);
@@ -319,7 +319,7 @@ var TypeEvaluator = /** @class */ (function () {
     return TypeEvaluator;
 }());
 exports.TypeEvaluator = TypeEvaluator;
-function callFunctionSet(funset, args) {
+function callFunctionSet(funset, args, unifier) {
     var funcs = funset.types[1];
     var results = [];
     for (var i = 0; i < funcs.types.length; ++i) {
@@ -337,12 +337,12 @@ function callFunctionSet(funset, args) {
     if (results.length === 0)
         throw new Error("Could not find a function that matches the types");
     if (results.length === 1)
-        return callFunction(results[0], args);
+        return callFunction(results[0], args, unifier);
     // TODO: maybe unify types if we can. 
     return makeUnionType(results.map(getReturnType));
 }
 exports.callFunctionSet = callFunctionSet;
-function callFunction(funOriginal, argTypes) {
+function callFunction(funOriginal, argTypes, mainUnifier) {
     // We have to create fresh variable names.
     // BUT I need to assure that those names have a lower priority then the 
     // ones we have now. This might happen automatically, but I am not 100% sure.
@@ -353,9 +353,21 @@ function callFunction(funOriginal, argTypes) {
     // Parameters should match the number of arguments given to it. 
     if (paramTypes.length !== argTypes.length)
         throw new Error("Mismatched number of arguments was " + argTypes.length + " expected " + paramTypes.length);
-    // Unify the passed arguments with the parameter types.         
-    for (var i = 0; i < argTypes.length; ++i)
-        u.unifyTypes(paramTypes[i], argTypes[i]);
+    // Unify the passed arguments with the parameter types.    
+    for (var i = 0; i < argTypes.length; ++i) {
+        var argType = argTypes[i];
+        var paramType = paramTypes[i];
+        if (argType instanceof type_system_1.PolyType && isFunctionSet(argType)) {
+            // We have to figure out which type is the best here. 
+            console.log("We have a function set as an argument.");
+            var bestMatch = chooseBestFunction(paramType, argType);
+            argType = bestMatch;
+        }
+        // Do the local unification to get the proper return type
+        u.unifyTypes(paramType, argType);
+        // Do the unification of the arguments with the types.
+        mainUnifier.unifyTypes(argTypes[i], paramTypes[i]);
+    }
     // DEBUG:
     //console.log("Unifier state:");
     //console.log(u.state);
@@ -365,15 +377,17 @@ function callFunction(funOriginal, argTypes) {
 exports.callFunction = callFunction;
 function computeFuncType(f) {
     if (!f.type) {
+        if (f.name === "min")
+            console.log("min");
         f.type = genericFuncType(f.params.length);
-        console.log("Computing type for " + f.toString());
+        //console.log("Computing type for " + f.toString());
         var sigNode = heron_ast_rewrite_1.validateNode(f.node.children[0], "funcSig");
         var genParamsNode = heron_ast_rewrite_1.validateNode(sigNode.children[1], "genericParams");
         var genParams = genParamsNode.children.map(function (p) { return p.allText; });
         var te = new TypeEvaluator(f.params, genParams, f.body, f.retTypeNode);
         f.type = te.getFinalResult();
-        console.log("Type for " + f.toString());
-        console.log(" is " + f.type);
+        console.log("Type for " + f);
+        console.log(" is " + type_system_1.normalizeType(f.type));
     }
     return f.type;
 }
@@ -504,8 +518,36 @@ function getReturnType(f) {
 }
 exports.getReturnType = getReturnType;
 function canCallFunc(f, args) {
-    // TODO: can I pass the arg type to the function type, and other shit.
+    // TODO: can I pass the arg type to the function type, and other stuff
     return true;
 }
 exports.canCallFunc = canCallFunc;
+// Given a function set, choose the best one to pass to the arg, or throw an error 
+function chooseBestFunction(arg, funcSet) {
+    if (!isFunctionType(arg))
+        throw new Error("Argument is not a function");
+    var n = chooseBestFunctionIndex(arg, funcSet);
+    return funcSet.types[1].types[1];
+}
+exports.chooseBestFunction = chooseBestFunction;
+function functionSetOptions(f) {
+    return f.types[1].types.map(function (t) { return t; });
+}
+exports.functionSetOptions = functionSetOptions;
+function chooseBestFunctionIndex(f, funcSet) {
+    var args = getArgTypes(f);
+    var r = -1;
+    for (var _i = 0, _a = functionSetOptions(funcSet); _i < _a.length; _i++) {
+        var g = _a[_i];
+        var argsG = getArgTypes(g);
+        // TODO: replace with a more sophisticated algorithm        
+        if (argsG.length === args.length)
+            if (r < 0)
+                r = 0;
+            else
+                throw new Error("Multiple options found");
+    }
+    return r;
+}
+exports.chooseBestFunctionIndex = chooseBestFunctionIndex;
 //# sourceMappingURL=heron-types.js.map

@@ -220,3 +220,40 @@ export function typeConstantToVar(t: Type, vars: Lookup<TypeVariable>): Type {
 //==
 
 I see that "vector(xs :any): any" isn't working. 
+
+> filter type is wrong. 
+
+It really should figure out that 
+A) the function is a boolean.
+B) the end result is the same type as the input function
+
+Doesn't seem to do any type unification whatsoever. 
+
+> Flatten is wrong
+
+> First is horribly wrong.
+
+It doesn't even know an argument is an array.
+
+Slice. Doesn't know that the two inputs are ints.
+It is the basis of this whole thing.  
+
+//==
+
+So when resolving this stuff, ONE problem is that 
+in some cases we are dealing with functions that could be anything. 
+
+I need the system to choose the best function before I get into unification. 
+
+. . . 
+
+So interestingly: "min" is defined twice. Shouldn't happen. 
+
+//==
+
+Right now the problem is figuring out which function is which. 
+
+I get a funcset, only once I infer the types can I figure out which one is being called. 
+
+Maybe I can figure it out anyway. 
+
