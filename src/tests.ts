@@ -12,7 +12,7 @@ import { FunCall, Expr } from "./heron-expr";
 import { getTraits } from "./heron-traits";
 import { computeFuncType, callFunction, typeStrategy } from "./heron-types";
 import { parseType } from "./type-parser";
-import { PolyType, TypeResolver } from "./type-system";
+import { PolyType, TypeResolver, normalizeType } from "./type-system";
 
 const m = Myna.Myna;
 const g = heronGrammar;
@@ -165,7 +165,10 @@ function outputFunctionTypes(pkg: Package) {
         let t = computeFuncType(f);
         if (f.body) {
             console.log(f.toString());
-            console.log(" : " + t);
+            // NOTE: I don't really need to track the oirginal type
+            //console.log(" : " + t); 
+            const finalType = normalizeType(t);
+            console.log(" : " + finalType);
         }
     }
 }

@@ -394,7 +394,7 @@ exports.typeVarsInScheme = typeVarsInScheme;
 /** Rename all type variables os that they follow T0..TN according to the order the show in the tree. */
 function normalizeType(t) {
     var indices = lookupToIndices(typeVars(t));
-    return clone(t, function (v) { return v.name + "T" + indices[v.name]; });
+    return clone(t, function (v) { return "T" + indices[v.name]; });
 }
 exports.normalizeType = normalizeType;
 /** Provides unique names for the type scheme types only.*/

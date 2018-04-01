@@ -392,7 +392,7 @@ export function typeVarsInScheme(t: PolyType): Lookup<TypeVariable> {
 /** Rename all type variables os that they follow T0..TN according to the order the show in the tree. */
 export function normalizeType(t:Type) : Type {
     const indices = lookupToIndices(typeVars(t));
-    return clone(t, v => v.name + "T" + indices[v.name]);
+    return clone(t, v => "T" + indices[v.name]);
 }
 
 /** Provides unique names for the type scheme types only.*/
