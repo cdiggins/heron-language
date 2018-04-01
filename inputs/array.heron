@@ -8,6 +8,12 @@ module heron:std.array:0.1
     function map(xs, f)
         = array(xs.count, i => f(xs[i]));        
 
+    function mapWithIndex(xs, f)
+        = array(xs.count, i => f(xs[i], i));        
+
+    function mapIndex(xs, f)
+        = array(xs.count, f);        
+
     function min(x, y) 
         = x <= y ? x : y;
 
@@ -31,8 +37,8 @@ module heron:std.array:0.1
 
     function zip(xs, ys, f) 
         = xs.count <= ys.count 
-            ? xs.map((x, i) => f(x, ys[i]))
-            : ys.map((y, i) => f(xs[i], y));
+            ? xs.mapWithIndex((x, i) => f(x, ys[i]))
+            : ys.mapWithIndex((y, i) => f(xs[i], y));
 
     function all(xs, p) 
         = xs.reduce(true, (prev, x) => prev && p(x));    

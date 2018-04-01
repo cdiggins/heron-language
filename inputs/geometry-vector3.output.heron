@@ -1,4 +1,4 @@
-// Generated on Sun Apr 01 2018 00:19:40 GMT-0400 (Eastern Daylight Time)
+// Generated on Sun Apr 01 2018 18:40:49 GMT-0400 (Eastern Daylight Time)
 heron:std:0.1heron:geometry.vector:0.1{
 var // definition type undefined
 origin// expression type undefined
@@ -257,14 +257,14 @@ function normal(v)
     
 */
 // definition type (Func Float2 Float)
-function normal(// definition type '@771
+function normal(// definition type '@793
 v)
 // expression type Float
 // expression type !'@227.(Func '@227 '@227 '@227)
-op/(// expression type '@771
+op/(// expression type '@793
 v, // expression type Float
 // expression type (Func Float2 Float)
-length(// expression type '@771
+length(// expression type '@793
 v))// definition type (Func Float2 Float3 Float3)
 
 /**
@@ -342,22 +342,22 @@ function reflect(v, n)
     
 */
 // definition type (Func Float2 Float2 Float)
-function reflect(// definition type '@845
-v, // definition type '@846
+function reflect(// definition type '@867
+v, // definition type '@868
 n)
 // expression type Float
 // expression type !'@129.(Func '@129 '@129 '@129)
-op-(// expression type '@845
+op-(// expression type '@867
 v, // expression type Float
 (// expression type Float
 // expression type !'@336.(Func '@336 '@336 '@336)
 op*(// expression type Float
 // expression type !'@336.(Func '@336 '@336 '@336)
-op*(// expression type '@846
+op*(// expression type '@868
 n, // expression type Float
 // expression type (Func Float2 Float2 Float)
-dot(// expression type '@845
-v, // expression type '@846
+dot(// expression type '@867
+v, // expression type '@868
 n)), // expression type Float
 2.0)))// definition type (Func Float Float Float Float)
 
@@ -394,7 +394,7 @@ function negate(v)
 
 */
 // definition type (Func Float2 Float3)
-function negate(// definition type '@763
+function negate(// definition type '@785
 v)
 // expression type Float3
 // expression type (FuncSet ((Func Float Float Float Float3) (Func Float Float3) (Func Float2 Float3) (Func (Array Float) Float3)))
@@ -402,7 +402,7 @@ vector(// expression type Float
 // expression type (Func Float Float)
 op_negate(// expression type Float
 // expression type (Func Float2 Float)
-x(// expression type '@763
+x(// expression type '@785
 v)), // expression type Float
 // expression type (Func Float Float)
 op_negate(// expression type Float

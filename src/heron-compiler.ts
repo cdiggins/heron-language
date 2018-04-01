@@ -1,5 +1,5 @@
 import { Myna } from "myna-parser/myna";
-import { Type } from "./type-system";
+import { Type, TypeResolver } from "./type-system";
 import { preprocessAst, visitAst, HeronAstNode } from "./heron-ast-rewrite";
 import { parseHeron, heronGrammar } from "./heron-parser";
 import { heronToText } from "./heron-to-text";
@@ -7,18 +7,18 @@ import { Def, createDef } from "./heron-defs";
 import { Ref } from "./heron-refs";
 import { Expr, createExpr } from "./heron-expr";
 import { Package } from "./heron-package";
-import { computeFuncType } from "./heron-types";
+import { computeFuncType, typeStrategy } from "./heron-types";
 
 const g = heronGrammar;
 
 // Get some details about the language implementation environment 
 declare var require; 
-let fs = require('fs');
-let path = require('path');
-let nodePackage = JSON.parse(fs.readFileSync('package.json','utf8'));
-let ver = nodePackage.version; 
-let flavor = 'std';
-let ext = '.heron';
+const fs = require('fs');
+const path = require('path');
+const nodePackage = JSON.parse(fs.readFileSync('package.json','utf8'));
+const ver = nodePackage.version; 
+const flavor = 'std';
+const ext = '.heron';
 
 // Module resolution
 export const moduleFolder = path.join('.', 'inputs');
@@ -32,11 +32,11 @@ export function createPackage(moduleNames: string[]): Package {
     const pkg = new Package();
 
     // Load the intrinsic (built-in) modules
-    for (let name of intrinsicModules) 
+    for (const name of intrinsicModules) 
         addModuleToPackage(name, true, pkg);
 
     // Load the specified modules (any order)    
-    for (let name of moduleNames) 
+    for (const name of moduleNames) 
         addModuleToPackage(name, false, pkg);
 
     // The package is doing the heavy lifting 
@@ -44,24 +44,24 @@ export function createPackage(moduleNames: string[]): Package {
     
     // Compute types 
     for (const f of pkg.allFuncDefs) {
-        let t = computeFuncType(f);
+        const t = computeFuncType(f);
         if (f.body) {
             console.log(f.toString());
             console.log(" : " + t);
         }
     }
     
-    for (let sf of pkg.files) {
-        let outputPath = sf.filePath.substr(0, sf.filePath.lastIndexOf('.')) + '.output.heron';
-        let text = heronToText(sf.node as HeronAstNode);
+    for (const sf of pkg.files) {
+        const outputPath = sf.filePath.substr(0, sf.filePath.lastIndexOf('.')) + '.output.heron';
+        const text = heronToText(sf.node as HeronAstNode);
         fs.writeFileSync(outputPath, text);
     }
     return pkg;
 }
 
 export function addModuleToPackage(name: string, intrinsic: boolean, pkg: Package) {
-    let modulePath = moduleNameToPath(name);
-    let ast = parseFile(modulePath);
+    const modulePath = moduleNameToPath(name);
+    const ast = parseFile(modulePath);
     pkg.addFile(ast, intrinsic, modulePath);
 }
 
@@ -70,13 +70,13 @@ export function moduleNameToPath(f: string): string {
 }
 
 export function parseModule(moduleName: string): HeronAstNode {
-    let modulePath = moduleNameToPath(moduleName);
+    const modulePath = moduleNameToPath(moduleName);
     return parseFile(modulePath);
 }
 
 export function parseFile(f: string): HeronAstNode {
-    let outputFile = f.substring(0, f.lastIndexOf('.')) + '.output.heron';
-    let code = fs.readFileSync(f, 'utf-8');
-    let ast = parseHeron(code, g.file);     
+    const outputFile = f.substring(0, f.lastIndexOf('.')) + '.output.heron';
+    const code = fs.readFileSync(f, 'utf-8');
+    const ast = parseHeron(code, g.file);     
     return ast;
 }

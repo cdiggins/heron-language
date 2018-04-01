@@ -1,10 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var heron_expr_1 = require("./heron-expr");
-var heron_statement_1 = require("./heron-statement");
 var heron_ast_rewrite_1 = require("./heron-ast-rewrite");
-var heron_refs_1 = require("./heron-refs");
 var type_system_1 = require("./type-system");
+var heron_type_evaluator_1 = require("./heron-type-evaluator");
 function assure(t) {
     if (!t)
         throw new Error("Value was not defined");
@@ -46,290 +44,36 @@ function typeFromNode(node, typeParams) {
     }
 }
 exports.typeFromNode = typeFromNode;
-function typeStrategy(a, b) {
-    var casts = {
-        'Float': ['Int'],
-        'ArrayBuilder': ['Array'],
-        'Array': ['Float2', 'Float3', 'Float4'],
-        'Float4': ['Float', 'Float2', 'Float3'],
-        'Float3': ['Float', 'Float2'],
-        'Float2': ['Float'],
-    };
-    if ((casts[a.name] || []).indexOf(b.name) >= 0)
-        return a;
-    if ((casts[b.name] || []).indexOf(a.name) >= 0)
-        return b;
-    if (casts[a.name])
-        throw new Error("Failed to resolve type constants: " + a + " and " + b);
-}
-exports.typeStrategy = typeStrategy;
-// This class computes the type for a function
-var TypeEvaluator = /** @class */ (function () {
-    function TypeEvaluator(params, typeParams, bodyNode, retTypeNode) {
-        this.params = params;
-        this.typeParams = typeParams;
-        this.bodyNode = bodyNode;
-        this.retTypeNode = retTypeNode;
-        this.unifier = new type_system_1.TypeResolver(typeStrategy);
-        this.function = genericFuncType(params.length);
-        for (var i = 0; i < params.length; ++i) {
-            var param = params[i];
-            var paramType = typeFromNode(params[i].typeNode, typeParams);
-            if (paramType !== null) {
-                param.type = paramType;
-                this.unify(this.getArgType(i), paramType);
-            }
-            else {
-                param.type = this.getArgType(i);
-            }
-        }
-        var retType = typeFromNode(retTypeNode, typeParams);
-        if (retType)
-            this.unifyReturn(retType);
-        if (bodyNode && bodyNode.statement)
-            this.getType(bodyNode.statement);
-        else if (bodyNode && bodyNode.expr) {
-            var bodyType = this.getType(bodyNode.expr);
-            this.unifyReturn(bodyType);
-        }
+var TypeStrategyClass = /** @class */ (function () {
+    function TypeStrategyClass() {
+        this.casts = {
+            'Float': ['Int'],
+            'ArrayBuilder': ['Array'],
+            'Array': ['Float2', 'Float3', 'Float4'],
+            'Float4': ['Float', 'Float2', 'Float3'],
+            'Float3': ['Float', 'Float2'],
+            'Float2': ['Float'],
+        };
     }
-    Object.defineProperty(TypeEvaluator.prototype, "numArgs", {
-        get: function () {
-            return getNumArgTypes(this.function);
-        },
-        enumerable: true,
-        configurable: true
-    });
-    TypeEvaluator.prototype.getArgType = function (n) {
-        return getArgType(this.function, n);
+    TypeStrategyClass.prototype.chooseConstant = function (a, b) {
+        if ((this.casts[a.name] || []).indexOf(b.name) >= 0)
+            return a;
+        if ((this.casts[b.name] || []).indexOf(a.name) >= 0)
+            return b;
+        throw new Error("Failed to resolve type constants: " + a + " and " + b);
     };
-    TypeEvaluator.prototype.getReturnType = function () {
-        return getReturnType(this.function);
+    TypeStrategyClass.prototype.canCastTo = function (arg, param) {
+        if (arg.name === param.name)
+            return true;
+        if ((this.casts[param.name] || []).indexOf(arg.name) >= 0)
+            return true;
+        if (param.name === 'Array' && arg.name === 'ArrayBuilder')
+            return true;
+        return false;
     };
-    TypeEvaluator.prototype.getFinalResult = function () {
-        return this.unifier.getUnifiedType(this.function);
-    };
-    TypeEvaluator.prototype.getType = function (x) {
-        if (x.type)
-            return x.type;
-        try {
-            if (x instanceof heron_statement_1.Statement) {
-                this.getStatementType(x);
-                return x.type = Types.VoidType;
-            }
-            else if (x instanceof heron_expr_1.Expr) {
-                var rawType = this.getExpressionType(x);
-                var uniType = this.unifier.getUnifiedType(rawType);
-                //console.log("Expression   : " + x.toString());
-                //console.log("Has type     : " + uniType);
-                return x.type = uniType;
-            }
-        }
-        catch (e) {
-            heron_ast_rewrite_1.throwError(x.node, e.message);
-        }
-    };
-    TypeEvaluator.prototype.getStatementType = function (statement) {
-        if (statement.type)
-            return statement.type;
-        //console.log("Computing statement type:");
-        //console.log(statement.node.allText);
-        if (statement instanceof heron_statement_1.CompoundStatement) {
-            for (var _i = 0, _a = statement.statements; _i < _a.length; _i++) {
-                var st = _a[_i];
-                this.getType(st);
-            }
-        }
-        else if (statement instanceof heron_statement_1.IfStatement) {
-            this.unifyBool(statement.condition);
-            this.getType(statement.onTrue);
-            this.getType(statement.onFalse);
-        }
-        else if (statement instanceof heron_statement_1.ReturnStatement) {
-            if (statement.condition)
-                this.unifyReturn(statement.condition);
-            else
-                this.unifyReturn(Types.VoidType);
-        }
-        else if (statement instanceof heron_statement_1.ContinueStatement) {
-            // Do nothing 
-        }
-        else if (statement instanceof heron_statement_1.ExprStatement) {
-            this.getType(statement.expr);
-        }
-        else if (statement instanceof heron_statement_1.ForStatement) {
-            var forLoopVar = statement.node.def;
-            if (!forLoopVar)
-                heron_ast_rewrite_1.throwError(statement.node, "Missing for loop variable definition");
-            var arrayType = makeNewArrayType();
-            var elementType = getArrayElementType(arrayType);
-            if (forLoopVar.type)
-                this.unify(forLoopVar.type, elementType);
-            else
-                forLoopVar.type = elementType;
-            this.unify(statement.array, arrayType);
-            this.getType(statement.loop);
-        }
-        else if (statement instanceof heron_statement_1.DoStatement) {
-            this.getType(statement.body);
-            this.unifyBool(statement.condition);
-        }
-        else if (statement instanceof heron_statement_1.WhileStatement) {
-            this.unifyBool(statement.condition);
-            this.getType(statement.body);
-        }
-        else if (statement instanceof heron_statement_1.VarDeclStatement) {
-            for (var _b = 0, _c = statement.vars; _b < _c.length; _b++) {
-                var vd = _c[_b];
-                if (!vd.exprNode.expr)
-                    heron_ast_rewrite_1.throwError(vd.exprNode, "Missing an expression");
-                vd.type = this.getType(vd.exprNode.expr);
-            }
-        }
-        else if (statement instanceof heron_statement_1.EmptyStatement) {
-            // Do nothing. 
-        }
-        else {
-            throw new Error("Unrecognized statement " + statement);
-        }
-    };
-    TypeEvaluator.prototype.getExpressionType = function (expr) {
-        var _this = this;
-        if (expr === null)
-            throw new Error("No type available on a null expression");
-        if (expr.type)
-            return expr.type;
-        //console.log("Evaluating type of: " + expr.toString());
-        if (expr instanceof heron_expr_1.VarName) {
-            if (!expr.node.ref)
-                heron_ast_rewrite_1.throwError(expr.node, "Missing ref");
-            var ref = expr.node.ref;
-            if (ref instanceof heron_refs_1.FuncRef) {
-                return makeFunctionSet(ref.defs.map(computeFuncType));
-            }
-            else if (ref instanceof heron_refs_1.VarRef) {
-                return assure(ref.def.type);
-            }
-            else if (ref instanceof heron_refs_1.FuncParamRef) {
-                return assure(ref.def.type);
-            }
-            else if (ref instanceof heron_refs_1.ForLoopVarRef) {
-                return assure(ref.def.type);
-            }
-            else if (ref instanceof heron_refs_1.TypeRef || ref instanceof heron_refs_1.TypeParamRef) {
-                // TODO: eventually we might want to support 
-                heron_ast_rewrite_1.throwError(expr.node, "Type names are not allowed in expressions: " + expr.name);
-            }
-            // TODO: the reference could be to something else
-            //return this.findVar(expr.name);
-            throw new Error("Unrecoggnized expression");
-        }
-        else if (expr instanceof heron_expr_1.FunCall) {
-            var func = this.getType(expr.func);
-            var args = expr.args.map(function (a) { return _this.getType(a); });
-            if (func instanceof type_system_1.PolyType) {
-                if (isFunctionSet(func)) {
-                    console.log("Function: " + expr.func);
-                    return callFunctionSet(func, args, this.unifier);
-                }
-                else if (isFunctionType(func))
-                    // We have to create new Type variable names when calling a
-                    return callFunction(func, args, this.unifier);
-                else
-                    throw new Error("Can't call " + func);
-            }
-            else if (func instanceof type_system_1.TypeVariable) {
-                var genFunc = genericFuncTypeFromArgs(args);
-                this.unify(func, genFunc);
-                return callFunction(genFunc, args, this.unifier);
-            }
-            else {
-                throw new Error("Can't call " + func);
-            }
-        }
-        else if (expr instanceof heron_expr_1.ConditionalExpr) {
-            var cond = this.unifyBool(expr.cond);
-            var onTrue = this.getType(expr.onTrue);
-            var onFalse = this.getType(expr.onFalse);
-            return this.unify(onTrue, onFalse);
-        }
-        else if (expr instanceof heron_expr_1.ObjectLiteral || expr instanceof heron_expr_1.ObjectField) {
-            throw new Error("Object literals not yet supported");
-        }
-        else if (expr instanceof heron_expr_1.ArrayLiteral) {
-            var arrayType = makeNewArrayType();
-            var elemType = getArrayElementType(arrayType);
-            for (var _i = 0, _a = expr.vals; _i < _a.length; _i++) {
-                var v = _a[_i];
-                this.unify(v, elemType);
-            }
-            return arrayType;
-        }
-        else if (expr instanceof heron_expr_1.BoolLiteral) {
-            return Types.BoolType;
-        }
-        else if (expr instanceof heron_expr_1.IntLiteral) {
-            return Types.IntType;
-        }
-        else if (expr instanceof heron_expr_1.FloatLiteral) {
-            return Types.FloatType;
-        }
-        else if (expr instanceof heron_expr_1.StrLiteral) {
-            return Types.StrType;
-        }
-        else if (expr instanceof heron_expr_1.VarExpr) {
-            for (var _b = 0, _c = expr.vars; _b < _c.length; _b++) {
-                var v = _c[_b];
-                var varExpr = v.exprNode.expr;
-                if (!varExpr)
-                    heron_ast_rewrite_1.throwError(v.exprNode, "No expression associated with variable: " + v.name);
-            }
-            var r = this.getType(expr.expr);
-            return r;
-        }
-        else if (expr instanceof heron_expr_1.Lambda) {
-            return getLambdaType(expr);
-        }
-        else if (expr instanceof heron_expr_1.PostfixDec) {
-            return this.unifyInt(expr.lvalue);
-        }
-        else if (expr instanceof heron_expr_1.PostfixInc) {
-            return this.unifyInt(expr.lvalue);
-        }
-        else if (expr instanceof heron_expr_1.VarAssignmentExpr) {
-            var ref = expr.node.children[0].ref;
-            if (!ref)
-                heron_ast_rewrite_1.throwError(expr.node, "Variable assignment is missing reference");
-            if (ref.defs.length > 1)
-                heron_ast_rewrite_1.throwError(expr.node, "Multiple defs found");
-            if (ref.defs.length < 1)
-                heron_ast_rewrite_1.throwError(expr.node, "No defs found");
-            var def = ref.defs[0];
-            return this.unify(def.type, expr.value);
-        }
-        else {
-            throw new Error("Not a recognized expression " + expr);
-        }
-    };
-    TypeEvaluator.prototype.unify = function (a, b) {
-        if (a instanceof heron_expr_1.Expr)
-            a = this.getType(a);
-        if (b instanceof heron_expr_1.Expr)
-            b = this.getType(b);
-        return this.unifier.unifyTypes(a, b);
-    };
-    TypeEvaluator.prototype.unifyBool = function (x) {
-        return this.unify(x, Types.BoolType);
-    };
-    TypeEvaluator.prototype.unifyInt = function (x) {
-        return this.unify(x, Types.IntType);
-    };
-    TypeEvaluator.prototype.unifyReturn = function (x) {
-        return this.unify(x, this.getReturnType());
-    };
-    return TypeEvaluator;
+    return TypeStrategyClass;
 }());
-exports.TypeEvaluator = TypeEvaluator;
+exports.typeStrategy = new TypeStrategyClass();
 function callFunctionSet(funcSet, args, unifier) {
     console.log("Calling function set with args: ");
     console.log("    " + args.join(", "));
@@ -345,10 +89,8 @@ function callFunctionSet(funcSet, args, unifier) {
 exports.callFunctionSet = callFunctionSet;
 function callFunction(funOriginal, argTypes, mainUnifier) {
     // We have to create fresh variable names.
-    // BUT I need to assure that those names have a lower priority then the 
-    // ones we have now. This might happen automatically, but I am not 100% sure.
     var fun = type_system_1.freshVariableNames(funOriginal);
-    var u = new type_system_1.TypeResolver(typeStrategy);
+    var u = new type_system_1.TypeResolver(exports.typeStrategy);
     var paramTypes = getArgTypes(fun);
     var returnType = getReturnType(fun);
     // Parameters should match the number of arguments given to it. 
@@ -382,7 +124,8 @@ function computeFuncType(f) {
         var sigNode = heron_ast_rewrite_1.validateNode(f.node.children[0], "funcSig");
         var genParamsNode = heron_ast_rewrite_1.validateNode(sigNode.children[1], "genericParams");
         var genParams = genParamsNode.children.map(function (p) { return p.allText; });
-        var te = new TypeEvaluator(f.params, genParams, f.body, f.retTypeNode);
+        var u = new type_system_1.TypeResolver(exports.typeStrategy);
+        var te = new heron_type_evaluator_1.TypeEvaluator(f.params, genParams, f.body, f.retTypeNode, exports.typeStrategy, u);
         f.type = te.getFinalResult();
         console.log("Type for " + f);
         console.log(" is " + type_system_1.normalizeType(f.type));
@@ -390,9 +133,9 @@ function computeFuncType(f) {
     return f.type;
 }
 exports.computeFuncType = computeFuncType;
-function getLambdaType(l) {
+function getLambdaType(l, u) {
     if (!l.type) {
-        var te = new TypeEvaluator(l.params, [], l.bodyNode, null);
+        var te = new heron_type_evaluator_1.TypeEvaluator(l.params, [], l.bodyNode, null, exports.typeStrategy, u);
         l.type = te.getFinalResult();
     }
     return l.type;
@@ -476,16 +219,14 @@ function canCallFunc(f, args) {
     return true;
 }
 exports.canCallFunc = canCallFunc;
-// TODO: this could be better. 
 function canPassArg(arg, param) {
     if (param instanceof type_system_1.TypeVariable || arg instanceof type_system_1.TypeVariable)
         return true;
     if (param instanceof type_system_1.TypeConstant) {
-        if (type_system_1.isTypeConstant(arg, param.name))
-            return true;
-        if (type_system_1.isTypeConstant(arg, "ArrayBuilder") && type_system_1.isTypeConstant(param, "Array"))
-            return true;
-        return false;
+        if (arg instanceof type_system_1.TypeConstant)
+            return exports.typeStrategy.canCastTo(arg, param);
+        else
+            return false;
     }
     if (param instanceof type_system_1.PolyType) {
         if (!(arg instanceof type_system_1.PolyType))

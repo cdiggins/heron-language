@@ -290,4 +290,53 @@ When you encounter a list, one of them might be better than another.
 
 You look at the first type: you ask ... 
 
+//==
+
+Some problems:
+Slice
+Slices
+Zip 
+
+These folks have generics where they shouldn't.
+But they do return the right type a lot. 
+
+//==
+
+I need to be able to find the functions now. In order to do this, I think having a
+"Val" makes sense 
+
+There is an issue, where some functions are generating new variables .. .
+
+//==
+
+    function zip(xs, ys, f) 
+        = xs.count <= ys.count 
+            ? xs.map((x, i) => f(x, ys[i]))
+            : ys.map((y, i) => f(xs[i], y));
+
+So the thing is that there is a lambda expression: 
+* It has its own unifier, BUT, the unifier also is relevant to the containing function as well. 
+* In FACT, there should probably be only one. 
+
+So does the system work?
+
+Not sure: I should be creating new Type unifiers.
+
+//==
+
+So one question: where are these 'T coming from? I need everyone to use new types.
+
+It could be parsed? 
+
+I need to make sure ALL type varaibles are different. Then things might start to work.
+
+However: I need to make sure I also give a new TypeEvaluator ...
+
+Should I rename the type resolver to a TypeEvaluator. 
+
+"I don't know maybe get a kitten"
+
+https://code.visualstudio.com/docs/extensionAPI/extension-points
+
+//==
 

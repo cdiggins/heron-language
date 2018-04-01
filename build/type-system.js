@@ -122,8 +122,6 @@ var TypeConstant = /** @class */ (function (_super) {
     return TypeConstant;
 }(MonoType));
 exports.TypeConstant = TypeConstant;
-//================================================
-// A classes used to implement unification.
 /** Find a unified type. */
 var TypeResolver = /** @class */ (function () {
     /** The consumer of the class has to provide a startegy for choosing the best unifier
@@ -133,8 +131,8 @@ var TypeResolver = /** @class */ (function () {
      * - look for an appropriate type-cast
      * This is a great place to add logging as well, to have insights into the unification process.
      */
-    function TypeResolver(chooseTypeStrategy) {
-        this.chooseTypeStrategy = chooseTypeStrategy;
+    function TypeResolver(typeStrategy) {
+        this.typeStrategy = typeStrategy;
         /* Given a type variable name find the unifier. Multiple type variables will map to the same unifier. */
         this.unifiers = {};
     }
@@ -159,7 +157,7 @@ var TypeResolver = /** @class */ (function () {
         }
         else if (t1 instanceof TypeConstant && t2 instanceof TypeConstant) {
             if (t1.name != t2.name)
-                return this.chooseTypeStrategy(t1, t2);
+                return this.typeStrategy.chooseConstant(t1, t2);
             return t1;
         }
         else if (t1 instanceof TypeConstant || t2 instanceof TypeConstant) {
@@ -233,7 +231,7 @@ var TypeResolver = /** @class */ (function () {
         }
         else if (t1 instanceof TypeConstant && t2 instanceof TypeConstant) {
             if (t1.name != t2.name)
-                return this.chooseTypeStrategy(t1, t2);
+                return this.typeStrategy.chooseConstant(t1, t2);
             return t1;
         }
         else if (t1 instanceof TypeConstant || t2 instanceof TypeConstant) {

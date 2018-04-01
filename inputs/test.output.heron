@@ -1,4 +1,4 @@
-// Generated on Sun Apr 01 2018 00:19:40 GMT-0400 (Eastern Daylight Time)
+// Generated on Sun Apr 01 2018 18:40:49 GMT-0400 (Eastern Daylight Time)
 heron:std:0.1heron:tests:0.1{
 heron:std.array:0.1// definition type !'@592.(Func '@592)
 
@@ -93,7 +93,7 @@ print(// expression type Str
 // expression type '@616
 // expression type !'@597!'@598.(Func '@597 '@598)
 print(// expression type Int
-// expression type !'T.(FuncSet !'@64.((Func (Array 'T) Int) (Func !'@79.(Array '@79) '@64 Int)))
+// expression type !'T.(FuncSet !'@79!'@81.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 '@81) Int)))
 count(// expression type (Array Int)
 xs));
 // expression type '@618

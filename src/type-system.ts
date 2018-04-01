@@ -99,6 +99,10 @@ export class TypeConstant extends MonoType
 //================================================
 // A classes used to implement unification.
 
+export interface TypeStrategy {
+    chooseConstant(a: TypeConstant, b: TypeConstant): TypeConstant;
+}
+
 /** Find a unified type. */
 export class TypeResolver
 {
@@ -113,7 +117,7 @@ export class TypeResolver
      * This is a great place to add logging as well, to have insights into the unification process. 
      */
     constructor(
-        public readonly chooseTypeStrategy: (a: TypeConstant, b: TypeConstant) => TypeConstant)
+        public readonly typeStrategy: TypeStrategy)
     { }
 
     /** Unify both types, returning the most specific type possible. 
@@ -140,7 +144,7 @@ export class TypeResolver
         else if (t1 instanceof TypeConstant && t2 instanceof TypeConstant)
         {
             if (t1.name != t2.name)            
-                return this.chooseTypeStrategy(t1, t2);
+                return this.typeStrategy.chooseConstant(t1, t2);
             return t1;
         }
         else if (t1 instanceof TypeConstant || t2 instanceof TypeConstant)
@@ -216,7 +220,7 @@ export class TypeResolver
         else if (t1 instanceof TypeConstant && t2 instanceof TypeConstant)
         {
             if (t1.name != t2.name)            
-                return this.chooseTypeStrategy(t1, t2);
+                return this.typeStrategy.chooseConstant(t1, t2);
             return t1;
         }
         else if (t1 instanceof TypeConstant || t2 instanceof TypeConstant)

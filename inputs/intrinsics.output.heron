@@ -1,4 +1,4 @@
-// Generated on Sun Apr 01 2018 00:19:40 GMT-0400 (Eastern Daylight Time)
+// Generated on Sun Apr 01 2018 18:40:49 GMT-0400 (Eastern Daylight Time)
 heron:std:0.1heron:intrinsics:0.1{
 // definition type undefined
 Float// definition type undefined
@@ -179,7 +179,7 @@ T(// definition type 'T
 x : T, // definition type 'T
 y : T)Bool
 ;
-// definition type !'@778.(Func '@778 '@778 Bool)
+// definition type !'@800.(Func '@800 '@800 Bool)
 intrinsic op!= <// definition type undefined
 T>// definition type undefined
 T(// definition type 'T
@@ -242,7 +242,7 @@ T>// definition type undefined
 T(// definition type !'T.(Array 'T)
 xs : ArrayT)ArrayBuilderT
 ;
-// definition type !'@840.(Func (ArrayBuilder '@840) '@840 (ArrayBuilder '@840))
+// definition type !'@862.(Func (ArrayBuilder '@862) '@862 (ArrayBuilder '@862))
 intrinsic push <// definition type undefined
 T>// definition type undefined
 T(// definition type !'T.(ArrayBuilder 'T)
@@ -328,13 +328,13 @@ function float2(xs) = float2(xs[0], xs[1]);
     
 */
 // definition type (Func (Array Float) Float2)
-function float2(// definition type '@518
+function float2(// definition type '@512
 xs)
 // expression type Float2
-// expression type (FuncSet !'@517.((Func Float Float Float2) !'@516.(Func '@516 '@517)))
+// expression type (FuncSet !'@511.((Func Float Float Float2) !'@510.(Func '@510 '@511)))
 float2(// expression type '@520
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
-op[](// expression type '@518
+op[](// expression type '@512
 xs, // expression type Int
 0), // expression type '@520
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
