@@ -185,7 +185,10 @@ var TypeEvaluator = /** @class */ (function () {
             else if (func instanceof type_system_1.TypeVariable) {
                 var genFunc = heron_types_1.genericFuncTypeFromArgs(args);
                 this.unify(func, genFunc);
-                return heron_types_1.callFunction(genFunc, args, this.unifier);
+                var retType = heron_types_1.getReturnType(genFunc);
+                var r = heron_types_1.callFunction(genFunc, args, this.unifier);
+                this.unify(retType, r);
+                return r;
             }
             else {
                 throw new Error("Can't call " + func);

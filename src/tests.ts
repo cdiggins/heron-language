@@ -10,7 +10,7 @@ import { FuncDef, FuncParamDef } from "./heron-defs";
 //import { Evaluator, Types, union, analyzeFunctions, findFunc } from "./heron-eval";
 import { FunCall, Expr } from "./heron-expr";
 import { getTraits } from "./heron-traits";
-import { computeFuncType, callFunction } from "./heron-types";
+import { computeFuncType, callFunction, typeStrategy } from "./heron-types";
 import { parseType } from "./type-parser";
 import { PolyType, TypeResolver } from "./type-system";
 
@@ -200,7 +200,10 @@ function testCallFunctions() {
     for (const t of tests) {
         const f = parseType(t[0]) as PolyType;
         const args = parseType(t[1]) as PolyType;
-        const r = callFunction(f, args.types, new TypeResolver((a, b) => { throw new Error("Inconsistent types"); }));
+
+        // TODO: the null is supposed to be a TypeResolver
+        const u = new TypeResolver(typeStrategy);
+        const r = callFunction(f, args.types, u);
         console.log("func   : " + f);
         console.log("args   : " + args);
         console.log("result : " + r);

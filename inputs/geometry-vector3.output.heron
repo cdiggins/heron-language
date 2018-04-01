@@ -1,4 +1,4 @@
-// Generated on Sun Apr 01 2018 18:40:49 GMT-0400 (Eastern Daylight Time)
+// Generated on Sun Apr 01 2018 18:49:27 GMT-0400 (Eastern Daylight Time)
 heron:std:0.1heron:geometry.vector:0.1{
 var // definition type undefined
 origin// expression type undefined
@@ -65,7 +65,7 @@ function vector(x: Float)
 function vector(// definition type Float
 x : Float)
 // expression type Float3
-// expression type (FuncSet !'@318.((Func Float Float Float Float3) !'@317.(Func '@317 '@318) (Func Float2 Float3) (Func (Array Float) Float3)))
+// expression type (FuncSet !'@311.((Func Float Float Float Float3) !'@310.(Func '@310 '@311) (Func Float2 Float3) (Func (Array Float) Float3)))
 vector(// expression type Float
 x, // expression type Float
 x, // expression type Float
@@ -78,13 +78,13 @@ function vector(v)
     
 */
 // definition type (Func Float2 Float3)
-function vector(// definition type '@323
+function vector(// definition type '@316
 v)
 // expression type Float3
-// expression type !'@321!'@322.(FuncSet !'@318.((Func Float Float Float Float3) !'@317.(Func '@317 '@318) (Func '@321 '@322) (Func (Array Float) Float3)))
+// expression type !'@314!'@315.(FuncSet !'@311.((Func Float Float Float Float3) !'@310.(Func '@310 '@311) (Func '@314 '@315) (Func (Array Float) Float3)))
 vector(// expression type Float
 // expression type (Func Float2 Float)
-x(// expression type '@323
+x(// expression type '@316
 v), // expression type Float
 // expression type (Func Float2 Float)
 y(// expression type Float2
@@ -100,21 +100,21 @@ function vector(xs)
     
 */
 // definition type (Func (Array Float) Float3)
-function vector(// definition type '@327
+function vector(// definition type '@320
 xs)
 // expression type Float3
-// expression type !'@321!'@322!'@325!'@326.(FuncSet !'@318.((Func Float Float Float Float3) !'@317.(Func '@317 '@318) (Func '@321 '@322) (Func '@325 '@326)))
-vector(// expression type '@329
+// expression type !'@314!'@315!'@318!'@319.(FuncSet !'@311.((Func Float Float Float Float3) !'@310.(Func '@310 '@311) (Func '@314 '@315) (Func '@318 '@319)))
+vector(// expression type '@322
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
-op[](// expression type '@327
+op[](// expression type '@320
 xs, // expression type Int
-0), // expression type '@329
+0), // expression type '@322
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
-op[](// expression type !'@329.(Array '@329)
+op[](// expression type !'@322.(Array '@322)
 xs, // expression type Int
-1), // expression type '@329
+1), // expression type '@322
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
-op[](// expression type !'@329.(Array '@329)
+op[](// expression type !'@322.(Array '@322)
 xs, // expression type Int
 2))// definition type (Func Float2 (Array Float))
 
@@ -125,12 +125,12 @@ function array(v)
     
 */
 // definition type (Func Float2 (Array Float))
-function array(// definition type '@199
+function array(// definition type '@195
 v)
 // expression type (Array Float)
 [// expression type Float
 // expression type (Func Float2 Float)
-x(// expression type '@199
+x(// expression type '@195
 v), // expression type Float
 // expression type (Func Float2 Float)
 y(// expression type Float2
@@ -146,7 +146,7 @@ function sum(v)
     
 */
 // definition type (Func Float2 Float)
-function sum(// definition type '@391
+function sum(// definition type '@383
 v)
 // expression type Float
 // expression type !'@88.(Func '@88 '@88 '@88)
@@ -154,7 +154,7 @@ op+(// expression type Float
 // expression type !'@88.(Func '@88 '@88 '@88)
 op+(// expression type Float
 // expression type (Func Float2 Float)
-x(// expression type '@391
+x(// expression type '@383
 v), // expression type Float
 // expression type (Func Float2 Float)
 y(// expression type Float2
@@ -170,15 +170,15 @@ function dot(a, b)
     
 */
 // definition type (Func Float2 Float2 Float)
-function dot(// definition type '@386
-a, // definition type '@387
+function dot(// definition type '@378
+a, // definition type '@379
 b)
 // expression type Float
 // expression type (Func Float2 Float)
-sum(// expression type '@387
-// expression type !'@336.(Func '@336 '@336 '@336)
-op*(// expression type '@386
-a, // expression type '@387
+sum(// expression type '@379
+// expression type !'@329.(Func '@329 '@329 '@329)
+op*(// expression type '@378
+a, // expression type '@379
 b))// definition type (Func Float2 Float)
 
 /**
@@ -188,13 +188,13 @@ function length(v)
     
 */
 // definition type (Func Float2 Float)
-function length(// definition type '@373
+function length(// definition type '@365
 v)
 // expression type Float
 // expression type (Func Float Float)
 sqrt(// expression type Float
 // expression type (Func Float2 Float)
-length2(// expression type '@373
+length2(// expression type '@365
 v))// definition type (Func Float2 Float)
 
 /**
@@ -204,12 +204,12 @@ function length2(v)
     
 */
 // definition type (Func Float2 Float)
-function length2(// definition type '@381
+function length2(// definition type '@373
 v)
 // expression type Float
 // expression type (Func Float2 Float2 Float)
-dot(// expression type '@381
-v, // expression type '@381
+dot(// expression type '@373
+v, // expression type '@373
 v)// definition type (Func Float2 Float2 Float)
 
 /**
@@ -219,16 +219,16 @@ function distance(a, b)
     
 */
 // definition type (Func Float2 Float2 Float)
-function distance(// definition type '@368
-a, // definition type '@369
+function distance(// definition type '@360
+a, // definition type '@361
 b)
 // expression type Float
 // expression type (Func Float2 Float)
-length(// expression type '@369
-(// expression type '@369
-// expression type !'@129.(Func '@129 '@129 '@129)
-op-(// expression type '@368
-a, // expression type '@369
+length(// expression type '@361
+(// expression type '@361
+// expression type !'@128.(Func '@128 '@128 '@128)
+op-(// expression type '@360
+a, // expression type '@361
 b)))// definition type (Func Float2 Float2 Float)
 
 /**
@@ -238,16 +238,16 @@ function distance2(a, b)
     
 */
 // definition type (Func Float2 Float2 Float)
-function distance2(// definition type '@400
-a, // definition type '@401
+function distance2(// definition type '@392
+a, // definition type '@393
 b)
 // expression type Float
 // expression type (Func Float2 Float)
-length2(// expression type '@401
-(// expression type '@401
-// expression type !'@129.(Func '@129 '@129 '@129)
-op-(// expression type '@400
-a, // expression type '@401
+length2(// expression type '@393
+(// expression type '@393
+// expression type !'@128.(Func '@128 '@128 '@128)
+op-(// expression type '@392
+a, // expression type '@393
 b)))// definition type (Func Float2 Float)
 
 /**
@@ -257,14 +257,14 @@ function normal(v)
     
 */
 // definition type (Func Float2 Float)
-function normal(// definition type '@793
+function normal(// definition type '@777
 v)
 // expression type Float
-// expression type !'@227.(Func '@227 '@227 '@227)
-op/(// expression type '@793
+// expression type !'@223.(Func '@223 '@223 '@223)
+op/(// expression type '@777
 v, // expression type Float
 // expression type (Func Float2 Float)
-length(// expression type '@793
+length(// expression type '@777
 v))// definition type (Func Float2 Float3 Float3)
 
 /**
@@ -274,23 +274,23 @@ function cross(a, b)
     
 */
 // definition type (Func Float2 Float3 Float3)
-function cross(// definition type '@291
-a, // definition type '@292
+function cross(// definition type '@284
+a, // definition type '@285
 b)
 // expression type Float3
 // expression type (FuncSet ((Func Float Float Float Float3) (Func Float Float3) (Func Float2 Float3) (Func (Array Float) Float3)))
 vector(// expression type Float
-// expression type !'@129.(Func '@129 '@129 '@129)
+// expression type !'@128.(Func '@128 '@128 '@128)
 op-(// expression type Float
-// expression type !'@336.(Func '@336 '@336 '@336)
+// expression type !'@329.(Func '@329 '@329 '@329)
 op*(// expression type Float
 // expression type (Func Float2 Float)
-y(// expression type '@291
+y(// expression type '@284
 a), // expression type Float
 // expression type (Func Float3 Float)
-z(// expression type '@292
+z(// expression type '@285
 b)), // expression type Float
-// expression type !'@336.(Func '@336 '@336 '@336)
+// expression type !'@329.(Func '@329 '@329 '@329)
 op*(// expression type Float
 // expression type (Func Float3 Float)
 z(// expression type Float2
@@ -298,9 +298,9 @@ a), // expression type Float
 // expression type (Func Float2 Float)
 y(// expression type Float3
 b))), // expression type Float
-// expression type !'@129.(Func '@129 '@129 '@129)
+// expression type !'@128.(Func '@128 '@128 '@128)
 op-(// expression type Float
-// expression type !'@336.(Func '@336 '@336 '@336)
+// expression type !'@329.(Func '@329 '@329 '@329)
 op*(// expression type Float
 // expression type (Func Float3 Float)
 z(// expression type Float2
@@ -308,7 +308,7 @@ a), // expression type Float
 // expression type (Func Float2 Float)
 x(// expression type Float3
 b)), // expression type Float
-// expression type !'@336.(Func '@336 '@336 '@336)
+// expression type !'@329.(Func '@329 '@329 '@329)
 op*(// expression type Float
 // expression type (Func Float2 Float)
 x(// expression type Float2
@@ -316,9 +316,9 @@ a), // expression type Float
 // expression type (Func Float3 Float)
 z(// expression type Float3
 b))), // expression type Float
-// expression type !'@129.(Func '@129 '@129 '@129)
+// expression type !'@128.(Func '@128 '@128 '@128)
 op-(// expression type Float
-// expression type !'@336.(Func '@336 '@336 '@336)
+// expression type !'@329.(Func '@329 '@329 '@329)
 op*(// expression type Float
 // expression type (Func Float2 Float)
 x(// expression type Float2
@@ -326,7 +326,7 @@ a), // expression type Float
 // expression type (Func Float2 Float)
 y(// expression type Float3
 b)), // expression type Float
-// expression type !'@336.(Func '@336 '@336 '@336)
+// expression type !'@329.(Func '@329 '@329 '@329)
 op*(// expression type Float
 // expression type (Func Float2 Float)
 y(// expression type Float2
@@ -342,22 +342,22 @@ function reflect(v, n)
     
 */
 // definition type (Func Float2 Float2 Float)
-function reflect(// definition type '@867
-v, // definition type '@868
+function reflect(// definition type '@847
+v, // definition type '@848
 n)
 // expression type Float
-// expression type !'@129.(Func '@129 '@129 '@129)
-op-(// expression type '@867
+// expression type !'@128.(Func '@128 '@128 '@128)
+op-(// expression type '@847
 v, // expression type Float
 (// expression type Float
-// expression type !'@336.(Func '@336 '@336 '@336)
+// expression type !'@329.(Func '@329 '@329 '@329)
 op*(// expression type Float
-// expression type !'@336.(Func '@336 '@336 '@336)
-op*(// expression type '@868
+// expression type !'@329.(Func '@329 '@329 '@329)
+op*(// expression type '@848
 n, // expression type Float
 // expression type (Func Float2 Float2 Float)
-dot(// expression type '@867
-v, // expression type '@868
+dot(// expression type '@847
+v, // expression type '@848
 n)), // expression type Float
 2.0)))// definition type (Func Float Float Float Float)
 
@@ -368,23 +368,23 @@ function lerp(a, b, x)
     
 */
 // definition type (Func Float Float Float Float)
-function lerp(// definition type '@570
-a, // definition type '@571
-b, // definition type '@572
+function lerp(// definition type '@556
+a, // definition type '@557
+b, // definition type '@558
 x)
 // expression type Float
 // expression type !'@88.(Func '@88 '@88 '@88)
 op+(// expression type Float
-// expression type !'@336.(Func '@336 '@336 '@336)
-op*(// expression type '@570
+// expression type !'@329.(Func '@329 '@329 '@329)
+op*(// expression type '@556
 a, // expression type Float
 (// expression type Float
-// expression type !'@129.(Func '@129 '@129 '@129)
+// expression type !'@128.(Func '@128 '@128 '@128)
 op-(// expression type Float
-1.0, // expression type '@572
+1.0, // expression type '@558
 x))), // expression type Float
-// expression type !'@336.(Func '@336 '@336 '@336)
-op*(// expression type '@571
+// expression type !'@329.(Func '@329 '@329 '@329)
+op*(// expression type '@557
 b, // expression type Float
 x))// definition type (Func Float2 Float3)
 
@@ -394,7 +394,7 @@ function negate(v)
 
 */
 // definition type (Func Float2 Float3)
-function negate(// definition type '@785
+function negate(// definition type '@769
 v)
 // expression type Float3
 // expression type (FuncSet ((Func Float Float Float Float3) (Func Float Float3) (Func Float2 Float3) (Func (Array Float) Float3)))
@@ -402,7 +402,7 @@ vector(// expression type Float
 // expression type (Func Float Float)
 op_negate(// expression type Float
 // expression type (Func Float2 Float)
-x(// expression type '@785
+x(// expression type '@769
 v)), // expression type Float
 // expression type (Func Float Float)
 op_negate(// expression type Float

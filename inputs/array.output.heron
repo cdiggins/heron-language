@@ -1,6 +1,6 @@
-// Generated on Sun Apr 01 2018 18:40:49 GMT-0400 (Eastern Daylight Time)
+// Generated on Sun Apr 01 2018 18:49:27 GMT-0400 (Eastern Daylight Time)
 heron:std:0.1heron:std.array:0.1{
-// definition type !'@995.(Func '@995 (Array '@995))
+// definition type !'@966.(Func '@966 (Array '@966))
 
 /**
 function unit(x) 
@@ -8,12 +8,12 @@ function unit(x)
 
     
 */
-// definition type !'@995.(Func '@995 (Array '@995))
-function unit(// definition type '@995
+// definition type !'@966.(Func '@966 (Array '@966))
+function unit(// definition type '@966
 x)
-// expression type !'@995.(Array '@995)
-[// expression type '@995
-x]// definition type !'@94!'@113.(Func (Array '@94) !'@111.(Func '@94 '@111) (Array '@113))
+// expression type !'@966.(Array '@966)
+[// expression type '@966
+x]// definition type !'@93!'@110.(Func (Array '@93) (Func '@93 '@110) (Array '@110))
 
 /**
 function map(xs, f)
@@ -21,24 +21,24 @@ function map(xs, f)
 
     
 */
-// definition type !'@94!'@113.(Func (Array '@94) !'@111.(Func '@94 '@111) (Array '@113))
+// definition type !'@93!'@110.(Func (Array '@93) (Func '@93 '@110) (Array '@110))
 function map(// definition type '@15
 xs, // definition type '@16
 f)
-// expression type !'@113.(Array '@113)
+// expression type !'@110.(Array '@110)
 // expression type !'T.(FuncSet ((Func Int (Func Int 'T) (Array 'T)) (Func (ArrayBuilder 'T) (Array 'T)) (Func Float2 (Array Float)) (Func Float3 (Array Float)) (Func Float4 (Array Float))))
 array(// expression type Int
-// expression type !'T.(FuncSet !'@79!'@81.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 '@81) Int)))
+// expression type !'T.(FuncSet !'@79.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 Bool) Int)))
 count(// expression type '@15
-xs), // expression type !'@113.(Func Int '@113)
-(// definition type '@95
-i) => // expression type '@113
+xs), // expression type !'@110.(Func Int '@110)
+(// definition type '@94
+i) => // expression type '@110
 // expression type '@16
-f(// expression type '@94
+f(// expression type '@93
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
-op[](// expression type !'@94.(Array '@94)
-xs, // expression type '@95
-i)))// definition type !'@775!'@779!'@781.(Func (Array '@775) (Func '@775 Int '@779) (Array '@781))
+op[](// expression type !'@93.(Array '@93)
+xs, // expression type '@94
+i)))// definition type !'@759!'@763.(Func (Array '@759) (Func '@759 Int '@763) (Array '@763))
 
 /**
 function mapWithIndex(xs, f)
@@ -46,25 +46,25 @@ function mapWithIndex(xs, f)
 
     
 */
-// definition type !'@775!'@779!'@781.(Func (Array '@775) (Func '@775 Int '@779) (Array '@781))
-function mapWithIndex(// definition type '@772
-xs, // definition type '@773
+// definition type !'@759!'@763.(Func (Array '@759) (Func '@759 Int '@763) (Array '@763))
+function mapWithIndex(// definition type '@756
+xs, // definition type '@757
 f)
-// expression type !'@781.(Array '@781)
+// expression type !'@763.(Array '@763)
 // expression type !'T.(FuncSet ((Func Int (Func Int 'T) (Array 'T)) (Func (ArrayBuilder 'T) (Array 'T)) (Func Float2 (Array Float)) (Func Float3 (Array Float)) (Func Float4 (Array Float))))
 array(// expression type Int
-// expression type !'T.(FuncSet !'@79!'@81.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 '@81) Int)))
-count(// expression type '@772
-xs), // expression type !'@781.(Func Int '@781)
-(// definition type '@776
-i) => // expression type '@781
-// expression type '@773
-f(// expression type '@775
+// expression type !'T.(FuncSet !'@79.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 Bool) Int)))
+count(// expression type '@756
+xs), // expression type !'@763.(Func Int '@763)
+(// definition type '@760
+i) => // expression type '@763
+// expression type '@757
+f(// expression type '@759
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
-op[](// expression type !'@775.(Array '@775)
-xs, // expression type '@776
+op[](// expression type !'@759.(Array '@759)
+xs, // expression type '@760
 i), // expression type Int
-i))// definition type !'@768.(Func !'@767.(Array '@767) (Func Int '@768) (Array '@768))
+i))// definition type !'@752.(Func !'@751.(Array '@751) (Func Int '@752) (Array '@752))
 
 /**
 function mapIndex(xs, f)
@@ -72,17 +72,17 @@ function mapIndex(xs, f)
 
     
 */
-// definition type !'@768.(Func !'@767.(Array '@767) (Func Int '@768) (Array '@768))
-function mapIndex(// definition type '@764
-xs, // definition type '@765
+// definition type !'@752.(Func !'@751.(Array '@751) (Func Int '@752) (Array '@752))
+function mapIndex(// definition type '@748
+xs, // definition type '@749
 f)
-// expression type !'@768.(Array '@768)
+// expression type !'@752.(Array '@752)
 // expression type !'T.(FuncSet ((Func Int (Func Int 'T) (Array 'T)) (Func (ArrayBuilder 'T) (Array 'T)) (Func Float2 (Array Float)) (Func Float3 (Array Float)) (Func Float4 (Array Float))))
 array(// expression type Int
-// expression type !'T.(FuncSet !'@79!'@81.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 '@81) Int)))
-count(// expression type '@764
-xs), // expression type '@765
-f)// definition type (Func '@634 '@634 '@634)
+// expression type !'T.(FuncSet !'@79.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 Bool) Int)))
+count(// expression type '@748
+xs), // expression type '@749
+f)// definition type (Func '@620 '@620 '@620)
 
 /**
 function min(x, y) 
@@ -90,18 +90,18 @@ function min(x, y)
 
     
 */
-// definition type (Func '@634 '@634 '@634)
-function min(// definition type '@633
-x, // definition type '@634
+// definition type (Func '@620 '@620 '@620)
+function min(// definition type '@619
+x, // definition type '@620
 y)
-// expression type '@634
+// expression type '@620
 // expression type Bool
-// expression type !'@640.(Func '@640 '@640 Bool)
-op<=(// expression type '@633
-x, // expression type '@634
-y) ? // expression type '@634
-x// expression type '@634
-y// definition type (Func '@660 '@660 '@660)
+// expression type !'@626.(Func '@626 '@626 Bool)
+op<=(// expression type '@619
+x, // expression type '@620
+y) ? // expression type '@620
+x// expression type '@620
+y// definition type (Func '@645 '@645 '@645)
 
 /**
 function max(x, y) 
@@ -109,18 +109,18 @@ function max(x, y)
    
     
 */
-// definition type (Func '@660 '@660 '@660)
-function max(// definition type '@659
-x, // definition type '@660
+// definition type (Func '@645 '@645 '@645)
+function max(// definition type '@644
+x, // definition type '@645
 y)
-// expression type '@660
+// expression type '@645
 // expression type Bool
-// expression type !'@640.(Func '@640 '@640 Bool)
-op<=(// expression type '@659
-x, // expression type '@660
-y) ? // expression type '@660
-x// expression type '@660
-y// definition type !'@911.(Func (Array '@911) (Array '@911) (Array '@911))
+// expression type !'@626.(Func '@626 '@626 Bool)
+op<=(// expression type '@644
+x, // expression type '@645
+y) ? // expression type '@645
+x// expression type '@645
+y// definition type !'@889.(Func (Array '@889) (Array '@889) (Array '@889))
 
 /**
 function shorter(xs, ys) 
@@ -128,22 +128,22 @@ function shorter(xs, ys)
    
     
 */
-// definition type !'@911.(Func (Array '@911) (Array '@911) (Array '@911))
-function shorter(// definition type '@908
-xs, // definition type '@909
+// definition type !'@889.(Func (Array '@889) (Array '@889) (Array '@889))
+function shorter(// definition type '@886
+xs, // definition type '@887
 ys)
-// expression type !'@911.(Array '@911)
+// expression type !'@889.(Array '@889)
 // expression type Bool
-// expression type !'@640.(Func '@640 '@640 Bool)
+// expression type !'@626.(Func '@626 '@626 Bool)
 op<=(// expression type Int
-// expression type !'T.(FuncSet !'@79!'@81.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 '@81) Int)))
-count(// expression type '@908
+// expression type !'T.(FuncSet !'@79.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 Bool) Int)))
+count(// expression type '@886
 xs), // expression type Int
-// expression type !'T.(FuncSet !'@79!'@81.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 '@81) Int)))
-count(// expression type '@909
-ys)) ? // expression type !'@911.(Array '@911)
-xs// expression type !'@912.(Array '@912)
-ys// definition type !'@588.(Func (Array '@588) (Array '@588) (Array '@588))
+// expression type !'T.(FuncSet !'@79.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 Bool) Int)))
+count(// expression type '@887
+ys)) ? // expression type !'@889.(Array '@889)
+xs// expression type !'@890.(Array '@890)
+ys// definition type !'@574.(Func (Array '@574) (Array '@574) (Array '@574))
 
 /**
 function longer(xs, ys) 
@@ -151,22 +151,22 @@ function longer(xs, ys)
 
     
 */
-// definition type !'@588.(Func (Array '@588) (Array '@588) (Array '@588))
-function longer(// definition type '@585
-xs, // definition type '@586
+// definition type !'@574.(Func (Array '@574) (Array '@574) (Array '@574))
+function longer(// definition type '@571
+xs, // definition type '@572
 ys)
-// expression type !'@588.(Array '@588)
+// expression type !'@574.(Array '@574)
 // expression type Bool
-// expression type !'@554.(Func '@554 '@554 Bool)
+// expression type !'@540.(Func '@540 '@540 Bool)
 op>=(// expression type Int
-// expression type !'T.(FuncSet !'@79!'@81.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 '@81) Int)))
-count(// expression type '@585
+// expression type !'T.(FuncSet !'@79.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 Bool) Int)))
+count(// expression type '@571
 xs), // expression type Int
-// expression type !'T.(FuncSet !'@79!'@81.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 '@81) Int)))
-count(// expression type '@586
-ys)) ? // expression type !'@588.(Array '@588)
-xs// expression type !'@589.(Array '@589)
-ys// definition type (Func !'@446.(Array '@446) Bool)
+// expression type !'T.(FuncSet !'@79.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 Bool) Int)))
+count(// expression type '@572
+ys)) ? // expression type !'@574.(Array '@574)
+xs// expression type !'@575.(Array '@575)
+ys// definition type (Func !'@435.(Array '@435) Bool)
 
 /**
 function empty(xs) 
@@ -174,16 +174,16 @@ function empty(xs)
 
     
 */
-// definition type (Func !'@446.(Array '@446) Bool)
-function empty(// definition type '@438
+// definition type (Func !'@435.(Array '@435) Bool)
+function empty(// definition type '@427
 xs)
 // expression type Bool
-// expression type !'@444.(Func '@444 '@444 Bool)
+// expression type !'@433.(Func '@433 '@433 Bool)
 op==(// expression type Int
-// expression type !'T.(FuncSet !'@79!'@81.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 '@81) Int)))
-count(// expression type '@438
+// expression type !'T.(FuncSet !'@79.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 Bool) Int)))
+count(// expression type '@427
 xs), // expression type Int
-0)// definition type !'@904.(Func !'@901.(Array '@901) (Array Int) (Array '@904))
+0)// definition type !'@880.(Func (Array '@880) (Array Int) (Array '@880))
 
 /**
 function selectByIndex(xs, indices) 
@@ -191,20 +191,20 @@ function selectByIndex(xs, indices)
 
     
 */
-// definition type !'@904.(Func !'@901.(Array '@901) (Array Int) (Array '@904))
-function selectByIndex(// definition type '@896
-xs, // definition type '@897
+// definition type !'@880.(Func (Array '@880) (Array Int) (Array '@880))
+function selectByIndex(// definition type '@875
+xs, // definition type '@876
 indices)
-// expression type !'@904.(Array '@904)
-// expression type !'@94!'@113.(Func (Array '@94) !'@111.(Func '@94 '@111) (Array '@113))
-map(// expression type '@897
-indices, // expression type !'@901.(Func Int '@901)
-(// definition type '@899
-i) => // expression type '@901
+// expression type !'@880.(Array '@880)
+// expression type !'@93!'@110.(Func (Array '@93) (Func '@93 '@110) (Array '@110))
+map(// expression type '@876
+indices, // expression type !'@880.(Func Int '@880)
+(// definition type '@878
+i) => // expression type '@880
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
-at(// expression type '@896
-xs, // expression type '@899
-i))// definition type (Func !'@136.(Array '@136) (Array Int))
+at(// expression type '@875
+xs, // expression type '@878
+i))// definition type (Func !'@135.(Array '@135) (Array Int))
 
 /**
 function indices(xs) 
@@ -212,16 +212,16 @@ function indices(xs)
 
     
 */
-// definition type (Func !'@136.(Array '@136) (Array Int))
-function indices(// definition type '@117
+// definition type (Func !'@135.(Array '@135) (Array Int))
+function indices(// definition type '@116
 xs)
 // expression type (Array Int)
 // expression type (Func Int Int (Array Int))
 op..(// expression type Int
 0, // expression type Int
-// expression type !'T.(FuncSet !'@79!'@81.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 '@81) Int)))
-count(// expression type '@117
-xs))// definition type !'@1008!'@1019!'@1018.(Func (Array '@1008) (Array '@1019) !'@1012.(Func '@1008 '@1019 '@1012) (Array '@1018))
+// expression type !'T.(FuncSet !'@79.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 Bool) Int)))
+count(// expression type '@116
+xs))// definition type !'@979!'@989!'@983.(Func (Array '@979) (Array '@989) (Func '@979 '@989 '@983) (Array '@983))
 
 /**
 function zip(xs, ys, f) 
@@ -231,47 +231,47 @@ function zip(xs, ys, f)
 
     
 */
-// definition type !'@1008!'@1019!'@1018.(Func (Array '@1008) (Array '@1019) !'@1012.(Func '@1008 '@1019 '@1012) (Array '@1018))
-function zip(// definition type '@1001
-xs, // definition type '@1002
-ys, // definition type '@1003
+// definition type !'@979!'@989!'@983.(Func (Array '@979) (Array '@989) (Func '@979 '@989 '@983) (Array '@983))
+function zip(// definition type '@972
+xs, // definition type '@973
+ys, // definition type '@974
 f)
-// expression type !'@1018.(Array '@1018)
+// expression type !'@983.(Array '@983)
 // expression type Bool
-// expression type !'@640.(Func '@640 '@640 Bool)
+// expression type !'@626.(Func '@626 '@626 Bool)
 op<=(// expression type Int
-// expression type !'T.(FuncSet !'@79!'@81.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 '@81) Int)))
-count(// expression type '@1001
+// expression type !'T.(FuncSet !'@79.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 Bool) Int)))
+count(// expression type '@972
 xs), // expression type Int
-// expression type !'T.(FuncSet !'@79!'@81.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 '@81) Int)))
-count(// expression type '@1002
-ys)) ? // expression type !'@1018.(Array '@1018)
-// expression type !'@775!'@779!'@781.(Func (Array '@775) (Func '@775 Int '@779) (Array '@781))
-mapWithIndex(// expression type !'@1005.(Array '@1005)
-xs, // expression type !'@1008!'@1015.(Func '@1008 Int '@1015)
-(// definition type '@1008
-x, // definition type '@1009
-i) => // expression type '@1015
-// expression type '@1003
-f(// expression type '@1008
-x, // expression type '@1006
+// expression type !'T.(FuncSet !'@79.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 Bool) Int)))
+count(// expression type '@973
+ys)) ? // expression type !'@983.(Array '@983)
+// expression type !'@759!'@763.(Func (Array '@759) (Func '@759 Int '@763) (Array '@763))
+mapWithIndex(// expression type !'@976.(Array '@976)
+xs, // expression type !'@979!'@983.(Func '@979 Int '@983)
+(// definition type '@979
+x, // definition type '@980
+i) => // expression type '@983
+// expression type '@974
+f(// expression type '@979
+x, // expression type '@977
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
-op[](// expression type !'@1006.(Array '@1006)
-ys, // expression type '@1009
-i)))// expression type !'@1028.(Array '@1028)
-// expression type !'@775!'@779!'@781.(Func (Array '@775) (Func '@775 Int '@779) (Array '@781))
-mapWithIndex(// expression type !'@1006.(Array '@1006)
-ys, // expression type !'@1019!'@1025.(Func '@1019 Int '@1025)
-(// definition type '@1019
-y, // definition type '@1020
-i) => // expression type '@1025
-// expression type !'@1008!'@1006!'@1012.(Func '@1008 '@1006 '@1012)
-f(// expression type '@1008
+op[](// expression type !'@977.(Array '@977)
+ys, // expression type '@980
+i)))// expression type !'@995.(Array '@995)
+// expression type !'@759!'@763.(Func (Array '@759) (Func '@759 Int '@763) (Array '@763))
+mapWithIndex(// expression type !'@977.(Array '@977)
+ys, // expression type !'@989!'@995.(Func '@989 Int '@995)
+(// definition type '@989
+y, // definition type '@990
+i) => // expression type '@995
+// expression type !'@979!'@977!'@983.(Func '@979 '@977 '@983)
+f(// expression type '@979
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
-op[](// expression type !'@1008.(Array '@1008)
-xs, // expression type '@1020
-i), // expression type '@1019
-y))// definition type !'@162.(Func (Array '@162) !'@170.(Func '@162 '@170) Bool)
+op[](// expression type !'@979.(Array '@979)
+xs, // expression type '@990
+i), // expression type '@989
+y))// definition type !'@160.(Func (Array '@160) (Func '@160 Bool) Bool)
 
 /**
 function all(xs, p) 
@@ -279,24 +279,24 @@ function all(xs, p)
 
     
 */
-// definition type !'@162.(Func (Array '@162) !'@170.(Func '@162 '@170) Bool)
-function all(// definition type '@158
-xs, // definition type '@159
+// definition type !'@160.(Func (Array '@160) (Func '@160 Bool) Bool)
+function all(// definition type '@156
+xs, // definition type '@157
 p)
 // expression type Bool
-// expression type !'@71!'$3.(Func (Array '$3) '@71 !'@74.(Func '@71 '$3 '@74) '@71)
-reduce(// expression type '@158
+// expression type !'@71!'$3.(Func (Array '$3) '@71 (Func '@71 '$3 '@71) '@71)
+reduce(// expression type '@156
 xs, // expression type Bool
-true, // expression type !'@162.(Func Bool '@162 Bool)
-(// definition type '@161
-prev, // definition type '@162
+true, // expression type !'@160.(Func Bool '@160 Bool)
+(// definition type '@159
+prev, // definition type '@160
 x) => // expression type Bool
 // expression type (Func Bool Bool Bool)
-op&&(// expression type '@161
-prev, // expression type '@172
-// expression type '@159
-p(// expression type '@162
-x)))// definition type !'@183.(Func (Array '@183) !'@191.(Func '@183 '@191) Bool)
+op&&(// expression type '@159
+prev, // expression type '@168
+// expression type '@157
+p(// expression type '@160
+x)))// definition type !'@180.(Func (Array '@180) (Func '@180 Bool) Bool)
 
 /**
 function any(xs, p) 
@@ -304,24 +304,24 @@ function any(xs, p)
 
     
 */
-// definition type !'@183.(Func (Array '@183) !'@191.(Func '@183 '@191) Bool)
-function any(// definition type '@179
-xs, // definition type '@180
+// definition type !'@180.(Func (Array '@180) (Func '@180 Bool) Bool)
+function any(// definition type '@176
+xs, // definition type '@177
 p)
 // expression type Bool
-// expression type !'@71!'$3.(Func (Array '$3) '@71 !'@74.(Func '@71 '$3 '@74) '@71)
-reduce(// expression type '@179
+// expression type !'@71!'$3.(Func (Array '$3) '@71 (Func '@71 '$3 '@71) '@71)
+reduce(// expression type '@176
 xs, // expression type Bool
-false, // expression type !'@183.(Func Bool '@183 Bool)
-(// definition type '@182
-prev, // definition type '@183
+false, // expression type !'@180.(Func Bool '@180 Bool)
+(// definition type '@179
+prev, // definition type '@180
 x) => // expression type Bool
 // expression type (Func Bool Bool Bool)
-op||(// expression type '@182
-prev, // expression type '@193
-// expression type '@180
-p(// expression type '@183
-x)))// definition type (Func (Array '@79) (Func '@79 '@81) Int)
+op||(// expression type '@179
+prev, // expression type '@188
+// expression type '@177
+p(// expression type '@180
+x)))// definition type (Func (Array '@79) (Func '@79 Bool) Int)
 
 /**
 function count(xs, p) 
@@ -329,19 +329,19 @@ function count(xs, p)
 
     
 */
-// definition type (Func (Array '@79) (Func '@79 '@81) Int)
+// definition type (Func (Array '@79) (Func '@79 Bool) Int)
 function count(// definition type '@63
 xs, // definition type '@64
 p)
 // expression type Int
-// expression type !'@71!'$3.(Func (Array '$3) '@71 !'@74.(Func '@71 '$3 '@74) '@71)
+// expression type !'@71!'$3.(Func (Array '$3) '@71 (Func '@71 '$3 '@71) '@71)
 reduce(// expression type '@63
 xs, // expression type Int
 0, // expression type !'@79.(Func Int '@79 Int)
 (// definition type '@78
 prev, // definition type '@79
 x) => // expression type Int
-// expression type '@83
+// expression type '@81
 // expression type '@64
 p(// expression type '@79
 x) ? // expression type Int
@@ -349,7 +349,7 @@ x) ? // expression type Int
 op+(// expression type '@78
 prev, // expression type Int
 1)// expression type Int
-prev)// definition type !'@455.(Func !'@454.(Array '@454) (Array '@455) Bool)
+prev)// definition type !'@444.(Func !'@443.(Array '@443) (Array '@444) Bool)
 
 /**
 function eq(xs, ys) 
@@ -357,19 +357,19 @@ function eq(xs, ys)
 
     
 */
-// definition type !'@455.(Func !'@454.(Array '@454) (Array '@455) Bool)
-function eq(// definition type '@451
-xs, // definition type '@452
+// definition type !'@444.(Func !'@443.(Array '@443) (Array '@444) Bool)
+function eq(// definition type '@440
+xs, // definition type '@441
 ys)
 // expression type Bool
-// expression type !'@444.(Func '@444 '@444 Bool)
+// expression type !'@433.(Func '@433 '@433 Bool)
 op==(// expression type Int
-// expression type !'T.(FuncSet !'@79!'@81.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 '@81) Int)))
-count(// expression type '@451
+// expression type !'T.(FuncSet !'@79.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 Bool) Int)))
+count(// expression type '@440
 xs), // expression type Int
-// expression type !'T.(FuncSet !'@79!'@81.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 '@81) Int)))
-count(// expression type '@452
-ys))// definition type !'@471!'@486.(Func (Array '@471) !'@472.(Func '@471 '@472) (Array '@486))
+// expression type !'T.(FuncSet !'@79.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 Bool) Int)))
+count(// expression type '@441
+ys))// definition type !'@460.(Func (Array '@460) (Func '@460 Bool) (Array '@460))
 
 /**
 function filter(xs, p) {
@@ -383,43 +383,43 @@ function filter(xs, p) {
 
     
 */
-// definition type !'@471!'@486.(Func (Array '@471) !'@472.(Func '@471 '@472) (Array '@486))
-function filter(// definition type '@464
-xs, // definition type '@465
+// definition type !'@460.(Func (Array '@460) (Func '@460 Bool) (Array '@460))
+function filter(// definition type '@453
+xs, // definition type '@454
 p)
 {
-var // definition type !'@471.(ArrayBuilder '@471)
-ys// expression type !'@471.(ArrayBuilder '@471)
+var // definition type !'@460.(ArrayBuilder '@460)
+ys// expression type !'@460.(ArrayBuilder '@460)
 // expression type !'T.(Func (Array 'T) (ArrayBuilder 'T))
-mutable(// expression type '@464
+mutable(// expression type '@453
 xs);
 var // definition type Int
 i// expression type Int
 0;
 // definition type '$5
-for (x in // expression type !'@471.(Array '@471)
+for (x in // expression type !'@460.(Array '@460)
 xs)
-// expression type '@474
-// expression type '@465
-p(// expression type '@471
-x)// expression type !'@471.(ArrayBuilder '@471)
-// expression type !'@471.(ArrayBuilder '@471)
-ys = // expression type !'@471.(ArrayBuilder '@471)
-// expression type !'@481.(Func (ArrayBuilder '@481) Int '@481 (ArrayBuilder '@481))
-set(// expression type !'@471.(ArrayBuilder '@471)
+// expression type '@461
+// expression type '@454
+p(// expression type '@460
+x)// expression type !'@460.(ArrayBuilder '@460)
+// expression type !'@460.(ArrayBuilder '@460)
+ys = // expression type !'@460.(ArrayBuilder '@460)
+// expression type !'@470.(Func (ArrayBuilder '@470) Int '@470 (ArrayBuilder '@470))
+set(// expression type !'@460.(ArrayBuilder '@460)
 ys, // expression type Int
 // expression type Int
-i++, // expression type '@471
+i++, // expression type '@460
 x);
-return // expression type !'@486.(Array '@486)
-// expression type !'@431.(Func !'@430.(Array '@430) Int (Array '@431))
-take(// expression type !'@471.(Array '@471)
+return // expression type !'@460.(Array '@460)
+// expression type !'@421.(Func (Array '@421) Int (Array '@421))
+take(// expression type !'@460.(Array '@460)
 // expression type !'T.(FuncSet ((Func Int (Func Int 'T) (Array 'T)) (Func (ArrayBuilder 'T) (Array 'T)) (Func Float2 (Array Float)) (Func Float3 (Array Float)) (Func Float4 (Array Float))))
-array(// expression type !'@471.(ArrayBuilder '@471)
+array(// expression type !'@460.(ArrayBuilder '@460)
 ys), // expression type Int
 i);
 }
-// definition type !'@828!'@835.(Func '@828 Int (Array '@835))
+// definition type !'@812.(Func '@812 Int (Array '@812))
 
 /**
 function repeat(x, n) 
@@ -427,21 +427,21 @@ function repeat(x, n)
 
     
 */
-// definition type !'@828!'@835.(Func '@828 Int (Array '@835))
-function repeat(// definition type '@828
-x, // definition type '@829
+// definition type !'@812.(Func '@812 Int (Array '@812))
+function repeat(// definition type '@812
+x, // definition type '@813
 n)
-// expression type !'@835.(Array '@835)
-// expression type !'@94!'@113.(Func (Array '@94) !'@111.(Func '@94 '@111) (Array '@113))
+// expression type !'@812.(Array '@812)
+// expression type !'@93!'@110.(Func (Array '@93) (Func '@93 '@110) (Array '@110))
 map(// expression type (Array Int)
 (// expression type (Array Int)
 // expression type (Func Int Int (Array Int))
 op..(// expression type Int
-0, // expression type '@829
-n)), // expression type !'@831!'@828.(Func '@831 '@828)
-(// definition type '@831
-i) => // expression type '@828
-x)// definition type !'@845!'@824.(Func (Array '@824) !'@848.(Func '@824 '@848 '@845) (Array '@824))
+0, // expression type '@813
+n)), // expression type !'@815!'@812.(Func '@815 '@812)
+(// definition type '@815
+i) => // expression type '@812
+x)// definition type !'@827.(Func (Array '@827) (Func '@827 '@827 '@827) (Array '@827))
 
 /**
 function prefixScan(xs, op) {
@@ -454,63 +454,63 @@ function prefixScan(xs, op) {
 
     
 */
-// definition type !'@845!'@824.(Func (Array '@824) !'@848.(Func '@824 '@848 '@845) (Array '@824))
-function prefixScan(// definition type '@821
-xs, // definition type '@822
+// definition type !'@827.(Func (Array '@827) (Func '@827 '@827 '@827) (Array '@827))
+function prefixScan(// definition type '@805
+xs, // definition type '@806
 op)
 {
 // expression type Bool
-// expression type (Func !'@446.(Array '@446) Bool)
-empty(// expression type '@821
-xs)return // expression type !'@824.(Array '@824)
+// expression type (Func !'@435.(Array '@435) Bool)
+empty(// expression type '@805
+xs)return // expression type !'@808.(Array '@808)
 xs;
-var // definition type !'@839.(ArrayBuilder '@839)
-ys// expression type !'@839.(ArrayBuilder '@839)
+var // definition type !'@808.(ArrayBuilder '@808)
+ys// expression type !'@808.(ArrayBuilder '@808)
 // expression type !'T.(Func (Array 'T) (ArrayBuilder 'T))
-mutable(// expression type !'@839.(Array '@839)
-// expression type !'@828!'@835.(Func '@828 Int (Array '@835))
-repeat(// expression type '@824
+mutable(// expression type !'@808.(Array '@808)
+// expression type !'@812.(Func '@812 Int (Array '@812))
+repeat(// expression type '@808
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
-op[](// expression type !'@824.(Array '@824)
+op[](// expression type !'@808.(Array '@808)
 xs, // expression type Int
 0), // expression type Int
-// expression type !'T.(FuncSet !'@79!'@81.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 '@81) Int)))
-count(// expression type !'@824.(Array '@824)
+// expression type !'T.(FuncSet !'@79.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 Bool) Int)))
+count(// expression type !'@808.(Array '@808)
 xs)));
 // definition type '$9
 for (i in // expression type (Array Int)
 // expression type (Func Int Int (Array Int))
 op..(// expression type Int
 1, // expression type Int
-// expression type !'T.(FuncSet !'@79!'@81.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 '@81) Int)))
-count(// expression type !'@839.(ArrayBuilder '@839)
+// expression type !'T.(FuncSet !'@79.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 Bool) Int)))
+count(// expression type !'@808.(ArrayBuilder '@808)
 ys)))
-// expression type !'@848.(ArrayBuilder '@848)
-// expression type !'@839.(ArrayBuilder '@839)
-ys = // expression type !'@848.(ArrayBuilder '@848)
-// expression type !'@481.(Func (ArrayBuilder '@481) Int '@481 (ArrayBuilder '@481))
-set(// expression type !'@839.(ArrayBuilder '@839)
+// expression type !'@827.(ArrayBuilder '@827)
+// expression type !'@808.(ArrayBuilder '@808)
+ys = // expression type !'@827.(ArrayBuilder '@827)
+// expression type !'@470.(Func (ArrayBuilder '@470) Int '@470 (ArrayBuilder '@470))
+set(// expression type !'@808.(ArrayBuilder '@808)
 ys, // expression type Int
-i, // expression type '@848
-// expression type '@822
-op(// expression type '@824
+i, // expression type '@827
+// expression type '@806
+op(// expression type '@808
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
-op[](// expression type !'@824.(Array '@824)
+op[](// expression type !'@808.(Array '@808)
 xs, // expression type Int
-i), // expression type '@839
+i), // expression type '@808
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
-op[](// expression type !'@839.(ArrayBuilder '@839)
+op[](// expression type !'@808.(ArrayBuilder '@808)
 ys, // expression type Int
-// expression type !'@129.(Func '@129 '@129 '@129)
+// expression type !'@128.(Func '@128 '@128 '@128)
 op-(// expression type Int
 i, // expression type Int
 1))));
-return // expression type !'@848.(Array '@848)
+return // expression type !'@827.(Array '@827)
 // expression type !'T.(FuncSet ((Func Int (Func Int 'T) (Array 'T)) (Func (ArrayBuilder 'T) (Array 'T)) (Func Float2 (Array Float)) (Func Float3 (Array Float)) (Func Float4 (Array Float))))
-array(// expression type !'@848.(ArrayBuilder '@848)
+array(// expression type !'@827.(ArrayBuilder '@827)
 ys);
 }
-// definition type !'@154.(Func !'@137.(Array '@137) (Array '@154))
+// definition type !'@136.(Func (Array '@136) (Array '@136))
 
 /**
 function adjacentDifferences(xs) 
@@ -518,39 +518,39 @@ function adjacentDifferences(xs)
     
     
 */
-// definition type !'@154.(Func !'@137.(Array '@137) (Array '@154))
+// definition type !'@136.(Func (Array '@136) (Array '@136))
 function adjacentDifferences(// definition type '@10
 xs)
-// expression type !'@154.(Array '@154)
-// expression type !'@94!'@113.(Func (Array '@94) !'@111.(Func '@94 '@111) (Array '@113))
+// expression type !'@136.(Array '@136)
+// expression type !'@93!'@110.(Func (Array '@93) (Func '@93 '@110) (Array '@110))
 map(// expression type (Array Int)
-// expression type (Func !'@136.(Array '@136) (Array Int))
+// expression type (Func !'@135.(Array '@135) (Array Int))
 indices(// expression type '@10
-xs), // expression type !'@137.(Func Int '@137)
-(// definition type '@138
-i) => // expression type '@137
+xs), // expression type !'@136.(Func Int '@136)
+(// definition type '@137
+i) => // expression type '@136
 // expression type Bool
-// expression type !'@144.(Func '@144 '@144 Bool)
-op>(// expression type '@138
+// expression type !'@143.(Func '@143 '@143 Bool)
+op>(// expression type '@137
 i, // expression type Int
-0) ? // expression type '@137
-// expression type !'@129.(Func '@129 '@129 '@129)
-op-(// expression type '@137
+0) ? // expression type '@136
+// expression type !'@128.(Func '@128 '@128 '@128)
+op-(// expression type '@136
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
-op[](// expression type !'@137.(Array '@137)
+op[](// expression type !'@136.(Array '@136)
 xs, // expression type Int
-i), // expression type '@137
+i), // expression type '@136
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
-op[](// expression type !'@137.(Array '@137)
+op[](// expression type !'@136.(Array '@136)
 xs, // expression type Int
-// expression type !'@129.(Func '@129 '@129 '@129)
+// expression type !'@128.(Func '@128 '@128 '@128)
 op-(// expression type Int
 i, // expression type Int
-1)))// expression type '@137
+1)))// expression type '@136
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
-op[](// expression type !'@137.(Array '@137)
+op[](// expression type !'@136.(Array '@136)
 xs, // expression type Int
-i))// definition type !'@429.(Func !'@426.(Array '@426) Int Int (Array '@429))
+i))// definition type !'@418.(Func (Array '@418) Int Int (Array '@418))
 
 /**
 function slice(xs, from, to) 
@@ -558,25 +558,25 @@ function slice(xs, from, to)
 
     
 */
-// definition type !'@429.(Func !'@426.(Array '@426) Int Int (Array '@429))
-function slice(// definition type '@420
-xs, // definition type '@421
-from, // definition type '@422
+// definition type !'@418.(Func (Array '@418) Int Int (Array '@418))
+function slice(// definition type '@412
+xs, // definition type '@413
+from, // definition type '@414
 to)
-// expression type !'@429.(Array '@429)
-// expression type !'@94!'@113.(Func (Array '@94) !'@111.(Func '@94 '@111) (Array '@113))
+// expression type !'@418.(Array '@418)
+// expression type !'@93!'@110.(Func (Array '@93) (Func '@93 '@110) (Array '@110))
 map(// expression type (Array Int)
 (// expression type (Array Int)
 // expression type (Func Int Int (Array Int))
-op..(// expression type '@421
-from, // expression type '@422
-to)), // expression type !'@426.(Func Int '@426)
-(// definition type '@424
-i) => // expression type '@426
+op..(// expression type '@413
+from, // expression type '@414
+to)), // expression type !'@418.(Func Int '@418)
+(// definition type '@416
+i) => // expression type '@418
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
-at(// expression type '@420
-xs, // expression type '@424
-i))// definition type !'@978.(Func !'@970.(Array '@970) Int (Array '@978))
+at(// expression type '@412
+xs, // expression type '@416
+i))// definition type !'@942.(Func (Array '@942) Int (Array '@942))
 
 /**
 function stride(xs, n) 
@@ -584,32 +584,32 @@ function stride(xs, n)
 
     
 */
-// definition type !'@978.(Func !'@970.(Array '@970) Int (Array '@978))
-function stride(// definition type '@967
-xs, // definition type '@968
+// definition type !'@942.(Func (Array '@942) Int (Array '@942))
+function stride(// definition type '@939
+xs, // definition type '@940
 n)
-// expression type !'@978.(Array '@978)
-// expression type !'@94!'@113.(Func (Array '@94) !'@111.(Func '@94 '@111) (Array '@113))
+// expression type !'@942.(Array '@942)
+// expression type !'@93!'@110.(Func (Array '@93) (Func '@93 '@110) (Array '@110))
 map(// expression type (Array Int)
 (// expression type (Array Int)
 // expression type (Func Int Int (Array Int))
 op..(// expression type Int
 0, // expression type Int
-// expression type !'@227.(Func '@227 '@227 '@227)
+// expression type !'@223.(Func '@223 '@223 '@223)
 op/(// expression type Int
-// expression type !'T.(FuncSet !'@79!'@81.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 '@81) Int)))
-count(// expression type '@967
-xs), // expression type '@968
-n))), // expression type !'@970.(Func Int '@970)
-(// definition type '@972
-i) => // expression type '@970
+// expression type !'T.(FuncSet !'@79.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 Bool) Int)))
+count(// expression type '@939
+xs), // expression type '@940
+n))), // expression type !'@942.(Func Int '@942)
+(// definition type '@944
+i) => // expression type '@942
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
-op[](// expression type !'@970.(Array '@970)
+op[](// expression type !'@942.(Array '@942)
 xs, // expression type Int
-// expression type !'@336.(Func '@336 '@336 '@336)
-op*(// expression type '@972
+// expression type !'@329.(Func '@329 '@329 '@329)
+op*(// expression type '@944
 i, // expression type Int
-n)))// definition type !'@947.(Func !'@943.(Array '@943) Int (Array '@947))
+n)))// definition type !'@920.(Func (Array '@920) Int (Array (Array '@920)))
 
 /**
 function slices(xs, n) 
@@ -617,35 +617,35 @@ function slices(xs, n)
 
     
 */
-// definition type !'@947.(Func !'@943.(Array '@943) Int (Array '@947))
-function slices(// definition type '@935
-xs, // definition type '@936
+// definition type !'@920.(Func (Array '@920) Int (Array (Array '@920)))
+function slices(// definition type '@912
+xs, // definition type '@913
 n)
-// expression type !'@947.(Array '@947)
-// expression type !'@94!'@113.(Func (Array '@94) !'@111.(Func '@94 '@111) (Array '@113))
+// expression type (Array !'@920.(Array '@920))
+// expression type !'@93!'@110.(Func (Array '@93) (Func '@93 '@110) (Array '@110))
 map(// expression type (Array Int)
 (// expression type (Array Int)
 // expression type (Func Int Int (Array Int))
 op..(// expression type Int
-0, // expression type '@936
-n)), // expression type !'@944.(Func Int (Array '@944))
-(// definition type '@938
-i) => // expression type !'@944.(Array '@944)
-// expression type !'@429.(Func !'@426.(Array '@426) Int Int (Array '@429))
-slice(// expression type '@935
+0, // expression type '@913
+n)), // expression type !'@920.(Func Int (Array '@920))
+(// definition type '@915
+i) => // expression type !'@920.(Array '@920)
+// expression type !'@418.(Func (Array '@418) Int Int (Array '@418))
+slice(// expression type '@912
 xs, // expression type Int
-// expression type !'@336.(Func '@336 '@336 '@336)
-op*(// expression type '@938
+// expression type !'@329.(Func '@329 '@329 '@329)
+op*(// expression type '@915
 i, // expression type Int
 n), // expression type Int
-// expression type !'@336.(Func '@336 '@336 '@336)
+// expression type !'@329.(Func '@329 '@329 '@329)
 op*(// expression type Int
 (// expression type Int
 // expression type !'@88.(Func '@88 '@88 '@88)
 op+(// expression type Int
 i, // expression type Int
 1)), // expression type Int
-n)))// definition type !'@431.(Func !'@430.(Array '@430) Int (Array '@431))
+n)))// definition type !'@421.(Func (Array '@421) Int (Array '@421))
 
 /**
 function take(xs, n) 
@@ -653,16 +653,16 @@ function take(xs, n)
 
     
 */
-// definition type !'@431.(Func !'@430.(Array '@430) Int (Array '@431))
-function take(// definition type '@413
-xs, // definition type '@414
+// definition type !'@421.(Func (Array '@421) Int (Array '@421))
+function take(// definition type '@405
+xs, // definition type '@406
 n)
-// expression type !'@431.(Array '@431)
-// expression type !'@429.(Func !'@426.(Array '@426) Int Int (Array '@429))
-slice(// expression type '@413
+// expression type !'@421.(Array '@421)
+// expression type !'@418.(Func (Array '@418) Int Int (Array '@418))
+slice(// expression type '@405
 xs, // expression type Int
-0, // expression type '@414
-n)// definition type !'@931.(Func !'@928.(Array '@928) Int (Array '@931))
+0, // expression type '@406
+n)// definition type !'@908.(Func !'@906.(Array '@906) Int (Array '@908))
 
 /**
 function skip(xs, n) 
@@ -670,21 +670,21 @@ function skip(xs, n)
 
     
 */
-// definition type !'@931.(Func !'@928.(Array '@928) Int (Array '@931))
-function skip(// definition type '@925
-xs, // definition type '@926
+// definition type !'@908.(Func !'@906.(Array '@906) Int (Array '@908))
+function skip(// definition type '@903
+xs, // definition type '@904
 n)
-// expression type !'@931.(Array '@931)
-// expression type !'@429.(Func !'@426.(Array '@426) Int Int (Array '@429))
-slice(// expression type '@925
-xs, // expression type '@926
+// expression type !'@908.(Array '@908)
+// expression type !'@418.(Func (Array '@418) Int Int (Array '@418))
+slice(// expression type '@903
+xs, // expression type '@904
 n, // expression type Int
-// expression type !'@129.(Func '@129 '@129 '@129)
+// expression type !'@128.(Func '@128 '@128 '@128)
 op-(// expression type Int
-// expression type !'T.(FuncSet !'@79!'@81.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 '@81) Int)))
-count(// expression type '@925
-xs), // expression type '@926
-n))// definition type !'@435.(Func !'@432.(Array '@432) Int (Array '@435))
+// expression type !'T.(FuncSet !'@79.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 Bool) Int)))
+count(// expression type '@903
+xs), // expression type '@904
+n))// definition type !'@424.(Func !'@422.(Array '@422) Int (Array '@424))
 
 /**
 function dropSuffix(xs, n) 
@@ -692,20 +692,20 @@ function dropSuffix(xs, n)
 
     
 */
-// definition type !'@435.(Func !'@432.(Array '@432) Int (Array '@435))
-function dropSuffix(// definition type '@407
-xs, // definition type '@408
+// definition type !'@424.(Func !'@422.(Array '@422) Int (Array '@424))
+function dropSuffix(// definition type '@399
+xs, // definition type '@400
 n)
-// expression type !'@435.(Array '@435)
-// expression type !'@431.(Func !'@430.(Array '@430) Int (Array '@431))
-take(// expression type '@407
+// expression type !'@424.(Array '@424)
+// expression type !'@421.(Func (Array '@421) Int (Array '@421))
+take(// expression type '@399
 xs, // expression type Int
-// expression type !'@129.(Func '@129 '@129 '@129)
+// expression type !'@128.(Func '@128 '@128 '@128)
 op-(// expression type Int
-// expression type !'T.(FuncSet !'@79!'@81.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 '@81) Int)))
-count(// expression type '@407
-xs), // expression type '@408
-n))// definition type !'@988.(Func !'@985.(Array '@985) Int (Array '@988))
+// expression type !'T.(FuncSet !'@79.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 Bool) Int)))
+count(// expression type '@399
+xs), // expression type '@400
+n))// definition type !'@959.(Func !'@956.(Array '@956) Int (Array '@959))
 
 /**
 function suffix(xs, n) 
@@ -713,20 +713,20 @@ function suffix(xs, n)
 
     
 */
-// definition type !'@988.(Func !'@985.(Array '@985) Int (Array '@988))
-function suffix(// definition type '@982
-xs, // definition type '@983
+// definition type !'@959.(Func !'@956.(Array '@956) Int (Array '@959))
+function suffix(// definition type '@953
+xs, // definition type '@954
 n)
-// expression type !'@988.(Array '@988)
-// expression type !'@931.(Func !'@928.(Array '@928) Int (Array '@931))
-skip(// expression type '@982
+// expression type !'@959.(Array '@959)
+// expression type !'@908.(Func !'@906.(Array '@906) Int (Array '@908))
+skip(// expression type '@953
 xs, // expression type Int
-// expression type !'@129.(Func '@129 '@129 '@129)
+// expression type !'@128.(Func '@128 '@128 '@128)
 op-(// expression type Int
-// expression type !'T.(FuncSet !'@79!'@81.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 '@81) Int)))
-count(// expression type '@982
-xs), // expression type '@983
-n))// definition type !'@877!'@888.(Func !'@879.(Array '@879) '@877 (Array '@888))
+// expression type !'T.(FuncSet !'@79.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 Bool) Int)))
+count(// expression type '@953
+xs), // expression type '@954
+n))// definition type !'@857!'@859.(Func (Array '@859) '@857 (Array '@859))
 
 /**
 function reverse(xs, n) 
@@ -734,30 +734,30 @@ function reverse(xs, n)
 
     
 */
-// definition type !'@877!'@888.(Func !'@879.(Array '@879) '@877 (Array '@888))
-function reverse(// definition type '@876
-xs, // definition type '@877
+// definition type !'@857!'@859.(Func (Array '@859) '@857 (Array '@859))
+function reverse(// definition type '@856
+xs, // definition type '@857
 n)
-// expression type !'@888.(Array '@888)
-// expression type !'@94!'@113.(Func (Array '@94) !'@111.(Func '@94 '@111) (Array '@113))
+// expression type !'@859.(Array '@859)
+// expression type !'@93!'@110.(Func (Array '@93) (Func '@93 '@110) (Array '@110))
 map(// expression type (Array Int)
-// expression type (Func !'@136.(Array '@136) (Array Int))
-indices(// expression type '@876
-xs), // expression type !'@879.(Func Int '@879)
-(// definition type '@880
-i) => // expression type '@879
+// expression type (Func !'@135.(Array '@135) (Array Int))
+indices(// expression type '@856
+xs), // expression type !'@859.(Func Int '@859)
+(// definition type '@860
+i) => // expression type '@859
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
-op[](// expression type !'@879.(Array '@879)
+op[](// expression type !'@859.(Array '@859)
 xs, // expression type Int
-// expression type !'@129.(Func '@129 '@129 '@129)
+// expression type !'@128.(Func '@128 '@128 '@128)
 op-(// expression type Int
-// expression type !'@129.(Func '@129 '@129 '@129)
+// expression type !'@128.(Func '@128 '@128 '@128)
 op-(// expression type Int
-// expression type !'T.(FuncSet !'@79!'@81.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 '@81) Int)))
-count(// expression type !'@879.(Array '@879)
+// expression type !'T.(FuncSet !'@79.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 Bool) Int)))
+count(// expression type !'@859.(Array '@859)
 xs), // expression type Int
-1), // expression type '@880
-i)))// definition type !'@264.(Func Int !'@263.(Func Int '@263) (Array '@264))
+1), // expression type '@860
+i)))// definition type !'@258.(Func Int (Func Int '@258) (Array '@258))
 
 /**
 function gen(cnt, f) 
@@ -765,19 +765,19 @@ function gen(cnt, f)
 
     
 */
-// definition type !'@264.(Func Int !'@263.(Func Int '@263) (Array '@264))
-function gen(// definition type '@259
-cnt, // definition type '@260
+// definition type !'@258.(Func Int (Func Int '@258) (Array '@258))
+function gen(// definition type '@254
+cnt, // definition type '@255
 f)
-// expression type !'@264.(Array '@264)
-// expression type !'@94!'@113.(Func (Array '@94) !'@111.(Func '@94 '@111) (Array '@113))
+// expression type !'@258.(Array '@258)
+// expression type !'@93!'@110.(Func (Array '@93) (Func '@93 '@110) (Array '@110))
 map(// expression type (Array Int)
 (// expression type (Array Int)
 // expression type (Func Int Int (Array Int))
 op..(// expression type Int
-0, // expression type '@259
-cnt)), // expression type '@260
-f)// definition type !'@265!'@283.(Func (Array '@265) (Array '@265) (Array '@283))
+0, // expression type '@254
+cnt)), // expression type '@255
+f)// definition type !'@259.(Func (Array '@259) (Array '@259) (Array '@259))
 
 /**
 function concat(xs, ys) 
@@ -785,43 +785,43 @@ function concat(xs, ys)
 
     
 */
-// definition type !'@265!'@283.(Func (Array '@265) (Array '@265) (Array '@283))
-function concat(// definition type '@253
-xs, // definition type '@254
+// definition type !'@259.(Func (Array '@259) (Array '@259) (Array '@259))
+function concat(// definition type '@248
+xs, // definition type '@249
 ys)
-// expression type !'@283.(Array '@283)
-// expression type !'@264.(Func Int !'@263.(Func Int '@263) (Array '@264))
+// expression type !'@259.(Array '@259)
+// expression type !'@258.(Func Int (Func Int '@258) (Array '@258))
 gen(// expression type Int
 // expression type !'@88.(Func '@88 '@88 '@88)
 op+(// expression type Int
-// expression type !'T.(FuncSet !'@79!'@81.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 '@81) Int)))
-count(// expression type '@253
+// expression type !'T.(FuncSet !'@79.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 Bool) Int)))
+count(// expression type '@248
 xs), // expression type Int
-// expression type !'T.(FuncSet !'@79!'@81.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 '@81) Int)))
-count(// expression type '@254
-ys)), // expression type !'@265.(Func Int '@265)
-(// definition type '@268
-i) => // expression type '@265
+// expression type !'T.(FuncSet !'@79.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 Bool) Int)))
+count(// expression type '@249
+ys)), // expression type !'@259.(Func Int '@259)
+(// definition type '@262
+i) => // expression type '@259
 // expression type Bool
-// expression type !'@274.(Func '@274 '@274 Bool)
-op<(// expression type '@268
+// expression type !'@268.(Func '@268 '@268 Bool)
+op<(// expression type '@262
 i, // expression type Int
-// expression type !'T.(FuncSet !'@79!'@81.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 '@81) Int)))
-count(// expression type !'@265.(Array '@265)
-xs)) ? // expression type '@265
+// expression type !'T.(FuncSet !'@79.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 Bool) Int)))
+count(// expression type !'@259.(Array '@259)
+xs)) ? // expression type '@259
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
-op[](// expression type !'@265.(Array '@265)
+op[](// expression type !'@259.(Array '@259)
 xs, // expression type Int
-i)// expression type '@266
+i)// expression type '@260
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
-op[](// expression type !'@266.(Array '@266)
+op[](// expression type !'@260.(Array '@260)
 ys, // expression type Int
-// expression type !'@129.(Func '@129 '@129 '@129)
+// expression type !'@128.(Func '@128 '@128 '@128)
 op-(// expression type Int
 i, // expression type Int
-// expression type !'T.(FuncSet !'@79!'@81.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 '@81) Int)))
-count(// expression type !'@265.(Array '@265)
-xs))))// definition type !'@364.(Func !'@355.(Array '@355) Int Int (Array '@364))
+// expression type !'T.(FuncSet !'@79.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 Bool) Int)))
+count(// expression type !'@259.(Array '@259)
+xs))))// definition type !'@348.(Func (Array '@348) Int Int (Array '@348))
 
 /**
 function cut(xs, from, n) 
@@ -829,38 +829,38 @@ function cut(xs, from, n)
 
     
 */
-// definition type !'@364.(Func !'@355.(Array '@355) Int Int (Array '@364))
-function cut(// definition type '@351
-xs, // definition type '@352
-from, // definition type '@353
+// definition type !'@348.(Func (Array '@348) Int Int (Array '@348))
+function cut(// definition type '@344
+xs, // definition type '@345
+from, // definition type '@346
 n)
-// expression type !'@364.(Array '@364)
-// expression type !'@264.(Func Int !'@263.(Func Int '@263) (Array '@264))
+// expression type !'@348.(Array '@348)
+// expression type !'@258.(Func Int (Func Int '@258) (Array '@258))
 gen(// expression type Int
-// expression type !'@129.(Func '@129 '@129 '@129)
+// expression type !'@128.(Func '@128 '@128 '@128)
 op-(// expression type Int
-// expression type !'T.(FuncSet !'@79!'@81.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 '@81) Int)))
-count(// expression type '@351
-xs), // expression type '@353
-n), // expression type !'@355.(Func Int '@355)
-(// definition type '@357
-i) => // expression type '@355
+// expression type !'T.(FuncSet !'@79.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 Bool) Int)))
+count(// expression type '@344
+xs), // expression type '@346
+n), // expression type !'@348.(Func Int '@348)
+(// definition type '@350
+i) => // expression type '@348
 // expression type Bool
-// expression type !'@274.(Func '@274 '@274 Bool)
-op<(// expression type '@357
-i, // expression type '@352
-from) ? // expression type '@355
+// expression type !'@268.(Func '@268 '@268 Bool)
+op<(// expression type '@350
+i, // expression type '@345
+from) ? // expression type '@348
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
-op[](// expression type !'@355.(Array '@355)
-xs, // expression type '@352
-i)// expression type '@355
+op[](// expression type !'@348.(Array '@348)
+xs, // expression type '@345
+i)// expression type '@348
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
-op[](// expression type !'@355.(Array '@355)
+op[](// expression type !'@348.(Array '@348)
 xs, // expression type Int
 // expression type !'@88.(Func '@88 '@88 '@88)
 op+(// expression type Int
 i, // expression type Int
-n)))// definition type !'@957!'@963.(Func !'@956.(Array '@956) Int (Array '@957) (Array '@963))
+n)))// definition type !'@934.(Func (Array '@934) Int (Array '@934) (Array '@934))
 
 /**
 function splice(xs, from, ys) 
@@ -868,23 +868,23 @@ function splice(xs, from, ys)
 
     
 */
-// definition type !'@957!'@963.(Func !'@956.(Array '@956) Int (Array '@957) (Array '@963))
-function splice(// definition type '@952
-xs, // definition type '@953
-from, // definition type '@954
+// definition type !'@934.(Func (Array '@934) Int (Array '@934) (Array '@934))
+function splice(// definition type '@927
+xs, // definition type '@928
+from, // definition type '@929
 ys)
-// expression type !'@963.(Array '@963)
-// expression type !'@265!'@283.(Func (Array '@265) (Array '@265) (Array '@283))
-concat(// expression type !'@959.(Array '@959)
-// expression type !'@265!'@283.(Func (Array '@265) (Array '@265) (Array '@283))
-concat(// expression type !'@957.(Array '@957)
-// expression type !'@431.(Func !'@430.(Array '@430) Int (Array '@431))
-take(// expression type '@952
-xs, // expression type '@953
-from), // expression type '@954
-ys), // expression type !'@961.(Array '@961)
-// expression type !'@931.(Func !'@928.(Array '@928) Int (Array '@931))
-skip(// expression type !'@956.(Array '@956)
+// expression type !'@934.(Array '@934)
+// expression type !'@259.(Func (Array '@259) (Array '@259) (Array '@259))
+concat(// expression type !'@931.(Array '@931)
+// expression type !'@259.(Func (Array '@259) (Array '@259) (Array '@259))
+concat(// expression type !'@931.(Array '@931)
+// expression type !'@421.(Func (Array '@421) Int (Array '@421))
+take(// expression type '@927
+xs, // expression type '@928
+from), // expression type '@929
+ys), // expression type !'@934.(Array '@934)
+// expression type !'@908.(Func !'@906.(Array '@906) Int (Array '@908))
+skip(// expression type !'@931.(Array '@931)
 xs, // expression type Int
 from))// definition type (Func (Array Int) Int)
 
@@ -895,11 +895,11 @@ function sum(xs)
     
 */
 // definition type (Func (Array Int) Int)
-function sum(// definition type '@231
+function sum(// definition type '@227
 xs)
 // expression type Int
-// expression type !'@71!'$3.(Func (Array '$3) '@71 !'@74.(Func '@71 '$3 '@74) '@71)
-reduce(// expression type '@231
+// expression type !'@71!'$3.(Func (Array '$3) '@71 (Func '@71 '$3 '@71) '@71)
+reduce(// expression type '@227
 xs, // expression type Int
 0, // expression type !'@88.(Func '@88 '@88 '@88)
 op+)// definition type (Func (Array Int) Int)
@@ -911,13 +911,13 @@ function product(xs)
     
 */
 // definition type (Func (Array Int) Int)
-function product(// definition type '@853
+function product(// definition type '@834
 xs)
 // expression type Int
-// expression type !'@71!'$3.(Func (Array '$3) '@71 !'@74.(Func '@71 '$3 '@74) '@71)
-reduce(// expression type '@853
+// expression type !'@71!'$3.(Func (Array '$3) '@71 (Func '@71 '$3 '@71) '@71)
+reduce(// expression type '@834
 xs, // expression type Int
-1, // expression type !'@336.(Func '@336 '@336 '@336)
+1, // expression type !'@329.(Func '@329 '@329 '@329)
 op*)// definition type (Func (Array Int) Int)
 
 /**
@@ -927,17 +927,17 @@ function average(xs)
     
 */
 // definition type (Func (Array Int) Int)
-function average(// definition type '@221
+function average(// definition type '@217
 xs)
 // expression type Int
-// expression type !'@227.(Func '@227 '@227 '@227)
+// expression type !'@223.(Func '@223 '@223 '@223)
 op/(// expression type Int
 // expression type (Func (Array Int) Int)
-sum(// expression type '@221
+sum(// expression type '@217
 xs), // expression type Int
-// expression type !'T.(FuncSet !'@79!'@81.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 '@81) Int)))
+// expression type !'T.(FuncSet !'@79.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 Bool) Int)))
 count(// expression type (Array Int)
-xs))// definition type (Func (Array '@634) '@634)
+xs))// definition type (Func (Array '@620) '@620)
 
 /**
 function min(xs) 
@@ -945,18 +945,18 @@ function min(xs)
 
     
 */
-// definition type (Func (Array '@634) '@634)
-function min(// definition type '@645
+// definition type (Func (Array '@620) '@620)
+function min(// definition type '@631
 xs)
-// expression type '@634
-// expression type !'@71!'$3.(Func (Array '$3) '@71 !'@74.(Func '@71 '$3 '@74) '@71)
-reduce(// expression type '@645
-xs, // expression type '@647
+// expression type '@620
+// expression type !'@71!'$3.(Func (Array '$3) '@71 (Func '@71 '$3 '@71) '@71)
+reduce(// expression type '@631
+xs, // expression type '@633
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
-op[](// expression type '@645
+op[](// expression type '@631
 xs, // expression type Int
-0), // expression type !'@634.(FuncSet !'@644.((Func '@634 '@634 '@634) !'@643.(Func '@643 '@644)))
-min)// definition type (Func (Array '@660) '@660)
+0), // expression type !'@620.(FuncSet !'@630.((Func '@620 '@620 '@620) !'@629.(Func '@629 '@630)))
+min)// definition type (Func (Array '@645) '@645)
 
 /**
 function max(xs) 
@@ -964,18 +964,18 @@ function max(xs)
 
     
 */
-// definition type (Func (Array '@660) '@660)
-function max(// definition type '@665
+// definition type (Func (Array '@645) '@645)
+function max(// definition type '@650
 xs)
-// expression type '@660
-// expression type !'@71!'$3.(Func (Array '$3) '@71 !'@74.(Func '@71 '$3 '@74) '@71)
-reduce(// expression type '@665
-xs, // expression type '@667
+// expression type '@645
+// expression type !'@71!'$3.(Func (Array '$3) '@71 (Func '@71 '$3 '@71) '@71)
+reduce(// expression type '@650
+xs, // expression type '@652
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
-op[](// expression type '@665
+op[](// expression type '@650
 xs, // expression type Int
-0), // expression type !'@660.(FuncSet !'@664.((Func '@660 '@660 '@660) !'@663.(Func '@663 '@664)))
-max)// definition type !'@702.(Func (ArrayBuilder '@702) Int Int (ArrayBuilder '@702))
+0), // expression type !'@645.(FuncSet !'@649.((Func '@645 '@645 '@645) !'@648.(Func '@648 '@649)))
+max)// definition type !'@686.(Func (ArrayBuilder '@686) Int Int (ArrayBuilder '@686))
 
 /**
 function partition(a, lo, hi) {
@@ -995,28 +995,28 @@ function partition(a, lo, hi) {
 
     
 */
-// definition type !'@702.(Func (ArrayBuilder '@702) Int Int (ArrayBuilder '@702))
-function partition(// definition type '@698
-a, // definition type '@699
-lo, // definition type '@700
+// definition type !'@686.(Func (ArrayBuilder '@686) Int Int (ArrayBuilder '@686))
+function partition(// definition type '@682
+a, // definition type '@683
+lo, // definition type '@684
 hi)
 {
-var // definition type '@702
-pivot// expression type '@702
+var // definition type '@686
+pivot// expression type '@686
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
-op[](// expression type '@698
-a, // expression type '@699
+op[](// expression type '@682
+a, // expression type '@683
 lo);
 var // definition type Int
 i// expression type Int
-// expression type !'@129.(Func '@129 '@129 '@129)
+// expression type !'@128.(Func '@128 '@128 '@128)
 op-(// expression type Int
 lo, // expression type Int
 1);
 var // definition type Int
 j// expression type Int
 // expression type !'@88.(Func '@88 '@88 '@88)
-op+(// expression type '@700
+op+(// expression type '@684
 hi, // expression type Int
 1);
 while (// expression type Bool
@@ -1030,12 +1030,12 @@ do
 i++;
 }
 // expression type Bool
-// expression type !'@274.(Func '@274 '@274 Bool)
-op<(// expression type '@702
+// expression type !'@268.(Func '@268 '@268 Bool)
+op<(// expression type '@686
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
-op[](// expression type !'@702.(Array '@702)
+op[](// expression type !'@686.(Array '@686)
 a, // expression type Int
-i), // expression type '@702
+i), // expression type '@686
 pivot);
 do
 {
@@ -1044,43 +1044,43 @@ do
 j--;
 }
 // expression type Bool
-// expression type !'@144.(Func '@144 '@144 Bool)
-op>(// expression type '@702
+// expression type !'@143.(Func '@143 '@143 Bool)
+op>(// expression type '@686
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
-op[](// expression type !'@702.(Array '@702)
+op[](// expression type !'@686.(Array '@686)
 a, // expression type Int
-j), // expression type '@702
+j), // expression type '@686
 pivot);
 // expression type Bool
-// expression type !'@554.(Func '@554 '@554 Bool)
+// expression type !'@540.(Func '@540 '@540 Bool)
 op>=(// expression type Int
 i, // expression type Int
-j)return // expression type !'@702.(Array '@702)
+j)return // expression type !'@686.(Array '@686)
 a;
-var // definition type '@702
-tmp// expression type '@702
+var // definition type '@686
+tmp// expression type '@686
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
-op[](// expression type !'@702.(Array '@702)
+op[](// expression type !'@686.(Array '@686)
 a, // expression type Int
 i);
-// expression type !'@702.(ArrayBuilder '@702)
-// expression type !'@702.(Array '@702)
-a = // expression type !'@702.(ArrayBuilder '@702)
-// expression type !'@481.(Func (ArrayBuilder '@481) Int '@481 (ArrayBuilder '@481))
-set(// expression type !'@702.(Array '@702)
+// expression type !'@686.(ArrayBuilder '@686)
+// expression type !'@686.(Array '@686)
+a = // expression type !'@686.(ArrayBuilder '@686)
+// expression type !'@470.(Func (ArrayBuilder '@470) Int '@470 (ArrayBuilder '@470))
+set(// expression type !'@686.(Array '@686)
 a, // expression type Int
-i, // expression type '@702
+i, // expression type '@686
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
-op[](// expression type !'@702.(Array '@702)
+op[](// expression type !'@686.(Array '@686)
 a, // expression type Int
 j));
-// expression type !'@702.(ArrayBuilder '@702)
-// expression type !'@702.(ArrayBuilder '@702)
-a = // expression type !'@702.(ArrayBuilder '@702)
-// expression type !'@481.(Func (ArrayBuilder '@481) Int '@481 (ArrayBuilder '@481))
-set(// expression type !'@702.(ArrayBuilder '@702)
+// expression type !'@686.(ArrayBuilder '@686)
+// expression type !'@686.(ArrayBuilder '@686)
+a = // expression type !'@686.(ArrayBuilder '@686)
+// expression type !'@470.(Func (ArrayBuilder '@470) Int '@470 (ArrayBuilder '@470))
+set(// expression type !'@686.(ArrayBuilder '@686)
 a, // expression type Int
-j, // expression type '@702
+j, // expression type '@686
 tmp);
 }
 {
@@ -1091,12 +1091,12 @@ do
 i++;
 }
 // expression type Bool
-// expression type !'@274.(Func '@274 '@274 Bool)
-op<(// expression type '@702
+// expression type !'@268.(Func '@268 '@268 Bool)
+op<(// expression type '@686
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
-op[](// expression type !'@702.(Array '@702)
+op[](// expression type !'@686.(Array '@686)
 a, // expression type Int
-i), // expression type '@702
+i), // expression type '@686
 pivot);
 do
 {
@@ -1105,46 +1105,46 @@ do
 j--;
 }
 // expression type Bool
-// expression type !'@144.(Func '@144 '@144 Bool)
-op>(// expression type '@702
+// expression type !'@143.(Func '@143 '@143 Bool)
+op>(// expression type '@686
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
-op[](// expression type !'@702.(Array '@702)
+op[](// expression type !'@686.(Array '@686)
 a, // expression type Int
-j), // expression type '@702
+j), // expression type '@686
 pivot);
 // expression type Bool
-// expression type !'@554.(Func '@554 '@554 Bool)
+// expression type !'@540.(Func '@540 '@540 Bool)
 op>=(// expression type Int
 i, // expression type Int
-j)return // expression type !'@702.(Array '@702)
+j)return // expression type !'@686.(Array '@686)
 a;
-var // definition type '@702
-tmp// expression type '@702
+var // definition type '@686
+tmp// expression type '@686
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
-op[](// expression type !'@702.(Array '@702)
+op[](// expression type !'@686.(Array '@686)
 a, // expression type Int
 i);
-// expression type !'@702.(ArrayBuilder '@702)
-// expression type !'@702.(Array '@702)
-a = // expression type !'@702.(ArrayBuilder '@702)
-// expression type !'@481.(Func (ArrayBuilder '@481) Int '@481 (ArrayBuilder '@481))
-set(// expression type !'@702.(Array '@702)
+// expression type !'@686.(ArrayBuilder '@686)
+// expression type !'@686.(Array '@686)
+a = // expression type !'@686.(ArrayBuilder '@686)
+// expression type !'@470.(Func (ArrayBuilder '@470) Int '@470 (ArrayBuilder '@470))
+set(// expression type !'@686.(Array '@686)
 a, // expression type Int
-i, // expression type '@702
+i, // expression type '@686
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
-op[](// expression type !'@702.(Array '@702)
+op[](// expression type !'@686.(Array '@686)
 a, // expression type Int
 j));
-// expression type !'@702.(ArrayBuilder '@702)
-// expression type !'@702.(ArrayBuilder '@702)
-a = // expression type !'@702.(ArrayBuilder '@702)
-// expression type !'@481.(Func (ArrayBuilder '@481) Int '@481 (ArrayBuilder '@481))
-set(// expression type !'@702.(ArrayBuilder '@702)
+// expression type !'@686.(ArrayBuilder '@686)
+// expression type !'@686.(ArrayBuilder '@686)
+a = // expression type !'@686.(ArrayBuilder '@686)
+// expression type !'@470.(Func (ArrayBuilder '@470) Int '@470 (ArrayBuilder '@470))
+set(// expression type !'@686.(ArrayBuilder '@686)
 a, // expression type Int
-j, // expression type '@702
+j, // expression type '@686
 tmp);
 }
-return // expression type !'@702.(ArrayBuilder '@702)
+return // expression type !'@686.(ArrayBuilder '@686)
 a;
 }
 // definition type (Func (ArrayBuilder Int) Int Int (ArrayBuilder Int))
@@ -1163,46 +1163,46 @@ function qsort(a, lo, hi) {
     
 */
 // definition type (Func (ArrayBuilder Int) Int Int (ArrayBuilder Int))
-function qsort(// definition type '@688
-a, // definition type '@689
-lo, // definition type '@690
+function qsort(// definition type '@672
+a, // definition type '@673
+lo, // definition type '@674
 hi)
 {
 // expression type Bool
-// expression type !'@274.(Func '@274 '@274 Bool)
-op<(// expression type '@689
-lo, // expression type '@690
+// expression type !'@268.(Func '@268 '@268 Bool)
+op<(// expression type '@673
+lo, // expression type '@674
 hi){
-var // definition type '@693
-p// expression type '@693
+var // definition type '@677
+p// expression type '@677
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
-op[](// expression type '@688
-a, // expression type '@690
+op[](// expression type '@672
+a, // expression type '@674
 lo);
-// expression type !'@693.(ArrayBuilder '@693)
+// expression type !'@677.(ArrayBuilder '@677)
 // expression type undefined
-a = // expression type !'@693.(ArrayBuilder '@693)
-// expression type !'@702.(Func (ArrayBuilder '@702) Int Int (ArrayBuilder '@702))
-partition(// expression type !'@693.(Array '@693)
+a = // expression type !'@677.(ArrayBuilder '@677)
+// expression type !'@686.(Func (ArrayBuilder '@686) Int Int (ArrayBuilder '@686))
+partition(// expression type !'@677.(Array '@677)
 a, // expression type Int
 lo, // expression type Int
 hi);
-// expression type !'@693.(ArrayBuilder '@693)
+// expression type !'@677.(ArrayBuilder '@677)
 // expression type undefined
-a = // expression type '@718
-// expression type !'@684!'@685!'@686!'@687.(Func '@684 '@685 '@686 '@687)
-qsort(// expression type !'@693.(ArrayBuilder '@693)
+a = // expression type '@702
+// expression type !'@668!'@669!'@670!'@671.(Func '@668 '@669 '@670 '@671)
+qsort(// expression type !'@677.(ArrayBuilder '@677)
 a, // expression type Int
-lo, // expression type '@693
+lo, // expression type '@677
 p);
 // expression type (ArrayBuilder Int)
 // expression type undefined
-a = // expression type '@723
-// expression type !'@684!'@685!'@686!'@687.(Func '@684 '@685 '@686 '@687)
-qsort(// expression type !'@693.(ArrayBuilder '@693)
+a = // expression type '@707
+// expression type !'@668!'@669!'@670!'@671.(Func '@668 '@669 '@670 '@671)
+qsort(// expression type !'@677.(ArrayBuilder '@677)
 a, // expression type Int
 // expression type !'@88.(Func '@88 '@88 '@88)
-op+(// expression type '@693
+op+(// expression type '@677
 p, // expression type Int
 1), // expression type Int
 hi);
@@ -1219,21 +1219,21 @@ function sort(xs)
     
 */
 // definition type (Func (Array Int) (Array Int))
-function sort(// definition type '@682
+function sort(// definition type '@666
 xs)
 // expression type (Array Int)
 // expression type !'T.(FuncSet ((Func Int (Func Int 'T) (Array 'T)) (Func (ArrayBuilder 'T) (Array 'T)) (Func Float2 (Array Float)) (Func Float3 (Array Float)) (Func Float4 (Array Float))))
 array(// expression type (ArrayBuilder Int)
 // expression type (Func (ArrayBuilder Int) Int Int (ArrayBuilder Int))
-qsort(// expression type !'@724.(ArrayBuilder '@724)
+qsort(// expression type !'@708.(ArrayBuilder '@708)
 // expression type !'T.(Func (Array 'T) (ArrayBuilder 'T))
-mutable(// expression type '@682
+mutable(// expression type '@666
 xs), // expression type Int
 0, // expression type Int
-// expression type !'@129.(Func '@129 '@129 '@129)
+// expression type !'@128.(Func '@128 '@128 '@128)
 op-(// expression type Int
-// expression type !'T.(FuncSet !'@79!'@81.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 '@81) Int)))
-count(// expression type !'@724.(Array '@724)
+// expression type !'T.(FuncSet !'@79.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 Bool) Int)))
+count(// expression type !'@708.(Array '@708)
 xs), // expression type Int
 1)))// definition type (Func (Array Int) Int)
 
@@ -1248,21 +1248,21 @@ function median(xs) {
     
 */
 // definition type (Func (Array Int) Int)
-function median(// definition type '@678
+function median(// definition type '@662
 xs)
 {
 var // definition type (Array Int)
 ys// expression type (Array Int)
 // expression type (Func (Array Int) (Array Int))
-sort(// expression type '@678
+sort(// expression type '@662
 xs);
 return // expression type Int
 // expression type Bool
-// expression type !'@444.(Func '@444 '@444 Bool)
+// expression type !'@433.(Func '@433 '@433 Bool)
 op==(// expression type Int
-// expression type !'@732.(Func '@732 '@732 '@732)
+// expression type !'@716.(Func '@716 '@716 '@716)
 op%(// expression type Int
-// expression type !'T.(FuncSet !'@79!'@81.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 '@81) Int)))
+// expression type !'T.(FuncSet !'@79.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 Bool) Int)))
 count(// expression type (Array Int)
 ys), // expression type Int
 2), // expression type Int
@@ -1270,9 +1270,9 @@ ys), // expression type Int
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
 op[](// expression type (Array Int)
 ys, // expression type Int
-// expression type !'@227.(Func '@227 '@227 '@227)
+// expression type !'@223.(Func '@223 '@223 '@223)
 op/(// expression type Int
-// expression type !'T.(FuncSet !'@79!'@81.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 '@81) Int)))
+// expression type !'T.(FuncSet !'@79.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 Bool) Int)))
 count(// expression type (Array Int)
 ys), // expression type Int
 2))// expression type Int
@@ -1281,32 +1281,32 @@ op+(// expression type Int
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
 op[](// expression type (Array Int)
 ys, // expression type Int
-// expression type !'@129.(Func '@129 '@129 '@129)
+// expression type !'@128.(Func '@128 '@128 '@128)
 op-(// expression type Int
-// expression type !'@227.(Func '@227 '@227 '@227)
+// expression type !'@223.(Func '@223 '@223 '@223)
 op/(// expression type Int
-// expression type !'T.(FuncSet !'@79!'@81.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 '@81) Int)))
+// expression type !'T.(FuncSet !'@79.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 Bool) Int)))
 count(// expression type (Array Int)
 ys), // expression type Int
 2), // expression type Int
 1)), // expression type Int
-// expression type !'@227.(Func '@227 '@227 '@227)
+// expression type !'@223.(Func '@223 '@223 '@223)
 op/(// expression type Int
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
 op[](// expression type (Array Int)
 ys, // expression type Int
 // expression type !'@88.(Func '@88 '@88 '@88)
 op+(// expression type Int
-// expression type !'@227.(Func '@227 '@227 '@227)
+// expression type !'@223.(Func '@223 '@223 '@223)
 op/(// expression type Int
-// expression type !'T.(FuncSet !'@79!'@81.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 '@81) Int)))
+// expression type !'T.(FuncSet !'@79.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 Bool) Int)))
 count(// expression type (Array Int)
 ys), // expression type Int
 2), // expression type Int
 1)), // expression type Int
 2));
 }
-// definition type (Func !'@557.(Array '@557) Int Bool)
+// definition type (Func !'@543.(Array '@543) Int Bool)
 
 /**
 function inRange(xs, n) 
@@ -1314,23 +1314,23 @@ function inRange(xs, n)
 
     
 */
-// definition type (Func !'@557.(Array '@557) Int Bool)
-function inRange(// definition type '@547
-xs, // definition type '@548
+// definition type (Func !'@543.(Array '@543) Int Bool)
+function inRange(// definition type '@533
+xs, // definition type '@534
 n)
 // expression type Bool
 // expression type (Func Bool Bool Bool)
 op&&(// expression type Bool
-// expression type !'@554.(Func '@554 '@554 Bool)
-op>=(// expression type '@548
+// expression type !'@540.(Func '@540 '@540 Bool)
+op>=(// expression type '@534
 n, // expression type Int
 0), // expression type Bool
-// expression type !'@274.(Func '@274 '@274 Bool)
+// expression type !'@268.(Func '@268 '@268 Bool)
 op<(// expression type Int
 n, // expression type Int
-// expression type !'T.(FuncSet !'@79!'@81.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 '@81) Int)))
-count(// expression type '@547
-xs)))// definition type !'@565.(Func !'@563.(Array '@563) '@565)
+// expression type !'T.(FuncSet !'@79.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 Bool) Int)))
+count(// expression type '@533
+xs)))// definition type !'@551.(Func !'@549.(Array '@549) '@551)
 
 /**
 function last(xs) 
@@ -1338,19 +1338,19 @@ function last(xs)
 
     
 */
-// definition type !'@565.(Func !'@563.(Array '@563) '@565)
-function last(// definition type '@561
+// definition type !'@551.(Func !'@549.(Array '@549) '@551)
+function last(// definition type '@547
 xs)
-// expression type '@565
+// expression type '@551
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
-op[](// expression type '@561
+op[](// expression type '@547
 xs, // expression type Int
-// expression type !'@129.(Func '@129 '@129 '@129)
+// expression type !'@128.(Func '@128 '@128 '@128)
 op-(// expression type Int
-// expression type !'T.(FuncSet !'@79!'@81.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 '@81) Int)))
-count(// expression type '@561
+// expression type !'T.(FuncSet !'@79.((Func (Array 'T) Int) (Func (Array '@79) (Func '@79 Bool) Int)))
+count(// expression type '@547
 xs), // expression type Int
-1))// definition type !'@491.(Func !'@491.(Array '@491) '@491)
+1))// definition type !'@479.(Func !'@479.(Array '@479) '@479)
 
 /**
 function first(xs) 
@@ -1358,14 +1358,14 @@ function first(xs)
 
     
 */
-// definition type !'@491.(Func !'@491.(Array '@491) '@491)
-function first(// definition type '@489
+// definition type !'@479.(Func !'@479.(Array '@479) '@479)
+function first(// definition type '@477
 xs)
-// expression type '@491
+// expression type '@479
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
-op[](// expression type '@489
+op[](// expression type '@477
 xs, // expression type Int
-0)// definition type !'@71!'$3.(Func (Array '$3) '@71 !'@74.(Func '@71 '$3 '@74) '@71)
+0)// definition type !'@71!'$3.(Func (Array '$3) '@71 (Func '@71 '$3 '@71) '@71)
 
 /**
 function reduce(xs, acc, f) {
@@ -1376,7 +1376,7 @@ function reduce(xs, acc, f) {
 
     
 */
-// definition type !'@71!'$3.(Func (Array '$3) '@71 !'@74.(Func '@71 '$3 '@74) '@71)
+// definition type !'@71!'$3.(Func (Array '$3) '@71 (Func '@71 '$3 '@71) '@71)
 function reduce(// definition type '@70
 xs, // definition type '@71
 acc, // definition type '@72
@@ -1387,7 +1387,7 @@ for (x in // expression type '@70
 xs)
 // expression type '@71
 // expression type undefined
-acc = // expression type '@77
+acc = // expression type '@74
 // expression type '@72
 f(// expression type '@71
 acc, // expression type '$3
@@ -1395,7 +1395,7 @@ x);
 return // expression type '@71
 acc;
 }
-// definition type !'$6.(Func (Array !'@265.(Array '@265)) (Array '$6))
+// definition type !'$6.(Func (Array !'@259.(Array '@259)) (Array '$6))
 
 /**
 function flatten(xs)
@@ -1403,29 +1403,29 @@ function flatten(xs)
 
     
 */
-// definition type !'$6.(Func (Array !'@265.(Array '@265)) (Array '$6))
-function flatten(// definition type '@500
+// definition type !'$6.(Func (Array !'@259.(Array '@259)) (Array '$6))
+function flatten(// definition type '@488
 xs)
 // expression type !'$6.(Array '$6)
-// expression type !'@71!'$3.(Func (Array '$3) '@71 !'@74.(Func '@71 '$3 '@74) '@71)
-reduce(// expression type '@500
+// expression type !'@71!'$3.(Func (Array '$3) '@71 (Func '@71 '$3 '@71) '@71)
+reduce(// expression type '@488
 xs, // expression type !'$6.(Array '$6)
-[], // expression type !'@265!'@283.(Func (Array '@265) (Array '@265) (Array '@283))
-concat)// definition type !'@505!'@509.(Func (Array '@505) !'@506.(Func '@505 '@506) (Array '@509))
+[], // expression type !'@259.(Func (Array '@259) (Array '@259) (Array '@259))
+concat)// definition type !'@492!'@495.(Func (Array '@492) !'@494.(Func '@492 (Array '@494)) (Array '@495))
 
 /**
 function flatMap(xs, f)       
         = xs.map(f).flatten;
 
 */
-// definition type !'@505!'@509.(Func (Array '@505) !'@506.(Func '@505 '@506) (Array '@509))
-function flatMap(// definition type '@495
-xs, // definition type '@496
+// definition type !'@492!'@495.(Func (Array '@492) !'@494.(Func '@492 (Array '@494)) (Array '@495))
+function flatMap(// definition type '@483
+xs, // definition type '@484
 f)
-// expression type !'@509.(Array '@509)
-// expression type !'$6.(Func (Array !'@265.(Array '@265)) (Array '$6))
-flatten(// expression type !'@507.(Array '@507)
-// expression type !'@94!'@113.(Func (Array '@94) !'@111.(Func '@94 '@111) (Array '@113))
-map(// expression type '@495
-xs, // expression type '@496
+// expression type !'@495.(Array '@495)
+// expression type !'$6.(Func (Array !'@259.(Array '@259)) (Array '$6))
+flatten(// expression type !'@493.(Array '@493)
+// expression type !'@93!'@110.(Func (Array '@93) (Func '@93 '@110) (Array '@110))
+map(// expression type '@483
+xs, // expression type '@484
 f))}

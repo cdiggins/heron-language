@@ -180,7 +180,9 @@ function testCallFunctions() {
         var t = tests_1[_i];
         var f = type_parser_1.parseType(t[0]);
         var args = type_parser_1.parseType(t[1]);
-        var r = heron_types_1.callFunction(f, args.types, new type_system_1.TypeResolver(function (a, b) { throw new Error("Inconsistent types"); }));
+        // TODO: the null is supposed to be a TypeResolver
+        var u = new type_system_1.TypeResolver(heron_types_1.typeStrategy);
+        var r = heron_types_1.callFunction(f, args.types, u);
         console.log("func   : " + f);
         console.log("args   : " + args);
         console.log("result : " + r);

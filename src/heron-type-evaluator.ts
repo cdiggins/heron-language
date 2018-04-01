@@ -201,7 +201,10 @@ export class TypeEvaluator
             else if (func instanceof TypeVariable) {
                 const genFunc = genericFuncTypeFromArgs(args);
                 this.unify(func, genFunc);
-                return callFunction(genFunc, args, this.unifier);
+                const retType = getReturnType(genFunc);
+                const r = callFunction(genFunc, args, this.unifier);
+                this.unify(retType, r);
+                return r;
             }
             else {
                 throw new Error("Can't call " + func);

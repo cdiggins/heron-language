@@ -340,3 +340,6 @@ https://code.visualstudio.com/docs/extensionAPI/extension-points
 
 //==
 
+The return value of the functions isn't properly reserved. 
+
+This is apparent when looking at "map" 

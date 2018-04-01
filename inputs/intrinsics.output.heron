@@ -1,4 +1,4 @@
-// Generated on Sun Apr 01 2018 18:40:49 GMT-0400 (Eastern Daylight Time)
+// Generated on Sun Apr 01 2018 18:49:27 GMT-0400 (Eastern Daylight Time)
 heron:std:0.1heron:intrinsics:0.1{
 // definition type undefined
 Float// definition type undefined
@@ -123,70 +123,70 @@ T(// definition type 'T
 x : T, // definition type 'T
 y : T)T
 ;
-// definition type !'@129.(Func '@129 '@129 '@129)
+// definition type !'@128.(Func '@128 '@128 '@128)
 intrinsic op- <// definition type undefined
 T>// definition type undefined
 T(// definition type 'T
 x : T, // definition type 'T
 y : T)T
 ;
-// definition type !'@336.(Func '@336 '@336 '@336)
+// definition type !'@329.(Func '@329 '@329 '@329)
 intrinsic op* <// definition type undefined
 T>// definition type undefined
 T(// definition type 'T
 x : T, // definition type 'T
 y : T)T
 ;
-// definition type !'@227.(Func '@227 '@227 '@227)
+// definition type !'@223.(Func '@223 '@223 '@223)
 intrinsic op/ <// definition type undefined
 T>// definition type undefined
 T(// definition type 'T
 x : T, // definition type 'T
 y : T)T
 ;
-// definition type !'@732.(Func '@732 '@732 '@732)
+// definition type !'@716.(Func '@716 '@716 '@716)
 intrinsic op% <// definition type undefined
 T>// definition type undefined
 T(// definition type 'T
 x : T, // definition type 'T
 y : T)T
 ;
-// definition type !'@144.(Func '@144 '@144 Bool)
+// definition type !'@143.(Func '@143 '@143 Bool)
 intrinsic op> <// definition type undefined
 T>// definition type undefined
 T(// definition type 'T
 x : T, // definition type 'T
 y : T)Bool
 ;
-// definition type !'@554.(Func '@554 '@554 Bool)
+// definition type !'@540.(Func '@540 '@540 Bool)
 intrinsic op>= <// definition type undefined
 T>// definition type undefined
 T(// definition type 'T
 x : T, // definition type 'T
 y : T)Bool
 ;
-// definition type !'@274.(Func '@274 '@274 Bool)
+// definition type !'@268.(Func '@268 '@268 Bool)
 intrinsic op< <// definition type undefined
 T>// definition type undefined
 T(// definition type 'T
 x : T, // definition type 'T
 y : T)Bool
 ;
-// definition type !'@640.(Func '@640 '@640 Bool)
+// definition type !'@626.(Func '@626 '@626 Bool)
 intrinsic op<= <// definition type undefined
 T>// definition type undefined
 T(// definition type 'T
 x : T, // definition type 'T
 y : T)Bool
 ;
-// definition type !'@800.(Func '@800 '@800 Bool)
+// definition type !'@784.(Func '@784 '@784 Bool)
 intrinsic op!= <// definition type undefined
 T>// definition type undefined
 T(// definition type 'T
 x : T, // definition type 'T
 y : T)Bool
 ;
-// definition type !'@444.(Func '@444 '@444 Bool)
+// definition type !'@433.(Func '@433 '@433 Bool)
 intrinsic op== <// definition type undefined
 T>// definition type undefined
 T(// definition type 'T
@@ -242,14 +242,14 @@ T>// definition type undefined
 T(// definition type !'T.(Array 'T)
 xs : ArrayT)ArrayBuilderT
 ;
-// definition type !'@862.(Func (ArrayBuilder '@862) '@862 (ArrayBuilder '@862))
+// definition type !'@842.(Func (ArrayBuilder '@842) '@842 (ArrayBuilder '@842))
 intrinsic push <// definition type undefined
 T>// definition type undefined
 T(// definition type !'T.(ArrayBuilder 'T)
 xs : ArrayBuilderT, // definition type 'T
 x : T)ArrayBuilderT
 ;
-// definition type !'@481.(Func (ArrayBuilder '@481) Int '@481 (ArrayBuilder '@481))
+// definition type !'@470.(Func (ArrayBuilder '@470) Int '@470 (ArrayBuilder '@470))
 intrinsic set <// definition type undefined
 T>// definition type undefined
 T(// definition type !'T.(ArrayBuilder 'T)
@@ -328,17 +328,17 @@ function float2(xs) = float2(xs[0], xs[1]);
     
 */
 // definition type (Func (Array Float) Float2)
-function float2(// definition type '@512
+function float2(// definition type '@498
 xs)
 // expression type Float2
-// expression type (FuncSet !'@511.((Func Float Float Float2) !'@510.(Func '@510 '@511)))
-float2(// expression type '@520
+// expression type (FuncSet !'@497.((Func Float Float Float2) !'@496.(Func '@496 '@497)))
+float2(// expression type '@506
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
-op[](// expression type '@512
+op[](// expression type '@498
 xs, // expression type Int
-0), // expression type '@520
+0), // expression type '@506
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
-op[](// expression type !'@520.(Array '@520)
+op[](// expression type !'@506.(Array '@506)
 xs, // expression type Int
 1))// definition type (Func (Array Float) Float3)
 
@@ -347,21 +347,21 @@ function float3(xs) = float3(xs[0], xs[1], xs[2]);
     
 */
 // definition type (Func (Array Float) Float3)
-function float3(// definition type '@312
+function float3(// definition type '@305
 xs)
 // expression type Float3
-// expression type (FuncSet !'@311.((Func Float Float Float Float3) !'@310.(Func '@310 '@311)))
-float3(// expression type '@314
+// expression type (FuncSet !'@304.((Func Float Float Float Float3) !'@303.(Func '@303 '@304)))
+float3(// expression type '@307
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
-op[](// expression type '@312
+op[](// expression type '@305
 xs, // expression type Int
-0), // expression type '@314
+0), // expression type '@307
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
-op[](// expression type !'@314.(Array '@314)
+op[](// expression type !'@307.(Array '@307)
 xs, // expression type Int
-1), // expression type '@314
+1), // expression type '@307
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
-op[](// expression type !'@314.(Array '@314)
+op[](// expression type !'@307.(Array '@307)
 xs, // expression type Int
 2))// definition type (Func (Array Float) Float4)
 
@@ -372,25 +372,25 @@ function float4(xs) = float4(xs[0], xs[1], xs[2], xs[3]);
     
 */
 // definition type (Func (Array Float) Float4)
-function float4(// definition type '@534
+function float4(// definition type '@520
 xs)
 // expression type Float4
-// expression type (FuncSet !'@533.((Func Float Float Float Float Float4) !'@532.(Func '@532 '@533)))
-float4(// expression type '@536
+// expression type (FuncSet !'@519.((Func Float Float Float Float Float4) !'@518.(Func '@518 '@519)))
+float4(// expression type '@522
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
-op[](// expression type '@534
+op[](// expression type '@520
 xs, // expression type Int
-0), // expression type '@536
+0), // expression type '@522
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
-op[](// expression type !'@536.(Array '@536)
+op[](// expression type !'@522.(Array '@522)
 xs, // expression type Int
-1), // expression type '@536
+1), // expression type '@522
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
-op[](// expression type !'@536.(Array '@536)
+op[](// expression type !'@522.(Array '@522)
 xs, // expression type Int
-2), // expression type '@536
+2), // expression type '@522
 // expression type !'T.(Func !'T.(Array 'T) Int 'T)
-op[](// expression type !'@536.(Array '@536)
+op[](// expression type !'@522.(Array '@522)
 xs, // expression type Int
 3))// definition type (Func Int Int (Array Int))
 
@@ -408,14 +408,14 @@ upto : Int)ArrayInt
 // expression type (Array Int)
 // expression type !'T.(FuncSet ((Func Int (Func Int 'T) (Array 'T)) (Func (ArrayBuilder 'T) (Array 'T)) (Func Float2 (Array Float)) (Func Float3 (Array Float)) (Func Float4 (Array Float))))
 array(// expression type Int
-// expression type !'@129.(Func '@129 '@129 '@129)
+// expression type !'@128.(Func '@128 '@128 '@128)
 op-(// expression type Int
 upto, // expression type Int
 from), // expression type (Func Int Int)
-(// definition type '@132
+(// definition type '@131
 i) => // expression type Int
 // expression type !'@88.(Func '@88 '@88 '@88)
-op+(// expression type '@132
+op+(// expression type '@131
 i, // expression type Int
 upto))// definition type !'T.(Func !'T.(Array 'T) Int 'T)
 
@@ -442,11 +442,11 @@ pi// expression type undefined
 var // definition type undefined
 e// expression type undefined
 2.71828182845904523536;
-// definition type !'@597!'@598.(Func '@597 '@598)
-intrinsic print(// definition type '@597
+// definition type !'@583!'@584.(Func '@583 '@584)
+intrinsic print(// definition type '@583
 x)
 ;
-// definition type !'@208.(Func Bool '@208)
+// definition type !'@204.(Func Bool '@204)
 intrinsic assert(// definition type Bool
 x : Bool)
 ;
