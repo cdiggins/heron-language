@@ -266,7 +266,7 @@ function computeExprs(ast) {
 exports.computeExprs = computeExprs;
 function createExpr(node) {
     if (!node)
-        return null;
+        throw new Error("Missing node");
     if (node.expr)
         return node.expr;
     switch (node.name) {

@@ -194,11 +194,11 @@ const g = new function() {
     // Statements 
     this.exprStatement = this.expr.then(this.ws).then(this.eos).ast;
     this.varDeclStatement = guardedWsDelimSeq(m.keyword("var"), this.varDecls, this.eos).ast;        
-    this.loopCond = guardedWsDelimSeq("(", this.expr, ")").ast;
+    this.loopCond = guardedWsDelimSeq("(", this.expr, ")");
     this.forLoop = guardedWsDelimSeq(m.keyword("for"), "(", m.keyword("var"), this.identifier, m.keyword("in"), this.expr, ")", this.recStatement).ast;
     this.whileLoop = guardedWsDelimSeq(m.keyword("while"), this.loopCond, this.recStatement).ast;
     this.doLoop = guardedWsDelimSeq(m.keyword("do"), this.recStatement, m.keyword("while"), this.loopCond).ast;
-    this.elseStatement = guardedWsDelimSeq(m.keyword("else"), this.recStatement).ast;
+    this.elseStatement = guardedWsDelimSeq(m.keyword("else"), this.recStatement);
     this.ifCond = guardedWsDelimSeq("(", this.expr, ")");
     this.ifStatement = guardedWsDelimSeq(m.keyword("if"), this.ifCond, this.recStatement, this.elseStatement.opt).ast;
     this.compoundStatement = guardedWsDelimSeq("{", this.recStatement.zeroOrMore, "}").ast;

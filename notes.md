@@ -257,3 +257,37 @@ I get a funcset, only once I infer the types can I figure out which one is being
 
 Maybe I can figure it out anyway. 
 
+//==
+
+2018-03-30
+I ran into an interesting problem today, the "at" function was overloaded with two similar
+function types. Would have been nice to  catch it earlier. 
+
+qsort is inferred to have a type of IArray, which makes sense. 
+However, we really know it has a type of ArrayBuilder. 
+
+At least I think we know that, right? 
+
+//==
+
+So the problem is that there are N functions:
+One of them wants an ArrayBuilder, i have an array: BUT it is possibly an ArrayBuilder. 
+
+This is because an ArrayBuilder **is an** Array 
+
+So when trying to match up functions, I could choose that one as a possibility. 
+
+The problem I am currently facing though is that `qsort` has the wrong type: 
+it returns an Array when it should return an ArrayBuilder.
+
+I think this is because Array functions are called, 
+
+Nope. It is because something is broken. Partition should only work on ArrayBuilder. 
+
+//==
+
+When you encounter a list, one of them might be better than another.
+
+You look at the first type: you ask ... 
+
+

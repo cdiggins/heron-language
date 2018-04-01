@@ -1,4 +1,4 @@
-// Generated on Sun Mar 25 2018 22:31:32 GMT-0400 (Eastern Daylight Time)
+// Generated on Sun Apr 01 2018 00:19:40 GMT-0400 (Eastern Daylight Time)
 heron:std:0.1heron:intrinsics:0.1{
 // definition type undefined
 Float// definition type undefined
@@ -10,266 +10,246 @@ Bool// definition type undefined
 Array// definition type undefined
 ArrayBuilder// definition type undefined
 Func// definition type undefined
-Any// definition type undefined
+Any// definition type (Func Float Float Float2)
 intrinsic float2(// definition type Float
 x : Float, // definition type Float
 y : Float)Float2
 ;
-// definition type undefined
+// definition type (Func Float2 Float)
 intrinsic x(// definition type Float2
 v : Float2)Float
 ;
-// definition type undefined
+// definition type (Func Float2 Float)
 intrinsic y(// definition type Float2
 v : Float2)Float
 ;
-// definition type undefined
+// definition type (Func Float Float Float Float3)
 intrinsic float3(// definition type Float
 x : Float, // definition type Float
 y : Float, // definition type Float
 z : Float)Float3
 ;
-// definition type undefined
-intrinsic x(// definition type Float3
-v : Float3)Float
-;
-// definition type undefined
-intrinsic y(// definition type Float3
-v : Float3)Float
-;
-// definition type undefined
+// definition type (Func Float3 Float)
 intrinsic z(// definition type Float3
 v : Float3)Float
 ;
-// definition type undefined
+// definition type (Func Float Float Float Float Float4)
 intrinsic float4(// definition type Float
 x : Float, // definition type Float
 y : Float, // definition type Float
 z : Float, // definition type Float
 w : Float)Float4
 ;
-// definition type undefined
-intrinsic x(// definition type Float4
-v : Float4)Float
-;
-// definition type undefined
-intrinsic y(// definition type Float4
-v : Float4)Float
-;
-// definition type undefined
-intrinsic z(// definition type Float4
-v : Float4)Float
-;
-// definition type undefined
+// definition type (Func Float4 Float)
 intrinsic w(// definition type Float4
 v : Float4)Float
 ;
-// definition type undefined
+// definition type (Func Float Float)
 intrinsic abs(// definition type Float
 x : Float)Float
 ;
-// definition type undefined
+// definition type (Func Float Float)
 intrinsic acos(// definition type Float
 x : Float)Float
 ;
-// definition type undefined
+// definition type (Func Float Float)
 intrinsic asin(// definition type Float
 x : Float)Float
 ;
-// definition type undefined
+// definition type (Func Float Float)
 intrinsic atan(// definition type Float
 x : Float)Float
 ;
-// definition type undefined
+// definition type (Func Float Float Float)
 intrinsic atan2(// definition type Float
 y : Float, // definition type Float
 x : Float)Float
 ;
-// definition type undefined
+// definition type (Func Float Float)
 intrinsic ceil(// definition type Float
 x : Float)Float
 ;
-// definition type undefined
+// definition type (Func Float Float Float Float)
 intrinsic clamp(// definition type Float
 x : Float, // definition type Float
 min : Float, // definition type Float
 max : Float)Float
 ;
-// definition type undefined
+// definition type (Func Float Float)
 intrinsic cos(// definition type Float
 x : Float)Float
 ;
-// definition type undefined
+// definition type (Func Float Float)
 intrinsic exp(// definition type Float
 x : Float)Float
 ;
-// definition type undefined
+// definition type (Func Float Float)
 intrinsic floor(// definition type Float
 x : Float)Float
 ;
-// definition type undefined
+// definition type (Func Float Float)
 intrinsic log(// definition type Float
 x : Float)Float
 ;
-// definition type undefined
-intrinsic max(// definition type Float
-x : Float, // definition type Float
-y : Float)Float
-;
-// definition type undefined
-intrinsic min(// definition type Float
-x : Float, // definition type Float
-y : Float)Float
-;
-// definition type undefined
+// definition type (Func Float Float Float)
 intrinsic pow(// definition type Float
 x : Float, // definition type Float
 y : Float)Float
 ;
-// definition type undefined
+// definition type (Func Float Float)
 intrinsic round(// definition type Float
 x : Float)Float
 ;
-// definition type undefined
+// definition type (Func Float Float)
 intrinsic sin(// definition type Float
 x : Float)Float
 ;
-// definition type undefined
+// definition type (Func Float Float)
 intrinsic sign(// definition type Float
 x : Float)Float
 ;
-// definition type undefined
+// definition type (Func Float Float)
 intrinsic sqrt(// definition type Float
 x : Float)Float
 ;
-// definition type undefined
+// definition type (Func Float Float)
 intrinsic tan(// definition type Float
 x : Float)Float
 ;
-// definition type undefined
-intrinsic op+(// definition type Float
-x : Float, // definition type Float
-y : Float)Float
+// definition type !'@88.(Func '@88 '@88 '@88)
+intrinsic op+ <// definition type undefined
+T>// definition type undefined
+T(// definition type 'T
+x : T, // definition type 'T
+y : T)T
 ;
-// definition type undefined
-intrinsic op-(// definition type Float
-x : Float, // definition type Float
-y : Float)Float
+// definition type !'@129.(Func '@129 '@129 '@129)
+intrinsic op- <// definition type undefined
+T>// definition type undefined
+T(// definition type 'T
+x : T, // definition type 'T
+y : T)T
 ;
-// definition type undefined
-intrinsic op*(// definition type Float
-x : Float, // definition type Float
-y : Float)Float
+// definition type !'@336.(Func '@336 '@336 '@336)
+intrinsic op* <// definition type undefined
+T>// definition type undefined
+T(// definition type 'T
+x : T, // definition type 'T
+y : T)T
 ;
-// definition type undefined
-intrinsic op/(// definition type Float
-x : Float, // definition type Float
-y : Float)Float
+// definition type !'@227.(Func '@227 '@227 '@227)
+intrinsic op/ <// definition type undefined
+T>// definition type undefined
+T(// definition type 'T
+x : T, // definition type 'T
+y : T)T
 ;
-// definition type undefined
-intrinsic op%(// definition type Float
-x : Float, // definition type Float
-y : Float)Float
+// definition type !'@732.(Func '@732 '@732 '@732)
+intrinsic op% <// definition type undefined
+T>// definition type undefined
+T(// definition type 'T
+x : T, // definition type 'T
+y : T)T
 ;
-// definition type undefined
-intrinsic op>(// definition type Float
-x : Float, // definition type Float
-y : Float)Bool
+// definition type !'@144.(Func '@144 '@144 Bool)
+intrinsic op> <// definition type undefined
+T>// definition type undefined
+T(// definition type 'T
+x : T, // definition type 'T
+y : T)Bool
 ;
-// definition type undefined
-intrinsic op>=(// definition type Float
-x : Float, // definition type Float
-y : Float)Bool
+// definition type !'@554.(Func '@554 '@554 Bool)
+intrinsic op>= <// definition type undefined
+T>// definition type undefined
+T(// definition type 'T
+x : T, // definition type 'T
+y : T)Bool
 ;
-// definition type undefined
-intrinsic op<(// definition type Float
-x : Float, // definition type Float
-y : Float)Bool
+// definition type !'@274.(Func '@274 '@274 Bool)
+intrinsic op< <// definition type undefined
+T>// definition type undefined
+T(// definition type 'T
+x : T, // definition type 'T
+y : T)Bool
 ;
-// definition type undefined
-intrinsic op<=(// definition type Float
-x : Float, // definition type Float
-y : Float)Bool
+// definition type !'@640.(Func '@640 '@640 Bool)
+intrinsic op<= <// definition type undefined
+T>// definition type undefined
+T(// definition type 'T
+x : T, // definition type 'T
+y : T)Bool
 ;
-// definition type undefined
-intrinsic op!=(// definition type Float
-x : Float, // definition type Float
-y : Float)Bool
+// definition type !'@778.(Func '@778 '@778 Bool)
+intrinsic op!= <// definition type undefined
+T>// definition type undefined
+T(// definition type 'T
+x : T, // definition type 'T
+y : T)Bool
 ;
-// definition type undefined
-intrinsic op==(// definition type Float
-x : Float, // definition type Float
-y : Float)Bool
+// definition type !'@444.(Func '@444 '@444 Bool)
+intrinsic op== <// definition type undefined
+T>// definition type undefined
+T(// definition type 'T
+x : T, // definition type 'T
+y : T)Bool
 ;
-// definition type undefined
+// definition type (Func Bool Bool Bool)
 intrinsic op&&(// definition type Bool
 x : Bool, // definition type Bool
 y : Bool)Bool
 ;
-// definition type undefined
+// definition type (Func Bool Bool Bool)
 intrinsic op||(// definition type Bool
 x : Bool, // definition type Bool
 y : Bool)Bool
 ;
-// definition type undefined
+// definition type (Func Bool Bool Bool)
 intrinsic op^^(// definition type Bool
 x : Bool, // definition type Bool
 y : Bool)Bool
 ;
-// definition type undefined
-intrinsic op..(// definition type Int
-x : Int, // definition type Int
-y : Int)ArrayInt
-;
-// definition type undefined
-intrinsic op[] <// definition type undefined
-T>// definition type undefined
-T(// definition type !'T.(Array 'T)
-x : ArrayT, // definition type Int
-i : Int)T
-;
-// definition type undefined
+// definition type (Func Bool Bool)
 intrinsic op_not(// definition type Bool
 x : Bool)Bool
 ;
-// definition type undefined
+// definition type (Func Float Float)
 intrinsic op_negate(// definition type Float
 x : Float)Float
 ;
-// definition type undefined
+// definition type (Func Int (Func Int 'T) (Array 'T))
 intrinsic array <// definition type undefined
 T>// definition type undefined
 T(// definition type Int
 n : Int, // definition type !'T.(Func Int 'T)
 f : FuncIntT)ArrayT
 ;
-// definition type undefined
+// definition type (Func (Array 'T) Int)
 intrinsic count <// definition type undefined
 T>// definition type undefined
 T(// definition type !'T.(Array 'T)
 xs : ArrayT)Int
 ;
-// definition type undefined
+// definition type !'T.(Func !'T.(Array 'T) Int 'T)
 intrinsic at <// definition type undefined
 T>// definition type undefined
 T(// definition type !'T.(Array 'T)
 xs : ArrayT, // definition type Int
 i : Int)T
 ;
-// definition type undefined
+// definition type !'T.(Func (Array 'T) (ArrayBuilder 'T))
 intrinsic mutable <// definition type undefined
 T>// definition type undefined
 T(// definition type !'T.(Array 'T)
 xs : ArrayT)ArrayBuilderT
 ;
-// definition type undefined
+// definition type !'@840.(Func (ArrayBuilder '@840) '@840 (ArrayBuilder '@840))
 intrinsic push <// definition type undefined
 T>// definition type undefined
 T(// definition type !'T.(ArrayBuilder 'T)
 xs : ArrayBuilderT, // definition type 'T
 x : T)ArrayBuilderT
 ;
-// definition type undefined
+// definition type !'@481.(Func (ArrayBuilder '@481) Int '@481 (ArrayBuilder '@481))
 intrinsic set <// definition type undefined
 T>// definition type undefined
 T(// definition type !'T.(ArrayBuilder 'T)
@@ -277,165 +257,196 @@ xs : ArrayBuilderT, // definition type Int
 i : Int, // definition type 'T
 x : T)ArrayBuilderT
 ;
-// definition type undefined
+// definition type (Func (ArrayBuilder 'T) (Array 'T))
 intrinsic array <// definition type undefined
 T>// definition type undefined
 T(// definition type !'T.(ArrayBuilder 'T)
 xs : ArrayBuilderT)ArrayT
 ;
-// definition type undefined
-intrinsic count <// definition type undefined
-T>// definition type undefined
-T(// definition type !'T.(ArrayBuilder 'T)
-xs : ArrayBuilderT)Int
-;
-// definition type undefined
-intrinsic at <// definition type undefined
-T>// definition type undefined
-T(// definition type !'T.(ArrayBuilder 'T)
-xs : ArrayBuilderT, // definition type Int
-i : Int)T
-;
-// definition type undefined
+// definition type (Func Float2 (Array Float))
 
 /**
 function array(v: Float2) = [v.x, v.y];    
     
 */
-// definition type undefined
+// definition type (Func Float2 (Array Float))
 function array(// definition type Float2
 v : Float2)
-// expression type undefined
-[// expression type Error
-// expression type Error
+// expression type (Array Float)
+[// expression type Float
+// expression type (Func Float2 Float)
 x(// expression type Float2
-v), // expression type Error
-// expression type Error
+v), // expression type Float
+// expression type (Func Float2 Float)
 y(// expression type Float2
-v)]// definition type undefined
+v)]// definition type (Func Float3 (Array Float))
 
 /**
 function array(v: Float3) = [v.x, v.y, v.z];
     
 */
-// definition type undefined
+// definition type (Func Float3 (Array Float))
 function array(// definition type Float3
 v : Float3)
-// expression type undefined
-[// expression type Error
-// expression type Error
+// expression type (Array Float)
+[// expression type Float
+// expression type (Func Float2 Float)
 x(// expression type Float3
-v), // expression type Error
-// expression type Error
+v), // expression type Float
+// expression type (Func Float2 Float)
 y(// expression type Float3
-v), // expression type Error
-// expression type Error
+v), // expression type Float
+// expression type (Func Float3 Float)
 z(// expression type Float3
-v)]// definition type undefined
+v)]// definition type (Func Float4 (Array Float))
 
 /**
 function array(v: Float4) = [v.x, v.y, v.z, v.w];
 
     
 */
-// definition type undefined
+// definition type (Func Float4 (Array Float))
 function array(// definition type Float4
 v : Float4)
-// expression type undefined
-[// expression type Error
-// expression type Error
+// expression type (Array Float)
+[// expression type Float
+// expression type (Func Float2 Float)
 x(// expression type Float4
-v), // expression type Error
-// expression type Error
+v), // expression type Float
+// expression type (Func Float2 Float)
 y(// expression type Float4
-v), // expression type Error
-// expression type Error
+v), // expression type Float
+// expression type (Func Float3 Float)
 z(// expression type Float4
-v), // expression type Error
-// expression type undefined
+v), // expression type Float
+// expression type (Func Float4 Float)
 w(// expression type Float4
-v)]// definition type undefined
+v)]// definition type (Func (Array Float) Float2)
 
 /**
 function float2(xs) = float2(xs[0], xs[1]);
     
 */
-// definition type undefined
-function float2(// definition type 'T0
+// definition type (Func (Array Float) Float2)
+function float2(// definition type '@518
 xs)
-// expression type Error
-// expression type Error
-float2(// expression type Error
-// expression type Error
-op[](// expression type 'T0
-xs, // expression type Num
-0), // expression type Error
-// expression type Error
-op[](// expression type 'T0
-xs, // expression type Num
-1))// definition type undefined
+// expression type Float2
+// expression type (FuncSet !'@517.((Func Float Float Float2) !'@516.(Func '@516 '@517)))
+float2(// expression type '@520
+// expression type !'T.(Func !'T.(Array 'T) Int 'T)
+op[](// expression type '@518
+xs, // expression type Int
+0), // expression type '@520
+// expression type !'T.(Func !'T.(Array 'T) Int 'T)
+op[](// expression type !'@520.(Array '@520)
+xs, // expression type Int
+1))// definition type (Func (Array Float) Float3)
 
 /**
 function float3(xs) = float3(xs[0], xs[1], xs[2]);
     
 */
-// definition type undefined
-function float3(// definition type 'T0
+// definition type (Func (Array Float) Float3)
+function float3(// definition type '@312
 xs)
-// expression type Error
-// expression type Error
-float3(// expression type Error
-// expression type Error
-op[](// expression type 'T0
-xs, // expression type Num
-0), // expression type Error
-// expression type Error
-op[](// expression type 'T0
-xs, // expression type Num
-1), // expression type Error
-// expression type Error
-op[](// expression type 'T0
-xs, // expression type Num
-2))// definition type undefined
+// expression type Float3
+// expression type (FuncSet !'@311.((Func Float Float Float Float3) !'@310.(Func '@310 '@311)))
+float3(// expression type '@314
+// expression type !'T.(Func !'T.(Array 'T) Int 'T)
+op[](// expression type '@312
+xs, // expression type Int
+0), // expression type '@314
+// expression type !'T.(Func !'T.(Array 'T) Int 'T)
+op[](// expression type !'@314.(Array '@314)
+xs, // expression type Int
+1), // expression type '@314
+// expression type !'T.(Func !'T.(Array 'T) Int 'T)
+op[](// expression type !'@314.(Array '@314)
+xs, // expression type Int
+2))// definition type (Func (Array Float) Float4)
 
 /**
 function float4(xs) = float4(xs[0], xs[1], xs[2], xs[3]);    
 
+    // Range operator 
+    
+*/
+// definition type (Func (Array Float) Float4)
+function float4(// definition type '@534
+xs)
+// expression type Float4
+// expression type (FuncSet !'@533.((Func Float Float Float Float Float4) !'@532.(Func '@532 '@533)))
+float4(// expression type '@536
+// expression type !'T.(Func !'T.(Array 'T) Int 'T)
+op[](// expression type '@534
+xs, // expression type Int
+0), // expression type '@536
+// expression type !'T.(Func !'T.(Array 'T) Int 'T)
+op[](// expression type !'@536.(Array '@536)
+xs, // expression type Int
+1), // expression type '@536
+// expression type !'T.(Func !'T.(Array 'T) Int 'T)
+op[](// expression type !'@536.(Array '@536)
+xs, // expression type Int
+2), // expression type '@536
+// expression type !'T.(Func !'T.(Array 'T) Int 'T)
+op[](// expression type !'@536.(Array '@536)
+xs, // expression type Int
+3))// definition type (Func Int Int (Array Int))
+
+/**
+function op.. (from: Int, upto: Int): Array<Int>
+        = array(upto - from, (i) => i + upto);
+
+    // Indexing operator
+    
+*/
+// definition type (Func Int Int (Array Int))
+function op..(// definition type Int
+from : Int, // definition type Int
+upto : Int)ArrayInt
+// expression type (Array Int)
+// expression type !'T.(FuncSet ((Func Int (Func Int 'T) (Array 'T)) (Func (ArrayBuilder 'T) (Array 'T)) (Func Float2 (Array Float)) (Func Float3 (Array Float)) (Func Float4 (Array Float))))
+array(// expression type Int
+// expression type !'@129.(Func '@129 '@129 '@129)
+op-(// expression type Int
+upto, // expression type Int
+from), // expression type (Func Int Int)
+(// definition type '@132
+i) => // expression type Int
+// expression type !'@88.(Func '@88 '@88 '@88)
+op+(// expression type '@132
+i, // expression type Int
+upto))// definition type !'T.(Func !'T.(Array 'T) Int 'T)
+
+/**
+function op[] <T>(xs: Array<T>, i: Int): T
+        = at(xs, i);    
+
     // A couple of useful constants 
     
 */
-// definition type undefined
-function float4(// definition type 'T0
-xs)
-// expression type Error
-// expression type Error
-float4(// expression type Error
-// expression type Error
-op[](// expression type 'T0
-xs, // expression type Num
-0), // expression type Error
-// expression type Error
-op[](// expression type 'T0
-xs, // expression type Num
-1), // expression type Error
-// expression type Error
-op[](// expression type 'T0
-xs, // expression type Num
-2), // expression type Error
-// expression type Error
-op[](// expression type 'T0
-xs, // expression type Num
-3))var // definition type undefined
+// definition type !'T.(Func !'T.(Array 'T) Int 'T)
+function op[] <// definition type undefined
+T>// definition type undefined
+T(// definition type !'T.(Array 'T)
+xs : ArrayT, // definition type Int
+i : Int)T
+// expression type 'T
+// expression type !'T.(Func !'T.(Array 'T) Int 'T)
+at(// expression type !'T.(Array 'T)
+xs, // expression type Int
+i)var // definition type undefined
 pi// expression type undefined
 3.14159265358979323846;
 var // definition type undefined
 e// expression type undefined
 2.71828182845904523536;
-// definition type undefined
-intrinsic print(// definition type 'T0
+// definition type !'@597!'@598.(Func '@597 '@598)
+intrinsic print(// definition type '@597
 x)
 ;
-// definition type undefined
+// definition type !'@208.(Func Bool '@208)
 intrinsic assert(// definition type Bool
 x : Bool)
 ;

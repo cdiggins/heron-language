@@ -48,21 +48,38 @@ module heron:intrinsics:0.1
     intrinsic tan(x: Float): Float;    
 
     // Binary operators 
-    intrinsic op+ <T>(x: T, y: T): T;
-    intrinsic op- <T>(x: T, y: T): T;
-    intrinsic op* <T>(x: T, y: T): T;
-    intrinsic op/ <T>(x: T, y: T): T;
-    intrinsic op% <T>(x: T, y: T): T;
+    intrinsic op+ (x: Float, y: Float): Float;
+    intrinsic op- (x: Float, y: Float): Float;
+    intrinsic op* (x: Float, y: Float): Float;
+    intrinsic op/ (x: Float, y: Float): Float;
+    intrinsic op% (x: Float, y: Float): Float;
 
     // Comparison operators 
-    intrinsic op>  <T>(x: T, y: T): Bool;
-    intrinsic op>= <T>(x: T, y: T): Bool;
-    intrinsic op<  <T>(x: T, y: T): Bool;
-    intrinsic op<= <T>(x: T, y: T): Bool;
+    intrinsic op>  (x: Float, y: Float): Bool;
+    intrinsic op>= (x: Float, y: Float): Bool;
+    intrinsic op<  (x: Float, y: Float): Bool;
+    intrinsic op<= (x: Float, y: Float): Bool;
 
     // Equality operators 
-    intrinsic op!= <T>(x: T, y: T): Bool;
-    intrinsic op== <T>(x: T, y: T): Bool;
+    intrinsic op!= (x: Float, y: Float): Bool;
+    intrinsic op== (x: Float, y: Float): Bool;
+
+    // Binary operators 
+    intrinsic op+ (x: Int, y: Int): Int;
+    intrinsic op- (x: Int, y: Int): Int;
+    intrinsic op* (x: Int, y: Int): Int;
+    intrinsic op/ (x: Int, y: Int): Int;
+    intrinsic op% (x: Int, y: Int): Int;
+
+    // Comparison operators 
+    intrinsic op>  (x: Int, y: Int): Bool;
+    intrinsic op>= (x: Int, y: Int): Bool;
+    intrinsic op<  (x: Int, y: Int): Bool;
+    intrinsic op<= (x: Int, y: Int): Bool;
+
+    // Equality operators 
+    intrinsic op!= (x: Int, y: Int): Bool;
+    intrinsic op== (x: Int, y: Int): Bool;
 
     // Boolean operators
     intrinsic op&& (x: Bool, y: Bool): Bool;

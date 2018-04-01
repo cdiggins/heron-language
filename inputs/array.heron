@@ -23,11 +23,8 @@ module heron:std.array:0.1
     function empty(xs) 
         = xs.count == 0;
 
-    function at(xs, i) 
-        = xs[i];
-
     function selectByIndex(xs, indices) 
-        = indices.map(xs.at);
+        = indices.map(i => xs.at(i));
 
     function indices(xs) 
         = 0 .. xs.count;
@@ -130,7 +127,7 @@ module heron:std.array:0.1
         while (true) {
             do { i++; } while (a[i] < pivot);
             do { j--; } while (a[j] > pivot);
-            if (i >= j) return j;
+            if (i >= j) return a;
             var tmp = a[i];
             a[i] = a[j];
             a[j] = tmp;

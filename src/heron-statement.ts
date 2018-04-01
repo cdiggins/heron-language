@@ -7,7 +7,7 @@ import { Type } from "./type-system";
 
 export class Statement {
     constructor(
-        public node: HeronAstNode, 
+        public readonly node: HeronAstNode, 
     )
     { node.statement = this; }
 
@@ -17,84 +17,90 @@ export class Statement {
 
 export class CompoundStatement extends Statement {
     constructor(
-        public node: HeronAstNode, 
-        public statements: Statement[]
+        public readonly node: HeronAstNode, 
+        public readonly statements: Statement[]
     )
     { super(node); }
 }
 
 export class IfStatement extends Statement {
     constructor(
-        public node: HeronAstNode, 
-        public condition: Expr,
-        public onTrue: CompoundStatement,
-        public onFalse: CompoundStatement,
+        public readonly node: HeronAstNode, 
+        public readonly condition: Expr,
+        public readonly onTrue: CompoundStatement,
+        public readonly onFalse: CompoundStatement,
     )
-    { super(node); }
+    { 
+        super(node); 
+        if (!condition) 
+            throwError(node, "Missing expression condition");
+        if (onFalse instanceof CompoundStatement && onFalse.statements[1] === this)
+            throw new Error("Recursion error");
+    }
 }
 
 export class ReturnStatement extends Statement {
     constructor(
-        public node: HeronAstNode, 
-        public condition: Expr,
+        public readonly node: HeronAstNode, 
+        public readonly condition: Expr,
     )
     { super(node); }
 }
 
 export class ContinueStatement extends Statement {
     constructor(
-        public node: HeronAstNode, 
+        public readonly node: HeronAstNode, 
     )
     { super(node); }
 }
 
 export class BreakStatement extends Statement {
     constructor(
-        public node: HeronAstNode, 
+        public readonly node: HeronAstNode, 
     )
     { super(node); }
 }
 
 export class ExprStatement extends Statement {
     constructor(
-        public node: HeronAstNode,
-        public expr: Expr,
+        public readonly node: HeronAstNode,
+        public readonly expr: Expr,
     )
     { super(node); }    
 }
 
 export class ForStatement extends Statement {
     constructor(
-        public node: HeronAstNode, 
-        public identifier: string,
-        public array: Expr,
-        public loop: CompoundStatement,
+        public readonly node: HeronAstNode, 
+        public readonly identifier: string,
+        public readonly array: Expr,
+        public readonly loop: CompoundStatement,
     )
     { super(node); }
 }
 
 export class DoStatement extends Statement {
     constructor(
-        public node: HeronAstNode, 
-        public condition: Expr,
-        public body: CompoundStatement,
+        public readonly node: HeronAstNode, 
+        public readonly condition: Expr,
+        public readonly body: CompoundStatement,
     )
     { super(node); }
 }
 
 export class WhileStatement extends Statement {
     constructor(
-        public node: HeronAstNode, 
-        public condition: Expr,
-        public body: CompoundStatement,
+        public readonly node: HeronAstNode, 
+        public readonly condition: Expr,
+        public readonly body: CompoundStatement,
     )
     { super(node); }
 }
 
 export class VarDeclStatement extends Statement {
     constructor(
-        public node: HeronAstNode, 
-        public vars: VarDef[],
+        public readonly node: HeronAstNode, 
+        public readonly vars: VarDef[],
     )
     { super(node); }
 }
@@ -174,6 +180,8 @@ export function hasLoopBreak(st: Statement): boolean {
 
 // Put If statements into tail position of a loop 
 export function rewriteIfStatements(node: HeronAstNode) {
+    throw new Error("This can create recursion error");
+    /*
     let st = node.statement;
     if (!st) return;
     if (st instanceof CompoundStatement) {
@@ -199,6 +207,7 @@ export function rewriteIfStatements(node: HeronAstNode) {
                 throw new Error("Internal error: found an If statement in a compound statement that was not in tail position");
         }
     }
+    */
 }
 
 

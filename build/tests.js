@@ -7,6 +7,7 @@ var heron_compiler_1 = require("./heron-compiler");
 var heron_traits_1 = require("./heron-traits");
 var heron_types_1 = require("./heron-types");
 var type_parser_1 = require("./type-parser");
+var type_system_1 = require("./type-system");
 var m = Myna.Myna;
 var g = heron_parser_1.heronGrammar;
 var assert = require('assert');
@@ -179,7 +180,7 @@ function testCallFunctions() {
         var t = tests_1[_i];
         var f = type_parser_1.parseType(t[0]);
         var args = type_parser_1.parseType(t[1]);
-        var r = heron_types_1.callFunction(f, args.types);
+        var r = heron_types_1.callFunction(f, args.types, new type_system_1.TypeResolver(function (a, b) { throw new Error("Inconsistent types"); }));
         console.log("func   : " + f);
         console.log("args   : " + args);
         console.log("result : " + r);

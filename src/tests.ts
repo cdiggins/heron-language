@@ -12,7 +12,7 @@ import { FunCall, Expr } from "./heron-expr";
 import { getTraits } from "./heron-traits";
 import { computeFuncType, callFunction } from "./heron-types";
 import { parseType } from "./type-parser";
-import { PolyType } from "./type-system";
+import { PolyType, TypeResolver } from "./type-system";
 
 const m = Myna.Myna;
 const g = heronGrammar;
@@ -200,7 +200,7 @@ function testCallFunctions() {
     for (const t of tests) {
         const f = parseType(t[0]) as PolyType;
         const args = parseType(t[1]) as PolyType;
-        const r = callFunction(f, args.types);
+        const r = callFunction(f, args.types, new TypeResolver((a, b) => { throw new Error("Inconsistent types"); }));
         console.log("func   : " + f);
         console.log("args   : " + args);
         console.log("result : " + r);

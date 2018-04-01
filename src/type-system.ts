@@ -59,6 +59,10 @@ export class PolyType extends Type
         super(); 
     }
 
+    get _str(): string { 
+        return this.toString(); 
+    }
+
     get typeSchemeString(): string {
         const r = values(this.scheme).join("!");
         return r ?  "!" + r + "." : r;
@@ -73,7 +77,6 @@ export class PolyType extends Type
 export class MonoType extends Type 
 { 
     constructor(public readonly name : string) { super(); }
-    get _str(): string { return this.toString(); }
 }
 
 /** A type variable is used for generics (e.g. T0, TR). 
@@ -197,15 +200,35 @@ export class TypeResolver
     }
 
     /** Choose one of two unifiers, or continue the unification process if necessary */
-    _chooseBestUnifier(t1:Type, t2:Type, depth:number) : Type {
+    _chooseBestUnifier(t1:Type, t2:Type) : Type {
         if (t1 instanceof TypeVariable && t2 instanceof TypeVariable)
+        {
             return t1;
+        }
         else if (t1 instanceof TypeVariable)
+        {
             return t2;
+        }
         else if (t2 instanceof TypeVariable)
+        {
             return t1;
-        else 
-            return this.unifyTypes(t1, t2, depth+1);
+        }
+        else if (t1 instanceof TypeConstant && t2 instanceof TypeConstant)
+        {
+            if (t1.name != t2.name)            
+                return this.chooseTypeStrategy(t1, t2);
+            return t1;
+        }
+        else if (t1 instanceof TypeConstant || t2 instanceof TypeConstant)
+        {
+            throw new TypeUnificationError(this, t1, t2);
+        }
+        else if (t1 instanceof PolyType && t2 instanceof PolyType)
+        {             
+            const best = this._chooseBestUnifier(t1.types[0], t2.types[0]);
+            return (best === t1.types[0]) ? t1 : t2;            
+        }
+        assert(false, "unexpected code path: " + t1 + " and " + t2);
     }
 
     /** Unifying lists involves unifying each element. */
@@ -241,7 +264,7 @@ export class TypeResolver
         const v = (t instanceof TypeVariable) ? this._getOrCreateUnifier(t) : t;
 
         // Choise the best unifier 
-        const best = this._chooseBestUnifier(u, v, depth);
+        const best = this._chooseBestUnifier(u, v);
 
         // Each of these is potentially a type variable, and should point to the new best unifier    
         this._updateVariableUnifiers(a, best);

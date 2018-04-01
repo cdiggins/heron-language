@@ -67,6 +67,13 @@ var PolyType = /** @class */ (function (_super) {
         _this.scheme = {};
         return _this;
     }
+    Object.defineProperty(PolyType.prototype, "_str", {
+        get: function () {
+            return this.toString();
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(PolyType.prototype, "typeSchemeString", {
         get: function () {
             var r = values(this.scheme).join("!");
@@ -89,11 +96,6 @@ var MonoType = /** @class */ (function (_super) {
         _this.name = name;
         return _this;
     }
-    Object.defineProperty(MonoType.prototype, "_str", {
-        get: function () { return this.toString(); },
-        enumerable: true,
-        configurable: true
-    });
     return MonoType;
 }(Type));
 exports.MonoType = MonoType;
@@ -219,15 +221,29 @@ var TypeResolver = /** @class */ (function () {
         var _a;
     };
     /** Choose one of two unifiers, or continue the unification process if necessary */
-    TypeResolver.prototype._chooseBestUnifier = function (t1, t2, depth) {
-        if (t1 instanceof TypeVariable && t2 instanceof TypeVariable)
+    TypeResolver.prototype._chooseBestUnifier = function (t1, t2) {
+        if (t1 instanceof TypeVariable && t2 instanceof TypeVariable) {
             return t1;
-        else if (t1 instanceof TypeVariable)
+        }
+        else if (t1 instanceof TypeVariable) {
             return t2;
-        else if (t2 instanceof TypeVariable)
+        }
+        else if (t2 instanceof TypeVariable) {
             return t1;
-        else
-            return this.unifyTypes(t1, t2, depth + 1);
+        }
+        else if (t1 instanceof TypeConstant && t2 instanceof TypeConstant) {
+            if (t1.name != t2.name)
+                return this.chooseTypeStrategy(t1, t2);
+            return t1;
+        }
+        else if (t1 instanceof TypeConstant || t2 instanceof TypeConstant) {
+            throw new TypeUnificationError(this, t1, t2);
+        }
+        else if (t1 instanceof PolyType && t2 instanceof PolyType) {
+            var best = this._chooseBestUnifier(t1.types[0], t2.types[0]);
+            return (best === t1.types[0]) ? t1 : t2;
+        }
+        assert(false, "unexpected code path: " + t1 + " and " + t2);
     };
     /** Unifying lists involves unifying each element. */
     TypeResolver.prototype._unifyLists = function (list1, list2, depth) {
@@ -259,7 +275,7 @@ var TypeResolver = /** @class */ (function () {
         var u = this._getOrCreateUnifier(a);
         var v = (t instanceof TypeVariable) ? this._getOrCreateUnifier(t) : t;
         // Choise the best unifier 
-        var best = this._chooseBestUnifier(u, v, depth);
+        var best = this._chooseBestUnifier(u, v);
         // Each of these is potentially a type variable, and should point to the new best unifier    
         this._updateVariableUnifiers(a, best);
         this._updateVariableUnifiers(t, best);

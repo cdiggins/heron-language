@@ -1,6 +1,6 @@
-// Generated on Sun Mar 25 2018 22:31:32 GMT-0400 (Eastern Daylight Time)
+// Generated on Sun Apr 01 2018 00:19:40 GMT-0400 (Eastern Daylight Time)
 heron:std:0.1heron:tests:0.1{
-heron:std.array:0.1// definition type undefined
+heron:std.array:0.1// definition type !'@592.(Func '@592)
 
 /**
 function main() {
@@ -9,14 +9,14 @@ function main() {
 
     
 */
-// definition type undefined
+// definition type !'@592.(Func '@592)
 function main()
 {
-// expression type Error
-// expression type undefined
+// expression type '@760
+// expression type !'@594.(Func '@594)
 simpleTest();
 }
-// definition type undefined
+// definition type !'@594.(Func '@594)
 
 /**
 function simpleTest() {
@@ -47,126 +47,124 @@ function simpleTest() {
     }
 
 */
-// definition type undefined
+// definition type !'@594.(Func '@594)
 function simpleTest()
 {
-var // definition type undefined
-xs// expression type undefined
-[// expression type Num
-1, // expression type Num
-11, // expression type Num
+var // definition type (Array Int)
+xs// expression type (Array Int)
+[// expression type Int
+1, // expression type Int
+11, // expression type Int
 3];
-// expression type Error
-// expression type undefined
+// expression type '@600
+// expression type !'@597!'@598.(Func '@597 '@598)
 print(// expression type Str
 'Expect [1, 11, 3]');
-// expression type Error
-// expression type undefined
-print(// expression type Error
+// expression type '@602
+// expression type !'@597!'@598.(Func '@597 '@598)
+print(// expression type (Array Int)
 xs);
-// expression type Error
-// expression type undefined
+// expression type '@604
+// expression type !'@597!'@598.(Func '@597 '@598)
 print(// expression type Str
 'Expect 1, 11, 3');
-// definition type '$14
-for (x in // expression type Error
+// definition type '$8
+for (x in // expression type (Array Int)
 xs)
-{
-// expression type undefined
-// expression type undefined
-print(// expression type undefined
+// expression type '@606
+// expression type !'@597!'@598.(Func '@597 '@598)
+print(// expression type Int
 x);
-}
-// expression type Error
-// expression type undefined
+// expression type '@608
+// expression type !'@597!'@598.(Func '@597 '@598)
 print(// expression type Str
 'Expect 1');
-// expression type Error
-// expression type undefined
-print(// expression type Error
-// expression type undefined
-op[](// expression type Error
-xs, // expression type Num
+// expression type '@611
+// expression type !'@597!'@598.(Func '@597 '@598)
+print(// expression type Int
+// expression type !'T.(Func !'T.(Array 'T) Int 'T)
+op[](// expression type (Array Int)
+xs, // expression type Int
 0));
-// expression type Error
-// expression type undefined
+// expression type '@613
+// expression type !'@597!'@598.(Func '@597 '@598)
 print(// expression type Str
 'Expect 3');
-// expression type Error
-// expression type undefined
-print(// expression type Error
-// expression type Error
-count(// expression type Error
+// expression type '@616
+// expression type !'@597!'@598.(Func '@597 '@598)
+print(// expression type Int
+// expression type !'T.(FuncSet !'@64.((Func (Array 'T) Int) (Func !'@79.(Array '@79) '@64 Int)))
+count(// expression type (Array Int)
 xs));
-// expression type Error
-// expression type undefined
+// expression type '@618
+// expression type !'@597!'@598.(Func '@597 '@598)
 print(// expression type Str
 'Expect 1');
-// expression type Error
-// expression type undefined
-print(// expression type Error
-// expression type undefined
-first(// expression type Error
+// expression type '@621
+// expression type !'@597!'@598.(Func '@597 '@598)
+print(// expression type Int
+// expression type !'@491.(Func !'@491.(Array '@491) '@491)
+first(// expression type (Array Int)
 xs));
-// expression type Error
-// expression type undefined
+// expression type '@623
+// expression type !'@597!'@598.(Func '@597 '@598)
 print(// expression type Str
 'Expect 3');
-// expression type Error
-// expression type undefined
-print(// expression type Error
-// expression type undefined
-last(// expression type Error
+// expression type '@627
+// expression type !'@597!'@598.(Func '@597 '@598)
+print(// expression type '@625
+// expression type !'@565.(Func !'@563.(Array '@563) '@565)
+last(// expression type (Array Int)
 xs));
-// expression type Error
-// expression type undefined
+// expression type '@629
+// expression type !'@597!'@598.(Func '@597 '@598)
 print(// expression type Str
 'Expect 1');
-// expression type Error
-// expression type undefined
-print(// expression type Error
-// expression type Error
-min(// expression type Error
+// expression type '@653
+// expression type !'@597!'@598.(Func '@597 '@598)
+print(// expression type Int
+// expression type !'@634.(FuncSet ((Func '@634 '@634 '@634) (Func (Array '@634) '@634)))
+min(// expression type (Array Int)
 xs));
-// expression type Error
-// expression type undefined
+// expression type '@655
+// expression type !'@597!'@598.(Func '@597 '@598)
 print(// expression type Str
 'Expect 11');
-// expression type Error
-// expression type undefined
-print(// expression type Error
-// expression type Error
-max(// expression type Error
+// expression type '@673
+// expression type !'@597!'@598.(Func '@597 '@598)
+print(// expression type Int
+// expression type !'@660.(FuncSet ((Func '@660 '@660 '@660) (Func (Array '@660) '@660)))
+max(// expression type (Array Int)
 xs));
-// expression type Error
-// expression type undefined
+// expression type '@675
+// expression type !'@597!'@598.(Func '@597 '@598)
 print(// expression type Str
 'Expect 3');
-// expression type Error
-// expression type undefined
-print(// expression type Error
-// expression type undefined
-median(// expression type Error
+// expression type '@751
+// expression type !'@597!'@598.(Func '@597 '@598)
+print(// expression type Int
+// expression type (Func (Array Int) Int)
+median(// expression type (Array Int)
 xs));
-// expression type Error
-// expression type undefined
+// expression type '@753
+// expression type !'@597!'@598.(Func '@597 '@598)
 print(// expression type Str
 'Expect 15');
-// expression type Error
-// expression type undefined
-print(// expression type Error
-// expression type undefined
-sum(// expression type Error
+// expression type '@755
+// expression type !'@597!'@598.(Func '@597 '@598)
+print(// expression type Int
+// expression type (Func (Array Int) Int)
+sum(// expression type (Array Int)
 xs));
-// expression type Error
-// expression type undefined
+// expression type '@757
+// expression type !'@597!'@598.(Func '@597 '@598)
 print(// expression type Str
 'Expect 5');
-// expression type Error
-// expression type undefined
-print(// expression type Error
-// expression type undefined
-average(// expression type Error
+// expression type '@759
+// expression type !'@597!'@598.(Func '@597 '@598)
+print(// expression type Int
+// expression type (Func (Array Int) Int)
+average(// expression type (Array Int)
 xs));
 }
 }

@@ -109,7 +109,7 @@ export class Package
             visitAst(ast, createStatement);
             
             // Rewrite the if statements 
-            visitAst(ast, rewriteIfStatements);
+            //visitAst(ast, rewriteIfStatements);
         }
 
         // Analyze names for each module.

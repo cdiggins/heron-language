@@ -426,39 +426,10 @@ export function exprListToPair(node: HeronAstNode): HeronAstNode {
 
 export function wrapInCompoundStatement(node: HeronAstNode): HeronAstNode {
     if (!node) 
-        return makeNode(g.compoundStatement, node, "");
+        return makeNode(g.compoundStatement, null, "");
 
     if (node.name === 'compoundStatement') return node;
     return makeNode(g.compoundStatement, node, "", node);
-}
-
-export function makeCompoundStatements(node: HeronAstNode) {
-    if (node.name === 'compoundStatement') {
-        for (var c of node.children) {
-            if (c.name === 'ifStatement') {
-                // Add a compound statement to the end. 
-                if (c.children.length == 2) 
-                    c.children.push(makeNode(g.compoundStatement, c, ""));
-                // Make sure both children are compound statements 
-                c.children[0] = wrapInCompoundStatement(c.children[0]);
-                c.children[1] = wrapInCompoundStatement(c.children[1]);           
-            }
-        }
-    }
-    else if (node.name === 'whileLoop') {
-        node.children[1] = wrapInCompoundStatement(node.children[1]);
-    }
-    else if (node.name === 'doLoop') {
-        node.children[0] = wrapInCompoundStatement(node.children[0]);
-    }
-    else if (node.name === 'forLoop') {
-        node.children[2] = wrapInCompoundStatement(node.children[2]);
-    }
-    if (node === null)
-        throw new Error("Missing node");
-    for (var c of node.children)
-        if (!c)
-            throw new Error("Missing child node");
 }
 
 // Checks that a node has a name 
@@ -500,16 +471,13 @@ export function preprocessAst(node: HeronAstNode, file: SourceFile)
     // The order of transforms matters. Particularly we need to do 
     // Method to function before doing fieldSelectToFunctions
     node = mapAst(node, exprListToPair);
+    node = mapAst(node, arrayIndexAssignmentToFunction);
     node = mapAst(node, rewriteAssignment);
     node = mapAst(node, methodToFunction);
     node = mapAst(node, fieldSelectToFunction);
-    node = mapAst(node, arrayIndexAssignmentToFunction);
     node = mapAst(node, arrayIndexToFunction);
     node = mapAst(node, opToFunction);
 
-    // Make sure that ifStatements have two sides, and that they are both compound statements 
-    visitAst(node, makeCompoundStatements);
- 
     // The tree has been transformed, and new nodes have been added
     // so we have to recompute parent pointers, and the file pointers 
     setParentPointers(node);

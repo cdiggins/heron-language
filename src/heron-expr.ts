@@ -224,7 +224,7 @@ export function computeExprs(ast: HeronAstNode) {
 
 export function createExpr(node: HeronAstNode): Expr {
     if (!node)
-        return null;
+        throw new Error("Missing node");
     if (node.expr)
         return node.expr;
     switch (node.name) {

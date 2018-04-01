@@ -111,7 +111,7 @@ var Package = /** @class */ (function () {
             // Create statement, and add them to the nodes
             heron_ast_rewrite_1.visitAst(ast, heron_statement_1.createStatement);
             // Rewrite the if statements 
-            heron_ast_rewrite_1.visitAst(ast, heron_statement_1.rewriteIfStatements);
+            //visitAst(ast, rewriteIfStatements);
         }
         // Analyze names for each module.
         var moduleScopes = {};

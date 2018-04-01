@@ -39,6 +39,10 @@ var IfStatement = /** @class */ (function (_super) {
         _this.condition = condition;
         _this.onTrue = onTrue;
         _this.onFalse = onFalse;
+        if (!condition)
+            heron_ast_rewrite_1.throwError(node, "Missing expression condition");
+        if (onFalse instanceof CompoundStatement && onFalse.statements[1] === _this)
+            throw new Error("Recursion error");
         return _this;
     }
     return IfStatement;
@@ -203,32 +207,34 @@ function hasLoopBreak(st) {
 exports.hasLoopBreak = hasLoopBreak;
 // Put If statements into tail position of a loop 
 function rewriteIfStatements(node) {
-    var st = node.statement;
-    if (!st)
-        return;
+    throw new Error("This can create recursion error");
+    /*
+    let st = node.statement;
+    if (!st) return;
     if (st instanceof CompoundStatement) {
-        for (var i = st.statements.length - 2; i >= 0; --i) {
-            var c = st.statements[i];
+        for (var i=st.statements.length-2; i >= 0; --i) {
+            let c = st.statements[i];
             if (c instanceof IfStatement) {
                 if (!isLoopBreak(lastStatement(c.onTrue)))
-                    (_a = c.onTrue.statements).push.apply(_a, st.statements.slice(i));
+                    c.onTrue.statements.push(...st.statements.slice(i));
                 if (!isLoopBreak(lastStatement(c.onFalse)))
-                    (_b = c.onFalse.statements).push.apply(_b, st.statements.slice(i));
-                // Delete the statements after the current 
-                st.statements.splice(i + 1, st.statements.length - i - 1);
+                    c.onFalse.statements.push(...st.statements.slice(i));
+
+                // Delete the statements after the current
+                st.statements.splice(i+1, st.statements.length - i - 1);
             }
             else if (st instanceof BreakStatement) {
-                // Delete the statements after the current 
-                st.statements.splice(i + 1, st.statements.length - i - 1);
+                // Delete the statements after the current
+                st.statements.splice(i+1, st.statements.length - i - 1);
             }
         }
-        // Check the algorithm 
-        for (var i = 0; i < st.statements.length - 1; ++i) {
+        // Check the algorithm
+        for (var i=0; i < st.statements.length - 1; ++i) {
             if (st.statements[i] instanceof IfStatement)
                 throw new Error("Internal error: found an If statement in a compound statement that was not in tail position");
         }
     }
-    var _a, _b;
+    */
 }
 exports.rewriteIfStatements = rewriteIfStatements;
 //# sourceMappingURL=heron-statement.js.map

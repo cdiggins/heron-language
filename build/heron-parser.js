@@ -174,11 +174,11 @@ var g = new function () {
     // Statements 
     this.exprStatement = this.expr.then(this.ws).then(this.eos).ast;
     this.varDeclStatement = guardedWsDelimSeq(myna_parser_1.Myna.keyword("var"), this.varDecls, this.eos).ast;
-    this.loopCond = guardedWsDelimSeq("(", this.expr, ")").ast;
+    this.loopCond = guardedWsDelimSeq("(", this.expr, ")");
     this.forLoop = guardedWsDelimSeq(myna_parser_1.Myna.keyword("for"), "(", myna_parser_1.Myna.keyword("var"), this.identifier, myna_parser_1.Myna.keyword("in"), this.expr, ")", this.recStatement).ast;
     this.whileLoop = guardedWsDelimSeq(myna_parser_1.Myna.keyword("while"), this.loopCond, this.recStatement).ast;
     this.doLoop = guardedWsDelimSeq(myna_parser_1.Myna.keyword("do"), this.recStatement, myna_parser_1.Myna.keyword("while"), this.loopCond).ast;
-    this.elseStatement = guardedWsDelimSeq(myna_parser_1.Myna.keyword("else"), this.recStatement).ast;
+    this.elseStatement = guardedWsDelimSeq(myna_parser_1.Myna.keyword("else"), this.recStatement);
     this.ifCond = guardedWsDelimSeq("(", this.expr, ")");
     this.ifStatement = guardedWsDelimSeq(myna_parser_1.Myna.keyword("if"), this.ifCond, this.recStatement, this.elseStatement.opt).ast;
     this.compoundStatement = guardedWsDelimSeq("{", this.recStatement.zeroOrMore, "}").ast;
