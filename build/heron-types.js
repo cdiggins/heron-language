@@ -74,7 +74,7 @@ var TypeStrategyClass = /** @class */ (function () {
     return TypeStrategyClass;
 }());
 exports.typeStrategy = new TypeStrategyClass();
-function callFunctionSet(funcSet, args, unifier) {
+function callFunctionSet(fun, funcSet, args, unifier) {
     console.log("Calling function set with args: ");
     console.log("    " + args.join(", "));
     console.log("Function choices: ");
@@ -84,6 +84,7 @@ function callFunctionSet(funcSet, args, unifier) {
         console.log("  " + f);
     }
     var n = chooseBestFunctionIndexFromArgs(args, funcSet);
+    fun.functionIndex = n;
     return callFunction(funcs[n], args, unifier);
 }
 exports.callFunctionSet = callFunctionSet;

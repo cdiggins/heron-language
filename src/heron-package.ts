@@ -1,6 +1,6 @@
 import { Myna } from "myna-parser/myna";
 import { HeronAstNode, isExpr, validateNode, throwError, preprocessAst, visitAst } from "./heron-ast-rewrite";
-import { Type } from "./type-system";
+import { Type, filterType } from "./type-system";
 import { Def, createDef, VarDef, FuncDef, TypeDef, TypeParamDef, FuncParamDef, ForLoopVarDef } from "./heron-defs";
 import { Ref, FuncRef, TypeRef, TypeParamRef, FuncParamRef, VarRef, ForLoopVarRef } from "./heron-refs";
 import { createExpr } from "./heron-expr";
@@ -276,4 +276,12 @@ export class Module
         public readonly body: HeronAstNode,
     )
     { }      
+
+    get functions(): FuncDef[] {
+        const r: FuncDef[] = []; 
+        for (const x of this.body.children.map(c => c.def))
+            if (x && x instanceof FuncDef)
+                r.push(x);
+        return r;        
+    }
 }

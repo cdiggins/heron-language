@@ -50,10 +50,10 @@ var IfStatement = /** @class */ (function (_super) {
 exports.IfStatement = IfStatement;
 var ReturnStatement = /** @class */ (function (_super) {
     __extends(ReturnStatement, _super);
-    function ReturnStatement(node, condition) {
+    function ReturnStatement(node, expr) {
         var _this = _super.call(this, node) || this;
         _this.node = node;
-        _this.condition = condition;
+        _this.expr = expr;
         return _this;
     }
     return ReturnStatement;

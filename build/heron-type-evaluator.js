@@ -90,8 +90,8 @@ var TypeEvaluator = /** @class */ (function () {
             this.getType(statement.onFalse);
         }
         else if (statement instanceof heron_statement_1.ReturnStatement) {
-            if (statement.condition)
-                this.unifyReturn(statement.condition);
+            if (statement.expr)
+                this.unifyReturn(statement.expr);
             else
                 this.unifyReturn(heron_types_1.Types.VoidType);
         }
@@ -174,7 +174,7 @@ var TypeEvaluator = /** @class */ (function () {
             if (func instanceof type_system_1.PolyType) {
                 if (heron_types_1.isFunctionSet(func)) {
                     console.log("Function: " + expr.func);
-                    return heron_types_1.callFunctionSet(func, args, this.unifier);
+                    return heron_types_1.callFunctionSet(expr, func, args, this.unifier);
                 }
                 else if (heron_types_1.isFunctionType(func))
                     // We have to create new Type variable names when calling a
@@ -195,7 +195,7 @@ var TypeEvaluator = /** @class */ (function () {
             }
         }
         else if (expr instanceof heron_expr_1.ConditionalExpr) {
-            var cond = this.unifyBool(expr.cond);
+            var cond = this.unifyBool(expr.condition);
             var onTrue = this.getType(expr.onTrue);
             var onFalse = this.getType(expr.onFalse);
             return this.unify(onTrue, onFalse);

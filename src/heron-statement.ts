@@ -42,7 +42,7 @@ export class IfStatement extends Statement {
 export class ReturnStatement extends Statement {
     constructor(
         public readonly node: HeronAstNode, 
-        public readonly condition: Expr,
+        public readonly expr: Expr,
     )
     { super(node); }
 }

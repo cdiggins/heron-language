@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var heron_parser_1 = require("./heron-parser");
-var heron_to_text_1 = require("./heron-to-text");
 var heron_package_1 = require("./heron-package");
 var heron_types_1 = require("./heron-types");
 var g = heron_parser_1.heronGrammar;
@@ -39,12 +38,6 @@ function createPackage(moduleNames) {
             console.log(f.toString());
             console.log(" : " + t);
         }
-    }
-    for (var _d = 0, _e = pkg.files; _d < _e.length; _d++) {
-        var sf = _e[_d];
-        var outputPath = sf.filePath.substr(0, sf.filePath.lastIndexOf('.')) + '.output.heron';
-        var text = heron_to_text_1.heronToText(sf.node);
-        fs.writeFileSync(outputPath, text);
     }
     return pkg;
 }

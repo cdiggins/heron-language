@@ -78,7 +78,7 @@ class TypeStrategyClass {
 
 export const typeStrategy = new TypeStrategyClass();
 
-export function callFunctionSet(funcSet: PolyType, args: Type[], unifier: TypeResolver): Type {
+export function callFunctionSet(fun: FunCall, funcSet: PolyType, args: Type[], unifier: TypeResolver): Type {
     console.log("Calling function set with args: ");
     console.log("    " + args.join(", "))
     console.log("Function choices: ");
@@ -86,8 +86,9 @@ export function callFunctionSet(funcSet: PolyType, args: Type[], unifier: TypeRe
     for (const f of funcs)
         console.log("  " + f);
     let n = chooseBestFunctionIndexFromArgs(args, funcSet); 
+    fun.functionIndex = n;
     return callFunction(funcs[n] as PolyType, args, unifier);
-}        
+}
 
 export function callFunction(funOriginal: PolyType, argTypes: Type[], mainUnifier: TypeResolver): Type {                
     // We have to create fresh variable names.

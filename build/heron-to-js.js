@@ -1,455 +1,222 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var heron_ast_rewrite_1 = require("./heron-ast-rewrite");
+var heron_defs_1 = require("./heron-defs");
+var type_system_1 = require("./type-system");
 var code_builder_1 = require("./code-builder");
-//=====================================
-// Main entry function 
-// It is assumed that the AST is transformed
-function heronToJs(pkg, entryPoint) {
-    var cb = new code_builder_1.CodeBuilder();
-    // Find the entry point. 
-    // Whenever a function call occurs, replace it with its value, or something like that. 
-    // NOTE: when possible we are going to track values. 
-    // Now every expression has a unique ID. I can use that to track the thing.
-    // This is like a symbolic execution of the code.         
-    return cb.toString();
+var heron_expr_1 = require("./heron-expr");
+var heron_statement_1 = require("./heron-statement");
+var heron_ast_rewrite_1 = require("./heron-ast-rewrite");
+function toJavaScript(x) {
+    var toJs = new HeronToJs();
+    toJs.visit(x);
+    return toJs.cb.toString();
 }
-exports.heronToJs = heronToJs;
-/*
-type Sym = SymValue | {};
-interface SymValue { value: any }
-interface SymValueSet { values: Sym[] }
-interface GreaterThan { value: Sym }
-interface Less
-interface Intersection { symbols: Sym[]; }
-interface Conditional { condition: ()=> boolean; onTrue: Sym; onFalse: Sym; }
-interface
-*/
-var SymbolicValue = /** @class */ (function () {
-    function SymbolicValue() {
-    }
-    return SymbolicValue;
-}());
-// NOTE: this works best if it is an immutable structure. 
-// different branches can have their own 'env'.
-var Env = /** @class */ (function () {
-    function Env() {
-    }
-    return Env;
-}());
-//=====================================
-// Helper functions 
-function generateAccessor(ast, state) {
-    var name = ast.children[0].allText;
-    state.pushLine("function " + name + "(obj) { return obj." + name + "; }");
+exports.toJavaScript = toJavaScript;
+function funcDefName(f) {
+    return heron_ast_rewrite_1.identifierToString(f.name) + '_' + f.node.id;
 }
-exports.generateAccessor = generateAccessor;
-function generateAccessors(ast, state) {
-    var objs = findAllNodesNamed(ast, "objectExpr");
-    for (var _i = 0, objs_1 = objs; _i < objs_1.length; _i++) {
-        var obj = objs_1[_i];
-        for (var _a = 0, _b = obj.children; _a < _b.length; _a++) {
-            var field = _b[_a];
-            generateAccessor(field, state);
-        }
-    }
+exports.funcDefName = funcDefName;
+function funcParamDefName(p) {
+    return p.name;
 }
-exports.generateAccessors = generateAccessors;
-function groupBy(xs, f) {
-    return xs.reduce(function (r, v, i, a, k) {
-        if (k === void 0) { k = f(v); }
-        return ((r[k] || (r[k] = [])).push(v), r);
-    }, {});
-}
-exports.groupBy = groupBy;
-function sortyBy(xs, f) {
-    return xs.slice().sort(function (a, b) { return (f(a) > f(b)) ? 1 : ((f(b) > f(a)) ? -1 : 0); });
-}
-exports.sortyBy = sortyBy;
-/*
-export function mergeMultipleDefs(ast, nameAnalysis: Package) {
-    var funcDefs = [];
-    for (var scope of nameAnalysis.scopes)
-        for (var def of scope.defs)
-            if (def.node.name === 'funcDef')
-                funcDefs.push(def);
-    var grps = groupBy(funcDefs, x => x.name);
-    for (var grp in grps)
-    {
-        console.log(grp + ": " + grps[grp].map(op => op.decoratedName));
-    }
-}
-*/
-function findAllNodes(ast, f, r) {
-    if (r === void 0) { r = []; }
-    if (f(ast))
-        r.push(ast);
-    ast.children.forEach(function (c) { return findAllNodes(c, f, r); });
-    return r;
-}
-exports.findAllNodes = findAllNodes;
-function findAllNodesNamed(ast, name) {
-    return findAllNodes(ast, function (node) { return node.name === name; });
-}
-exports.findAllNodesNamed = findAllNodesNamed;
-//=====================================
-// A class for generating JavaScript code from a transformed Heron AST
+exports.funcParamDefName = funcParamDefName;
+// This class computes the type for a function
 var HeronToJs = /** @class */ (function () {
     function HeronToJs() {
+        this.cb = new code_builder_1.CodeBuilder();
     }
-    // Helper functions 
-    HeronToJs.prototype.delimited = function (astNodes, state, delim) {
-        for (var i = 0; i < astNodes.length; ++i) {
-            if (i > 0)
-                state.push(delim);
-            this.visitNode(astNodes[i], state);
-        }
-    };
-    HeronToJs.prototype.visitNode = function (ast, state) {
-        var fnName = 'visit_' + ast.name;
-        if (fnName in this)
-            this[fnName](ast, state);
+    HeronToJs.prototype.visit = function (x) {
+        if (x instanceof heron_statement_1.Statement)
+            this.visitStatement(x);
+        else if (x instanceof heron_expr_1.Expr)
+            this.visitExpr(x);
+        else if (x instanceof heron_defs_1.FuncDef)
+            this.visitFuncDef(x);
         else
-            this.visitChildren(ast, state);
+            this.visitModule(x);
     };
-    HeronToJs.prototype.visitChildren = function (ast, state) {
-        if (!ast.children)
-            return;
-        for (var _i = 0, _a = ast.children; _i < _a.length; _i++) {
-            var child = _a[_i];
-            this.visitNode(child, state);
+    HeronToJs.prototype.visitModule = function (m) {
+        var now = new Date();
+        this.cb.pushLine('// Generated on ' + now.toDateString() + ' ' + now.toTimeString());
+        this.cb.pushLine('');
+        for (var _i = 0, _a = m.functions; _i < _a.length; _i++) {
+            var f = _a[_i];
+            this.visit(f);
         }
     };
-    // Individual node visiting functions
-    HeronToJs.prototype.visit_bool = function (ast, state) {
-        // bool
-        state.push(' ' + ast.allText + ' ');
-        this.visitChildren(ast, state);
+    HeronToJs.prototype.visitFuncDef = function (f) {
+        this.cb.pushLine('// ' + type_system_1.normalizeType(f.type));
+        this.cb.pushLine('function ' + funcDefName(f) + '(' + f.params.map(funcParamDefName).join(', ') + ')');
+        this.cb.pushLine('{');
+        if (!f.body)
+            this.cb.pushLine('// INTRINSIC');
+        else if (f.body.statement)
+            this.visit(f.body.statement);
+        else if (f.body.expr) {
+            this.cb.push('return ');
+            this.visit(f.body.expr);
+            this.cb.pushLine(';');
+        }
+        else
+            throw new Error("No body statement or expression");
+        this.cb.pushLine('}');
     };
-    HeronToJs.prototype.visit_breakStatement = function (ast, state) {
-        // breakStatement
-        state.pushLine('break;');
-        this.visitChildren(ast, state);
-    };
-    HeronToJs.prototype.visit_compoundStatement = function (ast, state) {
-        state.pushLine('{');
-        this.visitChildren(ast, state);
-        state.pushLine('}');
-    };
-    HeronToJs.prototype.visit_continueStatement = function (ast, state) {
-        // continueStatement
-        state.pushLine('continue;');
-    };
-    HeronToJs.prototype.visit_doLoop = function (ast, state) {
-        // seq(recStatement,loopCond)
-        state.pushLine('do');
-        this.visitNode(ast.children[0], state);
-        state.push('while (');
-        this.visitNode(ast.children[1], state);
-        state.pushLine(')');
-    };
-    HeronToJs.prototype.visit_elseStatement = function (ast, state) {
-        // recStatement
-        state.pushLine("else");
-        this.visitChildren(ast, state);
-    };
-    HeronToJs.prototype.visit_emptyStatement = function (ast, state) {
-        // emptyStatement
-        state.pushLine(";");
-    };
-    HeronToJs.prototype.visit_exprStatement = function (ast, state) {
-        // expr
-        this.visitChildren(ast, state);
-        state.pushLine(";");
-    };
-    HeronToJs.prototype.visit_forLoop = function (ast, state) {
-        // seq(identifier,expr,recStatement)
-        this.visitChildren(ast, state);
-    };
-    HeronToJs.prototype.visit_funcBodyExpr = function (ast, state) {
-        state.pushLine('{');
-        state.push('return ');
-        this.visitChildren(ast, state);
-        state.pushLine(';');
-        state.pushLine('}');
-    };
-    HeronToJs.prototype.visit_funcBodyStatement = function (ast, state) {
-        this.visitChildren(ast, state);
-    };
-    HeronToJs.prototype.visit_funcDef = function (ast, state) {
-        // seq(funcName,funcParams,compoundStatement)
-        state.push("function ");
-        state.push(heron_ast_rewrite_1.identifierToString(ast.children[0].allText));
-        this.visitNode(ast.children[1], state);
-        state.pushLine();
-        this.visitNode(ast.children[2], state);
-    };
-    HeronToJs.prototype.visit_funcName = function (ast, state) {
-        // funcName
-        this.visitChildren(ast, state);
-    };
-    HeronToJs.prototype.visit_funcParam = function (ast, state) {
-        // funcParam
-        this.visitChildren(ast, state);
-    };
-    HeronToJs.prototype.visit_funcParams = function (ast, state) {
-        // funcParam[0, Infinity]
-        state.push("(");
-        this.delimited(ast.children, state, ", ");
-        state.push(")");
-    };
-    HeronToJs.prototype.visit_funcParamName = function (ast, state) {
-        // funcParamName
-        state.push(ast.allText);
-    };
-    HeronToJs.prototype.visit_genericParam = function (ast, state) {
-        // Don't visit children for now. 
-    };
-    HeronToJs.prototype.visit_genericParams = function (ast, state) {
-        // genericParam[0, In]
-        this.visitChildren(ast, state);
-    };
-    HeronToJs.prototype.visit_identifier = function (ast, state) {
-        // identifier
-        state.push(heron_ast_rewrite_1.identifierToString(ast.allText));
-    };
-    HeronToJs.prototype.visit_ifCond = function (ast, state) {
-        // expr
-        this.visitChildren(ast, state);
-    };
-    HeronToJs.prototype.visit_ifStatement = function (ast, state) {
-        // seq(ifCond,recStatement,elseStatement[0,Infinity])
-        state.push("if (");
-        this.visitNode(ast.children[0], state);
-        state.pushLine(")");
-        this.visitNode(ast.children[1], state);
-        for (var i = 2; i < ast.children.length; ++i)
-            this.visitNode(ast.children[i], state);
-    };
-    HeronToJs.prototype.visit_loopCond = function (ast, state) {
-        // expr
-        this.visitChildren(ast, state);
-    };
-    HeronToJs.prototype.visit_moduleBody = function (ast, state) {
-        // statement[0, infinity]
-        state.pushLine('{');
-        generateAccessors(ast, state);
-        this.visitChildren(ast, state);
-        state.pushLine('}');
-    };
-    HeronToJs.prototype.visit_moduleName = function (ast, state) {
-        // seq(identifier,identifier[0,Infinity])
-        state.push(ast.allText);
-    };
-    HeronToJs.prototype.visit_module = function (ast, state) {
-        state.pushLine('module ');
-        this.visitChildren(ast, state);
-    };
-    HeronToJs.prototype.visit_returnStatement = function (ast, state) {
-        // expr[0,1]
-        state.push('return ');
-        this.visitChildren(ast, state);
-        state.pushLine(';');
-    };
-    HeronToJs.prototype.visit_varDecl = function (ast, state) {
-        // seq(identifier,varInitialization)
-        state.push("let ");
-        state.push(ast.children[0].allText);
-        state.push(' = ');
-        this.visitNode(ast.children[1], state);
-        state.pushLine(';');
-    };
-    HeronToJs.prototype.visit_varDeclStatement = function (ast, state) {
-        // varDecls
-        var vds = ast.children[0];
-        if (vds.name !== "varDecls")
-            throw new Error("Expected varDecls as children");
-        for (var _i = 0, vds_1 = vds; _i < vds_1.length; _i++) {
-            var vd = vds_1[_i];
-            state.push("let ");
-            state.push(vd.children[0].allText);
-            state.push(' = ');
-            this.visitNode(vd.children[1], state);
-            state.pushLine(';');
+    HeronToJs.prototype.visitStatement = function (statement) {
+        if (statement instanceof heron_statement_1.CompoundStatement) {
+            this.cb.pushLine('{');
+            for (var _i = 0, _a = statement.statements; _i < _a.length; _i++) {
+                var st = _a[_i];
+                this.visit(st);
+            }
+            this.cb.pushLine('}');
+        }
+        else if (statement instanceof heron_statement_1.IfStatement) {
+            this.cb.pushLine('if (');
+            this.visit(statement.condition);
+            this.cb.pushLine(')');
+            this.visit(statement.onTrue);
+            this.cb.pushLine('else');
+            this.visit(statement.onFalse);
+        }
+        else if (statement instanceof heron_statement_1.ReturnStatement) {
+            this.cb.push('return ');
+            if (statement.expr)
+                this.visit(statement.expr);
+            this.cb.pushLine(';');
+        }
+        else if (statement instanceof heron_statement_1.ContinueStatement) {
+            this.cb.pushLine('continue;');
+        }
+        else if (statement instanceof heron_statement_1.ExprStatement) {
+            this.visit(statement.expr);
+            this.cb.pushLine(';');
+        }
+        else if (statement instanceof heron_statement_1.ForStatement) {
+            this.cb.push('for (const ');
+            this.cb.push(heron_ast_rewrite_1.identifierToString(statement.identifier));
+            this.cb.push(' of ');
+            this.visit(statement.array);
+            this.cb.pushLine(')');
+            this.visit(statement.loop);
+        }
+        else if (statement instanceof heron_statement_1.DoStatement) {
+            this.cb.pushLine('do');
+            this.visit(statement.body);
+            this.cb.push('while (');
+            this.visit(statement.condition);
+            this.cb.pushLine(')');
+        }
+        else if (statement instanceof heron_statement_1.WhileStatement) {
+            this.cb.push('while (');
+            this.visit(statement.condition);
+            this.cb.pushLine(')');
+            this.visit(statement.body);
+        }
+        else if (statement instanceof heron_statement_1.VarDeclStatement) {
+            for (var _b = 0, _c = statement.vars; _b < _c.length; _b++) {
+                var vd = _c[_b];
+                // TODO: I want to know when I can use 'const' instead of 'let'
+                this.cb.push('let ' + vd.name + ' = ');
+                this.visit(vd.exprNode.expr);
+                this.cb.pushLine(';');
+            }
+        }
+        else if (statement instanceof heron_statement_1.EmptyStatement) {
+            // Do nothing. 
+        }
+        else {
+            throw new Error("Unrecognized statement " + statement);
         }
     };
-    HeronToJs.prototype.visit_whileLoop = function (ast, state) {
-        // seq(loopCond,recStatement)
-        state.push("while (");
-        this.visitNode(ast.children[0], state);
-        state.pushLine(")");
-        this.visitNode(ast.children[1], state);
-    };
-    //== 
-    // Expressions
-    HeronToJs.prototype.visit_arrayExpr = function (ast, state) {
-        // seq(expr,expr[0,Infinity])[0,1]
-        state.push('$.array(');
-        this.delimited(ast.children, state, ", ");
-        state.push(')');
-    };
-    HeronToJs.prototype.visit_arrayIndex = function (ast, state) {
-        // expr 
-        this.visitChildren(ast, state);
-    };
-    HeronToJs.prototype.visit_assignmentExpr = function (ast, state) {
-        this.visitNode(ast.children[0], state);
-        state.push(' = ');
-        this.visitNode(ast.children[1], state);
-    };
-    HeronToJs.prototype.visit_conditionalExpr = function (ast, state) {
-        if (ast.children.length != 2)
-            throw new Error("Expected two children for a conditional expression");
-        this.visitChildren(ast, state);
-    };
-    HeronToJs.prototype.visit_conditionalExprRight = function (ast, state) {
-        state.push(' ? ');
-        this.visitNode(ast.children[0], state);
-        state.push(' : ');
-        this.visitNode(ast.children[1], state);
-    };
-    HeronToJs.prototype.visit_funCall = function (ast, state) {
-        // seq(expr,expr[0,Infinity])[0,1]
-        this.delimited(ast.children, state, ", ");
-    };
-    HeronToJs.prototype.visit_lambdaArgs = function (ast, state) {
-        // choice(lambdaArgsNoParen,lambdaArgsWithParen)
-        state.push("(");
-        this.visitNode(ast.children[0], state);
-        state.push(")");
-    };
-    HeronToJs.prototype.visit_lambdaArgsWithParen = function (ast, state) {
-        // seq(lambdaArg,lambdaArg[0,Infinity])[0,1]
-        this.delimited(ast.children, state, ", ");
-    };
-    HeronToJs.prototype.visit_lambdaBody = function (ast, state) {
-        // choice(recCompoundStatement,expr)
-        this.visitChildren(ast, state);
-    };
-    HeronToJs.prototype.visit_lambdaExpr = function (ast, state) {
-        // seq(lambdaArgs,lambdaBody)
-        this.visitNode(ast.children[0], state);
-        state.push(" => ");
-        this.visitNode(ast.children[1], state);
-    };
-    HeronToJs.prototype.visit_leafExpr = function (ast, state) {
-        // choice(lambdaExpr,parenExpr,arrayExpr,number,bool,string,identifier)
-        this.visitChildren(ast, state);
-    };
-    HeronToJs.prototype.visit_number = function (ast, state) {
-        // number
-        state.push(ast.allText);
-    };
-    HeronToJs.prototype.visit_objectExpr = function (ast, state) {
-        state.push(' { ');
-        this.delimited(ast.children, state, ", ");
-        state.push(' } ');
-    };
-    HeronToJs.prototype.visit_objectField = function (ast, state) {
-        // identifier, expr
-        this.visitNode(ast.children[0], state);
-        state.push(' : ');
-        this.visitNode(ast.children[1], state);
-    };
-    HeronToJs.prototype.visit_parenExpr = function (ast, state) {
-        // expr
-        state.push('(');
-        this.visitChildren(ast, state);
-        state.push(')');
-    };
-    HeronToJs.prototype.visit_postfixExpr = function (ast, state) {
-        // seq(leafExpr, postfixOp[0,Infinity])
-        if (ast.children.length == 1) {
-            this.visitNode(ast.children[0], state);
-            return;
-        }
-        if (ast.children.length != 2)
-            throw new Error("Expected two children for a postfix expression");
-        var astFirst = ast.children[0];
-        var astLast = ast.children[1];
-        switch (astLast.name) {
-            case "fieldSelect":
-                // Field selects are transformed into function calls. 
-                state.push(astLast.children[0].allText);
-                state.push("(");
-                this.visitNode(astFirst, state);
-                state.push(")");
-                break;
-            case "funCall":
-                state.push("(");
-                this.visitNode(astFirst, state);
-                state.push(")(");
-                this.visitNode(astLast, state);
-                state.push(")");
-                break;
-            case "arrayIndex":
-                state.push("$.at((");
-                this.visitNode(astFirst, state);
-                state.push("), ");
-                this.visitNode(astLast, state);
-                state.push(")");
-                break;
-            case "postIncOp":
-                state.push("(");
-                this.visitNode(astFirst, state);
-                state.push(")++");
-                break;
-            case "postDecOp":
-                state.push("(");
-                this.visitNode(astFirst, state);
-                state.push(")--");
-                break;
-            default:
-                throw new Error("Unrecognized child node type: " + astLast.name);
-        }
-    };
-    HeronToJs.prototype.visit_prefixExpr = function (ast, state) {
-        this.visitChildren(ast, state);
-    };
-    HeronToJs.prototype.visit_prefixOp = function (ast, state) {
-        state.push(ast.allText);
-    };
-    HeronToJs.prototype.visit_rangeExpr = function (ast, state) {
-        if (ast.children.length != 2)
-            throw new Error("Range expression should have two children");
-        state.push("$.range(");
-        this.visitNode(ast.children[0], state);
-        state.push(", ");
-        this.visitNode(ast.children[1], state);
-        state.push(")");
-    };
-    HeronToJs.prototype.visit_string = function (ast, state) {
-        // choice(doubleQuotedStringContents,singleQuotedStringContents)
-        state.push(ast.allText);
-    };
-    // This is a classic transformation from Lisp/Scheme of a "let" form into a 
-    // lambda-expression with immediate application. What is gives us is the ability 
-    // is to use variable declarations in an expression.
-    // (let ((x y)) expr) => ((lambda (x) expr)(y))
-    // Heron is not pretentious about it though, and just uses familiar syntax:
-    // (var x = y in expr)
-    HeronToJs.prototype.visit_varExpr = function (ast, state) {
-        var vds = ast.children[0];
-        if (vds.name !== "varDecls")
-            throw new Error("Expected varDecls as children");
-        state.push("(function(");
-        for (var i = 0; i < vds.children.length; ++i) {
+    HeronToJs.prototype.visitDelimited = function (xs, delim) {
+        if (delim === void 0) { delim = ','; }
+        for (var i = 0; i < xs.length; ++i) {
             if (i > 0)
-                state.push(", ");
-            var vd = vds.children[i];
-            state.push(vd.children[0].allText);
+                this.cb.push(delim);
+            this.visit(xs[i]);
         }
-        state.push(") { return ");
-        this.visitNode(ast.children[1], state);
-        state.push("; })(");
-        for (var i = 0; i < vds.children.length; ++i) {
-            if (i > 0)
-                state.push(", ");
-            var vd = vds.children[i];
-            this.visitNode(vd.children[1], state);
+    };
+    HeronToJs.prototype.visitExpr = function (expr) {
+        if (expr instanceof heron_expr_1.VarName) {
+            this.cb.push(heron_ast_rewrite_1.identifierToString(expr.name));
         }
-        state.push(")");
+        else if (expr instanceof heron_expr_1.FunCall) {
+            // TODO: this will fail when used with a lambda in the calling position.
+            var fd = expr.func.node.ref.defs[expr.functionIndex];
+            if (fd instanceof heron_defs_1.FuncDef) {
+                // If this is a known reference to a funcion
+                this.cb.push(funcDefName(fd));
+            }
+            else {
+                // We just visit it like an ordinary function
+                this.visit(expr.func);
+            }
+            this.cb.push('(');
+            this.visitDelimited(expr.args);
+            this.cb.push(')');
+        }
+        else if (expr instanceof heron_expr_1.ConditionalExpr) {
+            this.visit(expr.condition);
+            this.visit(expr.onTrue);
+            this.cb.push(' : ');
+            this.visit(expr.onFalse);
+        }
+        else if (expr instanceof heron_expr_1.ObjectLiteral || expr instanceof heron_expr_1.ObjectField) {
+            throw new Error("Object literals not yet supported");
+        }
+        else if (expr instanceof heron_expr_1.ArrayLiteral) {
+            this.cb.push('[');
+            this.visitDelimited(expr.vals);
+            this.cb.push(']');
+        }
+        else if (expr instanceof heron_expr_1.BoolLiteral) {
+            this.cb.push(expr.value ? "true" : "false");
+        }
+        else if (expr instanceof heron_expr_1.IntLiteral) {
+            this.cb.push(expr.value.toString());
+        }
+        else if (expr instanceof heron_expr_1.FloatLiteral) {
+            this.cb.push(expr.value.toString());
+        }
+        else if (expr instanceof heron_expr_1.StrLiteral) {
+            // TODO: escape the special charaters in value
+            this.cb.push('"' + expr.value + '"');
+        }
+        else if (expr instanceof heron_expr_1.VarExpr) {
+            // TODO: ((varName) => ...)(value)
+            // TODO: the expr really should only have one var. 
+            // I need to do rewriting during the analysis, to create one around each one. 
+            // OR: I just treat it as a lambda and a call. Which might simplify other things. 
+            // BUT: it would require the constant handling is properly handled. 
+            throw new Error("Not implemented yet");
+        }
+        else if (expr instanceof heron_expr_1.Lambda) {
+            this.cb.push('(');
+            this.cb.push(' ? ');
+            this.cb.push(expr.params.map(function (p) { return p.name; }).join(', '));
+            this.cb.push(') => ');
+            if (expr.bodyNode.expr)
+                this.visit(expr.bodyNode.expr);
+            else
+                this.visit(expr.bodyNode.statement);
+        }
+        else if (expr instanceof heron_expr_1.PostfixDec) {
+            this.visit(expr.lvalue);
+            this.cb.push('--');
+        }
+        else if (expr instanceof heron_expr_1.PostfixInc) {
+            this.visit(expr.lvalue);
+            this.cb.push('++');
+        }
+        else if (expr instanceof heron_expr_1.VarAssignmentExpr) {
+            this.cb.push(expr.name + ' = ');
+            this.visit(expr.value);
+        }
+        else {
+            throw new Error("Not a recognized expression " + expr);
+        }
     };
     return HeronToJs;
 }());
+exports.HeronToJs = HeronToJs;
 //# sourceMappingURL=heron-to-js.js.map

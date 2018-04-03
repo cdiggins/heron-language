@@ -345,3 +345,11 @@ The return value of the functions isn't properly reserved.
 This is apparent when looking at "map" 
 
 I need to fix ... 
+
+//== 
+
+The following looks interesting: 
+http://manu.sridharan.net/files/OOPSLA16Inference.pdf
+
+//==
+

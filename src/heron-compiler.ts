@@ -8,6 +8,7 @@ import { Ref } from "./heron-refs";
 import { Expr, createExpr } from "./heron-expr";
 import { Package } from "./heron-package";
 import { computeFuncType, typeStrategy } from "./heron-types";
+import { toJavaScript } from "./heron-to-js";
 
 const g = heronGrammar;
 
@@ -50,12 +51,7 @@ export function createPackage(moduleNames: string[]): Package {
             console.log(" : " + t);
         }
     }
-    
-    for (const sf of pkg.files) {
-        const outputPath = sf.filePath.substr(0, sf.filePath.lastIndexOf('.')) + '.output.heron';
-        const text = heronToText(sf.node as HeronAstNode);
-        fs.writeFileSync(outputPath, text);
-    }
+
     return pkg;
 }
 

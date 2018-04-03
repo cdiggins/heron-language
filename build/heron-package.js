@@ -264,6 +264,19 @@ var Module = /** @class */ (function () {
         this.imports = imports;
         this.body = body;
     }
+    Object.defineProperty(Module.prototype, "functions", {
+        get: function () {
+            var r = [];
+            for (var _i = 0, _a = this.body.children.map(function (c) { return c.def; }); _i < _a.length; _i++) {
+                var x = _a[_i];
+                if (x && x instanceof heron_defs_1.FuncDef)
+                    r.push(x);
+            }
+            return r;
+        },
+        enumerable: true,
+        configurable: true
+    });
     return Module;
 }());
 exports.Module = Module;

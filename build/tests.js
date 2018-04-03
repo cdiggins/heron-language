@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var Myna = require("myna-parser");
 var heron_parser_1 = require("./heron-parser");
+var heron_to_js_1 = require("./heron-to-js");
 var heron_ast_rewrite_1 = require("./heron-ast-rewrite");
 var heron_compiler_1 = require("./heron-compiler");
 var heron_traits_1 = require("./heron-traits");
@@ -197,6 +198,20 @@ function tests() {
     //testCallFunctions();
     var inputFiles = ['geometry-vector3', 'array', 'test'];
     var pkg = heron_compiler_1.createPackage(inputFiles);
+    /*
+    for (const sf of pkg.files) {
+        const outputPath = sf.filePath.substr(0, sf.filePath.lastIndexOf('.')) + '.output.heron';
+        const text = heronToText(sf.node as HeronAstNode);
+        fs.writeFileSync(outputPath, text);
+    }*/
+    var path = require('path');
+    var toJs = new heron_to_js_1.HeronToJs();
+    for (var _i = 0, _a = pkg.modules; _i < _a.length; _i++) {
+        var m_1 = _a[_i];
+        toJs.visit(m_1);
+    }
+    var text = toJs.cb.toString();
+    fs.writeFileSync(path.join(heron_compiler_1.moduleFolder, 'output.js'), text);
     //outputPackageStats(pkg);
     // find the main entry point and call into it. 
     var modName = 'heron:tests:0.1';

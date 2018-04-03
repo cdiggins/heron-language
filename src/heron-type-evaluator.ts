@@ -104,8 +104,8 @@ export class TypeEvaluator
             this.getType(statement.onFalse);
         }
         else if (statement instanceof ReturnStatement) {
-            if (statement.condition)
-                this.unifyReturn(statement.condition);
+            if (statement.expr)
+                this.unifyReturn(statement.expr);
             else 
                 this.unifyReturn(Types.VoidType);
         }
@@ -190,7 +190,7 @@ export class TypeEvaluator
             if (func instanceof PolyType) {
                 if (isFunctionSet(func)) {
                     console.log("Function: " + expr.func);
-                    return callFunctionSet(func, args, this.unifier);
+                    return callFunctionSet(expr, func, args, this.unifier);
                 }
                 else if (isFunctionType(func))
                     // We have to create new Type variable names when calling a
@@ -211,7 +211,7 @@ export class TypeEvaluator
             }
         }
         else if (expr instanceof ConditionalExpr) {
-            const cond = this.unifyBool(expr.cond);
+            const cond = this.unifyBool(expr.condition);
             const onTrue = this.getType(expr.onTrue);
             const onFalse = this.getType(expr.onFalse);
             return this.unify(onTrue, onFalse);

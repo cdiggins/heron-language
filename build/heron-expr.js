@@ -207,6 +207,8 @@ var FunCall = /** @class */ (function (_super) {
         _this.node = node;
         _this.func = func;
         _this.args = args;
+        // A func could be a number of different functions.
+        _this.functionIndex = 0;
         func.calledFunction = _this;
         for (var _i = 0, args_1 = args; _i < args_1.length; _i++) {
             var arg = args_1[_i];
@@ -223,16 +225,16 @@ exports.FunCall = FunCall;
 // Conditional (ternary operator) expressions. 
 var ConditionalExpr = /** @class */ (function (_super) {
     __extends(ConditionalExpr, _super);
-    function ConditionalExpr(node, cond, onTrue, onFalse) {
+    function ConditionalExpr(node, condition, onTrue, onFalse) {
         var _this = _super.call(this, node) || this;
         _this.node = node;
-        _this.cond = cond;
+        _this.condition = condition;
         _this.onTrue = onTrue;
         _this.onFalse = onFalse;
         return _this;
     }
     ConditionalExpr.prototype.toString = function () {
-        return this.cond + ' ? ' + this.onTrue + ' : ' + this.onFalse;
+        return this.condition + ' ? ' + this.onTrue + ' : ' + this.onFalse;
     };
     return ConditionalExpr;
 }(Expr));

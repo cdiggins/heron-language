@@ -179,21 +179,24 @@ export class FunCall extends Expr {
 
     toString(): string {
         return this.func + '(' + this.args.join(',') + ')';
-    }    
+    }
+    
+    // A func could be a number of different functions.
+    functionIndex: number = 0;
 }
 
 // Conditional (ternary operator) expressions. 
 export class ConditionalExpr extends Expr {
     constructor(
         public readonly node: HeronAstNode,
-        public readonly cond: Expr,
+        public readonly condition: Expr,
         public readonly onTrue: Expr,
         public readonly onFalse: Expr,
         )
     { super(node); }
 
     toString(): string {
-        return this.cond + ' ? ' + this.onTrue + ' : ' + this.onFalse;
+        return this.condition + ' ? ' + this.onTrue + ' : ' + this.onFalse;
     }
 }
 

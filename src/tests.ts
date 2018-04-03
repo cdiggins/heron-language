@@ -1,9 +1,9 @@
 import * as Myna from "myna-parser";
 import { heronGrammar, parseHeron } from './heron-parser';
-import { heronToJs } from "./heron-to-js";
+import { toJavaScript, HeronToJs } from "./heron-to-js";
 import { HeronAstNode, preprocessAst, parseLocation, visitAst, throwError } from "./heron-ast-rewrite";
 import { heronToText } from "./heron-to-text";
-import { parseFile, parseModule, createPackage } from "./heron-compiler";
+import { parseFile, parseModule, createPackage, moduleFolder } from "./heron-compiler";
 import { Ref } from "./heron-refs";
 import { Package, Module } from "./heron-package";
 import { FuncDef, FuncParamDef } from "./heron-defs";
@@ -213,6 +213,7 @@ function testCallFunctions() {
     }
 }
 
+
 function tests() {
     //testParsingRules();
     //testParseTypes();
@@ -220,6 +221,22 @@ function tests() {
 
     let inputFiles = ['geometry-vector3', 'array', 'test'];
     let pkg = createPackage(inputFiles);
+    
+    /*
+    for (const sf of pkg.files) {
+        const outputPath = sf.filePath.substr(0, sf.filePath.lastIndexOf('.')) + '.output.heron';
+        const text = heronToText(sf.node as HeronAstNode);
+        fs.writeFileSync(outputPath, text);
+    }*/
+    const path = require('path');
+
+    const toJs = new HeronToJs();
+    for (const m of pkg.modules) {
+        toJs.visit(m);        
+    }
+    const text = toJs.cb.toString();
+    fs.writeFileSync(path.join(moduleFolder, 'output.js'), text);
+
     //outputPackageStats(pkg);
     // find the main entry point and call into it. 
     let modName = 'heron:tests:0.1';

@@ -84,6 +84,8 @@ export function opSymbolToString(sym: string): string {
         case "$": return "dol";
         case "!": return "not";
         case ".": return "dot";
+        case "[": return "obr";
+        case "]": return "cbr";
         default: throw new Error("Not a symbol: " + sym);
     }
 }

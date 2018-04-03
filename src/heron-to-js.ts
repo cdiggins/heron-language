@@ -1,465 +1,223 @@
-import { Myna } from "myna-parser/myna";
-import { preprocessAst, identifierToString, HeronAstNode } from "./heron-ast-rewrite";
+import { FuncDef, FuncParamDef } from "./heron-defs";
+import { Type, normalizeType } from "./type-system";
+import { Types } from "./heron-types";
 import { CodeBuilder } from "./code-builder";
-import { Package } from "./heron-package";
-import { Type } from "./type-system";
+import { VarName, FunCall, ConditionalExpr, ObjectLiteral, ArrayLiteral, BoolLiteral, IntLiteral, FloatLiteral, StrLiteral, VarExpr, PostfixDec, Lambda, PostfixInc, Expr, ObjectField, VarAssignmentExpr } from "./heron-expr";
+import { Statement, CompoundStatement, IfStatement, EmptyStatement, VarDeclStatement, WhileStatement, DoStatement, ForStatement, ExprStatement, ContinueStatement, ReturnStatement } from "./heron-statement";
+import { SourceFile, Module } from "./heron-package";
+import { identifierToString } from "./heron-ast-rewrite";
 
-//=====================================
-// Main entry function 
-
-// It is assumed that the AST is transformed
-export function heronToJs(pkg: Package, entryPoint: string): string {
-    const cb = new CodeBuilder();
-    // Find the entry point. 
-    // Whenever a function call occurs, replace it with its value, or something like that. 
-    // NOTE: when possible we are going to track values. 
-    // Now every expression has a unique ID. I can use that to track the thing.
-    // This is like a symbolic execution of the code.         
-    return cb.toString();
+export function toJavaScript(x: Statement|Expr|FuncDef|Module): string {
+    const toJs = new HeronToJs();
+    toJs.visit(x);
+    return toJs.cb.toString();
 }
 
-/*
-type Sym = SymValue | {};
-interface SymValue { value: any }
-interface SymValueSet { values: Sym[] }
-interface GreaterThan { value: Sym }
-interface Less
-interface Intersection { symbols: Sym[]; }
-interface Conditional { condition: ()=> boolean; onTrue: Sym; onFalse: Sym; }
-interface 
-*/
-
-class SymbolicValue {
-    value: any;
-    type: Type;
-    location: Node;
-    // Might be a value. 
-    // Might have a range. 
-    // Might be a set of possible values. 
-    // Might be a type.
-    // Might be a set of types
-    // Non-zero? 
-    // Non-NaN? 
-    // Are there values that are impossible? 
-    // Is it associative? 
-    // What are the operations that are performed? 
-    // Could it be NULL? 
-    // Is it reachable? 
-    // Is it a constant? 
-    // Can we have a list of the values that are given to it. 
-    // Is it "applied" or not.     
+export function funcDefName(f: FuncDef) {
+    return identifierToString(f.name) + '_' + f.node.id;
 }
 
-// NOTE: this works best if it is an immutable structure. 
-// different branches can have their own 'env'.
-class Env {
-    [name: string]: SymbolicValue;
+export function funcParamDefName(p: FuncParamDef) {
+    return p.name;
 }
 
-//=====================================
-// Helper functions 
+// This class computes the type for a function
+export class HeronToJs 
+{    
+    cb = new CodeBuilder();
 
-export function generateAccessor(ast, state) {
-    const name = ast.children[0].allText;
-    state.pushLine("function " + name + "(obj) { return obj." + name + "; }");
-}
+    visit(x: Statement|Expr|FuncDef|Module) {
+        if (x instanceof Statement)
+            this.visitStatement(x);
+        else if (x instanceof Expr)
+            this.visitExpr(x);
+        else if (x instanceof FuncDef)
+            this.visitFuncDef(x);
+        else 
+            this.visitModule(x);
+    }
 
-export function generateAccessors(ast, state) {
-    const objs = findAllNodesNamed(ast, "objectExpr");
-    for (var obj of objs) 
-        for (var field of obj.children) 
-            generateAccessor(field, state);
-}
+    visitModule(m: Module) {
+        let now = new Date();
+        this.cb.pushLine('// Generated on ' + now.toDateString() + ' ' + now.toTimeString());
+        this.cb.pushLine('')
+        for (const f of m.functions)
+            this.visit(f);
+    }
 
-export function groupBy(xs, f) {
-    return xs.reduce((r, v, i, a, k = f(v)) => ((r[k] || (r[k] = [])).push(v), r), {});
-}
+    visitFuncDef(f: FuncDef) {        
+        this.cb.pushLine('// ' +  normalizeType(f.type));
+        this.cb.pushLine('function ' + funcDefName(f) + '(' + f.params.map(funcParamDefName).join(', ') + ')');
+        this.cb.pushLine('{');
+        if (!f.body)
+            this.cb.pushLine('// INTRINSIC');
+        else if (f.body.statement) 
+            this.visit(f.body.statement);
+        else if (f.body.expr) {
+            this.cb.push('return ');
+            this.visit(f.body.expr);
+            this.cb.pushLine(';');
+        }   
+        else 
+            throw new Error("No body statement or expression");
+        this.cb.pushLine('}');
+    }
 
-export function sortyBy(xs, f) {
-    return [...xs].sort(function(a,b) {return (f(a) > f(b)) ? 1 : ((f(b) > f(a)) ? -1 : 0);});
-}
-
-/*
-export function mergeMultipleDefs(ast, nameAnalysis: Package) {
-    var funcDefs = [];
-    for (var scope of nameAnalysis.scopes) 
-        for (var def of scope.defs) 
-            if (def.node.name === 'funcDef') 
-                funcDefs.push(def);
-    var grps = groupBy(funcDefs, x => x.name);
-    for (var grp in grps) 
+    visitStatement(statement: Statement)
     {
-        console.log(grp + ": " + grps[grp].map(op => op.decoratedName));
-    }
-}
-*/
-
-export function findAllNodes(ast:HeronAstNode, f:(_:HeronAstNode)=>boolean, r:HeronAstNode[]=[]): HeronAstNode[] {
-    if (f(ast))
-        r.push(ast);
-    ast.children.forEach(c => findAllNodes(c, f, r));
-    return r;
-}
-
-export function findAllNodesNamed(ast:HeronAstNode, name: string) : HeronAstNode[] {
-    return findAllNodes(ast, node => node.name === name);
-}
-
-
-//=====================================
-// A class for generating JavaScript code from a transformed Heron AST
-
-class HeronToJs
-{
-    // Helper functions 
-    delimited(astNodes, state, delim) {
-        for (let i=0; i < astNodes.length; ++i) {
-            if (i > 0) 
-                state.push(delim);
-            this.visitNode(astNodes[i], state);
-        }
-    }    
-    visitNode(ast, state) {
-        const fnName = 'visit_' + ast.name;
-        if (fnName in this)
-            this[fnName](ast, state);
-        else
-            this.visitChildren(ast, state);
-    }
-    visitChildren(ast, state) {
-        if (!ast.children)
-            return;
-        for (let child of ast.children)
-            this.visitNode(child, state);
-    }
-    
-    // Individual node visiting functions
-    visit_bool(ast, state) {
-        // bool
-        state.push(' ' + ast.allText + ' ');
-        this.visitChildren(ast, state);
-    }
-    visit_breakStatement(ast, state) {
-        // breakStatement
-        state.pushLine('break;')
-        this.visitChildren(ast, state);
-    }
-    visit_compoundStatement(ast, state) {
-        state.pushLine('{');
-        this.visitChildren(ast, state);
-        state.pushLine('}');
-    }
-    visit_continueStatement(ast, state) {
-        // continueStatement
-        state.pushLine('continue;');
-    }
-    visit_doLoop(ast, state) {
-        // seq(recStatement,loopCond)
-        state.pushLine('do');
-        this.visitNode(ast.children[0], state);
-        state.push('while (');
-        this.visitNode(ast.children[1], state);
-        state.pushLine(')')
-    }
-    visit_elseStatement(ast, state) {
-        // recStatement
-        state.pushLine("else");
-        this.visitChildren(ast, state);
-    }
-    visit_emptyStatement(ast, state) {
-        // emptyStatement
-        state.pushLine(";");
-    }
-    visit_exprStatement(ast, state) {
-        // expr
-        this.visitChildren(ast, state);
-        state.pushLine(";");
-    }
-    visit_forLoop(ast, state) {
-        // seq(identifier,expr,recStatement)
-        this.visitChildren(ast, state);
-    }
-    visit_funcBodyExpr(ast, state) {
-        state.pushLine('{');
-        state.push('return ');
-        this.visitChildren(ast, state);
-        state.pushLine(';');
-        state.pushLine('}');
-    }
-    visit_funcBodyStatement(ast, state) {
-        this.visitChildren(ast, state);
-    }    
-    visit_funcDef(ast, state) {
-        // seq(funcName,funcParams,compoundStatement)
-        state.push("function ");
-        state.push(identifierToString(ast.children[0].allText));
-        this.visitNode(ast.children[1], state);
-        state.pushLine();
-        this.visitNode(ast.children[2], state);
-    }
-    visit_funcName(ast, state) {
-        // funcName
-        this.visitChildren(ast, state);
-    }
-    visit_funcParam(ast, state) {
-        // funcParam
-        this.visitChildren(ast, state);
-    }
-    visit_funcParams(ast, state) {
-        // funcParam[0, Infinity]
-        state.push("(");
-        this.delimited(ast.children, state, ", ");
-        state.push(")");
-    }
-    visit_funcParamName(ast, state) {
-        // funcParamName
-        state.push(ast.allText);
-    }
-    visit_genericParam(ast, state) {
-        // Don't visit children for now. 
-    }
-    visit_genericParams(ast, state) {
-        // genericParam[0, In]
-        this.visitChildren(ast, state);
-    }
-    visit_identifier(ast, state) {
-        // identifier
-        state.push(identifierToString(ast.allText));
-    }
-    visit_ifCond(ast, state) {
-        // expr
-        this.visitChildren(ast, state);
-    }
-    visit_ifStatement(ast, state) {
-        // seq(ifCond,recStatement,elseStatement[0,Infinity])
-        state.push("if (");
-        this.visitNode(ast.children[0], state);
-        state.pushLine(")");
-        this.visitNode(ast.children[1], state);
-        for (let i=2; i < ast.children.length; ++i)
-            this.visitNode(ast.children[i], state);
-    }
-    visit_loopCond(ast, state) {
-        // expr
-        this.visitChildren(ast, state);
-    }
-    visit_moduleBody(ast, state) {
-        // statement[0, infinity]
-        state.pushLine('{');
-        generateAccessors(ast, state);
-        this.visitChildren(ast, state);
-        state.pushLine('}');
-    }
-    visit_moduleName(ast, state) {
-        // seq(identifier,identifier[0,Infinity])
-        state.push(ast.allText);
-    }
-    visit_module(ast, state) {
-        state.pushLine('module ');
-        this.visitChildren(ast, state);
-    }
-    visit_returnStatement(ast, state) {
-        // expr[0,1]
-        state.push('return ');
-        this.visitChildren(ast, state);
-        state.pushLine(';');
-    }
-    visit_varDecl(ast, state) {
-        // seq(identifier,varInitialization)
-        state.push("let ");
-        state.push(ast.children[0].allText);
-        state.push(' = ');
-        this.visitNode(ast.children[1], state);
-        state.pushLine(';');
-    }
-    visit_varDeclStatement(ast, state) {
-        // varDecls
-        let vds = ast.children[0];
-        if (vds.name !== "varDecls") throw new Error("Expected varDecls as children");
-        for (let vd of vds) {
-            state.push("let ");
-            state.push(vd.children[0].allText);
-            state.push(' = ');
-            this.visitNode(vd.children[1], state);
-            state.pushLine(';');
-        }        
-    }
-    visit_whileLoop(ast, state) {
-        // seq(loopCond,recStatement)
-        state.push("while (");
-        this.visitNode(ast.children[0], state);
-        state.pushLine(")");
-        this.visitNode(ast.children[1], state);        
-    }
-
-    //== 
-    // Expressions
-
-    visit_arrayExpr(ast, state) {
-        // seq(expr,expr[0,Infinity])[0,1]
-        state.push('$.array(');
-        this.delimited(ast.children, state, ", ");
-        state.push(')');
-    }
-    visit_arrayIndex(ast, state) {
-        // expr 
-        this.visitChildren(ast, state);
-    }
-    visit_assignmentExpr(ast, state) {
-        this.visitNode(ast.children[0], state);
-        state.push(' = ');
-        this.visitNode(ast.children[1], state);
-    }
-    visit_conditionalExpr(ast, state) {
-        if (ast.children.length != 2)
-            throw new Error("Expected two children for a conditional expression");        
-        this.visitChildren(ast, state);
-    }
-    visit_conditionalExprRight(ast, state) {
-        state.push(' ? ');
-        this.visitNode(ast.children[0], state);
-        state.push(' : ');
-        this.visitNode(ast.children[1], state);
-    }
-    visit_funCall(ast, state) {
-        // seq(expr,expr[0,Infinity])[0,1]
-        this.delimited(ast.children, state, ", ");
-    }    
-    visit_lambdaArgs(ast, state) {
-        // choice(lambdaArgsNoParen,lambdaArgsWithParen)
-        state.push("(");
-        this.visitNode(ast.children[0], state);
-        state.push(")");
-    }
-    visit_lambdaArgsWithParen(ast, state) {
-        // seq(lambdaArg,lambdaArg[0,Infinity])[0,1]
-        this.delimited(ast.children, state, ", ");
-    }
-    visit_lambdaBody(ast, state) {
-        // choice(recCompoundStatement,expr)
-        this.visitChildren(ast, state);
-    }
-    visit_lambdaExpr(ast, state) {
-        // seq(lambdaArgs,lambdaBody)
-        this.visitNode(ast.children[0], state);
-        state.push(" => ");
-        this.visitNode(ast.children[1], state);
-    }
-    visit_leafExpr(ast, state) {
-        // choice(lambdaExpr,parenExpr,arrayExpr,number,bool,string,identifier)
-        this.visitChildren(ast, state);
-    }
-    visit_number(ast, state) {
-        // number
-        state.push(ast.allText);
-    }    
-    visit_objectExpr(ast, state) {
-        state.push(' { ');
-        this.delimited(ast.children, state, ", ");
-        state.push(' } ');
-    }
-    visit_objectField(ast, state) {
-        // identifier, expr
-        this.visitNode(ast.children[0], state);
-        state.push(' : ');
-        this.visitNode(ast.children[1], state);
-    }
-    visit_parenExpr(ast, state) {
-        // expr
-        state.push('(');
-        this.visitChildren(ast, state);
-        state.push(')');
-    }
-    visit_postfixExpr(ast, state) {        
-        // seq(leafExpr, postfixOp[0,Infinity])
-        if (ast.children.length == 1) {
-            this.visitNode(ast.children[0], state);
-            return;
-        }
-
-        if (ast.children.length != 2)
-            throw new Error("Expected two children for a postfix expression");
-        
-        let astFirst = ast.children[0];
-        let astLast = ast.children[1];
-        switch (astLast.name)
+        if (statement instanceof CompoundStatement) 
         {
-            case "fieldSelect":
-                // Field selects are transformed into function calls. 
-                state.push(astLast.children[0].allText);
-                state.push("(");
-                this.visitNode(astFirst, state);
-                state.push(")");
-                break;
-             case "funCall":
-                state.push("(");
-                this.visitNode(astFirst, state);
-                state.push(")(");
-                this.visitNode(astLast, state);
-                state.push(")");
-                break;
-            case "arrayIndex":
-                state.push("$.at((");
-                this.visitNode(astFirst, state);
-                state.push("), ");
-                this.visitNode(astLast, state);
-                state.push(")");
-                break;
-            case "postIncOp":
-                state.push("(");
-                this.visitNode(astFirst, state);
-                state.push(")++");
-                break;
-            case "postDecOp":
-                state.push("(");
-                this.visitNode(astFirst, state);
-                state.push(")--");
-                break;
-            default:
-                throw new Error("Unrecognized child node type: " + astLast.name);
+            this.cb.pushLine('{');
+            for (const st of statement.statements)
+                this.visit(st);
+            this.cb.pushLine('}');
+        }
+        else if (statement instanceof IfStatement) {
+            this.cb.pushLine('if (')
+            this.visit(statement.condition);
+            this.cb.pushLine(')');
+            this.visit(statement.onTrue);
+            this.cb.pushLine('else');
+            this.visit(statement.onFalse);
+        }
+        else if (statement instanceof ReturnStatement) {
+            this.cb.push('return ');
+            if (statement.expr)
+                this.visit(statement.expr);
+            this.cb.pushLine(';');
+        }
+        else if (statement instanceof ContinueStatement) {
+            this.cb.pushLine('continue;')
+        }
+        else if (statement instanceof ExprStatement) {
+            this.visit(statement.expr);
+            this.cb.pushLine(';')
+        }
+        else if (statement instanceof ForStatement) {
+            this.cb.push('for (const ');
+            this.cb.push(identifierToString(statement.identifier));
+            this.cb.push(' of ');
+            this.visit(statement.array);
+            this.cb.pushLine(')');
+            this.visit(statement.loop);
+        }
+        else if (statement instanceof DoStatement) {
+            this.cb.pushLine('do');
+            this.visit(statement.body);
+            this.cb.push('while (');
+            this.visit(statement.condition);
+            this.cb.pushLine(')');
+        }
+        else if (statement instanceof WhileStatement) {
+            this.cb.push('while (');
+            this.visit(statement.condition);
+            this.cb.pushLine(')');
+            this.visit(statement.body);
+        }
+        else if (statement instanceof VarDeclStatement) {
+            for (const vd of statement.vars) {
+                // TODO: I want to know when I can use 'const' instead of 'let'
+                this.cb.push('let ' + vd.name + ' = ');
+                this.visit(vd.exprNode.expr);
+                this.cb.pushLine(';');
+            }
+        }
+        else if (statement instanceof EmptyStatement) {
+            // Do nothing. 
+        }
+        else {
+            throw new Error("Unrecognized statement " + statement);
         }
     }
-    visit_prefixExpr(ast, state) {
-        this.visitChildren(ast, state);
+
+    visitDelimited(xs: Expr[], delim = ',') {
+        for (let i=0; i < xs.length; ++i) {
+            if (i > 0) this.cb.push(delim);
+            this.visit(xs[i])
+        }
     }
-    visit_prefixOp(ast, state) {
-        state.push(ast.allText);
-    }
-    visit_rangeExpr(ast, state) {
-        if (ast.children.length != 2) throw new Error("Range expression should have two children");
-        state.push("$.range(");
-        this.visitNode(ast.children[0], state);
-        state.push(", ");
-        this.visitNode(ast.children[1], state);
-        state.push(")");
-    }    
-    visit_string(ast, state) {
-        // choice(doubleQuotedStringContents,singleQuotedStringContents)
-        state.push(ast.allText);
-    }    
-    // This is a classic transformation from Lisp/Scheme of a "let" form into a 
-    // lambda-expression with immediate application. What is gives us is the ability 
-    // is to use variable declarations in an expression.
-    // (let ((x y)) expr) => ((lambda (x) expr)(y))
-    // Heron is not pretentious about it though, and just uses familiar syntax:
-    // (var x = y in expr)
-    visit_varExpr(ast, state) {
-        let vds = ast.children[0];
-        if (vds.name !== "varDecls") throw new Error("Expected varDecls as children");
-        state.push("(function(");        
-        for (let i=0; i < vds.children.length; ++i) {
-            if (i > 0) state.push(", ");
-            let vd = vds.children[i];
-            state.push(vd.children[0].allText);
-        }        
-        state.push(") { return ");
-        this.visitNode(ast.children[1], state);
-        state.push("; })(");
-        for (let i=0; i < vds.children.length; ++i) {
-            if (i > 0) state.push(", ");
-            let vd = vds.children[i];
-            this.visitNode(vd.children[1], state);
-        }        
-        state.push(")");
+
+    visitExpr(expr: Expr)
+    {
+        if (expr instanceof VarName) {
+            this.cb.push(identifierToString(expr.name));
+        }
+        else if (expr instanceof FunCall) {
+            // TODO: this will fail when used with a lambda in the calling position.
+            const fd = expr.func.node.ref.defs[expr.functionIndex];
+            if (fd instanceof FuncDef)
+            {
+                // If this is a known reference to a funcion
+                this.cb.push(funcDefName(fd));
+            }
+            else 
+            {
+                // We just visit it like an ordinary function
+                this.visit(expr.func);
+            }
+            this.cb.push('(');
+            this.visitDelimited(expr.args);
+            this.cb.push(')');
+        }
+        else if (expr instanceof ConditionalExpr) {
+            this.visit(expr.condition);
+            this.visit(expr.onTrue);
+            this.cb.push(' : ');
+            this.visit(expr.onFalse);
+        }
+        else if (expr instanceof ObjectLiteral || expr instanceof ObjectField) {
+            throw new Error("Object literals not yet supported");
+        }
+        else if (expr instanceof ArrayLiteral) {
+            this.cb.push('[');
+            this.visitDelimited(expr.vals);
+            this.cb.push(']');
+        }
+        else if (expr instanceof BoolLiteral) {
+            this.cb.push(expr.value ? "true" : "false");
+        }
+        else if (expr instanceof IntLiteral) {            
+            this.cb.push(expr.value.toString());
+        }
+        else if (expr instanceof FloatLiteral) {            
+            this.cb.push(expr.value.toString());
+        }
+        else if (expr instanceof StrLiteral) {
+            // TODO: escape the special charaters in value
+            this.cb.push('"' + expr.value + '"');
+        }
+        else if (expr instanceof VarExpr) {
+            // TODO: ((varName) => ...)(value)
+            // TODO: the expr really should only have one var. 
+            // I need to do rewriting during the analysis, to create one around each one. 
+            // OR: I just treat it as a lambda and a call. Which might simplify other things. 
+            // BUT: it would require the constant handling is properly handled. 
+            throw new Error("Not implemented yet");
+        }
+        else if (expr instanceof Lambda) {
+            this.cb.push('(')
+            this.cb.push(' ? ');
+            this.cb.push(expr.params.map(p => p.name).join(', '));
+            this.cb.push(') => ')
+            if (expr.bodyNode.expr) 
+                this.visit(expr.bodyNode.expr);
+            else    
+                this.visit(expr.bodyNode.statement);
+        }
+        else if (expr instanceof PostfixDec) {
+            this.visit(expr.lvalue);
+            this.cb.push('--');
+        }
+        else if (expr instanceof PostfixInc) {
+            this.visit(expr.lvalue);
+            this.cb.push('++');
+        }
+        else if (expr instanceof VarAssignmentExpr) {
+            this.cb.push(expr.name + ' = ');
+            this.visit(expr.value);
+        }
+        else {
+            throw new Error("Not a recognized expression " + expr);
+        }
     }    
 }
