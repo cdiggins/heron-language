@@ -17,11 +17,21 @@ export class CodeBuilder
         return r;
     }
     pushLine(s: string = '') {
-        this.lines.push(s + '\n');
+        this.push(s + '\n');
         this.lines.push(this.indentString);
     }
     push(s: string) {
-        this.indent += count(s, '{') - count(s, '}');
+        const indentDelta = count(s, '{') - count(s, '}');
+        this.indent += indentDelta;
+        if (indentDelta < 0) {            
+            if (this.lines.length > 0) {
+                const lastLine = this.lines[this.lines.length-1].trim();
+                if (lastLine.length === 0) {
+                    this.lines.pop();
+                    this.lines.push(this.indentString);
+                }
+            }
+        }
         this.lines.push(s);
     }
     toString(): string {

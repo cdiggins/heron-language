@@ -36,42 +36,53 @@ var HeronToJs = /** @class */ (function () {
             this.visitModule(x);
     };
     HeronToJs.prototype.visitModule = function (m) {
-        var now = new Date();
-        this.cb.pushLine('// Generated on ' + now.toDateString() + ' ' + now.toTimeString());
-        this.cb.pushLine('');
-        for (var _i = 0, _a = m.functions; _i < _a.length; _i++) {
-            var f = _a[_i];
+        this.cb.pushLine('// Module ' + m.name);
+        this.cb.pushLine('// file ' + m.file.filePath);
+        for (var _i = 0, _a = m.imports; _i < _a.length; _i++) {
+            var i = _a[_i];
+            this.cb.pushLine('// imports ' + i);
+        }
+        for (var _b = 0, _c = m.functions; _b < _c.length; _b++) {
+            var f = _c[_b];
             this.visit(f);
         }
     };
     HeronToJs.prototype.visitFuncDef = function (f) {
         this.cb.pushLine('// ' + type_system_1.normalizeType(f.type));
         this.cb.pushLine('function ' + funcDefName(f) + '(' + f.params.map(funcParamDefName).join(', ') + ')');
-        this.cb.pushLine('{');
-        if (!f.body)
+        if (!f.body) {
+            this.cb.pushLine('{');
             this.cb.pushLine('// INTRINSIC');
-        else if (f.body.statement)
+            this.cb.pushLine('}');
+        }
+        else if (f.body.statement) {
             this.visit(f.body.statement);
+        }
         else if (f.body.expr) {
+            this.cb.pushLine('{');
             this.cb.push('return ');
             this.visit(f.body.expr);
             this.cb.pushLine(';');
+            this.cb.pushLine('}');
         }
         else
             throw new Error("No body statement or expression");
-        this.cb.pushLine('}');
     };
     HeronToJs.prototype.visitStatement = function (statement) {
         if (statement instanceof heron_statement_1.CompoundStatement) {
-            this.cb.pushLine('{');
-            for (var _i = 0, _a = statement.statements; _i < _a.length; _i++) {
-                var st = _a[_i];
-                this.visit(st);
+            if (statement.statements.length === 0)
+                this.cb.pushLine('{ }');
+            else {
+                this.cb.pushLine('{');
+                for (var _i = 0, _a = statement.statements; _i < _a.length; _i++) {
+                    var st = _a[_i];
+                    this.visit(st);
+                }
+                this.cb.pushLine('}');
             }
-            this.cb.pushLine('}');
         }
         else if (statement instanceof heron_statement_1.IfStatement) {
-            this.cb.pushLine('if (');
+            this.cb.push('if (');
             this.visit(statement.condition);
             this.cb.pushLine(')');
             this.visit(statement.onTrue);
@@ -157,6 +168,7 @@ var HeronToJs = /** @class */ (function () {
         }
         else if (expr instanceof heron_expr_1.ConditionalExpr) {
             this.visit(expr.condition);
+            this.cb.push(' ? ');
             this.visit(expr.onTrue);
             this.cb.push(' : ');
             this.visit(expr.onFalse);
@@ -192,7 +204,6 @@ var HeronToJs = /** @class */ (function () {
         }
         else if (expr instanceof heron_expr_1.Lambda) {
             this.cb.push('(');
-            this.cb.push(' ? ');
             this.cb.push(expr.params.map(function (p) { return p.name; }).join(', '));
             this.cb.push(') => ');
             if (expr.bodyNode.expr)

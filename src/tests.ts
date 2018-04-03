@@ -234,7 +234,10 @@ function tests() {
     for (const m of pkg.modules) {
         toJs.visit(m);        
     }
-    const text = toJs.cb.toString();
+    const now = new Date();
+    const header = '// Generated using Heron on ' + now.toDateString() + ' ' + now.toTimeString() + '\n'; 
+    const body = toJs.cb.toString();
+    const text = header + body;
     fs.writeFileSync(path.join(moduleFolder, 'output.js'), text);
 
     //outputPackageStats(pkg);

@@ -210,7 +210,10 @@ function tests() {
         var m_1 = _a[_i];
         toJs.visit(m_1);
     }
-    var text = toJs.cb.toString();
+    var now = new Date();
+    var header = '// Generated using Heron on ' + now.toDateString() + ' ' + now.toTimeString() + '\n';
+    var body = toJs.cb.toString();
+    var text = header + body;
     fs.writeFileSync(path.join(heron_compiler_1.moduleFolder, 'output.js'), text);
     //outputPackageStats(pkg);
     // find the main entry point and call into it. 

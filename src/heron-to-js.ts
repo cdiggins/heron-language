@@ -38,9 +38,10 @@ export class HeronToJs
     }
 
     visitModule(m: Module) {
-        let now = new Date();
-        this.cb.pushLine('// Generated on ' + now.toDateString() + ' ' + now.toTimeString());
-        this.cb.pushLine('')
+        this.cb.pushLine('// Module ' + m.name);
+        this.cb.pushLine('// file ' + m.file.filePath);
+        for (const i of m.imports)
+            this.cb.pushLine('// imports ' + i);
         for (const f of m.functions)
             this.visit(f);
     }
@@ -48,32 +49,42 @@ export class HeronToJs
     visitFuncDef(f: FuncDef) {        
         this.cb.pushLine('// ' +  normalizeType(f.type));
         this.cb.pushLine('function ' + funcDefName(f) + '(' + f.params.map(funcParamDefName).join(', ') + ')');
-        this.cb.pushLine('{');
-        if (!f.body)
+        if (!f.body) {
+            this.cb.pushLine('{');
             this.cb.pushLine('// INTRINSIC');
+            this.cb.pushLine('}');
+        }
         else if (f.body.statement) 
+        {
             this.visit(f.body.statement);
+        }
         else if (f.body.expr) {
+            this.cb.pushLine('{');
             this.cb.push('return ');
             this.visit(f.body.expr);
             this.cb.pushLine(';');
+            this.cb.pushLine('}');
         }   
         else 
             throw new Error("No body statement or expression");
-        this.cb.pushLine('}');
     }
 
     visitStatement(statement: Statement)
     {
         if (statement instanceof CompoundStatement) 
         {
-            this.cb.pushLine('{');
-            for (const st of statement.statements)
-                this.visit(st);
-            this.cb.pushLine('}');
+            if (statement.statements.length === 0)
+                this.cb.pushLine('{ }');
+            else 
+            {
+                this.cb.pushLine('{');
+                for (const st of statement.statements)
+                    this.visit(st);
+                this.cb.pushLine('}');
+            }
         }
         else if (statement instanceof IfStatement) {
-            this.cb.pushLine('if (')
+            this.cb.push('if (')
             this.visit(statement.condition);
             this.cb.pushLine(')');
             this.visit(statement.onTrue);
@@ -161,6 +172,7 @@ export class HeronToJs
         }
         else if (expr instanceof ConditionalExpr) {
             this.visit(expr.condition);
+            this.cb.push(' ? ');    
             this.visit(expr.onTrue);
             this.cb.push(' : ');
             this.visit(expr.onFalse);
@@ -196,7 +208,6 @@ export class HeronToJs
         }
         else if (expr instanceof Lambda) {
             this.cb.push('(')
-            this.cb.push(' ? ');
             this.cb.push(expr.params.map(p => p.name).join(', '));
             this.cb.push(') => ')
             if (expr.bodyNode.expr) 
