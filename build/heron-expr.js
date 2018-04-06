@@ -18,6 +18,10 @@ var heron_ast_rewrite_1 = require("./heron-ast-rewrite");
 var Expr = /** @class */ (function () {
     function Expr(node) {
         this.node = node;
+        // If the type is a function set, there are multiple defs, this indicates which one. 
+        // TODO: maybe the defs and the type should be updated at the same time, rather than leaving us 
+        // to check these values. 
+        this.functionIndex = 0;
         node.expr = this;
     }
     Expr.prototype.toString = function () {
@@ -207,8 +211,6 @@ var FunCall = /** @class */ (function (_super) {
         _this.node = node;
         _this.func = func;
         _this.args = args;
-        // A func could be a number of different functions.
-        _this.functionIndex = 0;
         func.calledFunction = _this;
         for (var _i = 0, args_1 = args; _i < args_1.length; _i++) {
             var arg = args_1[_i];

@@ -48,6 +48,13 @@ var FuncDef = /** @class */ (function (_super) {
     FuncDef.prototype.toString = function () {
         return this.name + "(" + this.params.join(", ") + ") : " + typeNodeToStr(this.retTypeNode);
     };
+    Object.defineProperty(FuncDef.prototype, "isIntrinsic", {
+        get: function () {
+            return !this.body;
+        },
+        enumerable: true,
+        configurable: true
+    });
     return FuncDef;
 }(Def));
 exports.FuncDef = FuncDef;

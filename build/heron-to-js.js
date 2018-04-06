@@ -6,6 +6,8 @@ var code_builder_1 = require("./code-builder");
 var heron_expr_1 = require("./heron-expr");
 var heron_statement_1 = require("./heron-statement");
 var heron_ast_rewrite_1 = require("./heron-ast-rewrite");
+var heron_refs_1 = require("./heron-refs");
+var id = 0;
 function toJavaScript(x) {
     var toJs = new HeronToJs();
     toJs.visit(x);
@@ -47,15 +49,17 @@ var HeronToJs = /** @class */ (function () {
             this.visit(f);
         }
     };
+    HeronToJs.prototype.functionSig = function (f) {
+        return 'function ' + funcDefName(f) + '(' + f.params.map(funcParamDefName).join(', ') + ')';
+    };
     HeronToJs.prototype.visitFuncDef = function (f) {
         this.cb.pushLine('// ' + type_system_1.normalizeType(f.type));
-        this.cb.pushLine('function ' + funcDefName(f) + '(' + f.params.map(funcParamDefName).join(', ') + ')');
-        if (!f.body) {
-            this.cb.pushLine('{');
-            this.cb.pushLine('// INTRINSIC');
-            this.cb.pushLine('}');
+        if (f.isIntrinsic) {
+            this.cb.pushLine("const " + funcDefName(f) + ' = ' + heron_ast_rewrite_1.identifierToString(f.name) + ';');
+            return;
         }
-        else if (f.body.statement) {
+        this.cb.pushLine(this.functionSig(f));
+        if (f.body.statement) {
             this.visit(f.body.statement);
         }
         else if (f.body.expr) {
@@ -103,12 +107,18 @@ var HeronToJs = /** @class */ (function () {
             this.cb.pushLine(';');
         }
         else if (statement instanceof heron_statement_1.ForStatement) {
-            this.cb.push('for (const ');
-            this.cb.push(heron_ast_rewrite_1.identifierToString(statement.identifier));
-            this.cb.push(' of ');
+            var x = "i" + id++;
+            this.cb.push("for (let " + x + "=0; " + x + " < ");
             this.visit(statement.array);
-            this.cb.pushLine(')');
+            this.cb.pushLine(".count; ++" + x + ")");
+            this.cb.pushLine('{');
+            this.cb.push('const ');
+            this.cb.push(statement.identifier);
+            this.cb.push(' = ');
+            this.visit(statement.array);
+            this.cb.pushLine(".at(" + x + ");");
             this.visit(statement.loop);
+            this.cb.pushLine('}');
         }
         else if (statement instanceof heron_statement_1.DoStatement) {
             this.cb.pushLine('do');
@@ -149,7 +159,17 @@ var HeronToJs = /** @class */ (function () {
     };
     HeronToJs.prototype.visitExpr = function (expr) {
         if (expr instanceof heron_expr_1.VarName) {
-            this.cb.push(heron_ast_rewrite_1.identifierToString(expr.name));
+            if (expr.node.ref instanceof heron_refs_1.FuncRef) {
+                if (expr.node.ref.defs.length === 1) {
+                    this.cb.push(funcDefName(expr.node.ref.defs[0]));
+                }
+                else {
+                    this.cb.push(funcDefName(expr.node.ref.defs[expr.functionIndex]));
+                }
+            }
+            else {
+                this.cb.push(heron_ast_rewrite_1.identifierToString(expr.name));
+            }
         }
         else if (expr instanceof heron_expr_1.FunCall) {
             // TODO: this will fail when used with a lambda in the calling position.
@@ -177,9 +197,9 @@ var HeronToJs = /** @class */ (function () {
             throw new Error("Object literals not yet supported");
         }
         else if (expr instanceof heron_expr_1.ArrayLiteral) {
-            this.cb.push('[');
+            this.cb.push('arrayFromJavaScript([');
             this.visitDelimited(expr.vals);
-            this.cb.push(']');
+            this.cb.push('])');
         }
         else if (expr instanceof heron_expr_1.BoolLiteral) {
             this.cb.push(expr.value ? "true" : "false");

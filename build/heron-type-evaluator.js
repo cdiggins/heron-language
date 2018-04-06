@@ -66,7 +66,8 @@ var TypeEvaluator = /** @class */ (function () {
                 var uniType = this.unifier.getUnifiedType(rawType);
                 //console.log("Expression   : " + x.toString());
                 //console.log("Has type     : " + uniType);
-                return x.type = uniType;
+                return uniType;
+                //return x.type = rawType;
             }
         }
         catch (e) {
@@ -170,23 +171,23 @@ var TypeEvaluator = /** @class */ (function () {
         }
         else if (expr instanceof heron_expr_1.FunCall) {
             var func = this.getType(expr.func);
-            var args = expr.args.map(function (a) { return _this.getType(a); });
+            var argTypes = expr.args.map(function (a) { return _this.getType(a); });
             if (func instanceof type_system_1.PolyType) {
                 if (heron_types_1.isFunctionSet(func)) {
                     console.log("Function: " + expr.func);
-                    return heron_types_1.callFunctionSet(expr, func, args, this.unifier);
+                    return heron_types_1.callFunctionSet(expr, func, expr.args, argTypes, this.unifier);
                 }
                 else if (heron_types_1.isFunctionType(func))
                     // We have to create new Type variable names when calling a
-                    return heron_types_1.callFunction(func, args, this.unifier);
+                    return heron_types_1.callFunction(func, expr.args, argTypes, this.unifier);
                 else
                     throw new Error("Can't call " + func);
             }
             else if (func instanceof type_system_1.TypeVariable) {
-                var genFunc = heron_types_1.genericFuncTypeFromArgs(args);
+                var genFunc = heron_types_1.genericFuncTypeFromArgs(argTypes);
                 this.unify(func, genFunc);
                 var retType = heron_types_1.getReturnType(genFunc);
-                var r = heron_types_1.callFunction(genFunc, args, this.unifier);
+                var r = heron_types_1.callFunction(genFunc, expr.args, argTypes, this.unifier);
                 this.unify(retType, r);
                 return r;
             }

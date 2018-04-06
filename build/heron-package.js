@@ -28,6 +28,16 @@ var Package = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    Package.prototype.findFunction = function (name) {
+        for (var _i = 0, _a = this.modules; _i < _a.length; _i++) {
+            var m = _a[_i];
+            for (var _b = 0, _c = m.functions; _b < _c.length; _b++) {
+                var f = _c[_b];
+                if (f.name === name)
+                    return f;
+            }
+        }
+    };
     Object.defineProperty(Package.prototype, "allFuncDefs", {
         get: function () {
             var r = [];

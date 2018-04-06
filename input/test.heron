@@ -12,25 +12,45 @@ module heron:tests:0.1
         var xs = [1, 11, 3];
         print('Expect [1, 11, 3]');
         print(xs);
+        
         print('Expect 1, 11, 3');
         for (var x in xs)
             print(x);
+        
         print('Expect 1');            
         print(xs[0]);
+        
         print('Expect 3');            
         print(xs.count);
+        
         print('Expect 1');            
         print(xs.first);
+        
         print('Expect 3');            
         print(xs.last);
+        
         print('Expect 1');            
         print(xs.min);
+        
         print('Expect 11');            
         print(xs.max);
+
+        var ys = xs.mutable;
+        ys[1] = 5;        
+        print('Expect 5');
+        print(ys[1]);        
+
+        print('Expect 1, 3, 11');
+        var zs = xs.sort;
+        for (var z in zs)
+            print(z);
+        
         print('Expect 3');            
         print(xs.median);
+        
         print('Expect 15');            
         print(xs.sum);
+
         print('Expect 5');            
         print(xs.average);
     }

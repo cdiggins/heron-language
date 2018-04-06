@@ -43,6 +43,10 @@ export class FuncDef extends Def
     toString(): string {
         return this.name + "(" + this.params.join(", ") + ") : " + typeNodeToStr(this.retTypeNode);
     }
+
+    get isIntrinsic(): boolean {
+        return !this.body;
+    }
 }
 
 // Represent a parameter to a function or a lambda expression 

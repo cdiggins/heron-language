@@ -6,6 +6,9 @@ import { VarName, FunCall, ConditionalExpr, ObjectLiteral, ArrayLiteral, BoolLit
 import { Statement, CompoundStatement, IfStatement, EmptyStatement, VarDeclStatement, WhileStatement, DoStatement, ForStatement, ExprStatement, ContinueStatement, ReturnStatement } from "./heron-statement";
 import { SourceFile, Module } from "./heron-package";
 import { identifierToString } from "./heron-ast-rewrite";
+import { FuncRef } from "./heron-refs";
+
+let id = 0;
 
 export function toJavaScript(x: Statement|Expr|FuncDef|Module): string {
     const toJs = new HeronToJs();
@@ -46,15 +49,18 @@ export class HeronToJs
             this.visit(f);
     }
 
+    functionSig(f: FuncDef): string {
+        return 'function ' + funcDefName(f) + '(' + f.params.map(funcParamDefName).join(', ') + ')';
+    }
+
     visitFuncDef(f: FuncDef) {        
         this.cb.pushLine('// ' +  normalizeType(f.type));
-        this.cb.pushLine('function ' + funcDefName(f) + '(' + f.params.map(funcParamDefName).join(', ') + ')');
-        if (!f.body) {
-            this.cb.pushLine('{');
-            this.cb.pushLine('// INTRINSIC');
-            this.cb.pushLine('}');
+        if (f.isIntrinsic) {
+            this.cb.pushLine("const " + funcDefName(f) + ' = ' + identifierToString(f.name) + ';');
+            return;
         }
-        else if (f.body.statement) 
+        this.cb.pushLine(this.functionSig(f));
+        if (f.body.statement) 
         {
             this.visit(f.body.statement);
         }
@@ -105,12 +111,18 @@ export class HeronToJs
             this.cb.pushLine(';')
         }
         else if (statement instanceof ForStatement) {
-            this.cb.push('for (const ');
-            this.cb.push(identifierToString(statement.identifier));
-            this.cb.push(' of ');
+            const x = "i" + id++;
+            this.cb.push(`for (let ${x}=0; ${x} < `);
             this.visit(statement.array);
-            this.cb.pushLine(')');
+            this.cb.pushLine(`.count; ++${x})`);
+            this.cb.pushLine('{');
+            this.cb.push('const ');
+            this.cb.push(statement.identifier);
+            this.cb.push(' = ');
+            this.visit(statement.array);
+            this.cb.pushLine(`.at(${x});`);
             this.visit(statement.loop);
+            this.cb.pushLine('}');
         }
         else if (statement instanceof DoStatement) {
             this.cb.pushLine('do');
@@ -151,7 +163,19 @@ export class HeronToJs
     visitExpr(expr: Expr)
     {
         if (expr instanceof VarName) {
-            this.cb.push(identifierToString(expr.name));
+            if (expr.node.ref instanceof FuncRef)
+            {
+                if (expr.node.ref.defs.length === 1) {
+                    this.cb.push(funcDefName(expr.node.ref.defs[0]));                       
+                } 
+                else {
+                    this.cb.push(funcDefName(expr.node.ref.defs[expr.functionIndex]));
+                }
+            }
+            else 
+            {
+                this.cb.push(identifierToString(expr.name));
+            }
         }
         else if (expr instanceof FunCall) {
             // TODO: this will fail when used with a lambda in the calling position.
@@ -181,9 +205,9 @@ export class HeronToJs
             throw new Error("Object literals not yet supported");
         }
         else if (expr instanceof ArrayLiteral) {
-            this.cb.push('[');
+            this.cb.push('arrayFromJavaScript([');
             this.visitDelimited(expr.vals);
-            this.cb.push(']');
+            this.cb.push('])');
         }
         else if (expr instanceof BoolLiteral) {
             this.cb.push(expr.value ? "true" : "false");

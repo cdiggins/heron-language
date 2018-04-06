@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var heron_ast_rewrite_1 = require("./heron-ast-rewrite");
+var heron_refs_1 = require("./heron-refs");
 var type_system_1 = require("./type-system");
 var heron_type_evaluator_1 = require("./heron-type-evaluator");
 function assure(t) {
@@ -74,43 +75,56 @@ var TypeStrategyClass = /** @class */ (function () {
     return TypeStrategyClass;
 }());
 exports.typeStrategy = new TypeStrategyClass();
-function callFunctionSet(fun, funcSet, args, unifier) {
-    console.log("Calling function set with args: ");
+function callFunctionSet(fun, funcSet, args, argTypes, unifier) {
+    console.log("Calling function-set with: ");
     console.log("    " + args.join(", "));
+    console.log("    " + argTypes.join(", "));
     console.log("Function choices: ");
     var funcs = funcSet.types[1].types;
     for (var _i = 0, funcs_1 = funcs; _i < funcs_1.length; _i++) {
         var f = funcs_1[_i];
         console.log("  " + f);
     }
-    var n = chooseBestFunctionIndexFromArgs(args, funcSet);
+    var n = chooseBestFunctionIndexFromArgs(argTypes, funcSet);
     fun.functionIndex = n;
-    return callFunction(funcs[n], args, unifier);
+    return callFunction(funcs[n], args, argTypes, unifier);
 }
 exports.callFunctionSet = callFunctionSet;
-function callFunction(funOriginal, argTypes, mainUnifier) {
+function callFunction(funOriginal, args, argTypes, mainUnifier) {
     // We have to create fresh variable names.
     var fun = type_system_1.freshVariableNames(funOriginal);
     var u = new type_system_1.TypeResolver(exports.typeStrategy);
     var paramTypes = getArgTypes(fun);
     var returnType = getReturnType(fun);
     // Parameters should match the number of arguments given to it. 
-    if (paramTypes.length !== argTypes.length)
-        throw new Error("Mismatched number of arguments was " + argTypes.length + " expected " + paramTypes.length);
+    if (paramTypes.length !== args.length)
+        throw new Error("Mismatched number of arguments was " + args.length + " expected " + paramTypes.length);
     // Unify the passed arguments with the parameter types.    
-    for (var i = 0; i < argTypes.length; ++i) {
+    for (var i = 0; i < args.length; ++i) {
         var argType = argTypes[i];
         var paramType = paramTypes[i];
+        var arg = args[i];
         if (argType instanceof type_system_1.PolyType && isFunctionSet(argType)) {
+            if (!(paramType instanceof type_system_1.PolyType))
+                throw new Error("Parameter is not a poly-type: can't figure out best match");
             // We have to figure out which type is the best here. 
             //console.log("We have a function set as an argument.")
-            var bestMatch = chooseBestFunction(paramType, argType);
-            argType = bestMatch;
+            var n = chooseBestFunctionIndex(paramType, argType);
+            argType = functionSetOptions(argType)[n];
+            arg.functionIndex = n;
         }
         // Do the local unification to get the proper return type
-        u.unifyTypes(paramType, argType);
+        var localType = u.unifyTypes(paramType, argType);
         // Do the unification of the arguments with the types.
-        mainUnifier.unifyTypes(argType, paramType);
+        var globalType = mainUnifier.unifyTypes(argType, paramType);
+        // In case the referenced node is a variable or parameter, 
+        // we are going to unify it with the resulting global type. 
+        if (arg.node.ref instanceof heron_refs_1.FuncParamRef) {
+            mainUnifier.unifyTypes(arg.node.ref.def.type, globalType);
+        }
+        else if (arg.node.ref instanceof heron_refs_1.VarRef) {
+            mainUnifier.unifyTypes(arg.node.ref.def.type, globalType);
+        }
     }
     // DEBUG:
     //console.log("Unifier state:");
@@ -241,14 +255,6 @@ function canPassArg(arg, param) {
     return true;
 }
 exports.canPassArg = canPassArg;
-// Given a function set, choose the best one to pass to the arg, or throw an error 
-function chooseBestFunction(arg, funcSet) {
-    if (!isFunctionType(arg))
-        throw new Error("Argument is not a function");
-    var n = chooseBestFunctionIndex(arg, funcSet);
-    return funcSet.types[1].types[n];
-}
-exports.chooseBestFunction = chooseBestFunction;
 function functionSetOptions(f) {
     return f.types[1].types.map(function (t) { return t; });
 }

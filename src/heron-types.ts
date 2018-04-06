@@ -78,19 +78,20 @@ class TypeStrategyClass {
 
 export const typeStrategy = new TypeStrategyClass();
 
-export function callFunctionSet(fun: FunCall, funcSet: PolyType, args: Type[], unifier: TypeResolver): Type {
-    console.log("Calling function set with args: ");
+export function callFunctionSet(fun: FunCall, funcSet: PolyType, args: Expr[], argTypes: Type[], unifier: TypeResolver): Type {
+    console.log("Calling function-set with: ");
     console.log("    " + args.join(", "))
+    console.log("    " + argTypes.join(", "))
     console.log("Function choices: ");
     const funcs = (funcSet.types[1] as PolyType).types;
     for (const f of funcs)
         console.log("  " + f);
-    let n = chooseBestFunctionIndexFromArgs(args, funcSet); 
+    let n = chooseBestFunctionIndexFromArgs(argTypes, funcSet); 
     fun.functionIndex = n;
-    return callFunction(funcs[n] as PolyType, args, unifier);
+    return callFunction(funcs[n] as PolyType, args, argTypes, unifier);
 }
 
-export function callFunction(funOriginal: PolyType, argTypes: Type[], mainUnifier: TypeResolver): Type {                
+export function callFunction(funOriginal: PolyType, args: Expr[], argTypes: Type[], mainUnifier: TypeResolver): Type {                
     // We have to create fresh variable names.
     const fun = freshVariableNames(funOriginal) as PolyType;
     const u = new TypeResolver(typeStrategy);
@@ -98,26 +99,38 @@ export function callFunction(funOriginal: PolyType, argTypes: Type[], mainUnifie
     const returnType = getReturnType(fun);
 
     // Parameters should match the number of arguments given to it. 
-    if (paramTypes.length !== argTypes.length)
-        throw new Error("Mismatched number of arguments was " + argTypes.length + " expected " + paramTypes.length);    
+    if (paramTypes.length !== args.length)
+        throw new Error("Mismatched number of arguments was " + args.length + " expected " + paramTypes.length);    
 
     // Unify the passed arguments with the parameter types.    
-    for (let i=0; i < argTypes.length; ++i) {        
+    for (let i=0; i < args.length; ++i) {        
         let argType = argTypes[i];
         const paramType = paramTypes[i];
-
+        const arg = args[i];
         if (argType instanceof PolyType && isFunctionSet(argType)) {
+            if (!(paramType instanceof PolyType))
+                throw new Error("Parameter is not a poly-type: can't figure out best match");
             // We have to figure out which type is the best here. 
             //console.log("We have a function set as an argument.")
-            const bestMatch = chooseBestFunction(paramType, argType);
-            argType = bestMatch;
+            const n = chooseBestFunctionIndex(paramType, argType);
+            argType = functionSetOptions(argType)[n];
+            arg.functionIndex = n;
         }
 
         // Do the local unification to get the proper return type
-        u.unifyTypes(paramType, argType);
+        const localType = u.unifyTypes(paramType, argType);
 
         // Do the unification of the arguments with the types.
-        mainUnifier.unifyTypes(argType, paramType);
+        const globalType = mainUnifier.unifyTypes(argType, paramType);        
+
+        // In case the referenced node is a variable or parameter, 
+        // we are going to unify it with the resulting global type. 
+        if (arg.node.ref instanceof FuncParamRef) {
+            mainUnifier.unifyTypes(arg.node.ref.def.type, globalType);
+        }
+        else if (arg.node.ref instanceof VarRef) {
+            mainUnifier.unifyTypes(arg.node.ref.def.type, globalType);
+        }        
     }
 
     // DEBUG:
@@ -246,14 +259,6 @@ export function canPassArg(arg: Type, param: Type) {
                 return false;
     }
     return true;
-}
-
-// Given a function set, choose the best one to pass to the arg, or throw an error 
-export function chooseBestFunction(arg: Type, funcSet: PolyType): PolyType {
-    if (!isFunctionType(arg))
-        throw new Error("Argument is not a function");
-    const n = chooseBestFunctionIndex(arg as PolyType, funcSet);
-    return (funcSet.types[1] as PolyType).types[n] as PolyType;
 }
 
 export function functionSetOptions(f: PolyType): PolyType[] {

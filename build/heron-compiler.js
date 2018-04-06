@@ -11,7 +11,8 @@ var ver = nodePackage.version;
 var flavor = 'std';
 var ext = '.heron';
 // Module resolution
-exports.moduleFolder = path.join('.', 'inputs');
+exports.moduleFolder = path.join('.', 'input');
+exports.outputFolder = path.join('.', 'output');
 exports.intrinsicModules = ['intrinsics'];
 exports.modules = [];
 //================================================================

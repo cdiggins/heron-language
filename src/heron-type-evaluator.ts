@@ -77,7 +77,9 @@ export class TypeEvaluator
                 const uniType = this.unifier.getUnifiedType(rawType);
                 //console.log("Expression   : " + x.toString());
                 //console.log("Has type     : " + uniType);
-                return x.type = uniType;
+
+                return uniType;
+                //return x.type = rawType;
             }
         }
         catch (e) {
@@ -186,23 +188,23 @@ export class TypeEvaluator
         }
         else if (expr instanceof FunCall) {
             let func = this.getType(expr.func);
-            const args = expr.args.map(a => this.getType(a));
+            const argTypes = expr.args.map(a => this.getType(a));
             if (func instanceof PolyType) {
                 if (isFunctionSet(func)) {
                     console.log("Function: " + expr.func);
-                    return callFunctionSet(expr, func, args, this.unifier);
+                    return callFunctionSet(expr, func, expr.args, argTypes, this.unifier);
                 }
                 else if (isFunctionType(func))
                     // We have to create new Type variable names when calling a
-                    return callFunction(func, args, this.unifier);
+                    return callFunction(func, expr.args, argTypes, this.unifier);
                 else 
                     throw new Error("Can't call " + func);
             }
             else if (func instanceof TypeVariable) {
-                const genFunc = genericFuncTypeFromArgs(args);
+                const genFunc = genericFuncTypeFromArgs(argTypes);
                 this.unify(func, genFunc);
                 const retType = getReturnType(genFunc);
-                const r = callFunction(genFunc, args, this.unifier);
+                const r = callFunction(genFunc, expr.args, argTypes, this.unifier);
                 this.unify(retType, r);
                 return r;
             }

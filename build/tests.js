@@ -9,6 +9,7 @@ var heron_traits_1 = require("./heron-traits");
 var heron_types_1 = require("./heron-types");
 var type_parser_1 = require("./type-parser");
 var type_system_1 = require("./type-system");
+var js_intrinsics_1 = require("./js-intrinsics");
 var m = Myna.Myna;
 var g = heron_parser_1.heronGrammar;
 var assert = require('assert');
@@ -173,24 +174,12 @@ function testParseTypes() {
         testParseType(ts);
     }
 }
-function testCallFunctions() {
-    var map = "(Func (Array 'A) (Func 'A 'B) (Array 'B))";
-    var tests = [
-        ["(Func 'A 'A)", "(Num)"],
-        ["(Func 'A 'B ('B 'A))", "(Num Bool)"],
-        [map, "((Array Num) (Func Num Str))"],
-    ];
-    for (var _i = 0, tests_1 = tests; _i < tests_1.length; _i++) {
-        var t = tests_1[_i];
-        var f = type_parser_1.parseType(t[0]);
-        var args = type_parser_1.parseType(t[1]);
-        // TODO: the null is supposed to be a TypeResolver
-        var u = new type_system_1.TypeResolver(heron_types_1.typeStrategy);
-        var r = heron_types_1.callFunction(f, args.types, u);
-        console.log("func   : " + f);
-        console.log("args   : " + args);
-        console.log("result : " + r);
-    }
+function getIntrinsicCode(k) {
+    var v = js_intrinsics_1.intrinsics[k];
+    return "const " + k + " = " + v + ";";
+}
+function intrinsicCode() {
+    return Object.keys(js_intrinsics_1.intrinsics).map(getIntrinsicCode).join('\n');
 }
 function tests() {
     //testParsingRules();
@@ -212,9 +201,14 @@ function tests() {
     }
     var now = new Date();
     var header = '// Generated using Heron on ' + now.toDateString() + ' ' + now.toTimeString() + '\n';
+    //const preamble = fs.readFileSync(path.join('src', 'js-intrinsics.ts'), 'utf-8');
     var body = toJs.cb.toString();
-    var text = header + body;
-    fs.writeFileSync(path.join(heron_compiler_1.moduleFolder, 'output.js'), text);
+    var preamble = intrinsicCode();
+    var main = pkg.findFunction("main");
+    var entry = heron_to_js_1.funcDefName(main) + '();\n';
+    var exit = "process.exit();\n";
+    var text = header + js_intrinsics_1.library + preamble + body + '\n' + entry + exit;
+    fs.writeFileSync(path.join(heron_compiler_1.outputFolder, 'output.js'), text);
     //outputPackageStats(pkg);
     // find the main entry point and call into it. 
     var modName = 'heron:tests:0.1';
@@ -233,6 +227,10 @@ function tests() {
     // I shave decided that traits need to be declared. 
     //outputTraits(pkg);
     outputFunctionTypes(pkg);
+    /*
+    for (const k in intrinsics)
+        console.log(intrinsics[k].toString());
+    */
     console.log('Done');
 }
 /*

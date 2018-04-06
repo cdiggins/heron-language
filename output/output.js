@@ -1,255 +1,191 @@
-// Generated using Heron on Tue Apr 03 2018 01:19:06 GMT-0400 (Eastern Daylight Time)
-// Module heron:intrinsics:0.1
-// file inputs\intrinsics.heron
+// Generated using Heron on Thu Apr 05 2018 23:31:45 GMT-0400 (Eastern Daylight Time)
+
+
+function ImmutableArray(count, at) {
+    this.count = count;
+    this.at = at;
+}
+
+function toImmutable(xs) {
+    return new ImmutableArray(xs);
+}
+  
+function toMutable(xs) {
+    const count = xs.count;
+    const array = []; 
+    for (let i=0; i < count; ++i)
+      array.push(xs.at(i));
+    return arrayFromJavaScript(array);
+}
+
+function arrayFromJavaScript(xs) {
+  return {
+    array: xs,
+    count: xs.length,
+    at: (i) => xs[i],
+  }
+}
+const int = Math.round;
+const float = function (x) { return x; };
+const float2 = function (x, y) { return ({ x: x, y: y }); };
+const float3 = function (x, y, z) { return ({ x: x, y: y, z: z }); };
+const float4 = function (x, y, z, w) { return ({ x: x, y: y, z: z, w: w }); };
+const x = function (v) { return v.x; };
+const y = function (v) { return v.y; };
+const z = function (v) { return v.z; };
+const w = function (v) { return v.w; };
+const abs = Math.abs;
+const acos = Math.acos;
+const asin = Math.asin;
+const atan = Math.atan;
+const atan2 = Math.atan2;
+const ceil = Math.ceil;
+const clamp = function (x, min, max) { return x < min ? min : x > max ? max : x; };
+const cos = Math.cos;
+const exp = Math.exp;
+const floor = Math.floor;
+const log = Math.log;
+const pow = Math.pow;
+const round = Math.round;
+const sin = Math.sin;
+const sign = function (x) { return x > 0 ? 1 : x < 0 ? -1 : 0; };
+const sqrt = Math.sqrt;
+const tan = Math.tan;
+const op_add = function (x, y) { return x + y; };
+const op_sub = function (x, y) { return x - y; };
+const op_mul = function (x, y) { return x * y; };
+const op_div = function (x, y) { return x / y; };
+const op_mod = function (x, y) { return x % y; };
+const op_gt = function (x, y) { return x > y; };
+const op_gt_eq = function (x, y) { return x >= y; };
+const op_lt = function (x, y) { return x < y; };
+const op_lt_eq = function (x, y) { return x <= y; };
+const op_not_eq = function (x, y) { return x !== y; };
+const op_eq_eq = function (x, y) { return x === y; };
+const op_amp_amp = function (x, y) { return x && y; };
+const op_bar_bar = function (x, y) { return x || y; };
+const op_hat_hat = function (x, y) { return !!(x ^ y); };
+const op_not = function (x) { return !x; };
+const op_negate = function (x) { return -x; };
+const gen = toImmutable;
+const count = function (xs) { return xs.count; };
+const at = function (xs, i) { return xs.at(i); };
+const mutable = toMutable;
+const push = function (xs, x) { return (xs.array.push(x), xs); };
+const set = function (xs, i, x) { return (xs.array[i] = x, xs); };
+const array = function (xs) { return xs; };
+const print = console.log;
+const assert = function (condition) { if (!condition)
+        throw new Error("assertion failed"); };// Module heron:intrinsics:0.1
+// file input\intrinsics.heron
 // (Func Float Float Float2)
-function float2_45(x, y)
-{
-  // INTRINSIC
-}
+const float2_45 = float2;
 // (Func Float2 Float)
-function x_60(v)
-{
-  // INTRINSIC
-}
+const x_60 = x;
 // (Func Float2 Float)
-function y_75(v)
-{
-  // INTRINSIC
-}
+const y_75 = y;
 // (Func Float Float Float Float3)
-function float3_102(x, y, z)
-{
-  // INTRINSIC
-}
+const float3_102 = float3;
 // (Func Float3 Float)
-function z_117(v)
-{
-  // INTRINSIC
-}
+const z_117 = z;
 // (Func Float Float Float Float Float4)
-function float4_150(x, y, z, w)
-{
-  // INTRINSIC
-}
+const float4_150 = float4;
 // (Func Float4 Float)
-function w_165(v)
-{
-  // INTRINSIC
-}
+const w_165 = w;
 // (Func Float Float)
-function abs_180(x)
-{
-  // INTRINSIC
-}
+const abs_180 = abs;
 // (Func Float Float)
-function acos_195(x)
-{
-  // INTRINSIC
-}
+const acos_195 = acos;
 // (Func Float Float)
-function asin_210(x)
-{
-  // INTRINSIC
-}
+const asin_210 = asin;
 // (Func Float Float)
-function atan_225(x)
-{
-  // INTRINSIC
-}
+const atan_225 = atan;
 // (Func Float Float Float)
-function atan2_246(y, x)
-{
-  // INTRINSIC
-}
+const atan2_246 = atan2;
 // (Func Float Float)
-function ceil_261(x)
-{
-  // INTRINSIC
-}
+const ceil_261 = ceil;
 // (Func Float Float Float Float)
-function clamp_288(x, min, max)
-{
-  // INTRINSIC
-}
+const clamp_288 = clamp;
 // (Func Float Float)
-function cos_303(x)
-{
-  // INTRINSIC
-}
+const cos_303 = cos;
 // (Func Float Float)
-function exp_318(x)
-{
-  // INTRINSIC
-}
+const exp_318 = exp;
 // (Func Float Float)
-function floor_333(x)
-{
-  // INTRINSIC
-}
+const floor_333 = floor;
 // (Func Float Float)
-function log_348(x)
-{
-  // INTRINSIC
-}
+const log_348 = log;
 // (Func Float Float Float)
-function pow_369(x, y)
-{
-  // INTRINSIC
-}
+const pow_369 = pow;
 // (Func Float Float)
-function round_384(x)
-{
-  // INTRINSIC
-}
+const round_384 = round;
 // (Func Float Float)
-function sin_399(x)
-{
-  // INTRINSIC
-}
+const sin_399 = sin;
 // (Func Float Float)
-function sign_414(x)
-{
-  // INTRINSIC
-}
+const sign_414 = sign;
 // (Func Float Float)
-function sqrt_429(x)
-{
-  // INTRINSIC
-}
+const sqrt_429 = sqrt;
 // (Func Float Float)
-function tan_444(x)
-{
-  // INTRINSIC
-}
+const tan_444 = tan;
 // (Func T0 T0 T0)
-function op_add_468(x, y)
-{
-  // INTRINSIC
-}
+const op_add_468 = op_add;
 // (Func T0 T0 T0)
-function op_sub_492(x, y)
-{
-  // INTRINSIC
-}
+const op_sub_492 = op_sub;
 // (Func T0 T0 T0)
-function op_mul_516(x, y)
-{
-  // INTRINSIC
-}
+const op_mul_516 = op_mul;
 // (Func T0 T0 T0)
-function op_div_540(x, y)
-{
-  // INTRINSIC
-}
+const op_div_540 = op_div;
 // (Func T0 T0 T0)
-function op_mod_564(x, y)
-{
-  // INTRINSIC
-}
+const op_mod_564 = op_mod;
 // (Func T0 T0 Bool)
-function op_gt_588(x, y)
-{
-  // INTRINSIC
-}
+const op_gt_588 = op_gt;
 // (Func T0 T0 Bool)
-function op_gt_eq_612(x, y)
-{
-  // INTRINSIC
-}
+const op_gt_eq_612 = op_gt_eq;
 // (Func T0 T0 Bool)
-function op_lt_636(x, y)
-{
-  // INTRINSIC
-}
+const op_lt_636 = op_lt;
 // (Func T0 T0 Bool)
-function op_lt_eq_660(x, y)
-{
-  // INTRINSIC
-}
+const op_lt_eq_660 = op_lt_eq;
 // (Func T0 T0 Bool)
-function op_not_eq_684(x, y)
-{
-  // INTRINSIC
-}
+const op_not_eq_684 = op_not_eq;
 // (Func T0 T0 Bool)
-function op_eq_eq_708(x, y)
-{
-  // INTRINSIC
-}
+const op_eq_eq_708 = op_eq_eq;
 // (Func Bool Bool Bool)
-function op_amp_amp_730(x, y)
-{
-  // INTRINSIC
-}
+const op_amp_amp_730 = op_amp_amp;
 // (Func Bool Bool Bool)
-function op_bar_bar_752(x, y)
-{
-  // INTRINSIC
-}
+const op_bar_bar_752 = op_bar_bar;
 // (Func Bool Bool Bool)
-function op_hat_hat_774(x, y)
-{
-  // INTRINSIC
-}
+const op_hat_hat_774 = op_hat_hat;
 // (Func Bool Bool)
-function op_not_789(x)
-{
-  // INTRINSIC
-}
+const op_not_789 = op_not;
 // (Func Float Float)
-function op_negate_804(x)
-{
-  // INTRINSIC
-}
+const op_negate_804 = op_negate;
 // (Func Int (Func Int T0) (Array T0))
-function array_836(n, f)
-{
-  // INTRINSIC
-}
+const array_836 = array;
 // (Func (Array T0) Int)
-function count_856(xs)
-{
-  // INTRINSIC
-}
+const count_856 = count;
 // (Func (Array T0) Int T0)
-function at_882(xs, i)
-{
-  // INTRINSIC
-}
+const at_882 = at;
 // (Func (Array T0) (ArrayBuilder T0))
-function mutable_905(xs)
-{
-  // INTRINSIC
-}
+const mutable_905 = mutable;
 // (Func (ArrayBuilder T0) T0 (ArrayBuilder T0))
-function push_934(xs, x)
-{
-  // INTRINSIC
-}
+const push_934 = push;
 // (Func (ArrayBuilder T0) Int T0 (ArrayBuilder T0))
-function set_969(xs, i, x)
-{
-  // INTRINSIC
-}
+const set_969 = set;
 // (Func (ArrayBuilder T0) (Array T0))
-function array_992(xs)
-{
-  // INTRINSIC
-}
+const array_992 = array;
 // (Func Float2 (Array Float))
 function array_1015(v)
 {
-  return [x_60(v),y_75(v)];
+  return arrayFromJavaScript([x_60(v),y_75(v)]);
 }
 // (Func Float3 (Array Float))
 function array_1043(v)
 {
-  return [x_60(v),y_75(v),z_117(v)];
+  return arrayFromJavaScript([x_60(v),y_75(v),z_117(v)]);
 }
 // (Func Float4 (Array Float))
 function array_1076(v)
 {
-  return [x_60(v),y_75(v),z_117(v),w_165(v)];
+  return arrayFromJavaScript([x_60(v),y_75(v),z_117(v),w_165(v)]);
 }
 // (Func (Array Float) Float2)
 function float2_1101(xs)
@@ -277,17 +213,11 @@ function op_obr_cbr_1252(xs, i)
   return at_882(xs,i);
 }
 // (Func T0 T1)
-function print_1273(x)
-{
-  // INTRINSIC
-}
+const print_1273 = print;
 // (Func Bool T0)
-function assert_1285(x)
-{
-  // INTRINSIC
-}
+const assert_1285 = assert;
 // Module heron:geometry.vector:0.1
-// file inputs\geometry-vector3.heron
+// file input\geometry-vector3.heron
 // (Func Float Float Float Float3)
 function vector_98(x, y, z)
 {
@@ -298,7 +228,7 @@ function vector_120(x)
 {
   return vector_98(x,x,x);
 }
-// (Func Float2 Float3)
+// (Func Float3 Float3)
 function vector_148(v)
 {
   return vector_98(x_60(v),y_75(v),z_117(v));
@@ -308,52 +238,52 @@ function vector_179(xs)
 {
   return vector_98(op_obr_cbr_1252(xs,0),op_obr_cbr_1252(xs,1),op_obr_cbr_1252(xs,2));
 }
-// (Func Float2 (Array Float))
+// (Func Float3 (Array Float))
 function array_204(v)
 {
-  return [x_60(v),y_75(v),z_117(v)];
+  return arrayFromJavaScript([x_60(v),y_75(v),z_117(v)]);
 }
-// (Func Float2 Float)
+// (Func Float3 Float)
 function sum_234(v)
 {
   return op_add_468(op_add_468(x_60(v),y_75(v)),z_117(v));
 }
-// (Func Float2 Float2 Float)
+// (Func Float3 Float3 Float)
 function dot_257(a, b)
 {
   return sum_234(op_mul_516(a,b));
 }
-// (Func Float2 Float)
+// (Func Float3 Float)
 function length_275(v)
 {
   return sqrt_429(length2_291(v));
 }
-// (Func Float2 Float)
+// (Func Float3 Float)
 function length2_291(v)
 {
   return dot_257(v,v);
 }
-// (Func Float2 Float2 Float)
+// (Func Float3 Float3 Float)
 function distance_314(a, b)
 {
   return length_275(op_sub_492(a,b));
 }
-// (Func Float2 Float2 Float)
+// (Func Float3 Float3 Float)
 function distance2_337(a, b)
 {
   return length2_291(op_sub_492(a,b));
 }
-// (Func Float2 Float)
+// (Func Float3 Float)
 function normal_356(v)
 {
   return op_div_540(v,length_275(v));
 }
-// (Func Float2 Float3 Float3)
+// (Func Float3 Float3 Float3)
 function cross_459(a, b)
 {
   return vector_98(op_sub_492(op_mul_516(y_75(a),z_117(b)),op_mul_516(z_117(a),y_75(b))),op_sub_492(op_mul_516(z_117(a),x_60(b)),op_mul_516(x_60(a),z_117(b))),op_sub_492(op_mul_516(x_60(a),y_75(b)),op_mul_516(y_75(a),x_60(b))));
 }
-// (Func Float2 Float2 Float)
+// (Func Float3 Float3 Float)
 function reflect_494(v, n)
 {
   return op_sub_492(v,op_mul_516(op_mul_516(n,dot_257(v,n)),2));
@@ -363,17 +293,17 @@ function lerp_531(a, b, x)
 {
   return op_add_468(op_mul_516(a,op_sub_492(1,x)),op_mul_516(b,x));
 }
-// (Func Float2 Float3)
+// (Func Float3 Float3)
 function negate_568(v)
 {
   return vector_98(op_negate_804(x_60(v)),op_negate_804(y_75(v)),op_negate_804(z_117(v)));
 }
 // Module heron:std.array:0.1
-// file inputs\array.heron
+// file input\array.heron
 // (Func T0 (Array T0))
 function unit_16(x)
 {
-  return [x];
+  return arrayFromJavaScript([x]);
 }
 // (Func (Array T0) (Func T0 T1) (Array T1))
 function map_53(xs, f)
@@ -398,7 +328,7 @@ function min_140(x, y)
 // (Func T0 T0 T0)
 function max_165(x, y)
 {
-  return op_lt_eq_660(x,y) ? x : y;
+  return op_gt_eq_612(x,y) ? x : y;
 }
 // (Func (Array T0) (Array T0) (Array T0))
 function shorter_196(xs, ys)
@@ -433,17 +363,17 @@ function zip_372(xs, ys, f)
 // (Func (Array T0) (Func T0 Bool) Bool)
 function all_408(xs, p)
 {
-  return reduce_1812(xs,true,(prev, x) => op_amp_amp_730(prev,p(x)));
+  return reduce_1823(xs,true,(prev, x) => op_amp_amp_730(prev,p(x)));
 }
 // (Func (Array T0) (Func T0 Bool) Bool)
 function any_444(xs, p)
 {
-  return reduce_1812(xs,false,(prev, x) => op_bar_bar_752(prev,p(x)));
+  return reduce_1823(xs,false,(prev, x) => op_bar_bar_752(prev,p(x)));
 }
 // (Func (Array T0) (Func T0 Bool) Int)
 function count_485(xs, p)
 {
-  return reduce_1812(xs,0,(prev, x) => p(x) ? op_add_468(prev,1) : prev);
+  return reduce_1823(xs,0,(prev, x) => p(x) ? op_add_468(prev,1) : prev);
 }
 // (Func (Array T0) (Array T1) Bool)
 function eq_510(xs, ys)
@@ -455,14 +385,17 @@ function filter_578(xs, p)
 {
   let ys = mutable_905(xs);
   let i = 0;
-  for (const x of xs)
+  for (let i0=0; i0 < xs.count; ++i0)
   {
-    if (p(x))
+    const x = xs.at(i0);
     {
-      ys = set_969(ys,i++,x);
+      if (p(x))
+      {
+        ys = set_969(ys,i++,x);
+      }
+      else
+      { }
     }
-    else
-    { }
   }
   return take_917(array_992(ys),i);
 }
@@ -481,9 +414,12 @@ function prefixScan_703(xs, op)
   else
   { }
   let ys = mutable_905(repeat_607(op_obr_cbr_1252(xs,0),count_856(xs)));
-  for (const i of op_dot_dot_1217(1,count_856(ys)))
+  for (let i1=0; i1 < op_dot_dot_1217(1,count_856(ys)).count; ++i1)
   {
-    ys = set_969(ys,i,op(op_obr_cbr_1252(xs,i),op_obr_cbr_1252(ys,op_sub_492(i,1))));
+    const i = op_dot_dot_1217(1,count_856(ys)).at(i1);
+    {
+      ys = set_969(ys,i,op(op_obr_cbr_1252(xs,i),op_obr_cbr_1252(ys,op_sub_492(i,1))));
+    }
   }
   return array_992(ys);
 }
@@ -555,12 +491,12 @@ function splice_1235(xs, from, ys)
 // (Func (Array Int) Int)
 function sum_1253(xs)
 {
-  return reduce_1812(xs,0,op_add);
+  return reduce_1823(xs,0,op_add_468);
 }
 // (Func (Array Int) Int)
 function product_1271(xs)
 {
-  return reduce_1812(xs,1,op_mul);
+  return reduce_1823(xs,1,op_mul_516);
 }
 // (Func (Array Int) Int)
 function average_1293(xs)
@@ -570,17 +506,25 @@ function average_1293(xs)
 // (Func (Array T0) T0)
 function min_1315(xs)
 {
-  return reduce_1812(xs,op_obr_cbr_1252(xs,0),min);
+  return reduce_1823(xs,op_obr_cbr_1252(xs,0),min_140);
 }
 // (Func (Array T0) T0)
 function max_1337(xs)
 {
-  return reduce_1812(xs,op_obr_cbr_1252(xs,0),max);
+  return reduce_1823(xs,op_obr_cbr_1252(xs,0),max_165);
 }
 // (Func (ArrayBuilder T0) Int Int (ArrayBuilder T0))
-function partition_1491(a, lo, hi)
+function swapElements_1403(xs, i, j)
 {
-  let pivot = op_obr_cbr_1252(a,lo);
+  let tmp = op_obr_cbr_1252(xs,i);
+  xs = set_969(xs,i,op_obr_cbr_1252(xs,j));
+  xs = set_969(xs,j,tmp);
+  return xs;
+}
+// (Func (ArrayBuilder T0) Int Int Int)
+function partition_1518(a, lo, hi)
+{
+  let p = op_obr_cbr_1252(a,lo);
   let i = op_sub_492(lo,1);
   let j = op_add_468(hi,1);
   while (true)
@@ -589,118 +533,136 @@ function partition_1491(a, lo, hi)
     {
       i++;
     }
-    while (op_lt_636(op_obr_cbr_1252(a,i),pivot))
+    while (op_lt_636(op_obr_cbr_1252(a,i),p))
     do
     {
       j--;
     }
-    while (op_gt_588(op_obr_cbr_1252(a,j),pivot))
+    while (op_gt_588(op_obr_cbr_1252(a,j),p))
     if (op_gt_eq_612(i,j))
     {
-      return a;
+      return j;
     }
     else
     { }
-    let tmp = op_obr_cbr_1252(a,i);
-    a = set_969(a,i,op_obr_cbr_1252(a,j));
-    a = set_969(a,j,tmp);
+    swapElements_1403(a,i,j);
   }
-  return a;
 }
-// (Func (ArrayBuilder Int) Int Int (ArrayBuilder Int))
-function qsort_1583(a, lo, hi)
+// (Func (ArrayBuilder T0) Int Int (ArrayBuilder T0))
+function qsort_1587(a, lo, hi)
 {
   if (op_lt_636(lo,hi))
   {
-    let p = op_obr_cbr_1252(a,lo);
-    a = partition_1491(a,lo,hi);
-    a = qsort_1583(a,lo,p);
-    a = qsort_1583(a,op_add_468(p,1),hi);
+    let p = partition_1518(a,lo,hi);
+    qsort_1587(a,lo,p);
+    qsort_1587(a,op_add_468(p,1),hi);
   }
   else
   { }
   return a;
 }
-// (Func (Array Int) (Array Int))
-function sort_1613(xs)
+// (Func (Array T0) (Array T0))
+function sort_1617(xs)
 {
-  return array_992(qsort_1583(mutable_905(xs),0,op_sub_492(count_856(xs),1)));
+  return array_992(qsort_1587(mutable_905(xs),0,op_sub_492(count_856(xs),1)));
 }
 // (Func (Array Int) Int)
-function median_1706(xs)
+function median_1717(xs)
 {
-  let ys = sort_1613(xs);
-  return op_eq_eq_708(op_mod_564(count_856(ys),2),0) ? op_obr_cbr_1252(ys,op_div_540(count_856(ys),2)) : op_add_468(op_obr_cbr_1252(ys,op_sub_492(op_div_540(count_856(ys),2),1)),op_div_540(op_obr_cbr_1252(ys,op_add_468(op_div_540(count_856(ys),2),1)),2));
+  let ys = sort_1617(xs);
+  return op_eq_eq_708(op_mod_564(op_sub_492(count_856(ys),1),2),0) ? op_obr_cbr_1252(ys,op_div_540(op_sub_492(count_856(ys),1),2)) : op_add_468(op_obr_cbr_1252(ys,op_div_540(op_sub_492(count_856(ys),2),2)),op_div_540(op_obr_cbr_1252(ys,op_div_540(count_856(ys),2)),2));
 }
 // (Func (Array T0) Int Bool)
-function inRange_1737(xs, n)
+function inRange_1748(xs, n)
 {
   return op_amp_amp_730(op_gt_eq_612(n,0),op_lt_636(n,count_856(xs)));
 }
 // (Func (Array T0) T1)
-function last_1760(xs)
+function last_1771(xs)
 {
   return op_obr_cbr_1252(xs,op_sub_492(count_856(xs),1));
 }
 // (Func (Array T0) T0)
-function first_1775(xs)
+function first_1786(xs)
 {
   return op_obr_cbr_1252(xs,0);
 }
 // (Func (Array T0) T1 (Func T1 T0 T1) T1)
-function reduce_1812(xs, acc, f)
+function reduce_1823(xs, acc, f)
 {
-  for (const x of xs)
+  for (let i2=0; i2 < xs.count; ++i2)
   {
-    acc = f(acc,x);
+    const x = xs.at(i2);
+    {
+      acc = f(acc,x);
+    }
   }
   return acc;
 }
 // (Func (Array (Array T0)) (Array T1))
-function flatten_1829(xs)
+function flatten_1840(xs)
 {
-  return reduce_1812(xs,[],concat);
+  return reduce_1823(xs,arrayFromJavaScript([]),concat_1136);
 }
 // (Func (Array T0) (Func T0 (Array T1)) (Array T2))
-function flatMap_1851(xs, f)
+function flatMap_1862(xs, f)
 {
-  return flatten_1829(map_53(xs,f));
+  return flatten_1840(map_53(xs,f));
 }
 // Module heron:tests:0.1
-// file inputs\test.heron
+// file input\test.heron
 // imports heron:std.array:0.1
 // (Func T0)
 function main_22()
 {
-  simpleTest_330();
+  simpleTest_422();
 }
 // (Func T0)
-function simpleTest_330()
+function simpleTest_422()
 {
-  let xs = [1,11,3];
+  let xs = arrayFromJavaScript([1,11,3]);
   print_1273("'Expect [1, 11, 3]'");
   print_1273(xs);
   print_1273("'Expect 1, 11, 3'");
-  for (const x of xs)
+  for (let i3=0; i3 < xs.count; ++i3)
   {
-    print_1273(x);
+    const x = xs.at(i3);
+    {
+      print_1273(x);
+    }
   }
   print_1273("'Expect 1'");
   print_1273(op_obr_cbr_1252(xs,0));
   print_1273("'Expect 3'");
   print_1273(count_856(xs));
   print_1273("'Expect 1'");
-  print_1273(first_1775(xs));
+  print_1273(first_1786(xs));
   print_1273("'Expect 3'");
-  print_1273(last_1760(xs));
+  print_1273(last_1771(xs));
   print_1273("'Expect 1'");
   print_1273(min_1315(xs));
   print_1273("'Expect 11'");
   print_1273(max_1337(xs));
+  let ys = mutable_905(xs);
+  ys = set_969(ys,1,5);
+  print_1273("'Expect 5'");
+  print_1273(op_obr_cbr_1252(ys,1));
+  print_1273("'Expect 1, 3, 11'");
+  let zs = sort_1617(xs);
+  for (let i4=0; i4 < zs.count; ++i4)
+  {
+    const z = zs.at(i4);
+    {
+      print_1273(z);
+    }
+  }
   print_1273("'Expect 3'");
-  print_1273(median_1706(xs));
+  print_1273(median_1717(xs));
   print_1273("'Expect 15'");
   print_1273(sum_1253(xs));
   print_1273("'Expect 5'");
   print_1273(average_1293(xs));
 }
+
+main_22();
+process.exit();

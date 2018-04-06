@@ -22,7 +22,8 @@ const flavor = 'std';
 const ext = '.heron';
 
 // Module resolution
-export const moduleFolder = path.join('.', 'inputs');
+export const moduleFolder = path.join('.', 'input');
+export const outputFolder = path.join('.', 'output');
 export const intrinsicModules = ['intrinsics'];
 export const modules: HeronAstNode[] = [];
 

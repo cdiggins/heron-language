@@ -353,3 +353,7 @@ http://manu.sridharan.net/files/OOPSLA16Inference.pdf
 
 //==
 
+Basically the problem is only with "ArrayBuilder" / "Array" conversions. 
+
+If I find myself unifying two type constants, i had better choose the "unified" type.
+Right now getUnifiedType only works on TypeVariables.  

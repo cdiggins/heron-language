@@ -1,9 +1,9 @@
 import * as Myna from "myna-parser";
 import { heronGrammar, parseHeron } from './heron-parser';
-import { toJavaScript, HeronToJs } from "./heron-to-js";
+import { toJavaScript, HeronToJs, funcDefName } from "./heron-to-js";
 import { HeronAstNode, preprocessAst, parseLocation, visitAst, throwError } from "./heron-ast-rewrite";
 import { heronToText } from "./heron-to-text";
-import { parseFile, parseModule, createPackage, moduleFolder } from "./heron-compiler";
+import { parseFile, parseModule, createPackage, moduleFolder, outputFolder } from "./heron-compiler";
 import { Ref } from "./heron-refs";
 import { Package, Module } from "./heron-package";
 import { FuncDef, FuncParamDef } from "./heron-defs";
@@ -13,6 +13,7 @@ import { getTraits } from "./heron-traits";
 import { computeFuncType, callFunction, typeStrategy } from "./heron-types";
 import { parseType } from "./type-parser";
 import { PolyType, TypeResolver, normalizeType } from "./type-system";
+import { library, intrinsics } from "./js-intrinsics";
 
 const m = Myna.Myna;
 const g = heronGrammar;
@@ -193,26 +194,14 @@ function testParseTypes() {
         testParseType(ts);
 }
 
-function testCallFunctions() {
-    const map = "(Func (Array 'A) (Func 'A 'B) (Array 'B))";
-    const tests = [
-        ["(Func 'A 'A)", "(Num)"],
-        ["(Func 'A 'B ('B 'A))", "(Num Bool)"],
-        [map, "((Array Num) (Func Num Str))"],        
-    ];
-    for (const t of tests) {
-        const f = parseType(t[0]) as PolyType;
-        const args = parseType(t[1]) as PolyType;
-
-        // TODO: the null is supposed to be a TypeResolver
-        const u = new TypeResolver(typeStrategy);
-        const r = callFunction(f, args.types, u);
-        console.log("func   : " + f);
-        console.log("args   : " + args);
-        console.log("result : " + r);
-    }
+function getIntrinsicCode(k: string): string {
+    const v = intrinsics[k];
+    return `const ${k} = ${v};`;
 }
 
+function intrinsicCode(): string {
+    return Object.keys(intrinsics).map(getIntrinsicCode).join('\n');
+}
 
 function tests() {
     //testParsingRules();
@@ -236,9 +225,15 @@ function tests() {
     }
     const now = new Date();
     const header = '// Generated using Heron on ' + now.toDateString() + ' ' + now.toTimeString() + '\n'; 
+
+    //const preamble = fs.readFileSync(path.join('src', 'js-intrinsics.ts'), 'utf-8');
     const body = toJs.cb.toString();
-    const text = header + body;
-    fs.writeFileSync(path.join(moduleFolder, 'output.js'), text);
+    const preamble = intrinsicCode();
+    const main = pkg.findFunction("main");
+    const entry = funcDefName(main) + '();\n';
+    const exit = "process.exit();\n";
+    const text = header + library + preamble + body + '\n' + entry + exit;
+    fs.writeFileSync(path.join(outputFolder, 'output.js'), text);
 
     //outputPackageStats(pkg);
     // find the main entry point and call into it. 
@@ -263,6 +258,11 @@ function tests() {
     //outputTraits(pkg);
 
     outputFunctionTypes(pkg);
+
+    /*
+    for (const k in intrinsics)
+        console.log(intrinsics[k].toString());
+    */
 
     console.log('Done');
 }

@@ -26,6 +26,11 @@ export class Expr {
 
     // Set manually by the type evaluator
     type: Type;
+
+    // If the type is a function set, there are multiple defs, this indicates which one. 
+    // TODO: maybe the defs and the type should be updated at the same time, rather than leaving us 
+    // to check these values. 
+    functionIndex: number = 0;
 }
 
 export class PostfixDec extends Expr {
@@ -179,10 +184,7 @@ export class FunCall extends Expr {
 
     toString(): string {
         return this.func + '(' + this.args.join(',') + ')';
-    }
-    
-    // A func could be a number of different functions.
-    functionIndex: number = 0;
+    }    
 }
 
 // Conditional (ternary operator) expressions. 

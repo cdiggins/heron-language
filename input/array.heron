@@ -18,7 +18,7 @@ module heron:std.array:0.1
         = x <= y ? x : y;
 
     function max(x, y) 
-        = x <= y ? x : y;
+        = x >= y ? x : y;
    
     function shorter(xs, ys) 
         = xs.count <= ys.count ? xs : ys;
@@ -126,39 +126,42 @@ module heron:std.array:0.1
     function max(xs) 
         = xs.reduce(xs[0], max);
 
+    function swapElements(xs, i, j) {
+        var tmp = xs[i];
+        xs[i] = xs[j];
+        xs[j] = tmp;
+        return xs;
+    }
+
     function partition(a, lo, hi) {
-        var pivot = a[lo];
-        var i = lo-1;
-        var j = hi+1;
+        var p = a[lo];
+        var i = lo - 1;
+        var j = hi + 1;
         while (true) {
-            do { i++; } while (a[i] < pivot);
-            do { j--; } while (a[j] > pivot);
-            if (i >= j) return a;
-            var tmp = a[i];
-            a[i] = a[j];
-            a[j] = tmp;
+            do { i++; } while (a[i] < p);
+            do { j--; } while (a[j] > p);
+            if (i >= j) return j;
+            swapElements(a, i, j);
         }
-        return a;
     }
 
     function qsort(a, lo, hi) {
         if (lo < hi) {
-            var p = a[lo]; 
-            a = partition(a, lo, hi);
-            a = qsort(a, lo, p);
-            a = qsort(a, p+1, hi);
+            var p = partition(a, lo, hi);
+            qsort(a, lo, p);
+            qsort(a, p+1, hi);
         }
         return a;
     }
 
     function sort(xs) 
         = xs.mutable.qsort(0, xs.count-1).array;    
-
+    
     function median(xs) {        
-        var ys = xs.sort;
-        return ys.count % 2 == 0 
-            ? ys[ys.count / 2] 
-            : ys[ys.count / 2 - 1] + ys[ys.count / 2 + 1] / 2;
+        var ys = xs.sort;        
+        return (ys.count - 1) % 2 == 0
+            ? ys[(ys.count - 1) / 2]
+            : ys[(ys.count - 2) / 2] + ys[ys.count / 2] / 2;            
     }
 
     function inRange(xs, n) 

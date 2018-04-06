@@ -22,6 +22,13 @@ export class Package
     get refs(): Ref[] {
         return this.scope.allRefs();
     }
+
+    findFunction(name: string): FuncDef{
+        for (const m of this.modules)
+            for (const f of m.functions)
+                if (f.name === name)
+                    return f;                        
+    }
     
     get allFuncDefs(): FuncDef[] {
         let r: FuncDef[] = [];

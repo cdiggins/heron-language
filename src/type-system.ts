@@ -242,10 +242,15 @@ export class TypeResolver
         const rtypes : Type[] = [];
         for (let i=0; i < list1.types.length; ++i)
             rtypes.push(this.unifyTypes(list1.types[i], list2.types[i], depth));
+        
         // TODO: this might not doing the correct thing w.r.t. schameas. 
         // Both lists have their own scheme. I know that the types are effcecitvely equivalent.
         // By keeping just one, I know that it is has its computed schem kept intact. 
-        return list1;
+        //return list1;
+
+        // TEMP: experimenting with potentially the correct way to do this! 
+        // This is working better 
+        return polyType(rtypes);
     }
 
     /** All unifiers that refer to varName as the unifier are pointed to the new unifier. */ 
