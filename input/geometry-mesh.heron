@@ -1,16 +1,13 @@
 language heron:std:0.1;
 
+// http://prideout.net/blog/?p=44
+// https://github.com/mrdoob/three.js/blob/master/src/geometries/ParametricGeometry.js
+// 
 module heron:geometry.mesh:0.1
 {
     function mesh(vertices) 
         = mesh(vertices, vertices.indices);
     
-    function mesh(vertices, indices) 
-        = mesh(vertices, indices, origin.repeat(0), origin.repeat(0));
-
-    function mesh(vertices, indices, colors, uvs)
-        = { vertices=vertices, indices=indices, colors=colors, uvs=uvs };
-
     var tetrahedron 
         = mesh([1, 1, 1,   -1, -1, 1,   -1, 1, -1,   1, -1, -1], 
 	           [2, 1, 0,    0, 3, 2,	1, 3, 0,	 2, 3, 1]);
@@ -23,12 +20,21 @@ module heron:geometry.mesh:0.1
     function rescale(v, from, length)
         = from + (v * length);
 
-    /* TODO: finish this. 
-    function quadStripToMesh(vertices, rows)
-        = vertices.indices.
-    */
-
-    /*
+    function quadStripToMesh(vertices, rows) {
+        var cols = vertices.count / 3 / rows;
+        var indices = [].mutable;
+        for (var r of 0..rows) {
+            for (var c of 0..cols) {
+                var tri1 = [c + r * cols, c + r * cols + 1, c + (r + 1) * cols];
+                var tri2 = [c + (r + 1) * cols + 1), c + (r + 1) * cols, c + (r * cols) + 1];
+                indices = indices.push(tri1);
+                indices = indices.push(tri2);            
+            }
+        }
+        return mesh(vertices, indices.array);
+    }
+    
+    /* TODO: finish converting this to idiomatic heron.
     function sphere(radius, widthSegments, heightSegment, phiStart, phiLength, thetaStart, thetaLength) {
         var indices = [];
         var vertices = [];

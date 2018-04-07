@@ -14,6 +14,7 @@ module heron:intrinsics:0.1
     type ArrayBuilder;
     type Func;
     type Any;
+    type Mesh;
 
     // Intrinsic (built-in) functions. 
     intrinsic float2(x: Float, y: Float): Float2;    
@@ -81,6 +82,11 @@ module heron:intrinsics:0.1
     // Array builder functions77
     intrinsic mutable<T>(xs: Array<T>): ArrayBuilder<T>;
     intrinsic push<T>(xs: ArrayBuilder<T>, x: T): ArrayBuilder<T>;
+    intrinsic push<T>(xs: ArrayBuilder<T>, ys: Array<T>): ArrayBuilder<T> {
+        for (var y of ys)
+            xs = xs.push(y);
+        return xs;
+    }
     intrinsic set<T>(xs: ArrayBuilder<T>, i: Int, x: T): ArrayBuilder<T>;
     intrinsic array<T>(xs: ArrayBuilder<T>): Array<T>;
     
@@ -105,7 +111,12 @@ module heron:intrinsics:0.1
     var pi = 3.14159265358979323846;
     var e = 2.71828182845904523536;
 
-    // Yep. We need this for now.
+    // Some thing we need for now.
     intrinsic print(x);
-    intrinsic assert(x: Bool);
+    intrinsic assert(x: Bool);    
+
+    // Geometry stuff
+    intrinsic mesh(vertices: Array<Float>, indices: Array<Int>): Mesh;
+    intrinsic vertices(mesh: Mesh): Array<Float>;
+    intrinsic indices(mesh: Mesh): Array<Int>;
 }
