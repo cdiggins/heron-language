@@ -79,5 +79,8 @@ export const intrinsics =
     set: (xs, i, x) => (xs.array[i] = x, xs),
     array: (xs) => xs, 
     print: 'console.log',
-    assert: (condition) => { if (!condition) throw new Error("assertion failed"); }
+    assert: (condition) => { if (!condition) throw new Error("assertion failed"); },
+    mesh: (vertexBuffer, indexBuffer) => ({ vertexBuffer, indexBuffer }),
+    vertexBuffer: (mesh) => mesh.vertexBuffer,
+    indexBuffer: (mesh) => mesh.indexBuffer,
 };

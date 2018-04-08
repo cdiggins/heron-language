@@ -1,16 +1,116 @@
 language heron:std:0.1;
 
-// http://prideout.net/blog/?p=44
+// https://prideout.net/blog/?p=44
 // https://github.com/mrdoob/three.js/blob/master/src/geometries/ParametricGeometry.js
-// 
+// https://paulbourke.net/geometry/
+// https://github.com/mrdoob/three.js/tree/master/src/geometries
+
+// TODO: https://github.com/mrdoob/three.js/blob/master/src/geometries/TorusKnotGeometry.js
 module heron:geometry.mesh:0.1
 {
+    import heron:std.array:0.1;
+    import heron:geometry.vector:0.1;
+
     function mesh(vertices) 
         = mesh(vertices, vertices.indices);
     
-    var tetrahedron 
+    function tetrahedron()
         = mesh([1, 1, 1,   -1, -1, 1,   -1, 1, -1,   1, -1, -1], 
 	           [2, 1, 0,    0, 3, 2,	1, 3, 0,	 2, 3, 1]);
+
+    // Given a number of vertices arranged as a quad strip of "rows".
+    function quadStripToMesh(vertices, rows) {
+        var cols = vertices.count / 3 / rows;
+        var indices = [].mutable;
+        for (var r in 0..rows) {
+            for (var c in 0..cols) {                
+                // Rows increase from bottom to top
+                // Columns increase from left to right
+                // row r + 1 = ... d c ... 
+                // row r     = ... a b ... 
+                var a = c + r * cols;
+                var b = a + 1;
+                var c = b + cols;
+                var d = c - 1;
+                indices = indices.pushMany([a, b, d]);
+                indices = indices.pushMany([c, d, b]);            
+            }
+        }
+        return mesh(vertices, indices.array);
+    }
+    
+    // Given UV coordinates u=[0,1), v=[0,1), and a major radius (donut) 
+    // and a minor radius (tube) computes a spot on the torus
+    function torusPoint(u, v, r1, r2)
+        = vector(
+			(r1 + r2 * cos(v)) * cos(u),
+			(r1 + r2 * cos(v)) * sin(u),
+			r2 * sin(v));
+
+    // Computes a point on a cylinder givem uv coordinates 
+    function cylinderPoint(u, v) 
+        = vector(sin(u), v, cos(u));
+
+    // Computes a point on a sphere given uv coordintaes 
+    function spherePoint(u, v)
+        = vector(-cos(u) * sin(v), cos(v), sin(u) * sin(v));
+
+    // https://github.com/mrdoob/three.js/blob/master/src/geometries/DodecahedronGeometry.js
+    function dodecahedron() =
+	    var t = (1 + sqrt(5)) / 2 in
+	    var r = 1 / t in 
+        mesh([
+            -1, -1, -1,	-1, -1, 1,
+            -1, 1, -1, -1, 1, 1,
+            1, -1, -1, 1, -1, 1,
+            1, 1, -1, 1, 1, 1,
+
+            // (0, +/-1/theta, +/-theta)
+            0, -r, -t, 0, -r, t,
+            0, r, -t, 0, r, t,
+
+            // (+/-1/theta, +/-theta, 0)
+            -r, -t, 0, -r, t, 0,
+            r, -t, 0, r, t, 0,
+
+            // (+/-theta, 0, +/-1/theta)
+            -t, 0, -r, t, 0, -r,
+            -t, 0, r, t, 0, r
+        ],
+        [
+            3, 11, 7, 	3, 7, 15, 	3, 15, 13,
+            7, 19, 17, 	7, 17, 6, 	7, 6, 15,
+            17, 4, 8, 	17, 8, 10, 	17, 10, 6,
+            8, 0, 16, 	8, 16, 2, 	8, 2, 10,
+            0, 12, 1, 	0, 1, 18, 	0, 18, 16,
+            6, 10, 2, 	6, 2, 13, 	6, 13, 15,
+            2, 16, 18, 	2, 18, 3, 	2, 3, 13,
+            18, 1, 9, 	18, 9, 11, 	18, 11, 3,
+            4, 14, 12, 	4, 12, 0, 	4, 0, 8,
+            11, 9, 5, 	11, 5, 19, 	11, 19, 7,
+            19, 5, 14, 	19, 14, 4, 	19, 4, 17,
+            1, 12, 14, 	1, 14, 5, 	1, 5, 9
+        ]);
+
+    // https://github.com/mrdoob/three.js/blob/master/src/geometries/IcosahedronGeometry.js
+    function icosahedron() 
+        = var t = (1 + sqrt(5)) / 2 in
+            mesh([
+                -1, t, 0,   1, t, 0,   -1, -t, 0,   1, -t, 0,
+                0, -1, t,   0, 1, t,   0, -1, -t,   0, 1, -t,
+                t, 0, -1,   t, 0, 1,   -t, 0, -1,   -t, 0, 1
+            ],
+            [
+                0, 11, 5, 	0, 5, 1, 	0, 1, 7, 	0, 7, 10, 	0, 10, 11,
+                1, 5, 9, 	5, 11, 4,	11, 10, 2,	10, 7, 6,	7, 1, 8,
+                3, 9, 4, 	3, 4, 2,	3, 2, 6,	3, 6, 8,	3, 8, 9,
+                4, 9, 5, 	2, 4, 11,	6, 2, 10,	8, 6, 7,	9, 8, 1
+            ]);   
+
+    // Converts an array of vectors into a vertex buffer 
+    // which is an array of floating point numbers 
+    function vectorsToVertexBuffer(xs) 
+        = xs.flatMap(v => [v.x, v.y, v.z]);
 
     // Converts from UV coordinates to a float3
     function vector(uv: Float2)
@@ -20,67 +120,12 @@ module heron:geometry.mesh:0.1
     function rescale(v, from, length)
         = from + (v * length);
 
-    function quadStripToMesh(vertices, rows) {
-        var cols = vertices.count / 3 / rows;
-        var indices = [].mutable;
-        for (var r of 0..rows) {
-            for (var c of 0..cols) {
-                var tri1 = [c + r * cols, c + r * cols + 1, c + (r + 1) * cols];
-                var tri2 = [c + (r + 1) * cols + 1), c + (r + 1) * cols, c + (r * cols) + 1];
-                indices = indices.push(tri1);
-                indices = indices.push(tri2);            
-            }
-        }
-        return mesh(vertices, indices.array);
-    }
-    
-    /* TODO: finish converting this to idiomatic heron.
-    function sphere(radius, widthSegments, heightSegment, phiStart, phiLength, thetaStart, thetaLength) {
-        var indices = [];
-        var vertices = [];
-        var normals = [];
-        var uvs = [];
-
-        // generate vertices, normals and uvs
-
-        for ( var iy in 0 .. heightSegments ) 
-        {
-            var verticesRow = [];
-            var v = iy / heightSegments;
-
-            for ( var ix in 0 .. widthSegments ) {
-
-                var u = ix / widthSegments;
-
-                // vertex
-
-                var vtx = vector(x, y, z);
-                vertices.push(vtx);
-
-                // normal
-                var normal = vector(x, y, z).normalize;
-                normals.push(normal);
-
-                // uv
-                var uv = vector(u, 1 - v, 0);
-                uvs.push(uv);
-                verticesRow.push( index ++ );
-            }
-
-            grid.push( verticesRow );
-        }
-
-        // indices
-        for ( var iy in 0 .. heightSegments ) {
-            for ( var ix in 0 .. widthSegments ) {
-                var a = grid[ iy ][ ix + 1 ];
-                var b = grid[ iy ][ ix ];
-                var c = grid[ iy + 1 ][ ix ];
-                var d = grid[ iy + 1 ][ ix + 1 ];
-                if ( iy !== 0 || thetaStart > 0 ) indices.push( a, b, d );
-                if ( iy !== heightSegments - 1 || thetaEnd < PI ) indices.push( b, c, d );
-            }        
-        }
-    }
-    */
-}   
+    // Given a function that converts UV coordinates to vectors, creates an 
+    // array of points (uCount x vCount) starting at uStart,vStart (0,0) going to 
+    // uLength, vLength (1,1)
+    function meshFromUV(f, uCount, vCount, uStart, vStart, uLength, vLength) 
+        = cartesianProduct(0..vCount, 0..vCount, 
+            (u, v) => f(
+                u / uCount * uLength + uStart, 
+                v / vCount * vLength + vStart));
+}

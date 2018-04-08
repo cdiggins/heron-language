@@ -61,6 +61,27 @@ module heron:intrinsics:0.1
     intrinsic op<  <T>(x: T, y: T): Bool;
     intrinsic op<= <T>(x: T, y: T): Bool;
 
+    // Specialized binary operators 
+    /*
+    intrinsic op+ (x: Float2, y: Float2): Float2;
+    intrinsic op- (x: Float2, y: Float2): Float2;
+    intrinsic op* (x: Float2, y: Float2): Float2;
+    intrinsic op/ (x: Float2, y: Float2): Float2;
+    intrinsic op% (x: Float2, y: Float2): Float2;
+
+    intrinsic op+ (x: Float3, y: Float3): Float3;
+    intrinsic op- (x: Float3, y: Float3): Float3;
+    intrinsic op* (x: Float3, y: Float3): Float3;
+    intrinsic op/ (x: Float3, y: Float3): Float3;
+    intrinsic op% (x: Float3, y: Float3): Float3;
+
+    intrinsic op+ (x: Float4, y: Float4): Float4;
+    intrinsic op- (x: Float4, y: Float4): Float4;
+    intrinsic op* (x: Float4, y: Float4): Float4;
+    intrinsic op/ (x: Float4, y: Float4): Float4;
+    intrinsic op% (x: Float4, y: Float4): Float4;
+    */
+    
     // Equality operators 
     intrinsic op!= <T>(x: T, y: T): Bool;
     intrinsic op== <T>(x: T, y: T): Bool;
@@ -82,14 +103,9 @@ module heron:intrinsics:0.1
     // Array builder functions77
     intrinsic mutable<T>(xs: Array<T>): ArrayBuilder<T>;
     intrinsic push<T>(xs: ArrayBuilder<T>, x: T): ArrayBuilder<T>;
-    intrinsic push<T>(xs: ArrayBuilder<T>, ys: Array<T>): ArrayBuilder<T> {
-        for (var y of ys)
-            xs = xs.push(y);
-        return xs;
-    }
     intrinsic set<T>(xs: ArrayBuilder<T>, i: Int, x: T): ArrayBuilder<T>;
     intrinsic array<T>(xs: ArrayBuilder<T>): Array<T>;
-    
+
     // Some helpers (todo: move to a separate library)
     function array(v: Float2) = [v.x, v.y];    
     function array(v: Float3) = [v.x, v.y, v.z];
@@ -99,6 +115,12 @@ module heron:intrinsics:0.1
     function float3(xs) = float3(xs[0], xs[1], xs[2]);
     function float4(xs) = float4(xs[0], xs[1], xs[2], xs[3]);    
 
+    function pushMany<T>(xs: ArrayBuilder<T>, ys: Array<T>): ArrayBuilder<T> {
+        for (var y in ys)
+            xs = xs.push(y);
+        return xs;
+    }
+    
     // Range operator 
     function op.. (from: Int, upto: Int): Array<Int>
         = array(upto - from, (i) => i + upto);
@@ -116,7 +138,7 @@ module heron:intrinsics:0.1
     intrinsic assert(x: Bool);    
 
     // Geometry stuff
-    intrinsic mesh(vertices: Array<Float>, indices: Array<Int>): Mesh;
-    intrinsic vertices(mesh: Mesh): Array<Float>;
-    intrinsic indices(mesh: Mesh): Array<Int>;
+    intrinsic mesh(vertexBuffer: Array<Float>, indexBuffer: Array<Int>): Mesh;
+    intrinsic vertexBuffer(mesh: Mesh): Array<Float>;
+    intrinsic indexBuffer(mesh: Mesh): Array<Int>;
 }

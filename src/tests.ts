@@ -9,7 +9,6 @@ import { Package, Module } from "./heron-package";
 import { FuncDef, FuncParamDef } from "./heron-defs";
 //import { Evaluator, Types, union, analyzeFunctions, findFunc } from "./heron-eval";
 import { FunCall, Expr } from "./heron-expr";
-import { getTraits } from "./heron-traits";
 import { computeFuncType, callFunction, typeStrategy } from "./heron-types";
 import { parseType } from "./type-parser";
 import { PolyType, TypeResolver, normalizeType } from "./type-system";
@@ -78,6 +77,7 @@ const ruleTests = [
     [g.expr, ['(3)', '(3 + 2)', '(c)', '(a)+(b)', 'a+(b)', 'a+b+c', 'a?b:c', 'a?b+c:d', 'a?b:c+d','a?(b):c', '(a)?b:c'], []],
     [g.expr, ['a?b:1(c)'], ['f > max ? max : (f < min ? min) : f']], 
     [g.expr, ['op+', 'f(op+)', 'f(0, op+)'], []],
+    [g.expr, ['(r1+r2*cos(v))', '(r1 + r2 * cos(v))', '( r1 + r2 * cos(v) )', '( r1 + r2 * cos(v) ) * cos(u)'], []],
     [g.expr, ['a?b:c', 'a?b:c?d:e', 'a?b:(c<d?e:f)', 'a>3?b:c', 'a > 3 ? b : c', 'f > max ? max : (f < min ? min : f)'], []],
     [g.statement, [
             'var x = 0;',
@@ -151,16 +151,6 @@ function outputPackageStats(pkg: Package) {
         console.log(refDetails(d));
 }
 
-function outputTraits(pkg: Package) {
-    const traits = getTraits(pkg);
-    for (const t of traits) {
-        console.log("Trait " + t.type);
-        for (const f of t.funcs) {
-            console.log("  " +f.toString())
-        }
-    }
-}
-
 function outputFunctionTypes(pkg: Package) {
     for (const f of pkg.allFuncDefs) {
         let t = computeFuncType(f);
@@ -208,7 +198,7 @@ function tests() {
     //testParseTypes();
     //testCallFunctions();
 
-    let inputFiles = ['geometry-vector3', 'array', 'test'];
+    let inputFiles = ['geometry-vector3', 'geometry-mesh', 'array', 'test'];
     let pkg = createPackage(inputFiles);
     
     /*

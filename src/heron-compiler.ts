@@ -72,8 +72,16 @@ export function parseModule(moduleName: string): HeronAstNode {
 }
 
 export function parseFile(f: string): HeronAstNode {
-    const outputFile = f.substring(0, f.lastIndexOf('.')) + '.output.heron';
-    const code = fs.readFileSync(f, 'utf-8');
-    const ast = parseHeron(code, g.file);     
-    return ast;
+    try 
+    {
+        const outputFile = f.substring(0, f.lastIndexOf('.')) + '.output.heron';
+        const code = fs.readFileSync(f, 'utf-8');
+        const ast = parseHeron(code, g.file);     
+        return ast;
+    } 
+    catch (e) 
+    {
+        console.log("An error occurred while parsing " + f);
+        console.log(e.message);
+    }
 }

@@ -133,12 +133,36 @@ function callFunction(funOriginal, args, argTypes, mainUnifier) {
     return u.getUnifiedType(returnType);
 }
 exports.callFunction = callFunction;
+function computeFuncTypeFromSig(f, genParams) {
+    var u = new type_system_1.TypeResolver(exports.typeStrategy);
+    var t = genericFuncType(f.params.length);
+    var hasSpecType = false;
+    for (var i = 0; i < f.params.length; ++i) {
+        var param = f.params[i];
+        var paramType = typeFromNode(f.params[i].typeNode, genParams);
+        if (paramType !== null) {
+            hasSpecType = true;
+            param.type = paramType;
+            u.unifyTypes(getArgType(t, i), paramType);
+        }
+    }
+    var retType = typeFromNode(f.retTypeNode, genParams);
+    if (retType) {
+        hasSpecType = true;
+        u.unifyTypes(getReturnType(t), retType);
+    }
+    if (hasSpecType)
+        return u.getUnifiedType(t);
+    else
+        return t;
+}
+exports.computeFuncTypeFromSig = computeFuncTypeFromSig;
 function computeFuncType(f) {
     if (!f.type) {
-        f.type = genericFuncType(f.params.length);
         var sigNode = heron_ast_rewrite_1.validateNode(f.node.children[0], "funcSig");
         var genParamsNode = heron_ast_rewrite_1.validateNode(sigNode.children[1], "genericParams");
         var genParams = genParamsNode.children.map(function (p) { return p.allText; });
+        f.type = computeFuncTypeFromSig(f, genParams);
         var u = new type_system_1.TypeResolver(exports.typeStrategy);
         var te = new heron_type_evaluator_1.TypeEvaluator(f.params, genParams, f.body, f.retTypeNode, exports.typeStrategy, u);
         f.type = te.getFinalResult();

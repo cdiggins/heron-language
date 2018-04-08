@@ -184,4 +184,7 @@ module heron:std.array:0.1
 
     function flatMap(xs, f)       
         = xs.map(f).flatten;
+
+    function cartesianProduct(xs, ys, f) 
+        = xs.flatMap(x => ys.map(y => f(x, y)));        
 }

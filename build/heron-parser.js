@@ -1,7 +1,4 @@
 "use strict";
-// Inspired by: 
-// https://github.com/burg/glsl-simulator/blob/master/src/glsl.pegjs
-// https://www.khronos.org/registry/gles/specs/2.0/GLSL_ES_Specification_1.0.17.pdf
 Object.defineProperty(exports, "__esModule", { value: true });
 var myna_parser_1 = require("myna-parser");
 // Defines a Myna grammar for parsing Cat expressions that support the introduction and usage of scoped variables. 
@@ -13,8 +10,8 @@ var g = new function () {
     // Comments and whitespace 
     this.fullComment = myna_parser_1.Myna.guardedSeq("/*", myna_parser_1.Myna.advanceUntilPast("*/"));
     this.lineComment = myna_parser_1.Myna.seq("//", this.untilEol);
-    this.comment = this.fullComment.or(this.lineComment).ws.oneOrMore.setName("heron", "comment");
-    this.ws = this.comment.or(myna_parser_1.Myna.ws).setName("heron", "ws");
+    this.comment = this.fullComment.or(this.lineComment);
+    this.ws = this.comment.or(myna_parser_1.Myna.atWs.advance.oneOrMore).zeroOrMore;
     // Helper for whitespace delimited sequences that must start with a specific value
     function guardedWsDelimSeq() {
         var rules = [];
@@ -24,6 +21,7 @@ var g = new function () {
         var tmp = [_this.ws];
         for (var i = 0; i < rules.length; ++i) {
             var r = rules[i];
+            // TODO: I shouldn't have to setName on the assert rule
             if (i > 0)
                 r = myna_parser_1.Myna.assert(r).setName("heron", r.name);
             tmp.push(r, _this.ws);

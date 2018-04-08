@@ -5,7 +5,7 @@ import { Def, createDef, VarDef, FuncDef, TypeDef, TypeParamDef, FuncParamDef, F
 import { Ref, FuncRef, TypeRef, TypeParamRef, FuncParamRef, VarRef, ForLoopVarRef } from "./heron-refs";
 import { createExpr } from "./heron-expr";
 import { NameAnalyzer, Scope } from "./heron-name-analysis";
-import { createStatement, rewriteIfStatements } from "./heron-statement";
+import { createStatement, rewriteIfStatements, VarDeclStatement } from "./heron-statement";
 
 // A package is a compiled system. It contains a set of modules in different source files. 
 export class Package 
@@ -74,8 +74,16 @@ export class Package
     loadModuleDefs(module: Module) {
         let moduleBody = validateNode(module.node.children[1], 'moduleBody');
         for (let c of moduleBody.children)
-            if (c.def)
-                this.addDef(c.def);        
+            if (c.def) {
+                // Func def or type def 
+                this.addDef(c.def);  
+            }
+            else if (c.statement instanceof VarDeclStatement) {
+                // If a variable declaration there are potentially multiple variable defs 
+                for (const vd of c.statement.vars)
+                    this.addDef(vd);
+            }
+
     }
 
     // Load the definitions from the various dependent modules 

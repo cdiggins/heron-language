@@ -357,3 +357,142 @@ Basically the problem is only with "ArrayBuilder" / "Array" conversions.
 
 If I find myself unifying two type constants, i had better choose the "unified" type.
 Right now getUnifiedType only works on TypeVariables.  
+
+//==
+
+What I want in a language. 
+
+* No need for a project file to compile code correctly.
+* A proper module system.
+* Minimize special rules for the language designer that the programmer can't use
+* Overloading of operators (I need to be able to do complex number, quaternions, vectors!) 
+* Minimize the amount of syntax I have to learn. 
+* Make immutability easy to enforce 
+* Default to immutability
+* Infer all of my types: not just a couple of the trivially inferrable ones. 
+* Generics.
+* A good FFI 
+* Compile to multiple platforms 
+* Nothing too weird like '===' or needing a ! just to print something.
+* No significance to whitespace
+* Catch my errors while writing 
+* Feel like a dynamic language, without the traps and dangers 
+* No weird rules around 'this'
+* Don't bolt on OOP concepts like an afterthought. 
+* One 'for' loop form (not 'for-of' / 'for-in' / 'for')
+* Don't force me to express lifetime management
+* Optimize my usage of functional forms: a map or reduce should be as fast as a for-loop.
+* Leverage immutability during optimizations
+* Don't be bound to a specific platform (like JVM or .NET or Windows or JavaScript or LUA )
+* No weird 'LINQ' alternative query syntax 
+* Data-driven versus procedure driven. 
+* Don't garbage collect when it can be trivially inferred that no garbage is created 
+* Easy to read
+* Easy to write 
+* Backwards compatbility enforced but we can remove features!!
+* No complex type language 
+* Easy to write tools for the language
+* The language has a formal specification that is easy to understand 
+* The language has a simple recognizable syntax
+* The language can be used to write libraries 
+* When I want to specify types I can, but I am not obliged to. 
+* No penalty for using functional paradigms 
+* A function does what it is expected to do always 
+* Don't confuse me with let/var/const 
+* Don't make me test what can be proven statically 
+* There are more than two kinds of numbers: give me operators for them all. 
+* Don't give me too many ways to do things. 
+* Don't give me many gotchas 
+
+//==
+
+# To do
+
+* Parser error needs to specify correct location
+* I need to figure out how to set-up my various repos so that I can develop more quickly. 
+* Refactor the code
+* Get some VS code integration
+* Write a file-watcher
+* Use a config file for compilation (still) but something simple 
+* Write a debugger for the thing
+* Write a module resolver. 
+* Use a publish system that is compatible with NPM: auto-generate the package etc. 
+* Tetrahedfron doesn't work as a variable, because variables aren't type resolved.
+* The pushMany doesn't work as Push, even though the type signature would be cyclical (and thus impossible)  
+* Syntax coloring for VS studio
+* Live feedback :> Atom editor
+* Heron -> MCG converter (could be an interesting tool)
+* Speed comparison: creating a torus knot in Heron versus JavaScript. 
+* Optimization built-on specific module versions 
+* Optimization of 'flatMap' and 'flatten'
+* Add TSLint to everything
+* ADd "no unused locals" to TSConfig.
+* Make things "auto-save"
+
+# Optimization 
+
+* Defunctionalization
+* Inlining of For loops
+* Pre-allocation of arrays *counting 'push'* 
+
+
+# People 
+
+Parameteric geometry:
+ * @zz85 / https://github.com/zz85
+ * @Mugen87 / https://github.com/Mugen87
+ * @prideout http://prideout.net/blog/?p=44
+
+# What is Heron 
+
+Heron is a small cross-platform language designed for ease of use, performance, and safety. 
+
+The current language implementation targets JavaScript but a C++ generator is in the works.
+
+Heron is mainly influenced by JavaScript, Haskell, C++, Java, C#, Scala, and Python. Other languages that have played an influencing role in its design including: C#, C++, TypeScript, Scala, C#, and Go. 
+
+There are similarities with a large number of languages of course, 
+
+https://en.wikipedia.org/wiki/Speedcoding - 1953
+https://en.wikipedia.org/wiki/APL_(programming_language) - 1954
+https://en.wikipedia.org/wiki/Fortran - 1957
+https://en.wikipedia.org/wiki/Lisp_(programming_language) - 1958
+https://en.wikipedia.org/wiki/ALGOL_60 - 1960
+https://en.wikipedia.org/wiki/CPL_(programming_language) - 1963
+https://en.wikipedia.org/wiki/BASIC - 1964
+https://en.wikipedia.org/wiki/Simula - 1965
+https://en.wikipedia.org/wiki/Logo_(programming_language) - 1967
+https://en.wikipedia.org/wiki/Scheme_(programming_language) - 1970 
+https://en.wikipedia.org/wiki/Pascal_(programming_language) - 1970 
+https://en.wikipedia.org/wiki/Forth_(programming_language) - 1970
+https://en.wikipedia.org/wiki/Prolog - 1972
+https://en.wikipedia.org/wiki/C_(programming_language) - 1972
+https://en.wikipedia.org/wiki/ML_(programming_language) - 1973
+https://en.wikipedia.org/wiki/CLU_(programming_language) - 1975
+https://en.wikipedia.org/wiki/Lucid_(programming_language) - 1976
+https://en.wikipedia.org/wiki/Smalltalk - 1980 
+https://en.wikipedia.org/wiki/Ada_(programming_language) - 1980
+https://en.wikipedia.org/wiki/C%2B%2B - 1985
+https://en.wikipedia.org/wiki/Object_Pascal - 1986
+https://en.wikipedia.org/wiki/Eiffel_(programming_language) - 1986
+https://en.wikipedia.org/wiki/Perl - 1987
+https://en.wikipedia.org/wiki/Tcl - 1988 
+https://en.wikipedia.org/wiki/Python_(programming_language) - 1990
+https://en.wikipedia.org/wiki/Haskell_(programming_language) - 1990 
+https://en.wikipedia.org/wiki/Lua_(programming_language) - 1993 
+https://en.wikipedia.org/wiki/Java_(programming_language) - 1995
+https://en.wikipedia.org/wiki/Ruby_(programming_language) - 1995
+https://en.wikipedia.org/wiki/JavaScript - 1995
+https://en.wikipedia.org/wiki/C_Sharp_(programming_language) - 2000 
+https://en.wikipedia.org/wiki/Scala_(programming_language) - 2004
+https://en.wikipedia.org/wiki/Cyclone_(programming_language) - 2006 
+https://en.wikipedia.org/wiki/Go_(programming_language) - 2009 
+
+
+Anti-patterns 
+
+Know your history whippernappers
+
+//==
+
+Let's make an array of meshes. We can return them and then ... well something something. 

@@ -141,12 +141,36 @@ export function callFunction(funOriginal: PolyType, args: Expr[], argTypes: Type
     return u.getUnifiedType(returnType);
 }    
 
+export function computeFuncTypeFromSig(f: FuncDef, genParams: string[]): PolyType {
+    const u = new TypeResolver(typeStrategy);
+    const t = genericFuncType(f.params.length);
+    let hasSpecType = false;
+    for (let i=0; i < f.params.length; ++i) {
+        const param = f.params[i];
+        const paramType = typeFromNode(f.params[i].typeNode, genParams);
+        if (paramType !== null) {
+            hasSpecType = true;
+            param.type = paramType;
+            u.unifyTypes(getArgType(t, i), paramType);
+        }
+    }
+    const retType = typeFromNode(f.retTypeNode, genParams);
+    if (retType) {
+        hasSpecType = true;        
+        u.unifyTypes(getReturnType(t), retType);
+    }
+    if (hasSpecType)
+        return u.getUnifiedType(t) as PolyType;
+    else
+        return t;
+}
+
 export function computeFuncType(f: FuncDef): PolyType {
     if (!f.type) {
-        f.type = genericFuncType(f.params.length);
         const sigNode = validateNode(f.node.children[0], "funcSig");
         const genParamsNode = validateNode(sigNode.children[1], "genericParams");
         const genParams = genParamsNode.children.map(p => p.allText);
+        f.type = computeFuncTypeFromSig(f, genParams);
         const u = new TypeResolver(typeStrategy);
         const te = new TypeEvaluator(f.params, genParams, f.body, f.retTypeNode, typeStrategy, u);
         f.type = te.getFinalResult();

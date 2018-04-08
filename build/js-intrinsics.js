@@ -53,6 +53,9 @@ exports.intrinsics = {
     array: function (xs) { return xs; },
     print: 'console.log',
     assert: function (condition) { if (!condition)
-        throw new Error("assertion failed"); }
+        throw new Error("assertion failed"); },
+    mesh: function (vertexBuffer, indexBuffer) { return ({ vertexBuffer: vertexBuffer, indexBuffer: indexBuffer }); },
+    vertexBuffer: function (mesh) { return mesh.vertexBuffer; },
+    indexBuffer: function (mesh) { return mesh.indexBuffer; },
 };
 //# sourceMappingURL=js-intrinsics.js.map

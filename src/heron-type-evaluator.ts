@@ -10,7 +10,7 @@ import { genericFuncType, typeFromNode, getNumArgTypes, getArgType, getReturnTyp
 // This class computes the type for a function
 export class TypeEvaluator 
 {
-       public readonly function: PolyType;
+    public readonly function: PolyType;
 
     constructor(
         public readonly params: FuncParamDef[],
@@ -141,7 +141,7 @@ export class TypeEvaluator
         else if (statement instanceof VarDeclStatement) {
             for (const vd of statement.vars) {
                 if (!vd.exprNode.expr)
-                    throwError(vd.exprNode, "Missing an expression")
+                    throwError(vd.exprNode, "Missing an expression");
                 vd.type = this.getType(vd.exprNode.expr);
             }
         }
@@ -245,6 +245,7 @@ export class TypeEvaluator
                 const varExpr = v.exprNode.expr;
                 if (!varExpr)
                     throwError(v.exprNode, "No expression associated with variable: " + v.name);
+                v.type = this.getType(varExpr);
             }
             const r = this.getType(expr.expr);
             return r;

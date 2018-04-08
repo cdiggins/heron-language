@@ -1,7 +1,3 @@
-// Inspired by: 
-// https://github.com/burg/glsl-simulator/blob/master/src/glsl.pegjs
-// https://www.khronos.org/registry/gles/specs/2.0/GLSL_ES_Specification_1.0.17.pdf
-
 import { Myna as m } from "myna-parser";
 import { HeronAstNode } from "./heron-ast-rewrite";
 
@@ -16,14 +12,15 @@ const g = new function() {
     // Comments and whitespace 
     this.fullComment    = m.guardedSeq("/*", m.advanceUntilPast("*/"));
     this.lineComment    = m.seq("//", this.untilEol);
-    this.comment        = this.fullComment.or(this.lineComment).ws.oneOrMore.setName("heron", "comment");
-    this.ws             = this.comment.or(m.ws).setName("heron", "ws");    
+    this.comment        = this.fullComment.or(this.lineComment);
+    this.ws             = this.comment.or(m.atWs.advance.oneOrMore).zeroOrMore;
 
     // Helper for whitespace delimited sequences that must start with a specific value
     function guardedWsDelimSeq(...rules): m.Rule {
         let tmp = [_this.ws];
         for (let i=0; i < rules.length; ++i) {
             let r = rules[i];
+            // TODO: I shouldn't have to setName on the assert rule
             if (i > 0) r = m.assert(r).setName("heron", r.name);
             tmp.push(r, _this.ws);
         }

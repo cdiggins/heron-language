@@ -59,10 +59,16 @@ function parseModule(moduleName) {
 }
 exports.parseModule = parseModule;
 function parseFile(f) {
-    var outputFile = f.substring(0, f.lastIndexOf('.')) + '.output.heron';
-    var code = fs.readFileSync(f, 'utf-8');
-    var ast = heron_parser_1.parseHeron(code, g.file);
-    return ast;
+    try {
+        var outputFile = f.substring(0, f.lastIndexOf('.')) + '.output.heron';
+        var code = fs.readFileSync(f, 'utf-8');
+        var ast = heron_parser_1.parseHeron(code, g.file);
+        return ast;
+    }
+    catch (e) {
+        console.log("An error occurred while parsing " + f);
+        console.log(e.message);
+    }
 }
 exports.parseFile = parseFile;
 //# sourceMappingURL=heron-compiler.js.map

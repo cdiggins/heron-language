@@ -223,12 +223,21 @@ export class HeronToJs
             this.cb.push('"' + expr.value + '"');
         }
         else if (expr instanceof VarExpr) {
-            // TODO: ((varName) => ...)(value)
-            // TODO: the expr really should only have one var. 
-            // I need to do rewriting during the analysis, to create one around each one. 
-            // OR: I just treat it as a lambda and a call. Which might simplify other things. 
-            // BUT: it would require the constant handling is properly handled. 
-            throw new Error("Not implemented yet");
+            let vars = expr.vars.slice();
+            for (let i=0; i<vars.length; ++i) {
+                const vd=vars[i];
+                this.cb.push('((');
+                this.cb.push(vd.name);
+                this.cb.push(') => ');
+            }
+            this.visit(expr.expr);
+            for (let i=vars.length-1; i >= 0; --i) {
+                const vd=vars[i];
+                this.cb.push(')(');
+                this.visit(vd.exprNode.expr);
+                this.cb.push(')');
+            }
+            this.cb.pushLine();
         }
         else if (expr instanceof Lambda) {
             this.cb.push('(')

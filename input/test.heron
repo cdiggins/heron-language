@@ -3,12 +3,14 @@ language heron:std:0.1;
 module heron:tests:0.1
 {
     import heron:std.array:0.1;
+    import heron:geometry.mesh:0.1;
 
     function main() {
-        simpleTest();
+        simpleArrayTest();
+        return geometryTest();
     }
 
-    function simpleTest() {
+    function simpleArrayTest() {
         var xs = [1, 11, 3];
         print('Expect [1, 11, 3]');
         print(xs);
@@ -54,4 +56,7 @@ module heron:tests:0.1
         print('Expect 5');            
         print(xs.average);
     }
+
+    function geometryTest() 
+        = tetrahedron();    
 }

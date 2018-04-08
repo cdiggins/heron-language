@@ -5,7 +5,6 @@ var heron_parser_1 = require("./heron-parser");
 var heron_to_js_1 = require("./heron-to-js");
 var heron_ast_rewrite_1 = require("./heron-ast-rewrite");
 var heron_compiler_1 = require("./heron-compiler");
-var heron_traits_1 = require("./heron-traits");
 var heron_types_1 = require("./heron-types");
 var type_parser_1 = require("./type-parser");
 var type_system_1 = require("./type-system");
@@ -66,6 +65,7 @@ var ruleTests = [
     [g.expr, ['(3)', '(3 + 2)', '(c)', '(a)+(b)', 'a+(b)', 'a+b+c', 'a?b:c', 'a?b+c:d', 'a?b:c+d', 'a?(b):c', '(a)?b:c'], []],
     [g.expr, ['a?b:1(c)'], ['f > max ? max : (f < min ? min) : f']],
     [g.expr, ['op+', 'f(op+)', 'f(0, op+)'], []],
+    [g.expr, ['(r1+r2*cos(v))', '(r1 + r2 * cos(v))', '( r1 + r2 * cos(v) )', '( r1 + r2 * cos(v) ) * cos(u)'], []],
     [g.expr, ['a?b:c', 'a?b:c?d:e', 'a?b:(c<d?e:f)', 'a>3?b:c', 'a > 3 ? b : c', 'f > max ? max : (f < min ? min : f)'], []],
     [g.statement, [
             'var x = 0;',
@@ -130,17 +130,6 @@ function outputPackageStats(pkg) {
         console.log(refDetails(d));
     }
 }
-function outputTraits(pkg) {
-    var traits = heron_traits_1.getTraits(pkg);
-    for (var _i = 0, traits_1 = traits; _i < traits_1.length; _i++) {
-        var t = traits_1[_i];
-        console.log("Trait " + t.type);
-        for (var _a = 0, _b = t.funcs; _a < _b.length; _a++) {
-            var f = _b[_a];
-            console.log("  " + f.toString());
-        }
-    }
-}
 function outputFunctionTypes(pkg) {
     for (var _i = 0, _a = pkg.allFuncDefs; _i < _a.length; _i++) {
         var f = _a[_i];
@@ -185,7 +174,7 @@ function tests() {
     //testParsingRules();
     //testParseTypes();
     //testCallFunctions();
-    var inputFiles = ['geometry-vector3', 'array', 'test'];
+    var inputFiles = ['geometry-vector3', 'geometry-mesh', 'array', 'test'];
     var pkg = heron_compiler_1.createPackage(inputFiles);
     /*
     for (const sf of pkg.files) {

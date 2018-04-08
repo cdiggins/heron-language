@@ -231,6 +231,7 @@ var TypeEvaluator = /** @class */ (function () {
                 var varExpr = v.exprNode.expr;
                 if (!varExpr)
                     heron_ast_rewrite_1.throwError(v.exprNode, "No expression associated with variable: " + v.name);
+                v.type = this.getType(varExpr);
             }
             var r = this.getType(expr.expr);
             return r;

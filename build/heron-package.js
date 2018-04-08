@@ -87,8 +87,17 @@ var Package = /** @class */ (function () {
         var moduleBody = heron_ast_rewrite_1.validateNode(module.node.children[1], 'moduleBody');
         for (var _i = 0, _a = moduleBody.children; _i < _a.length; _i++) {
             var c = _a[_i];
-            if (c.def)
+            if (c.def) {
+                // Func def or type def 
                 this.addDef(c.def);
+            }
+            else if (c.statement instanceof heron_statement_1.VarDeclStatement) {
+                // If a variable declaration there are potentially multiple variable defs 
+                for (var _b = 0, _c = c.statement.vars; _b < _c.length; _b++) {
+                    var vd = _c[_b];
+                    this.addDef(vd);
+                }
+            }
         }
     };
     // Load the definitions from the various dependent modules 
