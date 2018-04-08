@@ -17,6 +17,8 @@ module heron:intrinsics:0.1
     type Mesh;
 
     // Intrinsic (built-in) functions. 
+    intrinsic float(x: Int): Float;
+    
     intrinsic float2(x: Float, y: Float): Float2;    
     intrinsic x(v: Float2): Float;
     intrinsic y(v: Float2): Float;
@@ -63,7 +65,7 @@ module heron:intrinsics:0.1
 
     // Specialized binary operators 
     /*
-    intrinsic op+ (x: Float2, y: Float2): Float2;
+    intrinsic op+ (x: Float2, y: Float2): Float2;+
     intrinsic op- (x: Float2, y: Float2): Float2;
     intrinsic op* (x: Float2, y: Float2): Float2;
     intrinsic op/ (x: Float2, y: Float2): Float2;
@@ -81,7 +83,7 @@ module heron:intrinsics:0.1
     intrinsic op/ (x: Float4, y: Float4): Float4;
     intrinsic op% (x: Float4, y: Float4): Float4;
     */
-    
+
     // Equality operators 
     intrinsic op!= <T>(x: T, y: T): Bool;
     intrinsic op== <T>(x: T, y: T): Bool;

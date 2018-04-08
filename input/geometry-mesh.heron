@@ -10,50 +10,65 @@ module heron:geometry.mesh:0.1
 {
     import heron:std.array:0.1;
     import heron:geometry.vector:0.1;
-
-    function mesh(vertices) 
-        = mesh(vertices, vertices.indices);
     
+    // Platonic solids 
+
     function tetrahedron()
-        = mesh([1, 1, 1,   -1, -1, 1,   -1, 1, -1,   1, -1, -1], 
-	           [2, 1, 0,    0, 3, 2,	1, 3, 0,	 2, 3, 1]);
+        = mesh(
+        [
+            1, 1, 1,   
+            -1, -1, 1,   
+            -1, 1, -1,   
+            1, -1, -1
+        ], 
+        [
+            2, 1, 0,    
+            0, 3, 2,	
+            1, 3, 0,	 
+            2, 3, 1
+        ]);
 
-    // Given a number of vertices arranged as a quad strip of "rows".
-    function quadStripToMesh(vertices, rows) {
-        var cols = vertices.count / 3 / rows;
-        var indices = [].mutable;
-        for (var r in 0..rows) {
-            for (var c in 0..cols) {                
-                // Rows increase from bottom to top
-                // Columns increase from left to right
-                // row r + 1 = ... d c ... 
-                // row r     = ... a b ... 
-                var a = c + r * cols;
-                var b = a + 1;
-                var c = b + cols;
-                var d = c - 1;
-                indices = indices.pushMany([a, b, d]);
-                indices = indices.pushMany([c, d, b]);            
-            }
-        }
-        return mesh(vertices, indices.array);
-    }
-    
-    // Given UV coordinates u=[0,1), v=[0,1), and a major radius (donut) 
-    // and a minor radius (tube) computes a spot on the torus
-    function torusPoint(u, v, r1, r2)
-        = vector(
-			(r1 + r2 * cos(v)) * cos(u),
-			(r1 + r2 * cos(v)) * sin(u),
-			r2 * sin(v));
+    function cube()
+        = mesh(
+        [
+            // front
+            -1.0, -1.0,  1.0,
+            1.0, -1.0,  1.0,
+            1.0,  1.0,  1.0,
+            -1.0,  1.0,  1.0,
+            // back
+            -1.0, -1.0, -1.0,
+            1.0, -1.0, -1.0,
+            1.0,  1.0, -1.0,
+            -1.0,  1.0, -1.0
+        ], 
+        [
+            // front
+            0, 1, 2, 2, 3, 0,
+            // right
+            1, 5, 6, 6, 2, 1,
+            // back
+            7, 6, 5, 5, 4, 7,
+            // left
+            4, 0, 3, 3, 7, 4,
+            // bottom
+            4, 5, 1, 1, 0, 4,
+            // top
+            3, 2, 6, 6, 7, 3
+        ]);
 
-    // Computes a point on a cylinder givem uv coordinates 
-    function cylinderPoint(u, v) 
-        = vector(sin(u), v, cos(u));
-
-    // Computes a point on a sphere given uv coordintaes 
-    function spherePoint(u, v)
-        = vector(-cos(u) * sin(v), cos(v), sin(u) * sin(v));
+    // https://github.com/mrdoob/three.js/blob/master/src/geometries/OctahedronGeometry.js
+    function octahedron() 
+        = mesh(
+            [
+            1, 0, 0, 	-1, 0, 0,	0, 1, 0,
+            0, -1, 0, 	0, 0, 1,	0, 0, -1
+	    ],
+        [
+            0, 2, 4,	0, 4, 3,	0, 3, 5,
+            0, 5, 2,	1, 2, 5,	1, 5, 3,
+            1, 3, 4,	1, 4, 2
+    	]);
 
     // https://github.com/mrdoob/three.js/blob/master/src/geometries/DodecahedronGeometry.js
     function dodecahedron() =
@@ -92,6 +107,7 @@ module heron:geometry.mesh:0.1
             1, 12, 14, 	1, 14, 5, 	1, 5, 9
         ]);
 
+
     // https://github.com/mrdoob/three.js/blob/master/src/geometries/IcosahedronGeometry.js
     function icosahedron() 
         = var t = (1 + sqrt(5)) / 2 in
@@ -107,6 +123,30 @@ module heron:geometry.mesh:0.1
                 4, 9, 5, 	2, 4, 11,	6, 2, 10,	8, 6, 7,	9, 8, 1
             ]);   
 
+    // Parametric geometry creation
+
+    // Given a number of points (vectors) arranged as a quad strip of "rows"
+    // will return a set of indices representing the triangulated indices.
+    function quadStripToMeshIndices(vertices, rows) {
+        var cols = vertices.count / rows;
+        var indices = [].mutable;
+        for (var r in 0..rows) {
+            for (var c in 0..cols) {                
+                // Rows increase from bottom to top
+                // Columns increase from left to right
+                // row r + 1 = ... d c ... 
+                // row r     = ... a b ... 
+                var a = c + r * cols;
+                var b = a + 1;
+                var c = b + cols;
+                var d = c - 1;
+                indices = indices.pushMany([a, b, d]);
+                indices = indices.pushMany([c, d, b]);            
+            }
+        }
+        return indices.array;
+    }
+    
     // Converts an array of vectors into a vertex buffer 
     // which is an array of floating point numbers 
     function vectorsToVertexBuffer(xs) 
@@ -123,9 +163,49 @@ module heron:geometry.mesh:0.1
     // Given a function that converts UV coordinates to vectors, creates an 
     // array of points (uCount x vCount) starting at uStart,vStart (0,0) going to 
     // uLength, vLength (1,1)
-    function meshFromUV(f, uCount, vCount, uStart, vStart, uLength, vLength) 
-        = cartesianProduct(0..vCount, 0..vCount, 
+    function meshFromUV(f, uCount, vCount, uStart, vStart, uLength, vLength) {
+        var points = cartesianProduct(0..vCount, 0..vCount, 
             (u, v) => f(
-                u / uCount * uLength + uStart, 
-                v / vCount * vLength + vStart));
+                u / uCount.float * uLength + uStart, 
+                v / vCount.float * vLength + vStart));
+        var indices = quadStripToMeshIndices(points, vCount);
+        return mesh(vectorsToVertexBuffer(points), indices);
+    }
+
+    function meshFromUV(f, segments)
+        = meshFromUV(f, segments, segments, 0, 0, 1, 1);
+
+    // Given UV coordinates on the surface of a sphere u=[0,1), v=[0,1) computes the 3D location.
+    function spherePoint(u, v)
+        = vector(-cos(u) * sin(v), cos(v), sin(u) * sin(v));
+
+    function sphere(segments) 
+        = meshFromUV(spherePoint, segments);
+    
+    function sphere()
+        = sphere(32);
+
+    // Given UV coordinates on the surface of a cylinder u=[0,1), v=[0,1) computes the 3D location.
+    function cylinderPoint(u, v) 
+        = vector(sin(u), v, cos(u));
+
+    function cylinder(segments) 
+        = meshFromUV(cylinderPoint, segments);
+    
+    function cylinder()
+        = cylinder(32);
+
+    function torus(r1, r2, segments)
+        = meshFromUV((u,v) => torusPoint(u, v, r1, r2), segments);
+
+    // Given UV coordinates u=[0,1), v=[0,1), and a major radius (donut) 
+    // and a minor radius (tube) computes the 3D location of the torus
+    function torusPoint(u, v, r1, r2)
+        = vector(
+			(r1 + r2 * cos(v)) * cos(u),
+			(r1 + r2 * cos(v)) * sin(u),
+			r2 * sin(v));
+
+    function torus()
+        = torus(10, 2, 32);
 }

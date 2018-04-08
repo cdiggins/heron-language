@@ -58,5 +58,14 @@ module heron:tests:0.1
     }
 
     function geometryTest() 
-        = tetrahedron();    
+        = [
+            tetrahedron(), 
+            cube(), 
+            octahedron(), 
+            dodecahedron(), 
+            icosahedron(), 
+            cylinder(), 
+            sphere(), 
+            torus()
+        ];
 }

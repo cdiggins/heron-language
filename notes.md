@@ -428,6 +428,7 @@ What I want in a language.
 * Add TSLint to everything
 * ADd "no unused locals" to TSConfig.
 * Make things "auto-save"
+* Default parameters would be very nice!! 
 
 # Optimization 
 
