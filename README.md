@@ -11,11 +11,12 @@ Current development on Heron is focused on numerical array processing, such as r
 Heron is built on the principle of emphasizing functional programming, immutable data structures, and type safety while minimizing complexity.
 
 > *"I'm still trying to figure this magic out"* 
+>
 > -- Stephen Taylor
 
 ## Ancient History
 
-This is technically the third incarnation of a programming language Heron, but no one is going to remember the older versions. Last time I announced a programming language named Heron was 8 years ago. The new Heron is quiate a different language from previous incarnations which were intended as general purpose languages, largely in part to my growth and evolution as a programmer. 
+This is technically the third incarnation of a programming language Heron, but virtually no one is going to remember the older versions. The last time I announced a programming language named Heron was 8 years ago. Previous incarnations which were intended as general purpose languages whereas Heron is now more focused in scope and purpose.
 
 The first large public announcement of the original Heron language was in 2006 https://developers.slashdot.org/story/04/12/08/1944233/introducing-the-heron-programming-language. That implementation was a Heron to C++ translator. It's primary contribution was a more advanced meta-programming system for C++ and a more regular synbtax.  
 
