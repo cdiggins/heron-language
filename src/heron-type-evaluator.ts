@@ -170,6 +170,8 @@ export class TypeEvaluator
                 return makeFunctionSet(ref.defs.map(r => computeFuncType(r)));
             }
             else if (ref instanceof VarRef) {
+                if (!ref.def.type)
+                    ref.def.type = this.getType(ref.def.exprNode.expr);
                 return assure(ref.def.type);
             }
             else if (ref instanceof FuncParamRef) {

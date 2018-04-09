@@ -296,6 +296,22 @@ var Module = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(Module.prototype, "vars", {
+        get: function () {
+            var r = [];
+            for (var _i = 0, _a = this.body.children; _i < _a.length; _i++) {
+                var x = _a[_i];
+                if (x.statement instanceof heron_statement_1.VarDeclStatement)
+                    for (var _b = 0, _c = x.statement.vars; _b < _c.length; _b++) {
+                        var vd = _c[_b];
+                        r.push(vd);
+                    }
+            }
+            return r;
+        },
+        enumerable: true,
+        configurable: true
+    });
     return Module;
 }());
 exports.Module = Module;

@@ -214,16 +214,16 @@ function tests() {
         toJs.visit(m);        
     }
     const now = new Date();
-    const header = '// Generated using Heron on ' + now.toDateString() + ' ' + now.toTimeString() + '\n'; 
-
-    //const preamble = fs.readFileSync(path.join('src', 'js-intrinsics.ts'), 'utf-8');
-    const body = toJs.cb.toString();
-    const preamble = intrinsicCode();
+    let text = '// Generated using Heron on ' + now.toDateString() + ' ' + now.toTimeString() + '\n'; 
+    text += 'var heronMain = (function () {\n';
+    text += library + '\n';
+    text += intrinsicCode() + '\n'
+    text += toJs.cb.toString();
     const main = pkg.findFunction("main");
-    const entry = funcDefName(main) + '();\n';
-    const exit = "process.exit();\n";
-    const text = header + library + preamble + body + '\n' + entry + exit;
+    text += '\nreturn ' + funcDefName(main) + ';\n';
+    text += '})();\n';
     fs.writeFileSync(path.join(outputFolder, 'output.js'), text);
+    fs.writeFileSync(path.join(outputFolder, '..', 'demo', 'output.js'), text);
 
     //outputPackageStats(pkg);
     // find the main entry point and call into it. 

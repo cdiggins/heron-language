@@ -44,7 +44,7 @@ function astToType(ast) : Type {
             if (ast.children.length != 1) 
                 throw new Error("Expected only one child of node, not " + ast.children.length);
             return astToType(ast.children[0]);
-        default: 
+        default:    
             throw new Error("Unrecognized type expression: " + ast.name);
     }
 }

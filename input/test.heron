@@ -64,8 +64,8 @@ module heron:tests:0.1
             octahedron(), 
             dodecahedron(), 
             icosahedron(), 
-            cylinder(), 
             sphere(), 
+            cylinder(), 
             torus()
         ];
 }

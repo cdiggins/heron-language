@@ -1,28 +1,30 @@
 export const library = 
 `
-function ImmutableArray(count, at) {
-    this.count = count;
-    this.at = at;
-}
-
 function newImmutableArray(count, at) {
-    return new ImmutableArray(count, at);
+    return {
+      count, at
+    }
 }
   
-function toMutable(xs) {
-    const count = xs.count;
-    const array = []; 
-    for (let i=0; i < count; ++i)
-      array.push(xs.at(i));
-    return arrayFromJavaScript(array);
-}
-
 function arrayFromJavaScript(xs) {
   return {
-    array: xs,
-    count: xs.length,
-    at: (i) => xs[i],
+      count: xs.length,
+      array: xs,
+      at: (i) => xs[i]
   }
+}
+
+function toMutable(xs) {
+  const count = xs.count;
+  const array = []; 
+  for (let i=0; i < count; ++i)
+      array.push(xs.at(i));
+  return arrayFromJavaScript(array);
+}
+
+function toImmutable(xs) {
+    xs.count = xs.array.length;
+    return xs;
 }
 `;
 
@@ -70,13 +72,13 @@ export const intrinsics =
     op_hat_hat: (x, y) => !!(x ^ y),
     op_not: (x) => !x,
     op_negate: (x) => -x,
-    genArray: 'newImmutableArray',
     count: (xs) => xs.count,
     at: (xs, i) => xs.at(i),
+    array: 'newImmutableArray',
     mutable: 'toMutable',
+    immutable: 'toImmutable', 
     push: (xs, x) => (xs.array.push(x), xs),
     set: (xs, i, x) => (xs.array[i] = x, xs),
-    array: (xs) => xs, 
     print: 'console.log',
     assert: (condition) => { if (!condition) throw new Error("assertion failed"); },
     mesh: (vertexBuffer, indexBuffer) => ({ vertexBuffer, indexBuffer }),

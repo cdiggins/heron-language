@@ -6,13 +6,13 @@ module heron:std.array:0.1
         = [x];
 
     function map(xs, f)
-        = genArray(xs.count, i => f(xs[i]));        
+        = array(xs.count, i => f(xs[i]));        
 
     function mapWithIndex(xs, f)
-        = genArray(xs.count, i => f(xs[i], i));        
+        = array(xs.count, i => f(xs[i], i));        
 
     function mapIndex(xs, f)
-        = genArray(xs.count, f);        
+        = array(xs.count, f);        
 
     function min(x, y) 
         = x <= y ? x : y;
@@ -58,7 +58,7 @@ module heron:std.array:0.1
         for (var x in xs) 
             if (p(x)) 
                 ys[i++] = x;
-        return ys.array.take(i);
+        return ys.immutable.take(i);
     }
 
     function repeat(x, n) 
@@ -69,7 +69,7 @@ module heron:std.array:0.1
         var ys = xs[0].repeat(xs.count).mutable;
         for (var i in 1 .. ys.count)
             ys[i] = op(xs[i], ys[i-1]);
-        return ys.array;
+        return ys.immutable;
     }
 
     function adjacentDifferences(xs) 
@@ -155,7 +155,7 @@ module heron:std.array:0.1
     }
 
     function sort(xs) 
-        = xs.mutable.qsort(0, xs.count-1).array;    
+        = xs.mutable.qsort(0, xs.count-1).immutable;    
     
     function median(xs) {        
         var ys = xs.sort;        

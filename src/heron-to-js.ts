@@ -1,4 +1,4 @@
-import { FuncDef, FuncParamDef } from "./heron-defs";
+import { FuncDef, FuncParamDef, VarDef } from "./heron-defs";
 import { Type, normalizeType } from "./type-system";
 import { Types } from "./heron-types";
 import { CodeBuilder } from "./code-builder";
@@ -10,7 +10,7 @@ import { FuncRef } from "./heron-refs";
 
 let id = 0;
 
-export function toJavaScript(x: Statement|Expr|FuncDef|Module): string {
+export function toJavaScript(x: Statement|Expr|FuncDef|VarDef|Module): string {
     const toJs = new HeronToJs();
     toJs.visit(x);
     return toJs.cb.toString();
@@ -29,13 +29,15 @@ export class HeronToJs
 {    
     cb = new CodeBuilder();
 
-    visit(x: Statement|Expr|FuncDef|Module) {
+    visit(x: Statement|Expr|FuncDef|VarDef|Module) {
         if (x instanceof Statement)
             this.visitStatement(x);
         else if (x instanceof Expr)
             this.visitExpr(x);
         else if (x instanceof FuncDef)
             this.visitFuncDef(x);
+        else if (x instanceof VarDef)
+            this.visitVarDef(x);
         else 
             this.visitModule(x);
     }
@@ -45,12 +47,22 @@ export class HeronToJs
         this.cb.pushLine('// file ' + m.file.filePath);
         for (const i of m.imports)
             this.cb.pushLine('// imports ' + i);
+        for (const v of m.vars)
+            this.visit(v);
         for (const f of m.functions)
             this.visit(f);
     }
 
     functionSig(f: FuncDef): string {
         return 'function ' + funcDefName(f) + '(' + f.params.map(funcParamDefName).join(', ') + ')';
+    }
+
+    visitVarDef(v: VarDef) {        
+        // TODO: the 'v' has no type!
+        //this.cb.pushLine('// ' +  normalizeType(v.type));
+        this.cb.push("const " + v.name + ' = ');
+        this.visit(v.exprNode.expr);
+        this.cb.pushLine(';');
     }
 
     visitFuncDef(f: FuncDef) {        

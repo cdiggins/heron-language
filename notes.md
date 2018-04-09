@@ -499,3 +499,17 @@ Know your history whippernappers
 //==
 
 Let's make an array of meshes. We can return them and then ... well something something. 
+
+//==
+
+TODO: 
+
+Before release.
+* Scaling 
+* Float2/Float3 math 
+* Link to code.
+* Fix the font bug. 
+* Explain the demo (what is different)
+* How did I write it? 
+* Expose some functionality? Be able to control different functions? 
+* Parameter descriptions (JSON)

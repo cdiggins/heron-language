@@ -34,6 +34,8 @@ var HeronToJs = /** @class */ (function () {
             this.visitExpr(x);
         else if (x instanceof heron_defs_1.FuncDef)
             this.visitFuncDef(x);
+        else if (x instanceof heron_defs_1.VarDef)
+            this.visitVarDef(x);
         else
             this.visitModule(x);
     };
@@ -44,13 +46,24 @@ var HeronToJs = /** @class */ (function () {
             var i = _a[_i];
             this.cb.pushLine('// imports ' + i);
         }
-        for (var _b = 0, _c = m.functions; _b < _c.length; _b++) {
-            var f = _c[_b];
+        for (var _b = 0, _c = m.vars; _b < _c.length; _b++) {
+            var v = _c[_b];
+            this.visit(v);
+        }
+        for (var _d = 0, _e = m.functions; _d < _e.length; _d++) {
+            var f = _e[_d];
             this.visit(f);
         }
     };
     HeronToJs.prototype.functionSig = function (f) {
         return 'function ' + funcDefName(f) + '(' + f.params.map(funcParamDefName).join(', ') + ')';
+    };
+    HeronToJs.prototype.visitVarDef = function (v) {
+        // TODO: the 'v' has no type!
+        //this.cb.pushLine('// ' +  normalizeType(v.type));
+        this.cb.push("const " + v.name + ' = ');
+        this.visit(v.exprNode.expr);
+        this.cb.pushLine(';');
     };
     HeronToJs.prototype.visitFuncDef = function (f) {
         this.cb.pushLine('// ' + type_system_1.normalizeType(f.type));

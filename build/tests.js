@@ -189,15 +189,16 @@ function tests() {
         toJs.visit(m_1);
     }
     var now = new Date();
-    var header = '// Generated using Heron on ' + now.toDateString() + ' ' + now.toTimeString() + '\n';
-    //const preamble = fs.readFileSync(path.join('src', 'js-intrinsics.ts'), 'utf-8');
-    var body = toJs.cb.toString();
-    var preamble = intrinsicCode();
+    var text = '// Generated using Heron on ' + now.toDateString() + ' ' + now.toTimeString() + '\n';
+    text += 'var heronMain = (function () {\n';
+    text += js_intrinsics_1.library + '\n';
+    text += intrinsicCode() + '\n';
+    text += toJs.cb.toString();
     var main = pkg.findFunction("main");
-    var entry = heron_to_js_1.funcDefName(main) + '();\n';
-    var exit = "process.exit();\n";
-    var text = header + js_intrinsics_1.library + preamble + body + '\n' + entry + exit;
+    text += '\nreturn ' + heron_to_js_1.funcDefName(main) + ';\n';
+    text += '})();\n';
     fs.writeFileSync(path.join(heron_compiler_1.outputFolder, 'output.js'), text);
+    fs.writeFileSync(path.join(heron_compiler_1.outputFolder, '..', 'demo', 'output.js'), text);
     //outputPackageStats(pkg);
     // find the main entry point and call into it. 
     var modName = 'heron:tests:0.1';

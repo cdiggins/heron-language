@@ -299,4 +299,13 @@ export class Module
                 r.push(x);
         return r;        
     }
+
+    get vars(): VarDef[] {
+        const r: VarDef[] = []; 
+        for (const x of this.body.children)
+            if (x.statement instanceof VarDeclStatement)
+                for (const vd of x.statement.vars)
+                    r.push(vd);
+        return r;        
+    }
 }

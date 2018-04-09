@@ -40,27 +40,59 @@
 		<script src="./geometry-browser_files/dat.gui.min.js.download"></script>
 		<script src="./geometry-browser_files/OrbitControls.js.download"></script>
 		<script src="./geometry-browser_files/ParametricGeometries.js.download"></script>
-		<script src="./geometry-browser_files/geometry.js.download"></script>
-		
-		<!--
+		<script src="./geometry-browser_files/geometry.js.download"></script>		
 		<script src="./output.js"></script>
-		-->
 
 		<script>
-
-			var heronData = { 
-				'geometry': 'tetrahedron'
+			// Used for controlling which geometry is show in the UI
+			const heronData = { 
+				geometryIndex: 7
 			};
 
-			function makeHeronGeometry( o ) {
-				var g = new THREE.TetrahedronGeometry(5, 0);
-				updateGroupGeometry( o, g );
-				var folder = gui.addFolder( 'Heron' );
-				var geometries = [ 'tetrahedron', 'cube', 'octahedron', 'dodecahedron', 'icosahedron', 'sphere', 'cylinder', 'torus'];
-				gui.add(heronData, 'geometry', geometries);
-				
-				//folder.add( data, 'width', 1, 30 ).onChange( generateGeometry );
-				
+			function heronArrayToJavaScript(xs) {
+				const r = [];
+				for (let i=0; i < xs.count; ++i) 
+					r.push(xs.at(i));
+				return r;
+			}
+
+			// A list of the geometris created
+			const heronGeometries = heronArrayToJavaScript(heronMain());
+
+			// Used to create a heron geometry and associate it with a ThreeJS scene object
+			function makeHeronGeometry( sceneObject ) 
+			{
+				function heronGeometryToThreeJsGeometry(heronMesh) {
+					const r = new THREE.BufferGeometry();
+					const indexBuffer = heronArrayToJavaScript(heronMesh.indexBuffer);
+					const vertexBuffer = heronArrayToJavaScript(heronMesh.vertexBuffer);
+				    r.setIndex( indexBuffer );
+					r.addAttribute( 'position', new THREE.Float32BufferAttribute( vertexBuffer, 3 ) );
+					return r;
+				}
+
+				function generateGeometry() {					
+					//var g = new THREE.TetrahedronGeometry(5, 0);
+					const hg = heronGeometries[heronData.geometryIndex];
+					const g = heronGeometryToThreeJsGeometry(hg);
+					updateGroupGeometry( sceneObject, g );
+				}
+
+				const folder = gui.addFolder( 'Heron' );
+				const geometryIndices = { 
+					'tetrahedron':0, 
+					'cube':1, 
+					'octahedron':2, 
+					'dodecahedron':3, 
+					'icosahedron':4, 
+					'sphere':5, 
+					'cylinder':6, 
+					'torus':7
+				};
+
+				gui.add(heronData, 'geometryIndex', geometryIndices).onChange( generateGeometry );
+				generateGeometry();
+								
 				return { };
 			}
 
@@ -68,8 +100,8 @@
 
 			var gui = new dat.GUI();
 			var scene = new THREE.Scene();
-			var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 50 );
-			camera.position.z = 30;
+			var camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 0.1, 50 );
+			camera.position.z = 20;
 
 			var renderer = new THREE.WebGLRenderer( { antialias: true } );
 			renderer.setPixelRatio( window.devicePixelRatio );

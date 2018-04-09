@@ -10,7 +10,7 @@ module heron:geometry.mesh:0.1
 {
     import heron:std.array:0.1;
     import heron:geometry.vector:0.1;
-    
+
     // Platonic solids 
 
     function tetrahedron()
@@ -127,24 +127,26 @@ module heron:geometry.mesh:0.1
 
     // Given a number of points (vectors) arranged as a quad strip of "rows"
     // will return a set of indices representing the triangulated indices.
-    function quadStripToMeshIndices(vertices, rows) {
+    function quadStripToMeshIndices(vertices, rows, connectRows, connectCols) {
         var cols = vertices.count / rows;
+        var nr = connectRows ? rows : rows-1;
+        var nc = connectCols ? cols : cols-1;
         var indices = [].mutable;
-        for (var row in 0..rows) {
-            for (var col in 0..cols) {                
+        for (var row in 0..nr) {
+            for (var col in 0..nc) {                
                 // Rows increase from bottom to top
                 // Columns increase from left to right
                 // row r + 1 = ... d c ... 
                 // row r     = ... a b ... 
                 var a = col + row * cols;
-                var b = a + 1;
-                var c = b + cols;
-                var d = c - 1;
+                var b = (col+1) % (cols) + row * cols;
+                var c = (col+1) % (cols) + (row+1) % (rows) * cols;
+                var d = col + (row+1) % (rows) * cols;
                 indices = indices.pushMany([a, b, d]);
-                indices = indices.pushMany([c, d, b]);            
+                indices = indices.pushMany([b, c, d]);            
             }
         }
-        return indices.array;
+        return indices.immutable;
     }
     
     // Converts an array of vectors into a vertex buffer 
@@ -168,7 +170,7 @@ module heron:geometry.mesh:0.1
             (u, v) => f(
                 u / uCount.float * uLength + uStart, 
                 v / vCount.float * vLength + vStart));
-        var indices = quadStripToMeshIndices(points, vCount);
+        var indices = quadStripToMeshIndices(points, vCount, true, true);
         return mesh(vectorsToVertexBuffer(points), indices);
     }
 
@@ -177,7 +179,7 @@ module heron:geometry.mesh:0.1
 
     // Given UV coordinates on the surface of a sphere u=[0,1), v=[0,1) computes the 3D location.
     function spherePoint(u, v)
-        = vector(-cos(u) * sin(v), cos(v), sin(u) * sin(v));
+        = vector(-cos(u*2*pi) * sin(v*2*pi), cos(v*2*pi), sin(u*2*pi) * sin(v*2*pi));
 
     function sphere(segments) 
         = meshFromUV(spherePoint, segments);
@@ -187,7 +189,7 @@ module heron:geometry.mesh:0.1
 
     // Given UV coordinates on the surface of a cylinder u=[0,1), v=[0,1) computes the 3D location.
     function cylinderPoint(u, v) 
-        = vector(sin(u), v, cos(u));
+        = vector(sin(u*2*pi), v, cos(u*2*pi));
 
     function cylinder(segments) 
         = meshFromUV(cylinderPoint, segments);
@@ -202,9 +204,9 @@ module heron:geometry.mesh:0.1
     // and a minor radius (tube) computes the 3D location of the torus
     function torusPoint(u, v, r1, r2)
         = vector(
-			(r1 + r2 * cos(v)) * cos(u),
-			(r1 + r2 * cos(v)) * sin(u),
-			r2 * sin(v));
+			(r1 + r2 * cos(v*2*pi)) * cos(u*2*pi),
+			(r1 + r2 * cos(v*2*pi)) * sin(u*2*pi),
+			r2 * sin(v*2*pi));
 
     function torus()
         = torus(10, 2, 32);

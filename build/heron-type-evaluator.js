@@ -153,6 +153,8 @@ var TypeEvaluator = /** @class */ (function () {
                 return heron_types_1.makeFunctionSet(ref.defs.map(function (r) { return heron_types_1.computeFuncType(r); }));
             }
             else if (ref instanceof heron_refs_1.VarRef) {
+                if (!ref.def.type)
+                    ref.def.type = this.getType(ref.def.exprNode.expr);
                 return heron_types_1.assure(ref.def.type);
             }
             else if (ref instanceof heron_refs_1.FuncParamRef) {
