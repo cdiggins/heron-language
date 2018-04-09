@@ -1,14 +1,19 @@
 # Heron Programming Language
 
-Heron is a pure functional fully type-inferred programming language with a JavaScript-like syntax.
+Heron is a small cross-platform language being designed for ease of use, performance, and safety with a JavaScript like syntax.
 
-## Why Heron
+Heron is a fully statically typed language that does not require type annotations in the majority of cases, so it looks and feels like a dynamic language, with the *potential* efficiency, safety, and tooling of a compiled language. 
 
-Heron is a programming language that aims at simplicity, safety, and code reuse. Heron supports multiple compilation targets, with the first implementation focusing on JavaScript. Heron is inspired by many languages particularly: JavaScript, Python, Scala, Haskell, and C#. 
+The Heron design is influenced most heavily by JavaScript, Haskell, C#, Scala, GLSL, and Scheme, but other languages play a role as well. Heron has a powerful module system built into the language, and a forward thinking language versioning scheme for maintaining backwards compatibility while the language evolves. 
 
-Heron is a type-inferred language, which is designed for efficient array processing. Heron supports generics and higher-order functions and emphasizes the use of immutable data structures. 
+Current development on Heron is focused on numerical array processing, such as required in sound and image processing, and data visualization in 2D and 3D. The reference implementation generates JavaScript, but a C++ generator is planned as well.
 
-## History
+Heron is built on the principle of emphasizing functional programming, immutable data structures, and type safety while minimizing complexity.
+
+> *"I'm still trying to figure this magic out"* 
+> -- Stephen Taylor
+
+## Ancient History
 
 This is technically the third incarnation of a programming language Heron, but no one is going to remember the older versions. Last time I announced a programming language named Heron was 8 years ago. The new Heron is quiate a different language from previous incarnations which were intended as general purpose languages, largely in part to my growth and evolution as a programmer. 
 

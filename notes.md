@@ -448,13 +448,19 @@ Parameteric geometry:
 
 # What is Heron 
 
-Heron is a small cross-platform language designed for ease of use, performance, and safety. 
+Heron is a small cross-platform language being designed for ease of use, performance, and safety.  
 
-The current language implementation targets JavaScript but a C++ generator is in the works.
+Heron is a fully statically typed language that does not require type annotations in the majority of cases, so it looks and feels like a dynamic language, with the potential efficiency, safety, and tooling of a compiled language. 
 
-Heron is mainly influenced by JavaScript, Haskell, C++, Java, C#, Scala, and Python. Other languages that have played an influencing role in its design including: C#, C++, TypeScript, Scala, C#, and Go. 
+The Heron design is influenced by JavaScript, C#, Scala, GLSL, and Scheme. Heron syntax is mostly a simplified subset of JavaScript. It has a powerful module system built into the language, and a forward thinking language versioning scheme for maintaining backwards compatibility while the language evolves. 
 
-There are similarities with a large number of languages of course, 
+Current development on Heron is focused on numerical array processing, such as required in sound and image processing, and data visualization in 2D and 3D. The reference implementation generates JavaScript, but a C++ generator is planned as well.
+
+Heron is built on the principle of emphasizing functional programming, immutable data structures, and type safety while minimizing complexity. The driving design principle, is to assure that 'it just works'. 
+
+*"I'm still trying to figure this magic out"* -- Stephen Taylor
+
+//==
 
 https://en.wikipedia.org/wiki/Speedcoding - 1953
 https://en.wikipedia.org/wiki/APL_(programming_language) - 1954
