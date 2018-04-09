@@ -452,11 +452,11 @@ Heron is a small cross-platform language being designed for ease of use, perform
 
 Heron is a fully statically typed language that does not require type annotations in the majority of cases, so it looks and feels like a dynamic language, with the potential efficiency, safety, and tooling of a compiled language. 
 
-The Heron design is influenced by JavaScript, C#, Scala, GLSL, and Scheme. Heron syntax is mostly a simplified subset of JavaScript. It has a powerful module system built into the language, and a forward thinking language versioning scheme for maintaining backwards compatibility while the language evolves. 
+The Heron design is influenced most heavily by JavaScript, Haskell, C#, Scala, GLSL, and Scheme, but other languages play a role as well. Heron syntax is mostly a simplified subset of JavaScript. It has a powerful module system built into the language, and a forward thinking language versioning scheme for maintaining backwards compatibility while the language evolves. 
 
 Current development on Heron is focused on numerical array processing, such as required in sound and image processing, and data visualization in 2D and 3D. The reference implementation generates JavaScript, but a C++ generator is planned as well.
 
-Heron is built on the principle of emphasizing functional programming, immutable data structures, and type safety while minimizing complexity. The driving design principle, is to assure that 'it just works'. 
+Heron is built on the principle of emphasizing functional programming, immutable data structures, and type safety while minimizing complexity.
 
 *"I'm still trying to figure this magic out"* -- Stephen Taylor
 
@@ -519,3 +519,19 @@ Before release.
 * How did I write it? 
 * Expose some functionality? Be able to control different functions? 
 * Parameter descriptions (JSON)
+
+//==
+
+The big problem is function overloading, or more specifically specialization. 
+Some functions have a general form, and a more specific form. 
+
+When a specific form can be chosen, it should be, when it can't what do we do? 
+
+BUT: here is the thing, I don't want it to go to the general form. I can't actually compile generics. 
+
+So let's leave it as an open-form, and force the compiler to make choices.
+
+This should be possible, right? We start with the most generic choice, but then
+we specialize at the end? Or is there another option? 
+
+The best choice is determined by the second best choice. 
