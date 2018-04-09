@@ -18,7 +18,7 @@ module heron:intrinsics:0.1
 
     // Intrinsic (built-in) functions. 
     intrinsic float(x: Int): Float;
-    
+
     intrinsic float2(x: Float, y: Float): Float2;    
     intrinsic x(v: Float2): Float;
     intrinsic y(v: Float2): Float;
@@ -98,7 +98,7 @@ module heron:intrinsics:0.1
     intrinsic op_negate(x: Float): Float;
 
     // Array functions 
-    intrinsic array<T>(n: Int, f: Func<Int, T>): Array<T>;
+    intrinsic genArray<T>(n: Int, f: Func<Int, T>): Array<T>;
     intrinsic count<T>(xs: Array<T>): Int;
     intrinsic at<T>(xs: Array<T>, i: Int): T;     
 
@@ -125,7 +125,7 @@ module heron:intrinsics:0.1
     
     // Range operator 
     function op.. (from: Int, upto: Int): Array<Int>
-        = array(upto - from, (i) => i + upto);
+        = genArray(upto - from, (i) => i + from);
 
     // Indexing operator
     function op[] <T>(xs: Array<T>, i: Int): T

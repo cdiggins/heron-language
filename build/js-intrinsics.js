@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.library = "\n\nfunction ImmutableArray(count, at) {\n    this.count = count;\n    this.at = at;\n}\n\nfunction toImmutable(xs) {\n    return new ImmutableArray(xs);\n}\n  \nfunction toMutable(xs) {\n    const count = xs.count;\n    const array = []; \n    for (let i=0; i < count; ++i)\n      array.push(xs.at(i));\n    return arrayFromJavaScript(array);\n}\n\nfunction arrayFromJavaScript(xs) {\n  return {\n    array: xs,\n    count: xs.length,\n    at: (i) => xs[i],\n  }\n}\n";
+exports.library = "\nfunction ImmutableArray(count, at) {\n    this.count = count;\n    this.at = at;\n}\n\nfunction newImmutableArray(count, at) {\n    return new ImmutableArray(count, at);\n}\n  \nfunction toMutable(xs) {\n    const count = xs.count;\n    const array = []; \n    for (let i=0; i < count; ++i)\n      array.push(xs.at(i));\n    return arrayFromJavaScript(array);\n}\n\nfunction arrayFromJavaScript(xs) {\n  return {\n    array: xs,\n    count: xs.length,\n    at: (i) => xs[i],\n  }\n}\n";
 exports.intrinsics = {
     int: 'Math.round',
     float: function (x) { return x; },
@@ -44,7 +44,7 @@ exports.intrinsics = {
     op_hat_hat: function (x, y) { return !!(x ^ y); },
     op_not: function (x) { return !x; },
     op_negate: function (x) { return -x; },
-    gen: 'toImmutable',
+    genArray: 'newImmutableArray',
     count: function (xs) { return xs.count; },
     at: function (xs, i) { return xs.at(i); },
     mutable: 'toMutable',

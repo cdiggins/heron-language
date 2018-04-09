@@ -429,7 +429,9 @@ What I want in a language.
 * ADd "no unused locals" to TSConfig.
 * Make things "auto-save"
 * Default parameters would be very nice!! 
-
+* It is a problem that I can't overload intrinsics, and I don't even check it 
+    * I am running out of names for things.
+    
 # Optimization 
 
 * Defunctionalization

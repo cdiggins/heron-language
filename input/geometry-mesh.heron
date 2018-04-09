@@ -130,13 +130,13 @@ module heron:geometry.mesh:0.1
     function quadStripToMeshIndices(vertices, rows) {
         var cols = vertices.count / rows;
         var indices = [].mutable;
-        for (var r in 0..rows) {
-            for (var c in 0..cols) {                
+        for (var row in 0..rows) {
+            for (var col in 0..cols) {                
                 // Rows increase from bottom to top
                 // Columns increase from left to right
                 // row r + 1 = ... d c ... 
                 // row r     = ... a b ... 
-                var a = c + r * cols;
+                var a = col + row * cols;
                 var b = a + 1;
                 var c = b + cols;
                 var d = c - 1;

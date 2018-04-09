@@ -1,13 +1,12 @@
 export const library = 
 `
-
 function ImmutableArray(count, at) {
     this.count = count;
     this.at = at;
 }
 
-function toImmutable(xs) {
-    return new ImmutableArray(xs);
+function newImmutableArray(count, at) {
+    return new ImmutableArray(count, at);
 }
   
 function toMutable(xs) {
@@ -71,7 +70,7 @@ export const intrinsics =
     op_hat_hat: (x, y) => !!(x ^ y),
     op_not: (x) => !x,
     op_negate: (x) => -x,
-    gen: 'toImmutable', 
+    genArray: 'newImmutableArray',
     count: (xs) => xs.count,
     at: (xs, i) => xs.at(i),
     mutable: 'toMutable',

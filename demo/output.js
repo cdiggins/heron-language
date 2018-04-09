@@ -1,5 +1,9 @@
 // Generated using Heron on Sun Apr 08 2018 18:00:54 GMT-0400 (Eastern Daylight Time)
 
+var exports = exports || {};
+
+(function() 
+{
 function ImmutableArray(count, at) {
     this.count = count;
     this.at = at;
@@ -827,6 +831,6 @@ function geometryTest_472()
   return arrayFromJavaScript([tetrahedron_70(),cube_178(),octahedron_241(),dodecahedron_547(),icosahedron_722(),cylinder_1291(),sphere_1233(),torus_1429()]);
 }
 
-main_33();
-console.log(geometryTest_472());
-process.exit();
+exports.main = main_33;
+})(exports);
+

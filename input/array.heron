@@ -6,13 +6,13 @@ module heron:std.array:0.1
         = [x];
 
     function map(xs, f)
-        = array(xs.count, i => f(xs[i]));        
+        = genArray(xs.count, i => f(xs[i]));        
 
     function mapWithIndex(xs, f)
-        = array(xs.count, i => f(xs[i], i));        
+        = genArray(xs.count, i => f(xs[i], i));        
 
     function mapIndex(xs, f)
-        = array(xs.count, f);        
+        = genArray(xs.count, f);        
 
     function min(x, y) 
         = x <= y ? x : y;
