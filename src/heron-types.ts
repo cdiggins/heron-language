@@ -254,21 +254,24 @@ export function getReturnType(f: PolyType): Type {
     return f.types[f.types.length-1];
 }
 
-export function canCallFunc(f: PolyType, args: Type[]): boolean {
+export function canCallFunc(f: PolyType, args: Type[], exact: boolean): boolean {
     const params = getArgTypes(f);
     if (params.length !== args.length) return false;
     for (let i=0; i < params.length; ++i)
-        if (!canPassArg(args[i], params[i]))
+        if (!canPassArg(args[i], params[i], exact))
             return false;
     return true;
 }
 
-export function canPassArg(arg: Type, param: Type) {
+export function canPassArg(arg: Type, param: Type, exact: boolean) {
     if (param instanceof TypeVariable || arg instanceof TypeVariable)
         return true;
     if (param instanceof TypeConstant) {
         if (arg instanceof TypeConstant)
-            return typeStrategy.canCastTo(arg, param);
+            if (exact)
+                return isTypeConstant(arg, param.name);
+            else
+                return typeStrategy.canCastTo(arg, param);
         else
             return false;        
     }
@@ -279,7 +282,7 @@ export function canPassArg(arg: Type, param: Type) {
         if (arg.types.length !== param.types.length) 
             return false;
         for (let i=0; i < arg.types.length; ++i)
-            if (!canPassArg(arg.types[i], param.types[i]))
+            if (!canPassArg(arg.types[i], param.types[i], exact))
                 return false;
     }
     return true;
@@ -289,23 +292,73 @@ export function functionSetOptions(f: PolyType): PolyType[] {
     return (f.types[1] as PolyType).types.map(t => t as PolyType);
 }
 
-export function chooseBestFunctionIndexFromArgs(args: Type[], funcSet: PolyType): number {
-    let r = -1;
+// Gives a score to a function based on how many concrete types it has  
+export function functionSpecificity(func: PolyType): number {
+    const args = getArgTypes(func);
+    let n = 0;
+    for (const a of args)
+        if (a instanceof PolyType || a instanceof TypeConstant)
+            n++;
+    return n;
+}
+
+export function chooseMostGeneric(funcSet: PolyType): number {
     const options = functionSetOptions(funcSet);
+    let scores = options.map(functionSpecificity);
+    let result = 0, many = false;
+    for (let i=1; i < scores.length; ++i) {
+        if (scores[i] < scores[result] && scores[i] >= 0) 
+            result = i, many = false;
+        else if (scores[i] === scores[result])
+            many = true;
+    }
+    return many ? -1 : result;
+}
+
+export function chooseBestFunctionIndexFromArgs(args: Type[], funcSet: PolyType): number {
+    // Try an exact match (no casting)
+    let tmp = chooseBestFunctionIndexFromArgsHelper(args, funcSet, true);
+    if (tmp >= 0) return tmp;
+    // Try an inexact match (casting)
+    tmp = chooseBestFunctionIndexFromArgsHelper(args, funcSet, false);
+    if (tmp >= 0) return tmp;
+    // If nothing else works, just try the most generic option
+    tmp = chooseMostGeneric(funcSet);
+    if (tmp >= 0) return tmp;
+    throw new Error("Found no matching function");
+}
+
+export function chooseBestFunctionIndexFromArgsHelper(args: Type[], funcSet: PolyType, exact: boolean): number {
+    let r = -1;    
+        
+    const options = functionSetOptions(funcSet);
+
+    let scores = [];
+    
+    // First try with exact matching
     for (let i = 0; i  < options.length; ++i) {
         const g = options[i];
-        if (canCallFunc(g, args))
-        {
-            if (r < 0)
-                r = i;
-            else 
-                throw new Error("Multiple options found");
+        if (canCallFunc(g, args, exact))
+            scores.push(functionSpecificity(g)); 
+        else 
+            scores.push(-1);
+    }
+    
+    let res = 0;
+    let many = false;
+    for (var i=1; i < scores.length; ++i) {
+        if (scores[i] > scores[res]) {
+            many = false;
+            res = i;
+        }
+        else if (scores[i] === scores[res]) {
+            many = true;
         }
     }
-    if (r >= 0)
-        return r;
-    else 
-        throw new Error("No function found");
+    if (res >= 0 && !many)
+        return res;
+    else   
+        return -1;
 }
 
 export function chooseBestFunctionIndex(f: PolyType, funcSet: PolyType): number {

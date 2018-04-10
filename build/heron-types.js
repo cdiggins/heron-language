@@ -248,22 +248,25 @@ function getReturnType(f) {
     return f.types[f.types.length - 1];
 }
 exports.getReturnType = getReturnType;
-function canCallFunc(f, args) {
+function canCallFunc(f, args, exact) {
     var params = getArgTypes(f);
     if (params.length !== args.length)
         return false;
     for (var i = 0; i < params.length; ++i)
-        if (!canPassArg(args[i], params[i]))
+        if (!canPassArg(args[i], params[i], exact))
             return false;
     return true;
 }
 exports.canCallFunc = canCallFunc;
-function canPassArg(arg, param) {
+function canPassArg(arg, param, exact) {
     if (param instanceof type_system_1.TypeVariable || arg instanceof type_system_1.TypeVariable)
         return true;
     if (param instanceof type_system_1.TypeConstant) {
         if (arg instanceof type_system_1.TypeConstant)
-            return exports.typeStrategy.canCastTo(arg, param);
+            if (exact)
+                return type_system_1.isTypeConstant(arg, param.name);
+            else
+                return exports.typeStrategy.canCastTo(arg, param);
         else
             return false;
     }
@@ -273,7 +276,7 @@ function canPassArg(arg, param) {
         if (arg.types.length !== param.types.length)
             return false;
         for (var i = 0; i < arg.types.length; ++i)
-            if (!canPassArg(arg.types[i], param.types[i]))
+            if (!canPassArg(arg.types[i], param.types[i], exact))
                 return false;
     }
     return true;
@@ -283,24 +286,76 @@ function functionSetOptions(f) {
     return f.types[1].types.map(function (t) { return t; });
 }
 exports.functionSetOptions = functionSetOptions;
-function chooseBestFunctionIndexFromArgs(args, funcSet) {
-    var r = -1;
-    var options = functionSetOptions(funcSet);
-    for (var i = 0; i < options.length; ++i) {
-        var g = options[i];
-        if (canCallFunc(g, args)) {
-            if (r < 0)
-                r = i;
-            else
-                throw new Error("Multiple options found");
-        }
+// Gives a score to a function based on how many concrete types it has  
+function functionSpecificity(func) {
+    var args = getArgTypes(func);
+    var n = 0;
+    for (var _i = 0, args_1 = args; _i < args_1.length; _i++) {
+        var a = args_1[_i];
+        if (a instanceof type_system_1.PolyType || a instanceof type_system_1.TypeConstant)
+            n++;
     }
-    if (r >= 0)
-        return r;
-    else
-        throw new Error("No function found");
+    return n;
+}
+exports.functionSpecificity = functionSpecificity;
+function chooseMostGeneric(funcSet) {
+    var options = functionSetOptions(funcSet);
+    var scores = options.map(functionSpecificity);
+    var result = 0, many = false;
+    for (var i = 1; i < scores.length; ++i) {
+        if (scores[i] < scores[result] && scores[i] >= 0)
+            result = i, many = false;
+        else if (scores[i] === scores[result])
+            many = true;
+    }
+    return many ? -1 : result;
+}
+exports.chooseMostGeneric = chooseMostGeneric;
+function chooseBestFunctionIndexFromArgs(args, funcSet) {
+    // Try an exact match (no casting)
+    var tmp = chooseBestFunctionIndexFromArgsHelper(args, funcSet, true);
+    if (tmp >= 0)
+        return tmp;
+    // Try an inexact match (casting)
+    tmp = chooseBestFunctionIndexFromArgsHelper(args, funcSet, false);
+    if (tmp >= 0)
+        return tmp;
+    // If nothing else works, just try the most generic option
+    tmp = chooseMostGeneric(funcSet);
+    if (tmp >= 0)
+        return tmp;
+    throw new Error("Found no matching function");
 }
 exports.chooseBestFunctionIndexFromArgs = chooseBestFunctionIndexFromArgs;
+function chooseBestFunctionIndexFromArgsHelper(args, funcSet, exact) {
+    var r = -1;
+    var options = functionSetOptions(funcSet);
+    var scores = [];
+    // First try with exact matching
+    for (var i_1 = 0; i_1 < options.length; ++i_1) {
+        var g = options[i_1];
+        if (canCallFunc(g, args, exact))
+            scores.push(functionSpecificity(g));
+        else
+            scores.push(-1);
+    }
+    var res = 0;
+    var many = false;
+    for (var i = 1; i < scores.length; ++i) {
+        if (scores[i] > scores[res]) {
+            many = false;
+            res = i;
+        }
+        else if (scores[i] === scores[res]) {
+            many = true;
+        }
+    }
+    if (res >= 0 && !many)
+        return res;
+    else
+        return -1;
+}
+exports.chooseBestFunctionIndexFromArgsHelper = chooseBestFunctionIndexFromArgsHelper;
 function chooseBestFunctionIndex(f, funcSet) {
     return chooseBestFunctionIndexFromArgs(getArgTypes(f), funcSet);
 }

@@ -535,3 +535,40 @@ This should be possible, right? We start with the most generic choice, but then
 we specialize at the end? Or is there another option? 
 
 The best choice is determined by the second best choice. 
+
+So when do I make a better choice? Looks like I will have to dig down deeper/later. 
+
+Either I have a delayed best choice? Or a second pass? Or I run another algorithm at the
+end? Saying: well we have to choose ONE of those types. We weren't sure which one it is,
+but we had better figure it out now. 
+
+Refine function choices. Fine, we just do that at the very end ... is there a better function to choose? If the types are part of the arguments, then that would help a lot. 
+
+I could change all functions so that the names are part of the functions. 
+
+THEN, 
+* rather than just randomly adding a number, names are predicatable 
+* I can overload intrinsics 
+* The correct choice is done at run-time.
+* I don't even have to list every intrinsic choice. I just have to implement them.
+
+Downside, the intrinsics have to be renamed according to the types. 
+
+Easiest thing that could possibly work? 
+* Add a refinement pass at the end. 
+* Do it for special functions that need to be resolved. 
+* During parsing, find functions that belong to an overload set. 
+* When resolving, we might resolve to a function that is a template. That would 
+not be ideal.
+* Maybe any generic ... 
+
+//==
+
+func$Int$Int => 
+
+When a template is found, there can be specializations. 
+However, only one specialization is chosen? Or the best one.
+
+I could leave it as a FuncSet. 
+
+Basically: at 

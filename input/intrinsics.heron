@@ -64,8 +64,19 @@ module heron:intrinsics:0.1
     intrinsic op<= <T>(x: T, y: T): Bool;
 
     // Specialized binary operators 
-    /*
-    intrinsic op+ (x: Float2, y: Float2): Float2;+
+    intrinsic op+ (x: Int, y: Int): Int;
+    intrinsic op- (x: Int, y: Int): Int;
+    intrinsic op* (x: Int, y: Int): Int;
+    intrinsic op/ (x: Int, y: Int): Int;
+    intrinsic op% (x: Int, y: Int): Int;
+
+    intrinsic op+ (x: Float, y: Float): Float;
+    intrinsic op- (x: Float, y: Float): Float;
+    intrinsic op* (x: Float, y: Float): Float;
+    intrinsic op/ (x: Float, y: Float): Float;
+    intrinsic op% (x: Float, y: Float): Float;
+
+    intrinsic op+ (x: Float2, y: Float2): Float2;
     intrinsic op- (x: Float2, y: Float2): Float2;
     intrinsic op* (x: Float2, y: Float2): Float2;
     intrinsic op/ (x: Float2, y: Float2): Float2;
@@ -81,8 +92,7 @@ module heron:intrinsics:0.1
     intrinsic op- (x: Float4, y: Float4): Float4;
     intrinsic op* (x: Float4, y: Float4): Float4;
     intrinsic op/ (x: Float4, y: Float4): Float4;
-    intrinsic op% (x: Float4, y: Float4): Float4;
-    */
+    intrinsic op% (x: Float4, y: Float4): Float4;    
 
     // Equality operators 
     intrinsic op!= <T>(x: T, y: T): Bool;
