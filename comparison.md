@@ -1,8 +1,10 @@
 ## Heron Compared to TypeScript / JavaScript
 
-Heron most closely resembles a subset of the JavaScript language. It has a type system that is more restricted than TypeScript, but the type-inference system is more aggressive. Heron also has no concept of classes or prototypes.  
+Heron most closely resembles a subset of the JavaScript language. It has a type system that is more restricted than TypeScript, but the type-inference system is more aggressive. For example Heron function parameter types are inferred based on usage in the function defintion, as opposed to resolving to `any`. 
 
-A longer list of differences between Heron and TypeScript/JavaScript:
+The biggest standout difference is that Heron has no concept of classes or prototypes.  
+
+Heron is an unordered list of various differences Heron has with TypeScript/JavaScript:
 
 * only primitive types, generic types (including array and function), and type variables 
 * no object literals

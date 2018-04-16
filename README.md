@@ -78,6 +78,15 @@ function sum(xs) =
 var sum = (xs) => 
     xs.reduce(0, op+);
 ```
+### Function Overloads
+
+Unlike JavaScript and TypeScript Heron allows the same name to be used for multiple functions. Like other strongly typed language, multiple functions may have the same name if they differ by the inferred type signature. 
+
+When multiple function can be chosen from a single name, the function with the type parameter that best matches the types of the expressions is chosen. If there is ambiguity, the most general type is chosen. This means that if you have an overloaded set of fucntions with ambiguity (like `op+`) then at least one function should have a generic implementation.   
+
+### Operator Overloads 
+
+Most binary operators can be overloaded. The Heron compiler maps operator calls to functions that have the letters `op` before the operator symbol (e.g. `op+`, `op<=`, `op..` etc.). This allows operators to be passed as function arguments. For several examples of operator definitions see the `intrinsics.heron` file. 
 
 ### Intrinsics 
 
@@ -134,9 +143,9 @@ Heron has the following expression forms:
 
 ## Function Calls and Object Oriented Syntax
 
-Heron is explicitly not an object oriented language, but Heron code support a similar dot syntax. 
+Heron is explicitly not an object oriented language, but Heron still supportas a dot syntax enabling method and property chaining.
 
-In Heron every function is a static function (there is no implicit `this` variable) but you can call any function using a dot syntax, with the first argument on the left of the function. If the the function is a unary function (has only one argument) then when using dot syntax the parentheses are omitted, giving it the appearance of a computed property. 
+In Heron every function is a static function (there is no implicit `this` variable) but you can also call any function using a dot syntax, with the first argument on the left of the function. If the the function is a unary function (has only one argument) then when using dot syntax the parentheses are omitted, giving it the appearance of a computed property. 
 
 ```
 function sqr(x) = x * x;
@@ -149,6 +158,9 @@ print(6.sqr);
 // The following two are equivalent and print 42
 print(multiply(6, 7));
 print(6.multiply(7))
+
+// The following is a compilation error, it would be equivalent to writing `sqr(6)()`
+print(6.sqr())
 ```
 
 # The Heron Type System 

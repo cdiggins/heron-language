@@ -1,4 +1,4 @@
-// A Type Inference Algorithm that provides support for full inference 
+// A Type Inference Algorithm that provides partial support for inference 
 // of non-recursive higher rank polymorphic types.
 //
 // Copyright 2017 by Christopher Diggins 
