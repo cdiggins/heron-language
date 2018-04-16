@@ -1,8 +1,5 @@
-import { Myna } from "myna-parser/myna";
-import { FuncDef, TypeDef, VarDef, FuncParamDef, createFuncParamDef, getDef, Def } from "./heron-defs";
+import { VarDef, FuncParamDef, getDef } from "./heron-defs";
 import { validateNode, visitAst, throwError, HeronAstNode } from "./heron-ast-rewrite";
-import { Ref } from "./heron-refs";
-import { Statement } from "./heron-statement";
 import { Type } from "./type-system";
 
 // Expressions are either: named function sets, anonymous functions, function calls, variables, or literals.

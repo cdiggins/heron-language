@@ -15,7 +15,9 @@
     "url": "https://github.com/cdiggins/heron-language.git"
   },
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "lint": "tslint --project ."    
   },
   "dependencies": {
     "myna-parser": "^2.5.1"

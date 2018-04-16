@@ -1,10 +1,9 @@
 import { FuncDef, FuncParamDef, VarDef } from "./heron-defs";
-import { Type, normalizeType } from "./type-system";
-import { Types } from "./heron-types";
+import { normalizeType } from "./type-system";
 import { CodeBuilder } from "./code-builder";
 import { VarName, FunCall, ConditionalExpr, ObjectLiteral, ArrayLiteral, BoolLiteral, IntLiteral, FloatLiteral, StrLiteral, VarExpr, PostfixDec, Lambda, PostfixInc, Expr, ObjectField, VarAssignmentExpr } from "./heron-expr";
 import { Statement, CompoundStatement, IfStatement, EmptyStatement, VarDeclStatement, WhileStatement, DoStatement, ForStatement, ExprStatement, ContinueStatement, ReturnStatement } from "./heron-statement";
-import { SourceFile, Module } from "./heron-package";
+import { Module } from "./heron-package";
 import { identifierToString } from "./heron-ast-rewrite";
 import { FuncRef } from "./heron-refs";
 

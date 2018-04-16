@@ -1,9 +1,6 @@
-import { Myna } from "myna-parser/myna";
-import { HeronAstNode, isExpr, validateNode, throwError, preprocessAst, visitAst } from "./heron-ast-rewrite";
-import { Type } from "./type-system";
-import { Def, createDef, FuncDef } from "./heron-defs";
+import { HeronAstNode } from "./heron-ast-rewrite";
+import { Def } from "./heron-defs";
 import { Ref } from "./heron-refs";
-import { createExpr } from "./heron-expr";
 import { Package } from "./heron-package";
 
 /** 
@@ -66,10 +63,6 @@ export function nodeId(node: HeronAstNode): string {
 }
 
 export const scopeType = ['funcDef', 'instrinsicDef', 'module', 'varExpr', 'compoundStatement'];
-
-function isValidScopeType(s: string): boolean {
-    return scopeType.indexOf(s) >= 0;
-}
 
 // Used for visiting nodes in the Heron node looking for name defintions, usages, and scopes.
 export class NameAnalyzer

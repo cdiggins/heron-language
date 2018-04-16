@@ -1,6 +1,5 @@
 import { CodeBuilder } from "./code-builder";
-import { HeronAstNode, isExpr } from "./heron-ast-rewrite";
-import { Ref } from "./heron-refs";
+import { HeronAstNode } from "./heron-ast-rewrite";
 
 // Given an AST, will generate a text representation of the code as Heron code
 // that has been marked up with the analysis results. 

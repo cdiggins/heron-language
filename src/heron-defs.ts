@@ -1,9 +1,7 @@
 // This module provides support for dealing with definitions.  
 // A definition could be a function definition, parameter definition, variable definition, type definition. 
  
-import { Myna } from "myna-parser/myna";
-import { visitAst, validateNode, throwError, HeronAstNode } from "./heron-ast-rewrite";
-import { Expr, createExpr } from "./heron-expr";
+import { validateNode, throwError, HeronAstNode } from "./heron-ast-rewrite";
 import { Type } from "./type-system";
 
 // This is a definition of a name. It could be a function, variable, type

@@ -4,13 +4,6 @@
 // Copyright 2017 by Christopher Diggins 
 // Licensed under the MIT License
 
-let trace = false;
-
-/** Turn on debug tracing */
-export function setTrace(b: boolean) {
-    trace = b;
-}
-
 //=========================================
 // Helper interfaces 
 

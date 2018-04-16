@@ -1,11 +1,9 @@
-import { Myna } from "myna-parser/myna";
-import { HeronAstNode, isExpr, validateNode, throwError, preprocessAst, visitAst } from "./heron-ast-rewrite";
-import { Type, filterType } from "./type-system";
+import { HeronAstNode,  validateNode, throwError, preprocessAst, visitAst } from "./heron-ast-rewrite";
 import { Def, createDef, VarDef, FuncDef, TypeDef, TypeParamDef, FuncParamDef, ForLoopVarDef } from "./heron-defs";
 import { Ref, FuncRef, TypeRef, TypeParamRef, FuncParamRef, VarRef, ForLoopVarRef } from "./heron-refs";
 import { createExpr } from "./heron-expr";
 import { NameAnalyzer, Scope } from "./heron-name-analysis";
-import { createStatement, rewriteIfStatements, VarDeclStatement } from "./heron-statement";
+import { createStatement, VarDeclStatement } from "./heron-statement";
 
 // A package is a compiled system. It contains a set of modules in different source files. 
 export class Package 
@@ -45,7 +43,7 @@ export class Package
         validateNode(node, 'file');
         let langVerNode = validateNode(node.children[0], 'langVer');
         let langVer = this.parseURN(langVerNode);
-        //if (langVer.length != 3) throwError(langVerNode, "Expected three component to language version URN: name, flavor, and version")
+        if (langVer.length != 3) throwError(langVerNode, "Expected three component to language version URN: name, flavor, and version")
         let file = new SourceFile(node, intrinsic, filePath, langVerNode.allText);
         this.files.push(file);
 
@@ -128,7 +126,6 @@ export class Package
         }
 
         // Analyze names for each module.
-        let moduleScopes = {};
         for (let m of this.modules) 
         {
             this.pushScope(m.node);

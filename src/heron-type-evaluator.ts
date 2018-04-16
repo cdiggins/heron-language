@@ -1,10 +1,9 @@
 import { VarName, FunCall, ConditionalExpr, ObjectLiteral, ArrayLiteral, BoolLiteral, IntLiteral, FloatLiteral, StrLiteral, VarExpr, PostfixDec, Lambda, PostfixInc, Expr, ObjectField, VarAssignmentExpr } from "./heron-expr";
 import { Statement, CompoundStatement, IfStatement, EmptyStatement, VarDeclStatement, WhileStatement, DoStatement, ForStatement, ExprStatement, ContinueStatement, ReturnStatement } from "./heron-statement";
-import { throwError, HeronAstNode, validateNode, visitAst } from "./heron-ast-rewrite";
-import { FuncDef, FuncParamDef, ForLoopVarDef, VarDef } from "./heron-defs";
-import { FuncRef, TypeRef, TypeParamRef, Ref, FuncParamRef, VarRef, ForLoopVarRef } from "./heron-refs";
-import { typeConstant, polyType, Type, PolyType, typeVariable, TypeVariable, TypeConstant, isTypeConstant, TypeResolver, newTypeVar, Lookup, freshVariableNames, MonoType, normalizeType, TypeStrategy } from "./type-system";
-import { Module, Package } from "./heron-package";
+import { throwError, HeronAstNode } from "./heron-ast-rewrite";
+import { FuncParamDef } from "./heron-defs";
+import { FuncRef, TypeRef, TypeParamRef, FuncParamRef, VarRef, ForLoopVarRef } from "./heron-refs";
+import { Type, PolyType, TypeVariable, TypeResolver, TypeStrategy } from "./type-system";
 import { genericFuncType, typeFromNode, getNumArgTypes, getArgType, getReturnType, Types, getLambdaType, getArrayElementType, makeNewArrayType, callFunction, genericFuncTypeFromArgs, isFunctionType, callFunctionSet, isFunctionSet, assure, makeFunctionSet, computeFuncType } from "./heron-types";
 
 // This class computes the type for a function
@@ -215,7 +214,7 @@ export class TypeEvaluator
             }
         }
         else if (expr instanceof ConditionalExpr) {
-            const cond = this.unifyBool(expr.condition);
+            this.unifyBool(expr.condition);
             const onTrue = this.getType(expr.onTrue);
             const onFalse = this.getType(expr.onFalse);
             return this.unify(onTrue, onFalse);

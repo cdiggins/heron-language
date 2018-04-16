@@ -2,7 +2,6 @@
 // A reference is a name (identifier) that refers to a definition.
 // There can be more than one definitions (for examples when dealing with overloaded functions)
 
-import { Myna } from "myna-parser/myna";
 import { Def, VarDef, ForLoopVarDef, TypeDef, TypeParamDef, FuncDef, FuncParamDef } from "./heron-defs";
 import { throwError, HeronAstNode } from "./heron-ast-rewrite";
 import { Scope } from "./heron-name-analysis";

@@ -31,12 +31,6 @@ const g = new function() {
         return rule.then(m.seq(",", _this.ws, rule).zeroOrMore).opt;
     }
 
-    function noAst(rule: m.Rule): m.Rule {
-        let r = rule.copy;
-        r._createAstNode = false;
-        return r;
-    }
-    
     // Recursive definition of an expression
     this.expr = m.delay(() => _this.assignmentExpr).setName("heron", "expr");
 

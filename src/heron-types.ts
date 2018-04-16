@@ -1,10 +1,8 @@
-import { VarName, FunCall, ConditionalExpr, ObjectLiteral, ArrayLiteral, BoolLiteral, IntLiteral, FloatLiteral, StrLiteral, VarExpr, PostfixDec, Lambda, PostfixInc, Expr, ObjectField, VarAssignmentExpr } from "./heron-expr";
-import { Statement, CompoundStatement, IfStatement, EmptyStatement, VarDeclStatement, WhileStatement, DoStatement, ForStatement, ExprStatement, ContinueStatement, ReturnStatement } from "./heron-statement";
-import { throwError, HeronAstNode, validateNode, visitAst } from "./heron-ast-rewrite";
-import { FuncDef, FuncParamDef, ForLoopVarDef, VarDef } from "./heron-defs";
-import { FuncRef, TypeRef, TypeParamRef, Ref, FuncParamRef, VarRef, ForLoopVarRef } from "./heron-refs";
-import { typeConstant, polyType, Type, PolyType, typeVariable, TypeVariable, TypeConstant, isTypeConstant, TypeResolver, newTypeVar, Lookup, freshVariableNames, MonoType, normalizeType } from "./type-system";
-import { Module, Package } from "./heron-package";
+import { FunCall, Lambda, Expr, } from "./heron-expr";
+import { HeronAstNode, validateNode } from "./heron-ast-rewrite";
+import { FuncDef } from "./heron-defs";
+import { FuncParamRef, VarRef } from "./heron-refs";
+import { typeConstant, polyType, Type, PolyType, typeVariable, TypeVariable, TypeConstant, isTypeConstant, TypeResolver, newTypeVar, freshVariableNames, normalizeType } from "./type-system";
 import { TypeEvaluator } from "./heron-type-evaluator";
 
 export function assure<T>(t: T): T {
@@ -118,7 +116,7 @@ export function callFunction(funOriginal: PolyType, args: Expr[], argTypes: Type
         }
 
         // Do the local unification to get the proper return type
-        const localType = u.unifyTypes(paramType, argType);
+        u.unifyTypes(paramType, argType);
 
         // Do the unification of the arguments with the types.
         const globalType = mainUnifier.unifyTypes(argType, paramType);        
@@ -132,10 +130,6 @@ export function callFunction(funOriginal: PolyType, args: Expr[], argTypes: Type
             mainUnifier.unifyTypes(arg.node.ref.def.type, globalType);
         }        
     }
-
-    // DEBUG:
-    //console.log("Unifier state:");
-    //console.log(u.state);
 
     // We return the unified version of the return type.
     return u.getUnifiedType(returnType);
@@ -329,8 +323,6 @@ export function chooseBestFunctionIndexFromArgs(args: Type[], funcSet: PolyType)
 }
 
 export function chooseBestFunctionIndexFromArgsHelper(args: Type[], funcSet: PolyType, exact: boolean): number {
-    let r = -1;    
-        
     const options = functionSetOptions(funcSet);
 
     let scores = [];

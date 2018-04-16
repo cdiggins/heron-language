@@ -1,14 +1,7 @@
-import { Myna } from "myna-parser/myna";
-import { Type, TypeResolver } from "./type-system";
-import { preprocessAst, visitAst, HeronAstNode } from "./heron-ast-rewrite";
+import {HeronAstNode } from "./heron-ast-rewrite";
 import { parseHeron, heronGrammar } from "./heron-parser";
-import { heronToText } from "./heron-to-text";
-import { Def, createDef } from "./heron-defs";
-import { Ref } from "./heron-refs";
-import { Expr, createExpr } from "./heron-expr";
 import { Package } from "./heron-package";
-import { computeFuncType, typeStrategy } from "./heron-types";
-import { toJavaScript } from "./heron-to-js";
+import { computeFuncType } from "./heron-types";
 
 const g = heronGrammar;
 
@@ -16,9 +9,12 @@ const g = heronGrammar;
 declare var require; 
 const fs = require('fs');
 const path = require('path');
-const nodePackage = JSON.parse(fs.readFileSync('package.json','utf8'));
-const ver = nodePackage.version; 
-const flavor = 'std';
+
+// TODO: use or throw out.
+//const nodePackage = JSON.parse(fs.readFileSync('package.json','utf8'));
+//const ver = nodePackage.version; 
+//const flavor = 'std';
+
 const ext = '.heron';
 
 // Module resolution
@@ -74,7 +70,6 @@ export function parseModule(moduleName: string): HeronAstNode {
 export function parseFile(f: string): HeronAstNode {
     try 
     {
-        const outputFile = f.substring(0, f.lastIndexOf('.')) + '.output.heron';
         const code = fs.readFileSync(f, 'utf-8');
         const ast = parseHeron(code, g.file);     
         return ast;
