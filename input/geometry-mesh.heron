@@ -13,7 +13,7 @@ module heron:geometry.mesh:0.1
 
     // Platonic solids 
 
-    function tetrahedron()
+    var tetrahedron
         = mesh(
         [
             1, 1, 1,   
@@ -28,7 +28,7 @@ module heron:geometry.mesh:0.1
             2, 3, 1
         ]);
 
-    function cube()
+    var cube
         = mesh(
         [
             // front
@@ -58,7 +58,7 @@ module heron:geometry.mesh:0.1
         ]);
 
     // https://github.com/mrdoob/three.js/blob/master/src/geometries/OctahedronGeometry.js
-    function octahedron() 
+    var octahedron
         = mesh(
             [
             1, 0, 0, 	-1, 0, 0,	0, 1, 0,
@@ -71,7 +71,7 @@ module heron:geometry.mesh:0.1
     	]);
 
     // https://github.com/mrdoob/three.js/blob/master/src/geometries/DodecahedronGeometry.js
-    function dodecahedron() =
+    var dodecahedron =
 	    var t = (1 + sqrt(5)) / 2 in
 	    var r = 1 / t in 
         mesh([
@@ -109,7 +109,7 @@ module heron:geometry.mesh:0.1
 
 
     // https://github.com/mrdoob/three.js/blob/master/src/geometries/IcosahedronGeometry.js
-    function icosahedron() 
+    var icosahedron
         = var t = (1 + sqrt(5)) / 2 in
             mesh([
                 -1, t, 0,   1, t, 0,   -1, -t, 0,   1, -t, 0,

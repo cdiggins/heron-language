@@ -59,11 +59,11 @@ module heron:tests:0.1
 
     function geometryTest() 
         = [
-            tetrahedron(), 
-            cube(), 
-            octahedron(), 
-            dodecahedron(), 
-            icosahedron(), 
+            tetrahedron, 
+            cube, 
+            octahedron, 
+            dodecahedron, 
+            icosahedron, 
             sphere(), 
             cylinder(), 
             torus()

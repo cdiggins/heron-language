@@ -1,4 +1,4 @@
-// Generated using Heron on Mon Apr 09 2018 23:52:58 GMT-0400 (Eastern Daylight Time)
+// Generated using Heron on Tue Apr 10 2018 00:05:06 GMT-0400 (Eastern Daylight Time)
 var heronMain = (function () {
 
 function newImmutableArray(count, at) {
@@ -702,36 +702,16 @@ function cartesianProduct_1905(xs, ys, f)
 // file input\geometry-mesh.heron
 // imports heron:std.array:0.1
 // imports heron:geometry.vector:0.1
-// (Func Mesh)
-function tetrahedron_70()
-{
-  return mesh_1932(arrayFromJavaScript([1,1,1,op_negate_1371(1),op_negate_1371(1),1,op_negate_1371(1),1,op_negate_1371(1),1,op_negate_1371(1),op_negate_1371(1)]),arrayFromJavaScript([2,1,0,0,3,2,1,3,0,2,3,1]));
-}
-// (Func Mesh)
-function cube_178()
-{
-  return mesh_1932(arrayFromJavaScript([op_negate_1371(1),op_negate_1371(1),1,1,op_negate_1371(1),1,1,1,1,op_negate_1371(1),1,1,op_negate_1371(1),op_negate_1371(1),op_negate_1371(1),1,op_negate_1371(1),op_negate_1371(1),1,1,op_negate_1371(1),op_negate_1371(1),1,op_negate_1371(1)]),arrayFromJavaScript([0,1,2,2,3,0,1,5,6,6,2,1,7,6,5,5,4,7,4,0,3,3,7,4,4,5,1,1,0,4,3,2,6,6,7,3]));
-}
-// (Func Mesh)
-function octahedron_241()
-{
-  return mesh_1932(arrayFromJavaScript([1,0,0,op_negate_1371(1),0,0,0,1,0,0,op_negate_1371(1),0,0,0,1,0,0,op_negate_1371(1)]),arrayFromJavaScript([0,2,4,0,4,3,0,3,5,0,5,2,1,2,5,1,5,3,1,3,4,1,4,2]));
-}
-// (Func Mesh)
-function dodecahedron_547()
-{
-  return ((t) => ((r) => mesh_1932(arrayFromJavaScript([op_negate_1371(1),op_negate_1371(1),op_negate_1371(1),op_negate_1371(1),op_negate_1371(1),1,op_negate_1371(1),1,op_negate_1371(1),op_negate_1371(1),1,1,1,op_negate_1371(1),op_negate_1371(1),1,op_negate_1371(1),1,1,1,op_negate_1371(1),1,1,1,0,op_negate_1371(r),op_negate_1371(t),0,op_negate_1371(r),t,0,r,op_negate_1371(t),0,r,t,op_negate_1371(r),op_negate_1371(t),0,op_negate_1371(r),t,0,r,op_negate_1371(t),0,r,t,0,op_negate_1371(t),0,op_negate_1371(r),t,0,op_negate_1371(r),op_negate_1371(t),0,r,t,0,r]),arrayFromJavaScript([3,11,7,3,7,15,3,15,13,7,19,17,7,17,6,7,6,15,17,4,8,17,8,10,17,10,6,8,0,16,8,16,2,8,2,10,0,12,1,0,1,18,0,18,16,6,10,2,6,2,13,6,13,15,2,16,18,2,18,3,2,3,13,18,1,9,18,9,11,18,11,3,4,14,12,4,12,0,4,0,8,11,9,5,11,5,19,11,19,7,19,5,14,19,14,4,19,4,17,1,12,14,1,14,5,1,5,9])))(op_div_557(1,t))
-  )(op_div_557(op_add_485(1,sqrt_446(5)),2))
-  ;
-}
-// (Func Mesh)
-function icosahedron_722()
-{
-  return ((t) => mesh_1932(arrayFromJavaScript([op_negate_1371(1),t,0,1,t,0,op_negate_1371(1),op_negate_1371(t),0,1,op_negate_1371(t),0,0,op_negate_1371(1),t,0,1,t,0,op_negate_1371(1),op_negate_1371(t),0,1,op_negate_1371(t),t,0,op_negate_1371(1),t,0,1,op_negate_1371(t),0,op_negate_1371(1),op_negate_1371(t),0,1]),arrayFromJavaScript([0,11,5,0,5,1,0,1,7,0,7,10,0,10,11,1,5,9,5,11,4,11,10,2,10,7,6,7,1,8,3,9,4,3,4,2,3,2,6,3,6,8,3,8,9,4,9,5,2,4,11,6,2,10,8,6,7,9,8,1])))(op_div_557(op_add_485(1,sqrt_446(5)),2))
-  ;
-}
+const tetrahedron = mesh_1932(arrayFromJavaScript([1,1,1,op_negate_1371(1),op_negate_1371(1),1,op_negate_1371(1),1,op_negate_1371(1),1,op_negate_1371(1),op_negate_1371(1)]),arrayFromJavaScript([2,1,0,0,3,2,1,3,0,2,3,1]));
+const cube = mesh_1932(arrayFromJavaScript([op_negate_1371(1),op_negate_1371(1),1,1,op_negate_1371(1),1,1,1,1,op_negate_1371(1),1,1,op_negate_1371(1),op_negate_1371(1),op_negate_1371(1),1,op_negate_1371(1),op_negate_1371(1),1,1,op_negate_1371(1),op_negate_1371(1),1,op_negate_1371(1)]),arrayFromJavaScript([0,1,2,2,3,0,1,5,6,6,2,1,7,6,5,5,4,7,4,0,3,3,7,4,4,5,1,1,0,4,3,2,6,6,7,3]));
+const octahedron = mesh_1932(arrayFromJavaScript([1,0,0,op_negate_1371(1),0,0,0,1,0,0,op_negate_1371(1),0,0,0,1,0,0,op_negate_1371(1)]),arrayFromJavaScript([0,2,4,0,4,3,0,3,5,0,5,2,1,2,5,1,5,3,1,3,4,1,4,2]));
+const dodecahedron = ((t) => ((r) => mesh_1932(arrayFromJavaScript([op_negate_1371(1),op_negate_1371(1),op_negate_1371(1),op_negate_1371(1),op_negate_1371(1),1,op_negate_1371(1),1,op_negate_1371(1),op_negate_1371(1),1,1,1,op_negate_1371(1),op_negate_1371(1),1,op_negate_1371(1),1,1,1,op_negate_1371(1),1,1,1,0,op_negate_1371(r),op_negate_1371(t),0,op_negate_1371(r),t,0,r,op_negate_1371(t),0,r,t,op_negate_1371(r),op_negate_1371(t),0,op_negate_1371(r),t,0,r,op_negate_1371(t),0,r,t,0,op_negate_1371(t),0,op_negate_1371(r),t,0,op_negate_1371(r),op_negate_1371(t),0,r,t,0,r]),arrayFromJavaScript([3,11,7,3,7,15,3,15,13,7,19,17,7,17,6,7,6,15,17,4,8,17,8,10,17,10,6,8,0,16,8,16,2,8,2,10,0,12,1,0,1,18,0,18,16,6,10,2,6,2,13,6,13,15,2,16,18,2,18,3,2,3,13,18,1,9,18,9,11,18,11,3,4,14,12,4,12,0,4,0,8,11,9,5,11,5,19,11,19,7,19,5,14,19,14,4,19,4,17,1,12,14,1,14,5,1,5,9])))(op_div_557(1,t))
+)(op_div_557(op_add_485(1,sqrt_446(5)),2))
+;
+const icosahedron = ((t) => mesh_1932(arrayFromJavaScript([op_negate_1371(1),t,0,1,t,0,op_negate_1371(1),op_negate_1371(t),0,1,op_negate_1371(t),0,0,op_negate_1371(1),t,0,1,t,0,op_negate_1371(1),op_negate_1371(t),0,1,op_negate_1371(t),t,0,op_negate_1371(1),t,0,1,op_negate_1371(t),0,op_negate_1371(1),op_negate_1371(t),0,1]),arrayFromJavaScript([0,11,5,0,5,1,0,1,7,0,7,10,0,10,11,1,5,9,5,11,4,11,10,2,10,7,6,7,1,8,3,9,4,3,4,2,3,2,6,3,6,8,3,8,9,4,9,5,2,4,11,6,2,10,8,6,7,9,8,1])))(op_div_557(op_add_485(1,sqrt_446(5)),2))
+;
 // (Func (Array T0) Int Bool Bool (Array Int))
-function quadStripToMeshIndices_971(vertices, rows, connectRows, connectCols)
+function quadStripToMeshIndices_966(vertices, rows, connectRows, connectCols)
 {
   let cols = op_div_765(count_1423(vertices),rows);
   let nr = connectRows ? rows : op_sub_721(rows,1);
@@ -758,76 +738,76 @@ function quadStripToMeshIndices_971(vertices, rows, connectRows, connectCols)
   return immutable_1559(indices);
 }
 // (Func (Array Float3) (Array T0))
-function vectorsToVertexBuffer_1006(xs)
+function vectorsToVertexBuffer_1001(xs)
 {
   return flatMap_1862(xs,(v) => arrayFromJavaScript([x_77(v),y_92(v),z_134(v)]));
 }
 // (Func Float2 Float3)
-function vector_1071(uv)
+function vector_1066(uv)
 {
   return float3_119(op_mul_853(op_negate_1371(cos_320(x_77(uv))),sin_416(y_92(uv))),cos_320(x_77(uv)),op_mul_853(sin_416(x_77(uv)),sin_416(y_92(uv))));
 }
 // (Func T0 T0 T0 T0)
-function rescale_1099(v, from, length)
+function rescale_1094(v, from, length)
 {
   return op_add_485(from,op_mul_533(v,length));
 }
 // (Func (Func Float Float T0) Int Int Float Float Float Float Mesh)
-function meshFromUV_1227(f, uCount, vCount, uStart, vStart, uLength, vLength)
+function meshFromUV_1222(f, uCount, vCount, uStart, vStart, uLength, vLength)
 {
   let points = cartesianProduct_1905(op_dot_dot_1837(0,vCount),op_dot_dot_1837(0,vCount),(u, v) => f(op_add_809(op_mul_853(op_div_875(u,float_41(uCount)),uLength),uStart),op_add_809(op_mul_853(op_div_875(v,float_41(vCount)),vLength),vStart)));
-  let indices = quadStripToMeshIndices_971(points,vCount,true,true);
-  return mesh_1932(vectorsToVertexBuffer_1006(points),indices);
+  let indices = quadStripToMeshIndices_966(points,vCount,true,true);
+  return mesh_1932(vectorsToVertexBuffer_1001(points),indices);
 }
 // (Func (Func Float Float T0) Int Mesh)
-function meshFromUV_1253(f, segments)
+function meshFromUV_1248(f, segments)
 {
-  return meshFromUV_1227(f,segments,segments,0,0,1,1);
+  return meshFromUV_1222(f,segments,segments,0,0,1,1);
 }
 // (Func Int Int Float3)
-function spherePoint_1353(u, v)
+function spherePoint_1348(u, v)
 {
   return vector_98(op_mul_853(op_negate_1371(cos_320(op_mul_533(op_mul_743(u,2),pi))),sin_416(op_mul_533(op_mul_743(v,2),pi))),cos_320(op_mul_533(op_mul_743(v,2),pi)),op_mul_853(sin_416(op_mul_533(op_mul_743(u,2),pi)),sin_416(op_mul_533(op_mul_743(v,2),pi))));
 }
 // (Func Int Mesh)
-function sphere_1370(segments)
+function sphere_1365(segments)
 {
-  return meshFromUV_1253(spherePoint_1353,segments);
+  return meshFromUV_1248(spherePoint_1348,segments);
 }
 // (Func Mesh)
-function sphere_1381()
+function sphere_1376()
 {
-  return sphere_1370(32);
+  return sphere_1365(32);
 }
 // (Func Int Float Float3)
-function cylinderPoint_1429(u, v)
+function cylinderPoint_1424(u, v)
 {
   return vector_98(sin_416(op_mul_533(op_mul_743(u,2),pi)),v,cos_320(op_mul_533(op_mul_743(u,2),pi)));
 }
 // (Func Int Mesh)
-function cylinder_1446(segments)
+function cylinder_1441(segments)
 {
-  return meshFromUV_1253(cylinderPoint_1429,segments);
+  return meshFromUV_1248(cylinderPoint_1424,segments);
 }
 // (Func Mesh)
-function cylinder_1457()
+function cylinder_1452()
 {
-  return cylinder_1446(32);
+  return cylinder_1441(32);
 }
 // (Func Float Float Int Mesh)
-function torus_1497(r1, r2, segments)
+function torus_1492(r1, r2, segments)
 {
-  return meshFromUV_1253((u, v) => torusPoint_1627(u,v,r1,r2),segments);
+  return meshFromUV_1248((u, v) => torusPoint_1622(u,v,r1,r2),segments);
 }
 // (Func Int Int Float Float Float3)
-function torusPoint_1627(u, v, r1, r2)
+function torusPoint_1622(u, v, r1, r2)
 {
   return vector_98(op_mul_853(op_add_809(r1,op_mul_853(r2,cos_320(op_mul_533(op_mul_743(v,2),pi)))),cos_320(op_mul_533(op_mul_743(u,2),pi))),op_mul_853(op_add_809(r1,op_mul_853(r2,cos_320(op_mul_533(op_mul_743(v,2),pi)))),sin_416(op_mul_533(op_mul_743(u,2),pi))),op_mul_853(r2,sin_416(op_mul_533(op_mul_743(v,2),pi))));
 }
 // (Func Mesh)
-function torus_1640()
+function torus_1635()
 {
-  return torus_1497(10,2,32);
+  return torus_1492(10,2,32);
 }
 // Module heron:tests:0.1
 // file input\test.heron
@@ -837,7 +817,7 @@ function torus_1640()
 function main_33()
 {
   simpleArrayTest_433();
-  return geometryTest_472();
+  return geometryTest_462();
 }
 // (Func T0)
 function simpleArrayTest_433()
@@ -886,9 +866,9 @@ function simpleArrayTest_433()
   print_1893(average_1293(xs));
 }
 // (Func (Array Mesh))
-function geometryTest_472()
+function geometryTest_462()
 {
-  return arrayFromJavaScript([tetrahedron_70(),cube_178(),octahedron_241(),dodecahedron_547(),icosahedron_722(),sphere_1381(),cylinder_1457(),torus_1640()]);
+  return arrayFromJavaScript([tetrahedron,cube,octahedron,dodecahedron,icosahedron,sphere_1376(),cylinder_1452(),torus_1635()]);
 }
 
 return main_33;

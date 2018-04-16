@@ -572,3 +572,10 @@ However, only one specialization is chosen? Or the best one.
 I could leave it as a FuncSet. 
 
 Basically: at 
+
+
+## Memory Management 
+
+Heron requires very simple memory management strategies. Most values are passed by value (Bool, Int, Float, Float2, Float3, Float4). Array memory can be managed by simple reference counting because it is not possible the type system prevents arrays from having circular references to themselves. Function closures on the other hand can create reference loops.
+
+Consider the slice function: it keeps a reference to an array, and uses it to put an array, 
