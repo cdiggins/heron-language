@@ -4,6 +4,7 @@ module heron:tests:0.1
 {
     import heron:std.array:0.1;
     import heron:geometry.mesh:0.1;
+    import heron:geometry.vector:0.1;
 
     function main() {
         simpleArrayTest();
@@ -57,15 +58,14 @@ module heron:tests:0.1
         print(xs.average);
     }
 
+    function testSphere(offX, offY, offZ) 
+    {
+        var offset = vector(offX, offY, offZ);
+        return sphere(32).translate(offset);
+    }
+
     function geometryTest() 
         = [
-            tetrahedron, 
-            cube, 
-            octahedron, 
-            dodecahedron, 
-            icosahedron, 
-            sphere(), 
-            cylinder(), 
-            torus()
+            testSphere 
         ];
 }

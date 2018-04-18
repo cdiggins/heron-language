@@ -48,7 +48,7 @@
 		<script>
 			// Used for controlling which geometry is show in the UI
 			const heronData = { 
-				geometryIndex: 7
+				geometryIndex: 0
 			};
 
 			function heronArrayToJavaScript(xs) {
@@ -74,8 +74,8 @@
 				}
 
 				function generateGeometry() {					
-					//var g = new THREE.TetrahedronGeometry(5, 0);
-					const hg = heronGeometries[heronData.geometryIndex];
+					const f = heronGeometries[heronData.geometryIndex];
+					const hg = f(3, 4, 5);
 					const g = heronGeometryToThreeJsGeometry(hg);
 					updateGroupGeometry( sceneObject, g );
 				}

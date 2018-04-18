@@ -1,61 +1,96 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.library = "\nfunction newImmutableArray(count, at) {\n    return {\n      count, at\n    }\n}\n  \nfunction arrayFromJavaScript(xs) {\n  return {\n      count: xs.length,\n      array: xs,\n      at: (i) => xs[i]\n  }\n}\n\nfunction toMutable(xs) {\n  const count = xs.count;\n  const array = []; \n  for (let i=0; i < count; ++i)\n      array.push(xs.at(i));\n  return arrayFromJavaScript(array);\n}\n\nfunction toImmutable(xs) {\n    xs.count = xs.array.length;\n    return xs;\n}\n";
-exports.intrinsics = {
-    int: 'Math.round',
-    float: function (x) { return x; },
-    float2: function (x, y) { return ({ x: x, y: y }); },
-    float3: function (x, y, z) { return ({ x: x, y: y, z: z }); },
-    float4: function (x, y, z, w) { return ({ x: x, y: y, z: z, w: w }); },
-    x: function (v) { return v.x; },
-    y: function (v) { return v.y; },
-    z: function (v) { return v.z; },
-    w: function (v) { return v.w; },
-    abs: 'Math.abs',
-    acos: 'Math.acos',
-    asin: 'Math.asin',
-    atan: 'Math.atan',
-    atan2: 'Math.atan2',
-    ceil: 'Math.ceil',
-    clamp: function (x, min, max) { return x < min ? min : x > max ? max : x; },
-    cos: 'Math.cos',
-    exp: 'Math.exp',
-    floor: 'Math.floor',
-    log: 'Math.log',
-    pow: 'Math.pow',
-    round: 'Math.round',
-    sin: 'Math.sin',
-    sign: function (x) { return x > 0 ? 1 : x < 0 ? -1 : 0; },
-    sqrt: 'Math.sqrt',
-    tan: 'Math.tan',
-    op_add: function (x, y) { return x + y; },
-    op_sub: function (x, y) { return x - y; },
-    op_mul: function (x, y) { return x * y; },
-    op_div: function (x, y) { return x / y; },
-    op_mod: function (x, y) { return x % y; },
-    op_gt: function (x, y) { return x > y; },
-    op_gt_eq: function (x, y) { return x >= y; },
-    op_lt: function (x, y) { return x < y; },
-    op_lt_eq: function (x, y) { return x <= y; },
-    op_not_eq: function (x, y) { return x !== y; },
-    op_eq_eq: function (x, y) { return x === y; },
-    op_amp_amp: function (x, y) { return x && y; },
-    op_bar_bar: function (x, y) { return x || y; },
-    op_hat_hat: function (x, y) { return !!(x ^ y); },
-    op_not: function (x) { return !x; },
-    op_negate: function (x) { return -x; },
-    count: function (xs) { return xs.count; },
-    at: function (xs, i) { return xs.at(i); },
-    array: 'newImmutableArray',
-    mutable: 'toMutable',
-    immutable: 'toImmutable',
-    push: function (xs, x) { return (xs.array.push(x), xs); },
-    set: function (xs, i, x) { return (xs.array[i] = x, xs); },
-    print: 'console.log',
-    assert: function (condition) { if (!condition)
-        throw new Error("assertion failed"); },
-    mesh: function (vertexBuffer, indexBuffer) { return ({ vertexBuffer: vertexBuffer, indexBuffer: indexBuffer }); },
-    vertexBuffer: function (mesh) { return mesh.vertexBuffer; },
-    indexBuffer: function (mesh) { return mesh.indexBuffer; },
-};
+function arrayFromJavaScript(xs) {
+    return {
+        count: xs.length,
+        array: xs,
+        at: function (i) { return xs[i]; }
+    };
+}
+function toMutable(xs) {
+    var count = xs.count;
+    var array = [];
+    for (var i = 0; i < count; ++i)
+        array.push(xs.at(i));
+    return arrayFromJavaScript(array);
+}
+function int(x) { return Math.round(x); }
+function float(x) { return x; }
+function float2(x, y) { return ({ x: x, y: y }); }
+function float3(x, y, z) { return ({ x: x, y: y, z: z }); }
+function float4(x, y, z, w) { return ({ x: x, y: y, z: z, w: w }); }
+function x(v) { return v.x; }
+function y(v) { return v.y; }
+function z(v) { return v.z; }
+function w(v) { return v.w; }
+function abs(x) { return Math.abs(x); }
+function acos(x) { return Math.acos(x); }
+function asin(x) { return Math.asin(x); }
+function atan(x) { return Math.atan(x); }
+function atan2(y, x) { return Math.atan2(y, x); }
+function ceil(x) { return Math.ceil(x); }
+function cos(x) { return Math.cos(x); }
+function exp(x) { return Math.exp(x); }
+function floor(x) { return Math.floor(x); }
+function log(x) { return Math.log(x); }
+function pow(x, y) { return Math.pow(x, y); }
+function round(x) { return Math.round(x); }
+function sin(x) { return Math.sin(x); }
+function sqrt(x) { return Math.sqrt(x); }
+function tan(x) { return Math.tan(x); }
+function clamp(x, min, max) { return x < min ? min : x > max ? max : x; }
+;
+function sign(x) { return x > 0 ? 1 : x < 0 ? -1 : 0; }
+;
+function op_add(x, y) { return x + y; }
+;
+function op_sub(x, y) { return x - y; }
+;
+function op_mul(x, y) { return x * y; }
+;
+function op_div(x, y) { return x / y; }
+;
+function op_mod(x, y) { return x % y; }
+;
+function op_gt(x, y) { return x > y; }
+;
+function op_gt_eq(x, y) { return x >= y; }
+;
+function op_lt(x, y) { return x < y; }
+;
+function op_lt_eq(x, y) { return x <= y; }
+;
+function op_not_eq(x, y) { return x !== y; }
+;
+function op_eq_eq(x, y) { return x === y; }
+;
+function op_amp_amp(x, y) { return x && y; }
+;
+function op_bar_bar(x, y) { return x || y; }
+;
+function op_hat_hat(x, y) { return !!(x ^ y); }
+;
+function op_not(x) { return !x; }
+;
+function op_negate(x) { return -x; }
+;
+function count(xs) { return xs.count; }
+;
+function at(xs, i) { return xs.at(i); }
+;
+function array(count, at) { return { count: count, at: at }; }
+function mutable(x) { return toMutable(x); }
+function immutable(xs) { return array(xs.array.length, xs.at); }
+function push(xs, x) { return (xs.array.push(x), xs); }
+;
+function set(xs, i, x) { return (xs.array[i] = x, xs); }
+;
+function print(x) { return console.log(x); }
+function assert(condition) { if (!condition)
+    throw new Error("assertion failed"); }
+;
+function mesh(vertexBuffer, indexBuffer) { return ({ vertexBuffer: vertexBuffer, indexBuffer: indexBuffer }); }
+;
+function vertexBuffer(mesh) { return mesh.vertexBuffer; }
+;
+function indexBuffer(mesh) { return mesh.indexBuffer; }
+;
 //# sourceMappingURL=js-intrinsics.js.map

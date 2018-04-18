@@ -60,9 +60,8 @@ var Package = /** @class */ (function () {
         var _this = this;
         heron_ast_rewrite_1.validateNode(node, 'file');
         var langVerNode = heron_ast_rewrite_1.validateNode(node.children[0], 'langVer');
-        var langVer = this.parseURN(langVerNode);
-        if (langVer.length != 3)
-            heron_ast_rewrite_1.throwError(langVerNode, "Expected three component to language version URN: name, flavor, and version");
+        //let langVer = this.parseURN(langVerNode);
+        //if (langVer.length != 3) throwError(langVerNode, "Expected three component to language version URN: name, flavor, and version")
         var file = new SourceFile(node, intrinsic, filePath, langVerNode.allText);
         this.files.push(file);
         var moduleNode = heron_ast_rewrite_1.validateNode(node.children[1], 'module');

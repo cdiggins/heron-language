@@ -42,11 +42,7 @@ export function createPackage(moduleNames: string[]): Package {
     
     // Compute types 
     for (const f of pkg.allFuncDefs) {
-        const t = computeFuncType(f);
-        if (f.body) {
-            console.log(f.toString());
-            console.log(" : " + t);
-        }
+        computeFuncType(f);
     }
 
     return pkg;

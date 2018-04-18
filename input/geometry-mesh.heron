@@ -210,4 +210,28 @@ module heron:geometry.mesh:0.1
 
     function torus()
         = torus(10, 2, 32);
+
+    function vertexCount(mesh)
+        = mesh.vertexBuffer.count / 3;
+
+    function faceCount(mesh)
+        = mesh.indexBuffer.count / 3;
+
+    function vertex(mesh, i)
+        = mesh.vertexBuffer.take(i * 3, 3).vector;
+
+    function vertices(mesh) 
+        = mesh.vertexCount.array(i => vertex(mesh, i));
+
+    function setVertices(m, points)
+        = mesh(points, m.indexBuffer);
+
+    function transform(m, f)
+        = m.setVertices(m.vertices.map(f));
+
+    function translate(m, amount)
+        = m.transform(v => v + amount);
+
+    function scale(m, amount)
+        = m.transform(v => v * amount);
 }

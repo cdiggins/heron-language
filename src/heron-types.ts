@@ -1,9 +1,9 @@
-import { FunCall, Lambda, Expr, } from "./heron-expr";
-import { HeronAstNode, validateNode } from "./heron-ast-rewrite";
-import { FuncDef } from "./heron-defs";
-import { FuncParamRef, VarRef } from "./heron-refs";
-import { typeConstant, polyType, Type, PolyType, typeVariable, TypeVariable, TypeConstant, isTypeConstant, TypeResolver, newTypeVar, freshVariableNames, normalizeType } from "./type-system";
-import { TypeEvaluator } from "./heron-type-evaluator";
+import { VarName, FunCall, ConditionalExpr, ObjectLiteral, ArrayLiteral, BoolLiteral, IntLiteral, FloatLiteral, StrLiteral, VarExpr, PostfixDec, Lambda, PostfixInc, Expr, ObjectField, VarAssignmentExpr } from "./heron-expr";
+import { Statement, CompoundStatement, IfStatement, EmptyStatement, VarDeclStatement, WhileStatement, DoStatement, ForStatement, ExprStatement, ContinueStatement, ReturnStatement } from "./heron-statement";
+import { throwError, HeronAstNode, validateNode } from "./heron-ast-rewrite";
+import { FuncParamDef, FuncDef } from "./heron-defs";
+import { FuncRef, TypeRef, TypeParamRef, FuncParamRef, VarRef, ForLoopVarRef } from "./heron-refs";
+import { Type, PolyType, TypeVariable, TypeResolver, TypeStrategy, typeConstant, polyType, typeVariable, TypeConstant, freshVariableNames, isTypeConstant, newTypeVar } from "./type-system";
 
 export function assure<T>(t: T): T {
     if (!t)
@@ -75,19 +75,6 @@ class TypeStrategyClass {
 }
 
 export const typeStrategy = new TypeStrategyClass();
-
-export function callFunctionSet(fun: FunCall, funcSet: PolyType, args: Expr[], argTypes: Type[], unifier: TypeResolver): Type {
-    console.log("Calling function-set with: ");
-    console.log("    " + args.join(", "))
-    console.log("    " + argTypes.join(", "))
-    console.log("Function choices: ");
-    const funcs = (funcSet.types[1] as PolyType).types;
-    for (const f of funcs)
-        console.log("  " + f);
-    let n = chooseBestFunctionIndexFromArgs(argTypes, funcSet); 
-    fun.functionIndex = n;
-    return callFunction(funcs[n] as PolyType, args, argTypes, unifier);
-}
 
 export function callFunction(funOriginal: PolyType, args: Expr[], argTypes: Type[], mainUnifier: TypeResolver): Type {                
     // We have to create fresh variable names.
@@ -168,8 +155,8 @@ export function computeFuncType(f: FuncDef): PolyType {
         const u = new TypeResolver(typeStrategy);
         const te = new TypeEvaluator(f.params, genParams, f.body, f.retTypeNode, typeStrategy, u);
         f.type = te.getFinalResult();
-        console.log("Type for " + f);
-        console.log(" is " + normalizeType(f.type));
+        //console.log("Type for " + f);
+        //console.log(" is " + normalizeType(f.type));
     }
     return f.type as PolyType;
 }
@@ -177,7 +164,7 @@ export function computeFuncType(f: FuncDef): PolyType {
 export function getLambdaType(l: Lambda, u: TypeResolver): PolyType {
     if (!l.type) {
         const te = new TypeEvaluator(l.params, [], l.bodyNode, null, typeStrategy, u);
-        l.type = te.getFinalResult();
+        l.type = te.getFinalResult();        
     }
     return l.type as PolyType;
 }
@@ -355,4 +342,313 @@ export function chooseBestFunctionIndexFromArgsHelper(args: Type[], funcSet: Pol
 
 export function chooseBestFunctionIndex(f: PolyType, funcSet: PolyType): number {
     return chooseBestFunctionIndexFromArgs(getArgTypes(f), funcSet);
+}
+
+// This class computes the type for a function
+export class TypeEvaluator 
+{
+    public readonly function: PolyType;
+
+    constructor(
+        public readonly params: FuncParamDef[],
+        public readonly typeParams: string[],
+        public readonly bodyNode: HeronAstNode,
+        public readonly retTypeNode: HeronAstNode,
+        public readonly typeStrategy: TypeStrategy, 
+        public readonly unifier: TypeResolver,
+    )
+    { 
+        this.function = genericFuncType(params.length);
+
+        for (let i=0; i < params.length; ++i) {
+            const param = params[i];
+            const paramType = typeFromNode(params[i].typeNode, typeParams);
+            if (paramType !== null) {
+                param.type = paramType;
+                this.unify(this.getArgType(i), paramType);
+            }
+            else {
+                param.type = this.getArgType(i);
+            }
+        }
+
+        const retType = typeFromNode(retTypeNode, typeParams);
+        if (retType)
+            this.unifyReturn(retType);
+        if (bodyNode && bodyNode.statement)         
+            this.getType(bodyNode.statement);
+        else if (bodyNode && bodyNode.expr) {
+            const bodyType = this.getType(bodyNode.expr);
+            this.unifyReturn(bodyType);
+        }
+    }
+
+    get numArgs(): number{
+        return getNumArgTypes(this.function);
+    }
+
+    getArgType(n: number): Type {
+        return getArgType(this.function, n);
+    }
+
+    getReturnType(): Type {
+        return getReturnType(this.function);
+    }
+
+    getFinalResult() : PolyType {
+        return this.unifier.getUnifiedType(this.function) as PolyType;
+    }
+
+    getType(x: Statement | Expr): Type
+    {     
+        // if (x.type) return x.type;
+
+        try {  
+            if (x instanceof Statement) {
+                this.getStatementType(x);
+                return x.type = Types.VoidType;
+            }
+            else {
+                const rawType = this.getExpressionType(x);
+                const uniType = this.unifier.getUnifiedType(rawType);
+                //console.log("Expression   : " + x.toString());
+                //console.log("Has type     : " + uniType);
+
+                return uniType;
+                //return x.type = rawType;
+            }
+        }
+        catch (e) {
+            throwError(x.node, e.message);
+        }
+    }
+
+    getStatementType(statement: Statement)
+    {
+        if (statement.type)
+            return statement.type; 
+
+        //console.log("Computing statement type:");
+        //console.log(statement.node.allText);
+
+        if (statement instanceof CompoundStatement) 
+        {
+            for (const st of statement.statements)
+                this.getType(st);
+        }
+        else if (statement instanceof IfStatement) {
+            this.unifyBool(statement.condition);
+            this.getType(statement.onTrue);
+            this.getType(statement.onFalse);
+        }
+        else if (statement instanceof ReturnStatement) {
+            if (statement.expr)
+                this.unifyReturn(statement.expr);
+            else 
+                this.unifyReturn(Types.VoidType);
+        }
+        else if (statement instanceof ContinueStatement) {
+            // Do nothing 
+        }
+        else if (statement instanceof ExprStatement) {
+            this.getType(statement.expr);
+        }
+        else if (statement instanceof ForStatement) {
+            const forLoopVar = statement.node.def;
+            if (!forLoopVar)
+                throwError(statement.node, "Missing for loop variable definition");
+            const arrayType = makeNewArrayType();
+            const elementType = getArrayElementType(arrayType);
+            if (forLoopVar.type)
+                this.unify(forLoopVar.type, elementType);
+            else   
+                forLoopVar.type = elementType;
+            this.unify(statement.array, arrayType);
+            this.getType(statement.loop);
+        }
+        else if (statement instanceof DoStatement) {
+            this.getType(statement.body);
+            this.unifyBool(statement.condition);
+        }
+        else if (statement instanceof WhileStatement) {
+            this.unifyBool(statement.condition);
+            this.getType(statement.body);
+        }
+        else if (statement instanceof VarDeclStatement) {
+            for (const vd of statement.vars) {
+                if (!vd.exprNode.expr)
+                    throwError(vd.exprNode, "Missing an expression");
+                vd.type = this.getType(vd.exprNode.expr);
+            }
+        }
+        else if (statement instanceof EmptyStatement) {
+            // Do nothing. 
+        }
+        else {
+            throw new Error("Unrecognized statement " + statement);
+        }
+    }
+
+    getExpressionType(expr: Expr): Type {
+        if (expr === null)
+            throw new Error("No type available on a null expression");
+        
+        //if (expr.type) return expr.type;
+
+        //console.log("Evaluating type of: " + expr.toString());
+
+        if (expr instanceof VarName) {
+            if (!expr.node.ref) 
+                throwError(expr.node, "Missing ref");
+                
+            const ref = expr.node.ref;
+            if (ref instanceof FuncRef) {
+                return makeFunctionSet(ref.defs.map(r => computeFuncType(r)));
+            }
+            else if (ref instanceof VarRef) {
+                if (!ref.def.type)
+                    ref.def.type = this.getType(ref.def.exprNode.expr);
+                return assure(ref.def.type);
+            }
+            else if (ref instanceof FuncParamRef) {
+                return assure(ref.def.type);
+            }
+            else if (ref instanceof ForLoopVarRef) {
+                return assure(ref.def.type);
+            }
+            else if (ref instanceof TypeRef || ref instanceof TypeParamRef) {
+                // TODO: eventually we might want to support 
+                throwError(expr.node, "Type names are not allowed in expressions: " + expr.name);
+            }
+            // TODO: the reference could be to something else
+            //return this.findVar(expr.name);
+            throw new Error("Unrecognized expression");
+        }
+        else if (expr instanceof FunCall) {
+            let funcType = this.getType(expr.func);
+            const argTypes = expr.args.map(a => this.getType(a));
+            
+            if (funcType instanceof PolyType) {
+                // Work out the function type  
+                if (isFunctionSet(funcType)) {
+                    const funcs = (funcType.types[1] as PolyType).types;
+                    let n = chooseBestFunctionIndexFromArgs(argTypes, funcType); 
+                    expr.func.functionIndex = n;
+                    funcType = funcs[n] as PolyType;
+                }
+                
+                if (!isFunctionType(funcType)) 
+                    throw new Error("Can't call " + funcType);                
+                
+                for (let i=0; i < argTypes.length; ++i) {
+                    const arg = expr.args[i];            
+                    const exp = getArgType(funcType as PolyType, i);
+                    
+                    // TODO: maybe extend this to all types, not just function args.
+                    // I can see this being something we want for arrays as well.
+                    if (arg instanceof Lambda) {
+                        this.unify(arg, exp);
+                        // Recompute the type now.
+                        arg.type = null;
+                        this.getType(arg)
+                    }
+                }
+
+                // We have to create new Type variable names when calling a
+                return callFunction(funcType as PolyType, expr.args, argTypes, this.unifier);
+            }
+            else if (funcType instanceof TypeVariable) {
+                const genFunc = genericFuncTypeFromArgs(argTypes);
+                this.unify(funcType, genFunc);
+                const retType = getReturnType(genFunc);
+                const r = callFunction(genFunc, expr.args, argTypes, this.unifier);
+                this.unify(retType, r);
+                return r;
+            }
+            else {
+                throw new Error("Can't call " + funcType);
+            }
+        }
+        else if (expr instanceof ConditionalExpr) {
+            this.unifyBool(expr.condition);
+            const onTrue = this.getType(expr.onTrue);
+            const onFalse = this.getType(expr.onFalse);
+            return this.unify(onTrue, onFalse);
+        }
+        else if (expr instanceof ObjectLiteral || expr instanceof ObjectField) {
+            throw new Error("Object literals not yet supported");
+        }
+        else if (expr instanceof ArrayLiteral) {
+            const arrayType = makeNewArrayType();
+            const elemType = getArrayElementType(arrayType);
+            for (const v of expr.vals)
+                this.unify(v, elemType);
+            return arrayType;
+        }
+        else if (expr instanceof BoolLiteral) {
+            return Types.BoolType;
+        }
+        else if (expr instanceof IntLiteral) {            
+            return Types.IntType;
+        }
+        else if (expr instanceof FloatLiteral) {            
+            return Types.FloatType;
+        }
+        else if (expr instanceof StrLiteral) {
+            return Types.StrType;
+        }
+        else if (expr instanceof VarExpr) {
+            for (const v of expr.vars) {
+                const varExpr = v.exprNode.expr;
+                if (!varExpr)
+                    throwError(v.exprNode, "No expression associated with variable: " + v.name);
+                v.type = this.getType(varExpr);
+            }
+            const r = this.getType(expr.expr);
+            return r;
+        }
+        else if (expr instanceof Lambda) {
+            return getLambdaType(expr, this.unifier);
+        }
+        else if (expr instanceof PostfixDec) {
+            return this.unifyInt(expr.lvalue);
+        }
+        else if (expr instanceof PostfixInc) {
+            return this.unifyInt(expr.lvalue);
+        }
+        else if (expr instanceof VarAssignmentExpr) {
+            const ref = expr.node.children[0].ref;
+            if (!ref)
+                throwError(expr.node, "Variable assignment is missing reference");
+            if (ref.defs.length > 1) 
+                throwError(expr.node, "Multiple defs found");
+            if (ref.defs.length < 1) 
+                throwError(expr.node, "No defs found");
+            const def = ref.defs[0];
+            return this.unify(def.type, expr.value);
+        }
+        else {
+            throw new Error("Not a recognized expression " + expr);
+        }
+    }
+    
+    unify(a: Type | Expr, b: Type | Expr): Type {
+        if (a instanceof Expr)
+            a = this.getType(a);
+        if (b instanceof Expr)
+            b = this.getType(b);
+        return this.unifier.unifyTypes(a, b);
+    }
+
+    unifyBool(x: Type | Expr): Type {
+        return this.unify(x, Types.BoolType);
+    }
+
+    unifyInt(x: Type | Expr): Type {
+        return this.unify(x, Types.IntType);
+    }
+
+    unifyReturn(x: Type | Expr): Type {
+        return this.unify(x, this.getReturnType());
+    }
 }

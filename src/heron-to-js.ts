@@ -64,10 +64,20 @@ export class HeronToJs
         this.cb.pushLine(';');
     }
 
+    intrinsicName(f: FuncDef): string {
+        let name = identifierToString(f.name);
+        /*
+        for (const p of f.params) {
+            name += '_' + p.type.toString();
+        }
+        */
+        return name;
+    }
+
     visitFuncDef(f: FuncDef) {        
         this.cb.pushLine('// ' +  normalizeType(f.type));
         if (f.isIntrinsic) {
-            this.cb.pushLine("const " + funcDefName(f) + ' = ' + identifierToString(f.name) + ';');
+            this.cb.pushLine("const " + funcDefName(f) + ' = ' + this.intrinsicName(f) + ';');
             return;
         }
         this.cb.pushLine(this.functionSig(f));

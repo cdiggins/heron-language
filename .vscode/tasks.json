@@ -13,11 +13,11 @@
 	},
 	
 	// args is the program to compile.
-	"args": [],
+	"args": ["--watch"],
 	
 	"isShellCommand": true,
 	
 	// use the standard tsc problem matcher to find compile problems
 	// in the output.
-	"problemMatcher": "$tsc"
+	"problemMatcher": "$tsc-watch"
 }

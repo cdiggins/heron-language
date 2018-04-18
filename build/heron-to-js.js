@@ -65,10 +65,19 @@ var HeronToJs = /** @class */ (function () {
         this.visit(v.exprNode.expr);
         this.cb.pushLine(';');
     };
+    HeronToJs.prototype.intrinsicName = function (f) {
+        var name = heron_ast_rewrite_1.identifierToString(f.name);
+        /*
+        for (const p of f.params) {
+            name += '_' + p.type.toString();
+        }
+        */
+        return name;
+    };
     HeronToJs.prototype.visitFuncDef = function (f) {
         this.cb.pushLine('// ' + type_system_1.normalizeType(f.type));
         if (f.isIntrinsic) {
-            this.cb.pushLine("const " + funcDefName(f) + ' = ' + heron_ast_rewrite_1.identifierToString(f.name) + ';');
+            this.cb.pushLine("const " + funcDefName(f) + ' = ' + this.intrinsicName(f) + ';');
             return;
         }
         this.cb.pushLine(this.functionSig(f));

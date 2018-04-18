@@ -8,7 +8,6 @@ import { Package } from "./heron-package";
 import { computeFuncType } from "./heron-types";
 import { parseType } from "./type-parser";
 import { normalizeType } from "./type-system";
-import { library, intrinsics } from "./js-intrinsics";
 
 const m = Myna.Myna;
 const g = heronGrammar;
@@ -98,7 +97,7 @@ const ruleTests = [
         ]]        
 ];
 
-function testParsingRules() {
+export function testParsingRules() {
     for (let ruleTest of ruleTests) {
         let rule = ruleTest[0]; 
         for (let passInput of ruleTest[1]) 
@@ -121,7 +120,7 @@ ${parseLocation(ref.node)}
     ${ref.defs}`;
 }
 
-function outputPackageStats(pkg: Package) {
+export function outputPackageStats(pkg: Package) {
     console.log("Files: ");
     console.log(pkg.files);
     console.log("# Modules  : " + pkg.modules.length);
@@ -157,7 +156,7 @@ function testParseType(expr: string) {
     console.log(" : " + t);
 }
 
-function testParseTypes() {
+export function testParseTypes() {
     const typeStrings = [
         "(Num Num)",
         "(Func 'T0 'T1 R)",
@@ -171,23 +170,14 @@ function testParseTypes() {
         testParseType(ts);
 }
 
-function getIntrinsicCode(k: string): string {
-    const v = intrinsics[k];
-    return `const ${k} = ${v};`;
-}
-
-function intrinsicCode(): string {
-    return Object.keys(intrinsics).map(getIntrinsicCode).join('\n');
-}
-
 function tests() {
-    testParsingRules();
-    testParseTypes();
+    //testParsingRules();
+    //testParseTypes();
     
     let inputFiles = ['geometry-vector3', 'geometry-mesh', 'array', 'test'];
     let pkg = createPackage(inputFiles);
     
-    outputPackageStats(pkg);
+    //outputPackageStats(pkg);
     /*
     for (const sf of pkg.files) {
         const outputPath = sf.filePath.substr(0, sf.filePath.lastIndexOf('.')) + '.output.heron';
@@ -201,16 +191,16 @@ function tests() {
         toJs.visit(m);        
     }
     const now = new Date();
+    const library = fs.readFileSync(path.join('src', 'js-intrinsics.js'), 'utf-8');
     let text = '// Generated using Heron on ' + now.toDateString() + ' ' + now.toTimeString() + '\n'; 
     text += 'var heronMain = (function () {\n';
     text += library + '\n';
-    text += intrinsicCode() + '\n'
     text += toJs.cb.toString();
     const main = pkg.findFunction("main");
     text += '\nreturn ' + funcDefName(main) + ';\n';
     text += '})();\n';
     fs.writeFileSync(path.join(outputFolder, 'output.js'), text);
-    fs.writeFileSync(path.join(outputFolder, '..', 'demo', 'output.js'), text);
+    fs.writeFileSync(path.join(outputFolder, '..', 'docs', 'demo', 'output.js'), text);
 
     //outputPackageStats(pkg);
     // find the main entry point and call into it. 

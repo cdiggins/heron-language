@@ -42,8 +42,8 @@ export class Package
     addFile(node: HeronAstNode, intrinsic: boolean, filePath: string) {        
         validateNode(node, 'file');
         let langVerNode = validateNode(node.children[0], 'langVer');
-        let langVer = this.parseURN(langVerNode);
-        if (langVer.length != 3) throwError(langVerNode, "Expected three component to language version URN: name, flavor, and version")
+        //let langVer = this.parseURN(langVerNode);
+        //if (langVer.length != 3) throwError(langVerNode, "Expected three component to language version URN: name, flavor, and version")
         let file = new SourceFile(node, intrinsic, filePath, langVerNode.allText);
         this.files.push(file);
 

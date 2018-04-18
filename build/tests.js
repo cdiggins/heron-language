@@ -8,7 +8,6 @@ var heron_compiler_1 = require("./heron-compiler");
 var heron_types_1 = require("./heron-types");
 var type_parser_1 = require("./type-parser");
 var type_system_1 = require("./type-system");
-var js_intrinsics_1 = require("./js-intrinsics");
 var m = Myna.Myna;
 var g = heron_parser_1.heronGrammar;
 var assert = require('assert');
@@ -103,6 +102,7 @@ function testParsingRules() {
         }
     }
 }
+exports.testParsingRules = testParsingRules;
 var fs = require('fs');
 function refDetails(ref) {
     return "Ref Details\n" + heron_ast_rewrite_1.parseLocation(ref.node) + "\n    ref = " + ref.toString() + "\n    name = " + ref.name + "\n    node = " + ref.node['id'] + "    \n    expr = " + ref.node['expr'] + "\n    " + ref.defs;
@@ -123,6 +123,7 @@ function outputPackageStats(pkg) {
         console.log(refDetails(d));
     }
 }
+exports.outputPackageStats = outputPackageStats;
 function outputFunctionTypes(pkg) {
     for (var _i = 0, _a = pkg.allFuncDefs; _i < _a.length; _i++) {
         var f = _a[_i];
@@ -156,19 +157,13 @@ function testParseTypes() {
         testParseType(ts);
     }
 }
-function getIntrinsicCode(k) {
-    var v = js_intrinsics_1.intrinsics[k];
-    return "const " + k + " = " + v + ";";
-}
-function intrinsicCode() {
-    return Object.keys(js_intrinsics_1.intrinsics).map(getIntrinsicCode).join('\n');
-}
+exports.testParseTypes = testParseTypes;
 function tests() {
-    testParsingRules();
-    testParseTypes();
+    //testParsingRules();
+    //testParseTypes();
     var inputFiles = ['geometry-vector3', 'geometry-mesh', 'array', 'test'];
     var pkg = heron_compiler_1.createPackage(inputFiles);
-    outputPackageStats(pkg);
+    //outputPackageStats(pkg);
     /*
     for (const sf of pkg.files) {
         const outputPath = sf.filePath.substr(0, sf.filePath.lastIndexOf('.')) + '.output.heron';
@@ -182,16 +177,16 @@ function tests() {
         toJs.visit(m_1);
     }
     var now = new Date();
+    var library = fs.readFileSync(path.join('src', 'js-intrinsics.js'), 'utf-8');
     var text = '// Generated using Heron on ' + now.toDateString() + ' ' + now.toTimeString() + '\n';
     text += 'var heronMain = (function () {\n';
-    text += js_intrinsics_1.library + '\n';
-    text += intrinsicCode() + '\n';
+    text += library + '\n';
     text += toJs.cb.toString();
     var main = pkg.findFunction("main");
     text += '\nreturn ' + heron_to_js_1.funcDefName(main) + ';\n';
     text += '})();\n';
     fs.writeFileSync(path.join(heron_compiler_1.outputFolder, 'output.js'), text);
-    fs.writeFileSync(path.join(heron_compiler_1.outputFolder, '..', 'demo', 'output.js'), text);
+    fs.writeFileSync(path.join(heron_compiler_1.outputFolder, '..', 'docs', 'demo', 'output.js'), text);
     //outputPackageStats(pkg);
     // find the main entry point and call into it. 
     var modName = 'heron:tests:0.1';

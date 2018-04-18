@@ -56,7 +56,7 @@ module heron:intrinsics:0.1
     intrinsic op* <T>(x: T, y: T): T;
     intrinsic op/ <T>(x: T, y: T): T;
     intrinsic op% <T>(x: T, y: T): T;
-
+    
     // Comparison operators 
     intrinsic op>  <T>(x: T, y: T): Bool;
     intrinsic op>= <T>(x: T, y: T): Bool;
@@ -76,23 +76,17 @@ module heron:intrinsics:0.1
     intrinsic op/ (x: Float, y: Float): Float;
     intrinsic op% (x: Float, y: Float): Float;
 
-    intrinsic op+ (x: Float2, y: Float2): Float2;
-    intrinsic op- (x: Float2, y: Float2): Float2;
-    intrinsic op* (x: Float2, y: Float2): Float2;
-    intrinsic op/ (x: Float2, y: Float2): Float2;
-    intrinsic op% (x: Float2, y: Float2): Float2;
+    function op+ (a: Float2, b: Float2): Float2 = float2(a.x + b.x, a.y + b.y);
+    function op- (a: Float2, b: Float2): Float2 = float2(a.x - b.x, a.y - b.y);
+    function op* (a: Float2, b: Float2): Float2 = float2(a.x * b.x, a.y * b.y);
+    function op/ (a: Float2, b: Float2): Float2 = float2(a.x / b.x, a.y / b.y);
+    function op% (a: Float2, b: Float2): Float2 = float2(a.x % b.x, a.y % b.y);
 
-    intrinsic op+ (x: Float3, y: Float3): Float3;
-    intrinsic op- (x: Float3, y: Float3): Float3;
-    intrinsic op* (x: Float3, y: Float3): Float3;
-    intrinsic op/ (x: Float3, y: Float3): Float3;
-    intrinsic op% (x: Float3, y: Float3): Float3;
-
-    intrinsic op+ (x: Float4, y: Float4): Float4;
-    intrinsic op- (x: Float4, y: Float4): Float4;
-    intrinsic op* (x: Float4, y: Float4): Float4;
-    intrinsic op/ (x: Float4, y: Float4): Float4;
-    intrinsic op% (x: Float4, y: Float4): Float4;    
+    function op+ (a: Float3, b: Float3): Float3 = float3(a.x + b.x, a.y + b.y, a.z + b.z);
+    function op- (a: Float3, b: Float3): Float3 = float3(a.x - b.x, a.y - b.y, a.z - b.z);
+    function op* (a: Float3, b: Float3): Float3 = float3(a.x * b.x, a.y * b.y, a.z * b.z);
+    function op/ (a: Float3, b: Float3): Float3 = float3(a.x / b.x, a.y / b.y, a.z / b.z);
+    function op% (a: Float3, b: Float3): Float3 = float3(a.x % b.x, a.y % b.y, a.z % b.z);
 
     // Equality operators 
     intrinsic op!= <T>(x: T, y: T): Bool;
@@ -132,6 +126,10 @@ module heron:intrinsics:0.1
             xs = xs.push(y);
         return xs;
     }
+
+    // Force an evaluation of an array into memory. Used for debugging, or optimization. 
+    function reify<T>(xs: Array<T>): Array<T>
+        = xs.mutable.immutable;
     
     // Range operator 
     function op.. (from: Int, upto: Int): Array<Int>

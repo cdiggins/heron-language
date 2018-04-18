@@ -35,11 +35,7 @@ function createPackage(moduleNames) {
     // Compute types 
     for (var _b = 0, _c = pkg.allFuncDefs; _b < _c.length; _b++) {
         var f = _c[_b];
-        var t = heron_types_1.computeFuncType(f);
-        if (f.body) {
-            console.log(f.toString());
-            console.log(" : " + t);
-        }
+        heron_types_1.computeFuncType(f);
     }
     return pkg;
 }

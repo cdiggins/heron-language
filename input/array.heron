@@ -81,19 +81,28 @@ module heron:std.array:0.1
     function stride(xs, n) 
         = (0 .. xs.count / n).map(i => xs[i * n]);    
 
+    function stride(xs, from, n) 
+        = (0 .. xs.count / n).map(i => xs[from + i * n]);    
+
+    function strides(xs, n) 
+        = (0 .. n).map(i => xs.stride(i, n));
+
     function slices(xs, n) 
         = (0 .. n).map(i => xs.slice(i * n, (i+1) * n));    
 
     function take(xs, n) 
         = xs.slice(0, n);    
 
+    function take(xs, i, n) 
+        = xs.skip(i).take(n);    
+
     function skip(xs, n) 
         = xs.slice(n, xs.count - n);    
 
-    function dropSuffix(xs, n) 
+    function drop(xs, n) 
         = xs.take(xs.count - n);    
 
-    function suffix(xs, n) 
+    function last(xs, n) 
         = xs.skip(xs.count-n);
 
     function reverse(xs, n) 

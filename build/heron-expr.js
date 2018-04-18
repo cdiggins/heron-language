@@ -281,8 +281,7 @@ function createExpr(node) {
                 case "arrayIndex":
                     heron_ast_rewrite_1.throwError(node, "Array indexing should be transformed into function calls");
                 case "postIncOp":
-                    if (node.children[1])
-                        return new PostfixInc(node, createExpr(node.children[0]));
+                    return new PostfixInc(node, createExpr(node.children[0]));
                 case "postDecOp":
                     return new PostfixDec(node, createExpr(node.children[0]));
                 case "funCall":
