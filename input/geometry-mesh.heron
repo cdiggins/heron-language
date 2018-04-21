@@ -151,7 +151,7 @@ module heron:geometry.mesh:0.1
     
     // Converts an array of vectors into a vertex buffer 
     // which is an array of floating point numbers 
-    function vectorsToVertexBuffer(xs) 
+    function toVertexBuffer(xs) 
         = xs.flatMap(v => [v.x, v.y, v.z]);
 
     // Converts from UV coordinates to a float3
@@ -171,7 +171,7 @@ module heron:geometry.mesh:0.1
                 u / uCount.float * uLength + uStart, 
                 v / vCount.float * vLength + vStart));
         var indices = quadStripToMeshIndices(points, vCount, true, true);
-        return mesh(vectorsToVertexBuffer(points), indices);
+        return mesh(points.toVertexBuffer, indices);
     }
 
     function meshFromUV(f, segments)
@@ -224,7 +224,7 @@ module heron:geometry.mesh:0.1
         = mesh.vertexCount.array(i => vertex(mesh, i));
 
     function setVertices(m, points)
-        = mesh(points, m.indexBuffer);
+        = mesh(points.toVertexBuffer, m.indexBuffer);
 
     function transform(m, f)
         = m.setVertices(m.vertices.map(f));

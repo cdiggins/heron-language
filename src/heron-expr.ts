@@ -1,6 +1,7 @@
 import { VarDef, FuncParamDef, getDef } from "./heron-defs";
 import { validateNode, visitAst, throwError, HeronAstNode } from "./heron-ast-rewrite";
-import { Type } from "./type-system";
+import { Statement } from "./heron-statement";
+import { HeronType } from "./heron-types";
 
 // Expressions are either: named function sets, anonymous functions, function calls, variables, or literals.
 // In order to work out the type we need to work out the type of the things it depends on first. 
@@ -22,7 +23,7 @@ export class Expr {
     }
 
     // Set manually by the type evaluator
-    type: Type;
+    type: HeronType;
 
     // If the type is a function set, there are multiple defs, this indicates which one. 
     // TODO: maybe the defs and the type should be updated at the same time, rather than leaving us 
@@ -62,6 +63,10 @@ export class Lambda extends Expr {
         public readonly bodyNode: HeronAstNode,
     )
     { super(node); }
+
+    get body(): Expr | Statement {
+        return this.bodyNode.expr ? this.bodyNode.expr : this.bodyNode.statement;
+    }
 
     toString(): string {
         let body = this.bodyNode.expr 

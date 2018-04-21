@@ -68,6 +68,13 @@ var Lambda = /** @class */ (function (_super) {
         _this.bodyNode = bodyNode;
         return _this;
     }
+    Object.defineProperty(Lambda.prototype, "body", {
+        get: function () {
+            return this.bodyNode.expr ? this.bodyNode.expr : this.bodyNode.statement;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Lambda.prototype.toString = function () {
         var body = this.bodyNode.expr
             ? this.bodyNode.expr.toString()

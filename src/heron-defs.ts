@@ -2,7 +2,7 @@
 // A definition could be a function definition, parameter definition, variable definition, type definition. 
  
 import { validateNode, throwError, HeronAstNode } from "./heron-ast-rewrite";
-import { Type } from "./type-system";
+import { HeronType } from "./heron-types";
 
 // This is a definition of a name. It could be a function, variable, type
 export class Def {    
@@ -13,7 +13,7 @@ export class Def {
     { node.def = this; }
 
     // Added as a post-process step 
-    type: Type;
+    type: HeronType;
     
     toString() {
         return this.name + '_' + this.constructor['name'] + this.node['id'];

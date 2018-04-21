@@ -1,7 +1,7 @@
 import { VarDef } from "./heron-defs";
 import { throwError, HeronAstNode, wrapInCompoundStatement } from "./heron-ast-rewrite";
 import { Expr, createExpr } from "./heron-expr";
-import { Type } from "./type-system";
+import { HeronType } from "./heron-types";
 
 export class Statement {
     constructor(
@@ -10,7 +10,7 @@ export class Statement {
     { node.statement = this; }
 
     // Added as a post-process step. 
-    type: Type;
+    type: HeronType;
 }
 
 export class CompoundStatement extends Statement {
