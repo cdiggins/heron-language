@@ -597,7 +597,11 @@ var FunctionTypeEvaluator = /** @class */ (function () {
                     // I can see this being something we want for arrays as well.
                     if (arg instanceof heron_expr_1.Lambda && exp instanceof type_system_1.PolyType) {
                         // Recompute the HeronType now based on the expected HeronType.
+                        utils_1.trace("funcType", "Getting an improved lambda type");
+                        utils_1.trace("funcType", "Original: " + arg.type);
+                        utils_1.trace("funcType", "Shape: " + exp);
                         arg.type = getLambdaType(arg, this.unifier, exp);
+                        utils_1.trace("funcType", "Updated: " + arg.type);
                         if (!arg.type)
                             throw new Error("Failed to get a recomputed lambda type");
                         argTypes[i] = arg.type;
@@ -608,10 +612,18 @@ var FunctionTypeEvaluator = /** @class */ (function () {
                 return callFunction(funcType_1, expr.args, argTypes, this.unifier);
             }
             else if (funcType_1 instanceof type_system_1.TypeVariable) {
+                utils_1.trace("chooseFunc", "The functionType is a variable: " + funcType_1);
                 var genFunc = genericFuncTypeFromArgs(argTypes);
+                utils_1.trace("chooseFunc", "Created a generic function: " + genFunc);
                 this.unify(funcType_1, genFunc);
                 var retType = getFuncReturnType(genFunc);
                 var r = callFunction(genFunc, expr.args, argTypes, this.unifier);
+                for (var _b = 0, argTypes_1 = argTypes; _b < argTypes_1.length; _b++) {
+                    var argType = argTypes_1[_b];
+                    utils_1.trace("chooseFunc", "Argument type is " + argType + ", unified is " + this.unifier.getUnifiedType(argType));
+                }
+                utils_1.trace("chooseFunc", "Final unification for the function " + this.unifier.getUnifiedType(genFunc));
+                utils_1.trace("chooseFunc", "Final unification for the variable " + this.unifier.getUnifiedType(funcType_1));
                 this.unify(retType, r);
                 return r;
             }
@@ -631,8 +643,8 @@ var FunctionTypeEvaluator = /** @class */ (function () {
         else if (expr instanceof heron_expr_1.ArrayLiteral) {
             var arrayType = makeNewArrayType();
             var elemType = getArrayElementType(arrayType);
-            for (var _b = 0, _c = expr.vals; _b < _c.length; _b++) {
-                var v = _c[_b];
+            for (var _c = 0, _d = expr.vals; _c < _d.length; _c++) {
+                var v = _d[_c];
                 this.unify(v, elemType);
             }
             return arrayType;
@@ -650,8 +662,8 @@ var FunctionTypeEvaluator = /** @class */ (function () {
             return Types.StrType;
         }
         else if (expr instanceof heron_expr_1.VarExpr) {
-            for (var _d = 0, _e = expr.vars; _d < _e.length; _d++) {
-                var v = _e[_d];
+            for (var _e = 0, _f = expr.vars; _e < _f.length; _e++) {
+                var v = _f[_e];
                 var varExpr = v.exprNode.expr;
                 if (!varExpr)
                     heron_ast_rewrite_1.throwError(v.exprNode, "No expression associated with variable: " + v.name);

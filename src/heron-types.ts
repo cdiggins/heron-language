@@ -627,7 +627,11 @@ export class FunctionTypeEvaluator
                     // I can see this being something we want for arrays as well.
                     if (arg instanceof Lambda && exp instanceof PolyType) {
                         // Recompute the HeronType now based on the expected HeronType.
+                        trace("funcType", "Getting an improved lambda type");
+                        trace("funcType", "Original: " + arg.type);
+                        trace("funcType", "Shape: " + exp);
                         arg.type = getLambdaType(arg, this.unifier, exp);
+                        trace("funcType", "Updated: " + arg.type);                        
                         if (!arg.type)
                             throw new Error("Failed to get a recomputed lambda type");
                         argTypes[i] = arg.type;
@@ -640,10 +644,17 @@ export class FunctionTypeEvaluator
                 return callFunction(funcType as PolyType, expr.args, argTypes, this.unifier);
             }
             else if (funcType instanceof TypeVariable) {
+                trace("chooseFunc", "The functionType is a variable: " + funcType);
                 const genFunc = genericFuncTypeFromArgs(argTypes);
+                trace("chooseFunc", "Created a generic function: " + genFunc);
                 this.unify(funcType, genFunc);
                 const retType = getFuncReturnType(genFunc);
                 const r = callFunction(genFunc, expr.args, argTypes, this.unifier);
+                for (const argType of argTypes) {
+                    trace("chooseFunc", "Argument type is " + argType + ", unified is " + this.unifier.getUnifiedType(argType));
+                }
+                trace("chooseFunc", "Final unification for the function " + this.unifier.getUnifiedType(genFunc));
+                trace("chooseFunc", "Final unification for the variable " + this.unifier.getUnifiedType(funcType));
                 this.unify(retType, r);
                 return r;
             }
