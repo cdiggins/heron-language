@@ -1,7 +1,7 @@
 import { HeronAstNode,  validateNode, throwError, preprocessAst, visitAst } from "./heron-ast-rewrite";
 import { Def, createDef, VarDef, FuncDef, TypeDef, TypeParamDef, FuncParamDef, ForLoopVarDef } from "./heron-defs";
 import { Ref, FuncRef, TypeRef, TypeParamRef, FuncParamRef, VarRef, ForLoopVarRef } from "./heron-refs";
-import { createExpr } from "./heron-expr";
+import { computeExpr } from "./heron-expr";
 import { NameAnalyzer, Scope } from "./heron-name-analysis";
 import { createStatement, VarDeclStatement } from "./heron-statement";
 
@@ -116,7 +116,7 @@ export class Package
             visitAst(ast, createDef);
 
             // Create expressions, and add them to the nodes
-            visitAst(ast, createExpr);
+            visitAst(ast, computeExpr);
 
             // Create statement, and add them to the nodes
             visitAst(ast, createStatement);

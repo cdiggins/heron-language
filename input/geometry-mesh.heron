@@ -166,7 +166,7 @@ module heron:geometry.mesh:0.1
     // array of points (uCount x vCount) starting at uStart,vStart (0,0) going to 
     // uLength, vLength (1,1)
     function meshFromUV(f, uCount, vCount, uStart, vStart, uLength, vLength) {
-        var points = cartesianProduct(0..vCount, 0..vCount, 
+        var points = cartesianProduct(0..uCount, 0..vCount, 
             (u, v) => f(
                 u / uCount.float * uLength + uStart, 
                 v / vCount.float * vLength + vStart));

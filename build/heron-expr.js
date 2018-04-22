@@ -18,6 +18,8 @@ var heron_ast_rewrite_1 = require("./heron-ast-rewrite");
 var Expr = /** @class */ (function () {
     function Expr(node) {
         this.node = node;
+        // Set manually by the type evaluator
+        this.type = null;
         // If the type is a function set, there are multiple defs, this indicates which one. 
         // TODO: maybe the defs and the type should be updated at the same time, rather than leaving us 
         // to check these values. 
@@ -70,7 +72,12 @@ var Lambda = /** @class */ (function (_super) {
     }
     Object.defineProperty(Lambda.prototype, "body", {
         get: function () {
-            return this.bodyNode.expr ? this.bodyNode.expr : this.bodyNode.statement;
+            var ret = this.bodyNode.expr
+                ? this.bodyNode.expr
+                : this.bodyNode.statement;
+            if (!ret)
+                throw new Error("No body in the lambda");
+            return ret;
         },
         enumerable: true,
         configurable: true
@@ -272,10 +279,18 @@ function addExpr(node, expr) {
 }
 exports.addExpr = addExpr;
 function computeExprs(ast) {
-    heron_ast_rewrite_1.visitAst(ast, createExpr);
+    heron_ast_rewrite_1.visitAst(ast, computeExpr);
 }
 exports.computeExprs = computeExprs;
-function createExpr(node) {
+function getExpr(node) {
+    if (!node)
+        throw new Error("Missing node");
+    if (node.expr)
+        return node.expr;
+    throw new Error("Missing expression");
+}
+exports.getExpr = getExpr;
+function computeExpr(node) {
     if (!node)
         throw new Error("Missing node");
     if (node.expr)
@@ -288,9 +303,9 @@ function createExpr(node) {
                 case "arrayIndex":
                     heron_ast_rewrite_1.throwError(node, "Array indexing should be transformed into function calls");
                 case "postIncOp":
-                    return new PostfixInc(node, createExpr(node.children[0]));
+                    return new PostfixInc(node, getExpr(node.children[0]));
                 case "postDecOp":
-                    return new PostfixDec(node, createExpr(node.children[0]));
+                    return new PostfixDec(node, getExpr(node.children[0]));
                 case "funCall":
                     // TODO: find the correct function based on the number and types of the arguments
                     return createFunCall(node);
@@ -318,7 +333,7 @@ function createExpr(node) {
         case "varName":
             return createVarNameExpr(node);
         case "parenExpr":
-            return addExpr(node, createExpr(node.children[0]));
+            return addExpr(node, getExpr(node.children[0]));
         case "assignmentExpr":
             return createVarAssignmentExpr(node);
         case "multiplicativeExpr":
@@ -333,22 +348,22 @@ function createExpr(node) {
             heron_ast_rewrite_1.throwError(node, "Unsupported expression found: pre-processing was not performed: " + node.name);
     }
 }
-exports.createExpr = createExpr;
+exports.computeExpr = computeExpr;
 function createFunCall(node) {
     heron_ast_rewrite_1.validateNode(node, 'postfixExpr');
     if (node.children.length != 2)
         heron_ast_rewrite_1.throwError(node, 'Expected two children of a postfix expression');
-    var func = createExpr(node.children[0]);
+    var func = getExpr(node.children[0]);
     if (!func)
         heron_ast_rewrite_1.throwError(node, 'Missing function');
     var funCall = heron_ast_rewrite_1.validateNode(node.children[1], 'funCall');
-    return new FunCall(node, func, funCall.children.map(createExpr));
+    return new FunCall(node, func, funCall.children.map(getExpr));
 }
 exports.createFunCall = createFunCall;
 function createObjectField(node) {
     heron_ast_rewrite_1.validateNode(node, "objectField");
-    var name = node.child[0].allText;
-    var expr = createExpr(node.child[1]);
+    var name = node.children[0].allText;
+    var expr = getExpr(node.children[1]);
     return new ObjectField(node, name, expr);
 }
 exports.createObjectField = createObjectField;
@@ -357,7 +372,7 @@ function createObjectLiteral(node) {
 }
 exports.createObjectLiteral = createObjectLiteral;
 function createArrayExpr(node) {
-    return new ArrayLiteral(heron_ast_rewrite_1.validateNode(node, 'arrayExpr'), node.children.map(createExpr));
+    return new ArrayLiteral(heron_ast_rewrite_1.validateNode(node, 'arrayExpr'), node.children.map(getExpr));
 }
 exports.createArrayExpr = createArrayExpr;
 function createBoolExpr(node) {
@@ -372,7 +387,7 @@ function createConditionalExpr(node) {
     var rightNode = heron_ast_rewrite_1.validateNode(node.children[1], 'conditionalExprRight');
     if (rightNode.children.length !== 2)
         heron_ast_rewrite_1.throwError(node, 'Right side of conditional expression should have two children');
-    return new ConditionalExpr(node, createExpr(node.children[0]), createExpr(rightNode.children[0]), createExpr(rightNode.children[1]));
+    return new ConditionalExpr(node, getExpr(node.children[0]), getExpr(rightNode.children[0]), getExpr(rightNode.children[1]));
 }
 exports.createConditionalExpr = createConditionalExpr;
 // TODO: the fact that I am calling a lambda body an expression is a problem.
@@ -400,7 +415,7 @@ exports.createVarNameExpr = createVarNameExpr;
 function createVarExpr(node) {
     heron_ast_rewrite_1.validateNode(node, 'varExpr');
     var defs = node.children[0].children.map(function (c) { return c.def; });
-    var body = createExpr(node.children[1]);
+    var body = getExpr(node.children[1]);
     return new VarExpr(node, defs, body);
 }
 exports.createVarExpr = createVarExpr;
@@ -414,7 +429,7 @@ function createVarAssignmentExpr(node) {
         heron_ast_rewrite_1.throwError(node, 'All assignment operators are supposed to be rewritten: found ' + op);
     var rvalue = node.children[1].children[1];
     // TODO: add 
-    return new VarAssignmentExpr(node, lvalue, createExpr(rvalue));
+    return new VarAssignmentExpr(node, lvalue, getExpr(rvalue));
 }
 exports.createVarAssignmentExpr = createVarAssignmentExpr;
 //# sourceMappingURL=heron-expr.js.map

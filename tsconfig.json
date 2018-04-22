@@ -6,6 +6,7 @@
 		"sourceMap": true,
 		"outDir": "build",
 		"noUnusedLocals": true,
+		"strict": false,
   		//"noUnusedParameters": true,
 	},
 	"include": [

@@ -5,14 +5,18 @@ var myna_parser_1 = require("myna-parser");
 // Defines syntax parsers for type expression, the lambda calculus, and Cat 
 function registerGrammars() {
     // A simple grammar for parsing type expressions
-    var typeGrammar = new function () {
-        var _this = this;
-        this.typeExprRec = myna_parser_1.Myna.delay(function () { return _this.typeExpr; });
-        this.typeList = myna_parser_1.Myna.guardedSeq('(', myna_parser_1.Myna.ws, this.typeExprRec.ws.zeroOrMore, ')').ast;
-        this.typeVar = myna_parser_1.Myna.guardedSeq("'", myna_parser_1.Myna.identifier).ast;
-        this.typeConstant = myna_parser_1.Myna.identifier.or(myna_parser_1.Myna.digits).or("->").or("*").or("[]").ast;
-        this.typeExpr = myna_parser_1.Myna.choice(this.typeList, this.typeVar, this.typeConstant).ast;
-    };
+    var TypeGrammar = /** @class */ (function () {
+        function TypeGrammar() {
+            var _this = this;
+            this.typeExprRec = myna_parser_1.Myna.delay(function () { return _this.typeExpr; });
+            this.typeList = myna_parser_1.Myna.guardedSeq('(', myna_parser_1.Myna.ws, this.typeExprRec.ws.zeroOrMore, ')').ast;
+            this.typeVar = myna_parser_1.Myna.guardedSeq("'", myna_parser_1.Myna.identifier).ast;
+            this.typeConstant = myna_parser_1.Myna.identifier.or(myna_parser_1.Myna.digits).or("->").or("*").or("[]").ast;
+            this.typeExpr = myna_parser_1.Myna.choice(this.typeList, this.typeVar, this.typeConstant).ast;
+        }
+        return TypeGrammar;
+    }());
+    var typeGrammar = new TypeGrammar();
     myna_parser_1.Myna.registerGrammar('type', typeGrammar, typeGrammar.typeExpr);
 }
 registerGrammars();

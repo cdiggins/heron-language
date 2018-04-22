@@ -16,6 +16,8 @@
 [] - Type code should be simplified. 
 [] - Start running linter 
 [] - replace sumComponents with sum. For some reason, it is struggling to figure out the type of that.
+[] - Output the AST: with types 
+[] - 
 
 Notes:
 
@@ -87,3 +89,38 @@ There is a problem because it is reusing variables tht it shouldn't.
 //==
 
 Right now I think the biggest problem is "Float2". 
+
+//==
+
+Some problems:
+* Transform
+* Flatten
+* Reduce
+* Zip
+
+It seems that when a call happens it doesn't really constrain all of the types? 
+
+If a call has a specific type 
+
+I may need to . . . 
+
+Perfect example: 
+
+all(xs : any, p : any) : any
+ : (Func (Array T0) (Func T1 Bool) Bool)
+
+//==
+
+reduce -> big problem
+
+The type of reduce is correct. 
+What I see is that I am passing 
+
+I need to track the actions of a specific function. 
+
+"all". 
+
+//==
+
+When I make a function call, with a function that is an argument, I should unify it? 
+

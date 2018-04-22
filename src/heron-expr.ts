@@ -13,17 +13,17 @@ export class Expr {
     { node.expr = this; }
 
     // When the Expression is an argument to a function this value will get set. 
-    functionArgument: FunCall;
+    functionArgument: FunCall|undefined;
 
     // When the expression is a function that is invoked, this value will get set. 
-    calledFunction: FunCall;
+    calledFunction: FunCall|undefined;
 
     toString(): string {
         return 'expr' + this.node['id'];        
     }
 
     // Set manually by the type evaluator
-    type: HeronType;
+    type: HeronType = null;
 
     // If the type is a function set, there are multiple defs, this indicates which one. 
     // TODO: maybe the defs and the type should be updated at the same time, rather than leaving us 
@@ -65,7 +65,12 @@ export class Lambda extends Expr {
     { super(node); }
 
     get body(): Expr | Statement {
-        return this.bodyNode.expr ? this.bodyNode.expr : this.bodyNode.statement;
+        const ret = this.bodyNode.expr 
+            ? this.bodyNode.expr 
+            : this.bodyNode.statement;
+        if (!ret)
+            throw new Error("No body in the lambda");
+        return ret;
     }
 
     toString(): string {
@@ -226,10 +231,18 @@ export function addExpr<T extends Expr>(node: HeronAstNode, expr: T): T {
 }
 
 export function computeExprs(ast: HeronAstNode) {
-    visitAst(ast, createExpr);
+    visitAst(ast, computeExpr);
 }
 
-export function createExpr(node: HeronAstNode): Expr {
+export function getExpr(node: HeronAstNode): Expr {
+    if (!node)
+        throw new Error("Missing node");
+    if (node.expr)
+        return node.expr;
+    throw new Error("Missing expression")
+}
+
+export function computeExpr(node: HeronAstNode) {
     if (!node)
         throw new Error("Missing node");
     if (node.expr)
@@ -243,9 +256,9 @@ export function createExpr(node: HeronAstNode): Expr {
                 case "arrayIndex":
                     throwError(node, "Array indexing should be transformed into function calls");
                 case "postIncOp":
-                    return new PostfixInc(node, createExpr(node.children[0]));
+                    return new PostfixInc(node, getExpr(node.children[0]));
                 case "postDecOp":
-                    return new PostfixDec(node, createExpr(node.children[0]));
+                    return new PostfixDec(node, getExpr(node.children[0]));
                 case "funCall":
                     // TODO: find the correct function based on the number and types of the arguments
                     return createFunCall(node);
@@ -273,7 +286,7 @@ export function createExpr(node: HeronAstNode): Expr {
         case "varName":
             return createVarNameExpr(node);
         case "parenExpr":
-            return addExpr(node, createExpr(node.children[0]));            
+            return addExpr(node, getExpr(node.children[0]));            
         case "assignmentExpr":
             return createVarAssignmentExpr(node);
         case "multiplicativeExpr":
@@ -294,17 +307,17 @@ export function createFunCall(node: HeronAstNode): FunCall
     validateNode(node, 'postfixExpr');
     if (node.children.length != 2)
         throwError(node, 'Expected two children of a postfix expression');
-    let func = createExpr(node.children[0]);
+    let func = getExpr(node.children[0]);
     if (!func)
         throwError(node, 'Missing function');
     let funCall = validateNode(node.children[1], 'funCall');
-    return new FunCall(node, func, funCall.children.map(createExpr));
+    return new FunCall(node, func, funCall.children.map(getExpr));
 }
 
 export function createObjectField(node: HeronAstNode): ObjectField {
     validateNode(node, "objectField");
-    let name = node.child[0].allText;
-    let expr = createExpr(node.child[1]);
+    let name = node.children[0].allText;
+    let expr = getExpr(node.children[1]);
     return new ObjectField(node, name, expr);
 }
 
@@ -313,7 +326,7 @@ export function createObjectLiteral(node: HeronAstNode): ObjectLiteral {
 }
 
 export function createArrayExpr(node: HeronAstNode): ArrayLiteral {
-    return new ArrayLiteral(validateNode(node, 'arrayExpr'), node.children.map(createExpr));
+    return new ArrayLiteral(validateNode(node, 'arrayExpr'), node.children.map(getExpr));
 }
 
 export function createBoolExpr(node: HeronAstNode): BoolLiteral {
@@ -329,9 +342,9 @@ export function createConditionalExpr(node: HeronAstNode): ConditionalExpr {
     if (rightNode.children.length !== 2)
         throwError(node, 'Right side of conditional expression should have two children');
     return new ConditionalExpr(node, 
-        createExpr(node.children[0]), 
-        createExpr(rightNode.children[0]), 
-        createExpr(rightNode.children[1]));
+        getExpr(node.children[0]), 
+        getExpr(rightNode.children[0]), 
+        getExpr(rightNode.children[1]));
 }
 
 // TODO: the fact that I am calling a lambda body an expression is a problem.
@@ -361,7 +374,7 @@ export function createVarNameExpr(node: HeronAstNode): VarName {
 export function createVarExpr(node: HeronAstNode): VarExpr {
     validateNode(node, 'varExpr');
     let defs = node.children[0].children.map(c => c.def as VarDef);
-    let body = createExpr(node.children[1]);
+    let body = getExpr(node.children[1]);
     return new VarExpr(node, defs, body);
 }
 
@@ -373,5 +386,5 @@ export function createVarAssignmentExpr(node: HeronAstNode): VarAssignmentExpr {
     if (op !== '=') throwError(node, 'All assignment operators are supposed to be rewritten: found ' + op);
     let rvalue = node.children[1].children[1];
     // TODO: add 
-    return new VarAssignmentExpr(node, lvalue, createExpr(rvalue));
+    return new VarAssignmentExpr(node, lvalue, getExpr(rvalue));
 }

@@ -1,6 +1,6 @@
 import { VarDef } from "./heron-defs";
 import { throwError, HeronAstNode, wrapInCompoundStatement } from "./heron-ast-rewrite";
-import { Expr, createExpr } from "./heron-expr";
+import { Expr, getExpr } from "./heron-expr";
 import { HeronType } from "./heron-types";
 
 export class Statement {
@@ -10,7 +10,7 @@ export class Statement {
     { node.statement = this; }
 
     // Added as a post-process step. 
-    type: HeronType;
+    type: HeronType|null = null
 }
 
 export class CompoundStatement extends Statement {
@@ -40,7 +40,7 @@ export class IfStatement extends Statement {
 export class ReturnStatement extends Statement {
     constructor(
         public readonly node: HeronAstNode, 
-        public readonly expr: Expr,
+        public readonly expr: Expr|null,
     )
     { super(node); }
 }
@@ -124,29 +124,29 @@ export function createStatement(node: HeronAstNode): Statement {
             return new CompoundStatement(node, node.children.map(createStatement));
         case 'ifStatement':
             return new IfStatement(node, 
-                createExpr(node.children[0]), 
+                getExpr(node.children[0]), 
                 createCompoundStatement(node.children[1]), 
                 createCompoundStatement(node.children[2]));
         case 'returnStatement':
             return new ReturnStatement(node,
-                node.children.length > 0 ? createExpr(node.children[0]) : null);
+                node.children.length > 0 ? getExpr(node.children[0]) : null);
         case 'continueStatement':
             return new ContinueStatement(node);
         case 'breakStatement':
             return new BreakStatement(node);
         case 'forLoop':
             return new ForStatement(node, node.children[0].allText, 
-                createExpr(node.children[1]), createCompoundStatement(node.children[2]));
+                getExpr(node.children[1]), createCompoundStatement(node.children[2]));
         case 'doLoop':
             return new DoStatement(node, 
-                createExpr(node.children[1]), createCompoundStatement(node.children[0]));
+                getExpr(node.children[1]), createCompoundStatement(node.children[0]));
         case 'whileLoop': 
             return new WhileStatement(node, 
-                createExpr(node.children[0]), createCompoundStatement(node.children[1]));
+                getExpr(node.children[0]), createCompoundStatement(node.children[1]));
         case 'varDeclStatement':            
             return new VarDeclStatement(node, node.children[0].children.map(n => n.def as VarDef));
         case 'exprStatement':
-            return new ExprStatement(node, createExpr(node.children[0]));
+            return new ExprStatement(node, getExpr(node.children[0]));
     }
 }
 

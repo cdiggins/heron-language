@@ -160,7 +160,7 @@ var TypeResolver = /** @class */ (function () {
         else if (t1 instanceof PolyType && t2 instanceof PolyType) {
             return this._unifyLists(t1, t2, depth + 1);
         }
-        assert(false, "unexpected code path: " + t1 + " and " + t2);
+        throw new Error("unexpected code path: " + t1 + " and " + t2);
     };
     Object.defineProperty(TypeResolver.prototype, "state", {
         /** Debug function that dumps prints out a representation of the engine state. */

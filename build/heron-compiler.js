@@ -43,7 +43,8 @@ exports.createPackage = createPackage;
 function addModuleToPackage(name, intrinsic, pkg) {
     var modulePath = moduleNameToPath(name);
     var ast = parseFile(modulePath);
-    pkg.addFile(ast, intrinsic, modulePath);
+    if (ast)
+        pkg.addFile(ast, intrinsic, modulePath);
 }
 exports.addModuleToPackage = addModuleToPackage;
 function moduleNameToPath(f) {
@@ -64,6 +65,7 @@ function parseFile(f) {
     catch (e) {
         console.log("An error occurred while parsing " + f);
         console.log(e.message);
+        return null;
     }
 }
 exports.parseFile = parseFile;

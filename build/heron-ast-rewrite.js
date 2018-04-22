@@ -17,7 +17,12 @@ var myna_1 = require("myna-parser/myna");
 var HeronAstNode = /** @class */ (function (_super) {
     __extends(HeronAstNode, _super);
     function HeronAstNode() {
-        return _super !== null && _super.apply(this, arguments) || this;
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        // Used to uniquely identify each node 
+        _this.id = -1;
+        // The children are also of type HeronAstNode. 
+        _this.children = _this.children;
+        return _this;
     }
     return HeronAstNode;
 }(myna_1.Myna.AstNode));
@@ -70,7 +75,8 @@ function makeNode(rule, src, text) {
         children[_i - 3] = arguments[_i];
     }
     var result = rule.node.apply(rule, [text].concat(children));
-    result.original = src;
+    if (src)
+        result.original = src;
     return result;
 }
 exports.makeNode = makeNode;
@@ -102,7 +108,8 @@ function identifierToString(id) {
 exports.identifierToString = identifierToString;
 // Applies a transform function to each member of the AST to create a new one
 function mapAst(node, f) {
-    node.children = node.children ? node.children.map(function (c) { return mapAst(c, f); }) : null;
+    if (node.children)
+        node.children = node.children.map(function (c) { return mapAst(c, f); });
     var r = f(node);
     // Store a back pointer to the original AST 
     if (r != node)
@@ -435,7 +442,7 @@ function visitAst(node, f) {
 exports.visitAst = visitAst;
 // Visits every node creating a pointer to its parent 
 function setParentPointers(node) {
-    visitAstWithParent(node, null, function (c, p) { return c.parent = p; });
+    visitAstWithParent(node, null, function (c, p) { return p ? c.parent = p : p; });
 }
 exports.setParentPointers = setParentPointers;
 // Performs some pre-processing of the AST to make it easier to work with

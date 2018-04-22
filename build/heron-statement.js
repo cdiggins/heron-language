@@ -15,6 +15,8 @@ var heron_expr_1 = require("./heron-expr");
 var Statement = /** @class */ (function () {
     function Statement(node) {
         this.node = node;
+        // Added as a post-process step. 
+        this.type = null;
         node.statement = this;
     }
     return Statement;
@@ -161,23 +163,23 @@ function createStatement(node) {
         case 'compoundStatement':
             return new CompoundStatement(node, node.children.map(createStatement));
         case 'ifStatement':
-            return new IfStatement(node, heron_expr_1.createExpr(node.children[0]), createCompoundStatement(node.children[1]), createCompoundStatement(node.children[2]));
+            return new IfStatement(node, heron_expr_1.getExpr(node.children[0]), createCompoundStatement(node.children[1]), createCompoundStatement(node.children[2]));
         case 'returnStatement':
-            return new ReturnStatement(node, node.children.length > 0 ? heron_expr_1.createExpr(node.children[0]) : null);
+            return new ReturnStatement(node, node.children.length > 0 ? heron_expr_1.getExpr(node.children[0]) : null);
         case 'continueStatement':
             return new ContinueStatement(node);
         case 'breakStatement':
             return new BreakStatement(node);
         case 'forLoop':
-            return new ForStatement(node, node.children[0].allText, heron_expr_1.createExpr(node.children[1]), createCompoundStatement(node.children[2]));
+            return new ForStatement(node, node.children[0].allText, heron_expr_1.getExpr(node.children[1]), createCompoundStatement(node.children[2]));
         case 'doLoop':
-            return new DoStatement(node, heron_expr_1.createExpr(node.children[1]), createCompoundStatement(node.children[0]));
+            return new DoStatement(node, heron_expr_1.getExpr(node.children[1]), createCompoundStatement(node.children[0]));
         case 'whileLoop':
-            return new WhileStatement(node, heron_expr_1.createExpr(node.children[0]), createCompoundStatement(node.children[1]));
+            return new WhileStatement(node, heron_expr_1.getExpr(node.children[0]), createCompoundStatement(node.children[1]));
         case 'varDeclStatement':
             return new VarDeclStatement(node, node.children[0].children.map(function (n) { return n.def; }));
         case 'exprStatement':
-            return new ExprStatement(node, heron_expr_1.createExpr(node.children[0]));
+            return new ExprStatement(node, heron_expr_1.getExpr(node.children[0]));
     }
 }
 exports.createStatement = createStatement;

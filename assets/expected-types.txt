@@ -1,0 +1,222 @@
+adjacentDifferences
+ : (Func (Array T0) (Array T0))
+all(xs : any, p : any) : any
+ : (Func (Array T0) (Func T1 Bool) Bool)
+any(xs : any, p : any) : any
+ : (Func (Array T0) (Func T1 Bool) Bool)
+array(v : Float3) : any
+ : (Func Float3 (Array Float))
+array(v : any) : any
+ : (Func Float3 (Array Float))
+average(xs : any) : any
+ : (Func (Array Int) Int)
+cartesianProduct(xs : any, ys : any, f : any) : any
+ : (Func (Array T0) (Array T1) (Func T2 T3 T4) (Array T5))
+concat(xs : any, ys : any) : any    
+ : (Func (Array T0) (Array T0) (Array T0))
+count(xs : any, p : any) : any
+ : (Func (Array T0) (Func T1 Bool) Int)
+cross(a : any, b : any) : any
+ : (Func Float3 Float3 Float3)
+cut(xs : any, from : any, n : any) : any
+ : (Func (Array T0) Int Int (Array T0))
+cylinder() : any
+ : (Func Mesh)
+cylinder(segments : any) : any
+ : (Func Int Mesh)
+cylinderPoint(u : any, v : any) : any
+ : (Func Int Float Float3)
+distance(a : any, b : any) : any
+ : (Func Float3 Float3 Float)
+distance2(a : any, b : any) : any
+ : (Func Float3 Float3 Float)
+dot(a : any, b : any) : any
+ : (Func Float3 Float3 Float)
+drop(xs : any, n : any) : any
+ : (Func (Array T0) Int (Array T1))
+empty(xs : any) : any
+ : (Func (Array T0) Bool)
+eq(xs : any, ys : any) : any
+ : (Func (Array T0) (Array T1) Bool)
+faceCount(mesh : any) : any
+ : (Func Mesh Int)
+filter(xs : any, p : any) : any
+ : (Func (Array T0) (Func T0 Bool) (Array T0))
+first(xs : any) : any
+ : (Func (Array T0) T0)
+flatMap(xs : any, f : any) : any
+ : (Func (Array T0) (Func T0 (Array T1)) (Array T2))
+flatten(xs : any) : any
+ : (Func (Array (Array T0)) (Array T1))
+float3(xs : any) : any
+ : (Func (Array Float) Float3)
+gen(cnt : any, f : any) : any
+ : (Func Int (Func Int T0) (Array T0))
+geometryTest() : any
+ : (Func (Array (Func Float Float Float Mesh)))
+inRange(xs : any, n : any) : any
+ : (Func (Array T0) Int Bool)
+indices(xs : any) : any
+ : (Func (Array T0) (Array Int))
+last(xs : any) : any
+ : (Func (Array T0) T1)
+last(xs : any, n : any) : any
+ : (Func (Array T0) Int (Array T1))
+length(v : any) : any
+ : (Func Float3 Float)
+length2(v : any) : any
+ : (Func Float3 Float)
+lerp(a : any, b : any, x : any) : any
+ : (Func Float Float Float Float)
+longer(xs : any, ys : any) : any
+ : (Func (Array T0) (Array T0) (Array T0))
+main() : any
+ : (Func (Array (Func Float Float Float Mesh)))
+map(xs : any, f : any) : any
+ : (Func (Array T0) (Func T0 T1) (Array T1))
+mapIndex(xs : any, f : any) : any
+ : (Func (Array T0) (Func Int T1) (Array T1))
+mapWithIndex(xs : any, f : any) : any
+ : (Func (Array T0) (Func T0 Int T1) (Array T1))
+max(x : any, y : any) : any
+ : (Func T0 T0 T0)
+max(xs : any) : any
+ : (Func (Array T0) T0)
+median(xs : any) : any
+ : (Func (Array Int) Int)
+meshFromUV(f : any, uCount : any, vCount : any, uStart : any, vStart : any, uLength : any, vLength : any) : any
+ : (Func (Func Float Float T0) Int Int Float Float Float Float Mesh)
+meshFromUV(f : any, segments : any) : any
+ : (Func (Func Float Float T0) Int Mesh)
+min(x : any, y : any) : any
+ : (Func T0 T0 T0)
+min(xs : any) : any
+ : (Func (Array T0) T0)
+negate(v : any) : any
+ : (Func Float3 Float3)
+normal(v : any) : any
+ : (Func Float3 Float)
+op%(a : Float2, b : Float2) : Float2
+ : (Func Float2 Float2 Float2)
+op%(a : Float3, b : Float3) : Float3
+ : (Func Float3 Float3 Float3)
+op*(a : Float2, b : Float2) : Float2
+ : (Func Float2 Float2 Float2)
+op*(a : Float3, b : Float3) : Float3
+ : (Func Float3 Float3 Float3)
+op+(a : Float2, b : Float2) : Float2
+ : (Func Float2 Float2 Float2)
+op+(a : Float3, b : Float3) : Float3
+ : (Func Float3 Float3 Float3)
+op-(a : Float2, b : Float2) : Float2
+ : (Func Float2 Float2 Float2)
+op-(a : Float3, b : Float3) : Float3
+ : (Func Float3 Float3 Float3)
+op..(from : Int, upto : Int) : Array<Int>
+        
+ : (Func Int Int (Array Int))
+op/(a : Float3, b : Float3) : Float3
+ : (Func Float3 Float3 Float3)
+op/(a : Float2, b : Float2) : Float2
+ : (Func Float2 Float2 Float2)
+op[](xs : Array<T>, i : Int) : T
+ : (Func (Array T0) Int T0)
+partition(a : any, lo : any, hi : any) : any
+ : (Func (ArrayBuilder T0) Int Int Int)
+prefixScan(xs : any, op : any) : any
+ : (Func (Array T0) (Func T0 T0 T0) (Array T0))
+product(xs : any) : any
+ : (Func (Array Int) Int)
+pushMany(xs : ArrayBuilder<T>, ys : Array<T>) : ArrayBuilder<T> 
+ : (Func (ArrayBuilder T0) (Array T0) (ArrayBuilder T0))
+qsort(a : any, lo : any, hi : any) : any
+ : (Func (ArrayBuilder T0) Int Int (ArrayBuilder T0))
+quadStripToMeshIndices(vertices : any, rows : any, connectRows : any, connectCols : any) : any
+ : (Func (Array T0) Int Bool Bool (Array Int))
+reduce(xs : any, acc : any, f : any) : any
+ : (Func (Array T0) T1 (Func T1 T0 T1) T1)
+reflect(v : any, n : any) : any
+ : (Func Float3 Float3 Float)
+reify(xs : Array<T>) : Array<T>
+        
+ : (Func (Array T0) (Array T0))
+repeat(x : any, n : any) : any
+ : (Func T0 Int (Array T0))
+rescale(v : any, from : any, length : any) : any
+ : (Func T0 T0 T0 T0)
+reverse(xs : any, n : any) : any
+ : (Func (Array T0) T1 (Array T0))
+scale(m : any, amount : any) : any
+ : (Func Mesh T0 Mesh)
+selectByIndex(xs : any, indices : any) : any
+ : (Func (Array T0) (Array T1) (Array T0))
+setVertices(m : any, points : any) : any
+ : (Func Mesh (Array T0) Mesh)
+shorter(xs : any, ys : any) : any
+ : (Func (Array T0) (Array T0) (Array T0))
+simpleArrayTest() : any
+ : (Func T0)
+skip(xs : any, n : any) : any
+ : (Func (Array T0) Int (Array T1))
+slice(xs : any, from : any, to : any) : any
+ : (Func (Array T0) Int Int (Array T0))
+slices(xs : any, n : any) : any
+ : (Func (Array T0) Int (Array (Array T0)))
+sort(xs : any) : any
+ : (Func (Array T0) (Array T0))
+sphere(segments : any) : any
+ : (Func Int Mesh)
+sphere() : any
+ : (Func Mesh)
+spherePoint(u : any, v : any) : any
+ : (Func Int Int Float3)
+splice(xs : any, from : any, ys : any) : any
+ : (Func (Array T0) Int (Array T0) (Array T0))
+stride(xs : any, from : any, n : any) : any
+ : (Func (Array T0) Int Int (Array T0))
+stride(xs : any, n : any) : any
+ : (Func (Array T0) Int (Array T0))
+strides(xs : any, n : any) : any
+ : (Func (Array T0) Int (Array (Array T0)))
+sum(xs : any) : any
+ : (Func (Array Int) Int)
+sumComponents(v : any) : any
+ : (Func Float3 Float)
+swapElements(xs : any, i : any, j : any) : any
+ : (Func (ArrayBuilder T0) Int Int (ArrayBuilder T0))
+take(xs : any, n : any) : any
+ : (Func (Array T0) Int (Array T0))
+take(xs : any, i : any, n : any) : any
+ : (Func (Array T0) Int Int (Array T1))
+testSphere(offX : any, offY : any, offZ : any) : any
+ : (Func Float Float Float Mesh)
+toVertexBuffer(xs : any) : any
+ : (Func (Array T0) (Array T1))
+torus(r1 : any, r2 : any, segments : any) : any
+ : (Func Float Float Int Mesh)
+torus() : any
+ : (Func Mesh)
+torusPoint(u : any, v : any, r1 : any, r2 : any) : any
+ : (Func Int Int Float Float Float3)
+transform(m : any, f : any) : any
+ : (Func Mesh (Func Float3 T0) Mesh)
+translate(m : any, amount : any) : any
+ : (Func Mesh T0 Mesh)
+unit(x : any) : any
+ : (Func T0 (Array T0))
+vector(uv : Float2) : any
+ : (Func Float2 Float3)
+vector(x : Float, y : Float, z : Float) : any
+ : (Func Float Float Float Float3)
+vector(xs : any) : any
+ : (Func (Array Float) Float3)
+vector(x : Float) : any
+ : (Func Float Float3)
+vertex(mesh : any, i : any) : any
+ : (Func Mesh Int Float3)
+vertexCount(mesh : any) : any
+ : (Func Mesh Int)
+vertices(mesh : any) : any
+ : (Func Mesh (Array Float3))
+zip(xs : any, ys : any, f : any) : any
+ : (Func (Array T0) (Array T1) (Func T2 T1 T3) (Array T3))

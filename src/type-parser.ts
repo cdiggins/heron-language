@@ -5,15 +5,15 @@ import { Myna as m } from "myna-parser"
 function registerGrammars() 
 {
     // A simple grammar for parsing type expressions
-    var typeGrammar = new function() 
+    class TypeGrammar 
     {
-        var _this = this;
-        this.typeExprRec    = m.delay(() => _this.typeExpr);        
-        this.typeList       = m.guardedSeq('(', m.ws, this.typeExprRec.ws.zeroOrMore, ')').ast;
-        this.typeVar        = m.guardedSeq("'", m.identifier).ast;
-        this.typeConstant   = m.identifier.or(m.digits).or("->").or("*").or("[]").ast;
-        this.typeExpr       = m.choice(this.typeList, this.typeVar, this.typeConstant).ast;        
-    }      
+        typeExprRec    = m.delay(() => this.typeExpr);        
+        typeList       = m.guardedSeq('(', m.ws, this.typeExprRec.ws.zeroOrMore, ')').ast;
+        typeVar        = m.guardedSeq("'", m.identifier).ast;
+        typeConstant   = m.identifier.or(m.digits).or("->").or("*").or("[]").ast;
+        typeExpr       = m.choice(this.typeList, this.typeVar, this.typeConstant).ast;        
+    }
+    const typeGrammar = new TypeGrammar();      
     m.registerGrammar('type', typeGrammar, typeGrammar.typeExpr);    
     
 }
@@ -22,14 +22,14 @@ registerGrammars();
 
 export const typeParser  = m.parsers['type'];
 
-export function parseType(input:string) : Type {
+export function parseType(input:string) : Type|null {
     var ast = typeParser(input);
     if (ast.end != input.length) 
         throw new Error("Only part of input was consumed");
     return astToType(ast);
 }
 
-function astToType(ast) : Type {
+function astToType(ast: any) : Type|null {
     if (!ast)
         return null;
     switch (ast.name)

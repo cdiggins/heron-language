@@ -197,10 +197,13 @@ function getDef(node, typeName) {
     if (!node)
         throw new Error("Node is missing");
     var def = node.def;
-    if (!def)
+    if (!def) {
         heron_ast_rewrite_1.throwError(node, "No definition associated with node");
-    if (def.constructor['name'] !== typeName)
-        heron_ast_rewrite_1.throwError(node, "Incorrect definition type, expected " + typeName + " was " + def.constructor['name']);
+        throw new Error("Unexpected code path");
+    }
+    var ctor = def.constructor['name'];
+    if (ctor !== typeName)
+        heron_ast_rewrite_1.throwError(node, "Incorrect definition type, expected " + typeName + " was " + ctor);
     return def;
 }
 exports.getDef = getDef;

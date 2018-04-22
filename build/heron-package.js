@@ -126,7 +126,7 @@ var Package = /** @class */ (function () {
             // Create definitions 
             heron_ast_rewrite_1.visitAst(ast, heron_defs_1.createDef);
             // Create expressions, and add them to the nodes
-            heron_ast_rewrite_1.visitAst(ast, heron_expr_1.createExpr);
+            heron_ast_rewrite_1.visitAst(ast, heron_expr_1.computeExpr);
             // Create statement, and add them to the nodes
             heron_ast_rewrite_1.visitAst(ast, heron_statement_1.createStatement);
             // Rewrite the if statements 

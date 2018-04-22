@@ -13,7 +13,7 @@ export class Scope
     refs: Ref[] = [];
     defs: Def[] = [];
     children: Scope[] = [];
-    parent: Scope;
+    parent: Scope|null = null;
     
     constructor(public readonly node: HeronAstNode) {
         if (node)
@@ -64,8 +64,9 @@ export function nodeId(node: HeronAstNode): string {
 
 export const scopeType = ['funcDef', 'instrinsicDef', 'module', 'varExpr', 'compoundStatement'];
 
+
 // Used for visiting nodes in the Heron node looking for name defintions, usages, and scopes.
-export class NameAnalyzer
+export class NameAnalyzer 
 {
     // Visitor helper functions
     visitNode(node: HeronAstNode, state: Package) {
@@ -73,7 +74,7 @@ export class NameAnalyzer
             state.addDef(node.def);
         const fnName = 'visit_' + node.name;
         if (fnName in this)
-            this[fnName](node, state);
+            ((this as any)[fnName])(node, state);
         else 
             this.visitChildren(node, state);        
     }

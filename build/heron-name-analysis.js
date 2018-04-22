@@ -11,6 +11,7 @@ var Scope = /** @class */ (function () {
         this.refs = [];
         this.defs = [];
         this.children = [];
+        this.parent = null;
         if (node)
             node['scope'] = this;
     }
@@ -69,7 +70,7 @@ var NameAnalyzer = /** @class */ (function () {
             state.addDef(node.def);
         var fnName = 'visit_' + node.name;
         if (fnName in this)
-            this[fnName](node, state);
+            (this[fnName])(node, state);
         else
             this.visitChildren(node, state);
     };

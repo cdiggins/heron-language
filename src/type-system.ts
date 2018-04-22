@@ -120,7 +120,7 @@ export class TypeResolver
      * - Given two variables, the first one is chosen. 
      * - given two different constants, the unifier uses the provided strategy
      */
-    unifyTypes(t1:Type, t2:Type, depth:number=0) : Type {            
+    unifyTypes(t1:Type|undefined, t2:Type|undefined, depth:number=0) : Type {            
         if (!t1 || !t2) 
             throw new Error("Missing type expression");
         if (t1 === t2)
@@ -148,7 +148,7 @@ export class TypeResolver
         {             
             return this._unifyLists(t1, t2, depth+1);
         }
-        assert(false, "unexpected code path: " + t1 + " and " + t2);
+        throw new Error("unexpected code path: " + t1 + " and " + t2);
     }
         
     /** Debug function that dumps prints out a representation of the engine state. */

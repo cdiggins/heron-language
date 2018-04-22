@@ -10,7 +10,12 @@ var utils_1 = require("./utils");
 var FunctionSet = /** @class */ (function () {
     function FunctionSet(functions) {
         this.functions = functions;
+        if (functions.some(function (f) { return !f; }))
+            throw new Error("One of the functions is null");
     }
+    FunctionSet.prototype.toString = function () {
+        return "[" + this.functions.join(" | ") + "]";
+    };
     return FunctionSet;
 }());
 exports.FunctionSet = FunctionSet;
@@ -44,7 +49,12 @@ function typeFromNode(node, typeParams) {
     if (node.name === "typeExpr") {
         if (node.children.length === 1)
             return typeFromNode(node.children[0], typeParams);
-        return type_system_1.polyType(node.children.map(function (c) { return typeFromNode(c, typeParams); }));
+        return type_system_1.polyType(node.children.map(function (c) {
+            var tmp = typeFromNode(c, typeParams);
+            if (!tmp)
+                throw new Error("Could not find inner type node");
+            return tmp;
+        }));
     }
     else if (node.name === "typeName") {
         var text = node.allText;
@@ -53,6 +63,7 @@ function typeFromNode(node, typeParams) {
         else
             return type_system_1.typeConstant(text);
     }
+    return null;
 }
 exports.typeFromNode = typeFromNode;
 var TypeStrategyClass = /** @class */ (function () {
@@ -95,8 +106,11 @@ function callFunction(funOriginal, args, argTypes, mainUnifier) {
     if (paramTypes.length !== args.length)
         throw new Error("Mismatched number of arguments was " + args.length + " expected " + paramTypes.length);
     // Unify the passed arguments with the parameter types.    
+    var finalArgTypes = [];
     for (var i = 0; i < args.length; ++i) {
         var argType = argTypes[i];
+        if (!argType)
+            throw new Error("illegal argument type");
         var paramType = paramTypes[i];
         var arg = args[i];
         if (argType instanceof FunctionSet) {
@@ -110,24 +124,38 @@ function callFunction(funOriginal, args, argTypes, mainUnifier) {
                 // We have to figure out which type is the best here. 
                 n = chooseBestFunctionIndex(paramType, argType);
             }
+            if (n < 0)
+                throw new Error("No function found");
             argType = argType.functions[n];
+            if (!argType)
+                throw new Error("No function type found");
             arg.functionIndex = n;
         }
         // Do the local unification to get the proper return HeronType
-        u.unifyTypes(paramType, argType);
+        utils_1.trace("funcType", "Unifying argument " + arg + " of type " + argType + " with type " + paramType);
+        var uniType = u.unifyTypes(paramType, argType);
+        utils_1.trace("funcType", "Local unified type " + uniType);
         // Do the unification of the arguments with the types.
         var globalType = mainUnifier.unifyTypes(argType, paramType);
+        utils_1.trace("funcType", "Global unified type " + globalType);
+        finalArgTypes.push(globalType);
         // In case the referenced node is a variable or parameter, 
         // we are going to unify it with the resulting global HeronType. 
-        if (arg.node.ref instanceof heron_refs_1.FuncParamRef) {
-            mainUnifier.unifyTypes(arg.node.ref.def.type, globalType);
-        }
-        else if (arg.node.ref instanceof heron_refs_1.VarRef) {
-            mainUnifier.unifyTypes(arg.node.ref.def.type, globalType);
+        if (arg.node.ref instanceof heron_refs_1.FuncParamRef || arg.node.ref instanceof heron_refs_1.VarRef) {
+            var refType = arg.node.ref.def.type;
+            utils_1.trace("funcType", "Reference type " + refType);
+            var uniRefType = mainUnifier.unifyTypes(refType, globalType);
+            utils_1.trace("funcType", "Reference type after unification " + uniRefType);
+            //arg.node.ref.def.type = uniRefType;
         }
     }
+    // Create a final function type, and unify it. 
+    var finalRetType = u.getUnifiedType(returnType);
+    // TODO: figure out if I need this.
+    //const finalType = funcType(finalArgTypes, finalRetType);
+    //mainUnifier.unifyTypes(funOriginal, finalType);
     // We return the unified version of the return HeronType.
-    return u.getUnifiedType(returnType);
+    return finalRetType;
 }
 exports.callFunction = callFunction;
 function computeFuncTypeFromSig(f, genParams) {
@@ -137,7 +165,7 @@ function computeFuncTypeFromSig(f, genParams) {
     for (var i = 0; i < f.params.length; ++i) {
         var param = f.params[i];
         var paramType = typeFromNode(f.params[i].typeNode, genParams);
-        if (paramType !== null) {
+        if (paramType) {
             hasSpecType = true;
             param.type = paramType;
             u.unifyTypes(getFuncArgType(t, i), paramType);
@@ -159,11 +187,11 @@ function computeFuncTypeFromSig(f, genParams) {
 exports.computeFuncTypeFromSig = computeFuncTypeFromSig;
 function computeFuncType(f) {
     if (!f.type) {
-        console.log("Computing function HeronType for " + f);
+        console.log("Computing function type for " + f);
         var sigNode = heron_ast_rewrite_1.validateNode(f.node.children[0], "funcSig");
         var genParamsNode = heron_ast_rewrite_1.validateNode(sigNode.children[1], "genericParams");
         var genParams = genParamsNode.children.map(function (p) { return p.allText; });
-        var body = f.body ? (f.body.expr ? f.body.expr : f.body.statement) : null;
+        var body = f.body ? (f.body.expr ? f.body.expr || null : f.body.statement || null) : null;
         // This is important, because it is used when a recursive call is made. 
         // Additionally, if types are present in the signature we use those
         f.type = computeFuncTypeFromSig(f, genParams);
@@ -413,6 +441,8 @@ var FunctionTypeEvaluator = /** @class */ (function () {
         return getFuncReturnType(this._function);
     };
     FunctionTypeEvaluator.prototype.getType = function (x) {
+        if (!x)
+            throw new Error("Invalid argument");
         if (x.type)
             return x.type;
         try {
@@ -422,17 +452,22 @@ var FunctionTypeEvaluator = /** @class */ (function () {
             }
             else {
                 var rawType = this.getExprType(x);
+                if (rawType instanceof FunctionSet)
+                    return rawType;
                 var uniType = this.unifier.getUnifiedType(rawType);
                 console.log("Expression     : " + x.toString());
-                console.log("  has raw HeronType : " + rawType);
-                console.log("  has HeronType     : " + uniType);
+                console.log("  has raw type : " + rawType);
+                console.log("  has type     : " + uniType);
                 //return x.type = rawType;
+                if (!uniType)
+                    throw new Error("Missing unified type");
                 return x.type = uniType;
             }
         }
         catch (e) {
             heron_ast_rewrite_1.throwError(x.node, e.message);
         }
+        throw new Error("Unexpected code path");
     };
     FunctionTypeEvaluator.prototype.getStatementType = function (statement) {
         if (statement.type)
@@ -464,8 +499,10 @@ var FunctionTypeEvaluator = /** @class */ (function () {
         }
         else if (statement instanceof heron_statement_1.ForStatement) {
             var forLoopVar = statement.node.def;
-            if (!forLoopVar)
+            if (!forLoopVar) {
                 heron_ast_rewrite_1.throwError(statement.node, "Missing for loop variable definition");
+                throw new Error("Unexpected code path");
+            }
             var arrayType = makeNewArrayType();
             var elementType = getArrayElementType(arrayType);
             if (forLoopVar.type)
@@ -531,34 +568,42 @@ var FunctionTypeEvaluator = /** @class */ (function () {
         }
         else if (expr instanceof heron_expr_1.FunCall) {
             var funcType_1 = this.getType(expr.func);
+            if (!funcType_1)
+                throw new Error("Could not get type of function");
+            var argTypes = [];
             for (var _i = 0, _a = expr.args; _i < _a.length; _i++) {
                 var a = _a[_i];
-                this.getType(a);
+                var argType = this.getType(a);
+                if (!argType)
+                    throw new Error("Could not get type of argument: " + a);
+                argTypes.push(argType);
             }
-            var argTypes = expr.args.map(function (a) { return a.type; });
             utils_1.trace("chooseFunc", "Function call: " + expr);
-            utils_1.trace("chooseFunc", "Has HeronType " + funcType_1);
+            utils_1.trace("chooseFunc", "Has function type " + funcType_1);
+            utils_1.trace("chooseFunc", "arg types : " + argTypes.join(", "));
+            if (funcType_1 instanceof FunctionSet) {
+                var funcs = funcType_1.functions;
+                //trace('chooseFunc', 'Looking for function match for: ' + expr.toString());
+                var n = chooseBestFunctionIndexFromArgs(argTypes, funcType_1);
+                expr.func.functionIndex = n;
+                funcType_1 = funcs[n];
+            }
             if (funcType_1 instanceof type_system_1.PolyType) {
-                // Work out the function HeronType  
-                if (funcType_1 instanceof FunctionSet) {
-                    var funcs = funcType_1.types[1].types;
-                    utils_1.trace('chooseFunc', 'Looking for function match for: ' + expr.toString());
-                    var n = chooseBestFunctionIndexFromArgs(argTypes, funcType_1);
-                    expr.func.functionIndex = n;
-                    funcType_1 = funcs[n];
-                }
                 if (!isFunctionType(funcType_1))
                     throw new Error("Can't call " + funcType_1);
-                for (var i = 0; i < argTypes.length; ++i) {
+                for (var i = 0; i < expr.args.length; ++i) {
                     var arg = expr.args[i];
                     var exp = getFuncArgType(funcType_1, i);
-                    // TODO: maybe extend this to all types, not just function args.
                     // I can see this being something we want for arrays as well.
                     if (arg instanceof heron_expr_1.Lambda && exp instanceof type_system_1.PolyType) {
                         // Recompute the HeronType now based on the expected HeronType.
                         arg.type = getLambdaType(arg, this.unifier, exp);
+                        if (!arg.type)
+                            throw new Error("Failed to get a recomputed lambda type");
+                        argTypes[i] = arg.type;
                     }
                 }
+                utils_1.trace("chooseFunc", "final arg types : " + argTypes.join(", "));
                 // We have to create new HeronType variable names when calling a
                 return callFunction(funcType_1, expr.args, argTypes, this.unifier);
             }
@@ -626,8 +671,10 @@ var FunctionTypeEvaluator = /** @class */ (function () {
         }
         else if (expr instanceof heron_expr_1.VarAssignmentExpr) {
             var ref = expr.node.children[0].ref;
-            if (!ref)
+            if (!ref) {
                 heron_ast_rewrite_1.throwError(expr.node, "Variable assignment is missing reference");
+                throw new Error("Unreachable code");
+            }
             if (ref.defs.length > 1)
                 heron_ast_rewrite_1.throwError(expr.node, "Multiple defs found");
             if (ref.defs.length < 1)

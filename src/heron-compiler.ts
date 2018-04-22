@@ -6,7 +6,7 @@ import { computeFuncType } from "./heron-types";
 const g = heronGrammar;
 
 // Get some details about the language implementation environment 
-declare var require; 
+declare var require: any; 
 const fs = require('fs');
 const path = require('path');
 
@@ -51,19 +51,20 @@ export function createPackage(moduleNames: string[]): Package {
 export function addModuleToPackage(name: string, intrinsic: boolean, pkg: Package) {
     const modulePath = moduleNameToPath(name);
     const ast = parseFile(modulePath);
-    pkg.addFile(ast, intrinsic, modulePath);
+    if (ast)
+        pkg.addFile(ast, intrinsic, modulePath);
 }
 
 export function moduleNameToPath(f: string): string {
     return path.join(moduleFolder, f + ext);
 }
 
-export function parseModule(moduleName: string): HeronAstNode {
+export function parseModule(moduleName: string): HeronAstNode|null {
     const modulePath = moduleNameToPath(moduleName);
     return parseFile(modulePath);
 }
 
-export function parseFile(f: string): HeronAstNode {
+export function parseFile(f: string): HeronAstNode|null {
     try 
     {
         const code = fs.readFileSync(f, 'utf-8');
@@ -74,5 +75,6 @@ export function parseFile(f: string): HeronAstNode {
     {
         console.log("An error occurred while parsing " + f);
         console.log(e.message);
+        return null;
     }
 }

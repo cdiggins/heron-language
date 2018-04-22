@@ -13,10 +13,10 @@ import { Scope } from "./heron-name-analysis";
 export class HeronAstNode extends Myna.AstNode 
 {
     // Used to uniquely identify each node 
-    id: number;
+    id: number = -1;
 
     // The children are also of type HeronAstNode. 
-    children: HeronAstNode[];
+    children: HeronAstNode[] = this.children as HeronAstNode[];
 
     // A pointer to the parent node 
     parent?: HeronAstNode;
@@ -46,14 +46,14 @@ export class HeronAstNode extends Myna.AstNode
     file?: SourceFile;
 }
 
-const g = Myna.grammars['heron'];
+const g: any = (Myna.grammars as any)['heron'];
 
 export function throwError(node: HeronAstNode, msg:string = '') {    
     throw new Error(msg + (msg ? "\n" : "") + parseLocation(node));
 }
 
 // TODO: fix a bug. This doesn't work. 
-export function getFile(node: HeronAstNode): string {
+export function getFile(node?: HeronAstNode): string {
     if (!node) return '';
     return node.file ? node.file.filePath : getFile(node.parent);
 }
@@ -88,9 +88,10 @@ export function opSymbolToString(sym: string): string {
     }
 }
 
-export function makeNode(rule: Myna.Rule, src: HeronAstNode, text: string, ...children:HeronAstNode[]): HeronAstNode {
+export function makeNode(rule: Myna.Rule, src: HeronAstNode|null, text: string, ...children:HeronAstNode[]): HeronAstNode {
     let result = rule.node(text, ...children) as HeronAstNode;
-    result.original = src;
+    if (src) 
+        result.original = src;
     return result;
 }
 
@@ -121,7 +122,8 @@ export function identifierToString(id: string) {
 
 // Applies a transform function to each member of the AST to create a new one
 export function mapAst(node: HeronAstNode, f: (_: HeronAstNode) => HeronAstNode): HeronAstNode {    
-    node.children = node.children ? node.children.map(c => mapAst(c, f)) : null;
+    if (node.children)
+        node.children = node.children.map(c => mapAst(c, f));
     let r = f(node);
     // Store a back pointer to the original AST 
     if (r != node)
@@ -130,7 +132,7 @@ export function mapAst(node: HeronAstNode, f: (_: HeronAstNode) => HeronAstNode)
 }
 
 // Creates a function call node given a function name, and some arguments 
-export function funCall(src: HeronAstNode, fxnName: string, ...args) : HeronAstNode {
+export function funCall(src: HeronAstNode, fxnName: string, ...args: HeronAstNode[]) : HeronAstNode {
     let fxn = makeNode(g.varName, src, fxnName);
     let fxnCallArgs = makeNode(g.funCall, src, '', ...args);
     return makeNode(g.postfixExpr, src, '', fxn, fxnCallArgs);
@@ -438,7 +440,7 @@ export function validateNode(node: HeronAstNode, ...names: string[]): HeronAstNo
 }
 
 // Calls a function on every node in the AST passing the AST node and it's child
-export function visitAstWithParent(node: HeronAstNode, parent: HeronAstNode, f:((child:HeronAstNode, parent:HeronAstNode)=>void)) {    
+export function visitAstWithParent(node: HeronAstNode, parent: HeronAstNode|null, f:((child:HeronAstNode, parent:HeronAstNode|null)=>void)) {    
     node.children.forEach(c => visitAstWithParent(c, node, f));
     f(node, parent);
 }
@@ -452,7 +454,7 @@ export function visitAst(node: HeronAstNode, f:((_:HeronAstNode)=>void)) {
 
 // Visits every node creating a pointer to its parent 
 export function setParentPointers(node: HeronAstNode) {
-    visitAstWithParent(node, null, (c, p) => c.parent = p);
+    visitAstWithParent(node, null, (c, p) => p ? c.parent = p : p);
 }
 
 // Performs some pre-processing of the AST to make it easier to work with

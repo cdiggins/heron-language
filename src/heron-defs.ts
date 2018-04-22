@@ -13,14 +13,14 @@ export class Def {
     { node.def = this; }
 
     // Added as a post-process step 
-    type: HeronType;
+    type?: HeronType;
     
     toString() {
-        return this.name + '_' + this.constructor['name'] + this.node['id'];
+        return this.name + '_' + (this.constructor as any)['name'] + this.node['id'];
     }
 }
 
-export function typeNodeToStr(node: HeronAstNode): string {
+export function typeNodeToStr(node?: HeronAstNode|null): string {
     if (!node || !node.allText) return "any";
     return node.allText;
 }
@@ -53,7 +53,7 @@ export class FuncParamDef extends Def
     constructor(
         public readonly node: HeronAstNode,
         public readonly name: string, 
-        public readonly typeNode: HeronAstNode,
+        public readonly typeNode?: HeronAstNode,
     )
     { super(node, name); }
 
@@ -110,7 +110,7 @@ export class TypeParamDef extends Def
 //==========================================================================================
 // Exported functions
 
-export function createDef(node: HeronAstNode): Def {
+export function createDef(node: HeronAstNode): Def|null {
     // NOTE: typeParamDef and funcParamDef are created by the funcDef    
     switch (node.name) {
         case "funcDef": 
@@ -126,7 +126,7 @@ export function createDef(node: HeronAstNode): Def {
         case "lambdaArgNoType":
             return createFuncParamDef(node);
     }
-    return null
+    return null;
 }
 
 //==========================================================================================
@@ -178,8 +178,12 @@ export function createTypeDef(node: HeronAstNode): TypeDef {
 export function getDef<T extends Def>(node: HeronAstNode, typeName: string): T {
     if (!node) throw new Error("Node is missing");
     let def = node.def;
-    if (!def) throwError(node, "No definition associated with node");
-    if (def.constructor['name'] !== typeName) 
-        throwError(node, "Incorrect definition type, expected " + typeName + " was " + def.constructor['name']);
+    if (!def) { 
+        throwError(node, "No definition associated with node");
+        throw new Error("Unexpected code path");
+    }
+    const ctor = (def.constructor as any)['name'] as string;
+    if (ctor !== typeName) 
+        throwError(node, "Incorrect definition type, expected " + typeName + " was " + ctor);
     return def as T;
 }
