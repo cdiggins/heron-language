@@ -124,3 +124,4 @@ I need to track the actions of a specific function.
 
 When I make a function call, with a function that is an argument, I should unify it? 
 
+* Map has type T => T, which is wrong.

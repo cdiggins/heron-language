@@ -46,8 +46,8 @@ module heron:std.array:0.1
     function any(xs, p) 
         = xs.reduce(false, (prev, x) => prev || p(x));
 
-    function count(xs, p) 
-        = xs.reduce(0, (prev, x) => p(x) ? prev + 1 : prev);    
+    //function count(xs, p) 
+    //    = xs.reduce(0, (prev, x) => p(x) ? prev + 1 : prev);    
 
     function eq(xs, ys) 
         = xs.count == ys.count;    

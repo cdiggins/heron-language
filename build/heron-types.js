@@ -97,11 +97,11 @@ var TypeStrategyClass = /** @class */ (function () {
 }());
 exports.typeStrategy = new TypeStrategyClass();
 function callFunction(funOriginal, args, argTypes, mainUnifier) {
+    // TODO: I used to think this but it is not correct 
     // We have to create fresh variable names.
-    var fun = type_system_1.freshVariableNames(funOriginal);
-    var u = new type_system_1.TypeResolver(exports.typeStrategy);
+    var fun = funOriginal; // freshVariableNames(funOriginal) as PolyType;
+    utils_1.trace("funcType", "New version of function " + fun);
     var paramTypes = getFuncArgTypes(fun);
-    var returnType = getFuncReturnType(fun);
     // Parameters should match the number of arguments given to it. 
     if (paramTypes.length !== args.length)
         throw new Error("Mismatched number of arguments was " + args.length + " expected " + paramTypes.length);
@@ -131,33 +131,90 @@ function callFunction(funOriginal, args, argTypes, mainUnifier) {
                 throw new Error("No function type found");
             arg.functionIndex = n;
         }
-        // Do the local unification to get the proper return HeronType
-        utils_1.trace("funcType", "Unifying argument " + arg + " of type " + argType + " with type " + paramType);
-        var uniType = u.unifyTypes(paramType, argType);
-        utils_1.trace("funcType", "Local unified type " + uniType);
-        // Do the unification of the arguments with the types.
-        var globalType = mainUnifier.unifyTypes(argType, paramType);
-        utils_1.trace("funcType", "Global unified type " + globalType);
-        finalArgTypes.push(globalType);
-        // In case the referenced node is a variable or parameter, 
-        // we are going to unify it with the resulting global HeronType. 
-        if (arg.node.ref instanceof heron_refs_1.FuncParamRef || arg.node.ref instanceof heron_refs_1.VarRef) {
-            var refType = arg.node.ref.def.type;
-            utils_1.trace("funcType", "Reference type " + refType);
-            var uniRefType = mainUnifier.unifyTypes(refType, globalType);
-            utils_1.trace("funcType", "Reference type after unification " + uniRefType);
-            //arg.node.ref.def.type = uniRefType;
-        }
+        var finalArgType = mainUnifier.unifyTypes(argType, paramType);
+        utils_1.trace("funcType", "Unifying argument " + arg + " with " + argType + " and " + paramType + " is " + finalArgType);
+        finalArgTypes.push(finalArgType);
     }
     // Create a final function type, and unify it. 
-    var finalRetType = u.getUnifiedType(returnType);
-    // TODO: figure out if I need this.
-    //const finalType = funcType(finalArgTypes, finalRetType);
-    //mainUnifier.unifyTypes(funOriginal, finalType);
+    var finalRetType = mainUnifier.getUnifiedType(getFuncReturnType(fun));
+    utils_1.trace("funcType", "Unified return type of " + fun + " is " + finalRetType);
     // We return the unified version of the return HeronType.
     return finalRetType;
 }
 exports.callFunction = callFunction;
+/*
+export function callFunction(funOriginal: PolyType, args: Expr[], argTypes: HeronType[], mainUnifier: TypeResolver): HeronType {
+    // We have to create fresh variable names.
+    const fun = freshVariableNames(funOriginal) as PolyType;
+    const u = new TypeResolver(typeStrategy);
+    const paramTypes = getFuncArgTypes(fun);
+    const returnType = getFuncReturnType(fun);
+
+    // Parameters should match the number of arguments given to it.
+    if (paramTypes.length !== args.length)
+        throw new Error("Mismatched number of arguments was " + args.length + " expected " + paramTypes.length);
+
+    // Unify the passed arguments with the parameter types.
+    const finalArgTypes: Type[] = [];
+    for (let i=0; i < args.length; ++i) {
+        let argType = argTypes[i];
+        if (!argType)
+            throw new Error("illegal argument type");
+
+        const paramType = paramTypes[i];
+        const arg = args[i];
+        if (argType instanceof FunctionSet) {
+            trace("chooseFunc", "Function set as argument");
+            let n = -1;
+            if (!(paramType instanceof PolyType)) {
+                n = chooseMostGeneric(argType);
+                trace("chooseFunc", "Parameter is not a poly-rype: can't figure out best match, defaulting to most generic");
+            }
+            else {
+                // We have to figure out which type is the best here.
+                n = chooseBestFunctionIndex(paramType as PolyType, argType);
+            }
+
+            if (n < 0)
+                throw new Error("No function found");
+            argType = argType.functions[n];
+            if (!argType)
+                throw new Error("No function type found");
+            arg.functionIndex = n;
+        }
+
+        // Do the local unification to get the proper return HeronType
+        trace("funcType", "Unifying argument " + arg + " of type " + argType + " with type " + paramType);
+        const uniType = u.unifyTypes(paramType, argType);
+        trace("funcType", "Local unified type " + uniType);
+
+        // Do the unification of the arguments with the types.
+        const globalType = mainUnifier.unifyTypes(argType, paramType);
+        trace("funcType", "Global unified type " + globalType)
+        finalArgTypes.push(globalType);
+
+        // In case the referenced node is a variable or parameter,
+        // we are going to unify it with the resulting global HeronType.
+        if (arg.node.ref instanceof FuncParamRef || arg.node.ref instanceof VarRef) {
+            const refType = arg.node.ref.def.type;
+            trace("funcType", "Reference type " + refType);
+            const uniRefType = mainUnifier.unifyTypes(refType, globalType);
+            trace("funcType", "Reference type after unification " + uniRefType);
+            //arg.node.ref.def.type = uniRefType;
+        }
+    }
+
+    // Create a final function type, and unify it.
+    const finalRetType = u.getUnifiedType(returnType);
+
+    // TODO: figure out if I need this.
+    //const finalType = funcType(finalArgTypes, finalRetType);
+    //mainUnifier.unifyTypes(funOriginal, finalType);
+
+    // We return the unified version of the return HeronType.
+    return finalRetType;
+}
+*/
 function computeFuncTypeFromSig(f, genParams) {
     var u = new type_system_1.TypeResolver(exports.typeStrategy);
     var t = genericFuncType(f.params.length);
@@ -173,6 +230,7 @@ function computeFuncTypeFromSig(f, genParams) {
         else {
             param.type = getFuncArgType(t, i);
         }
+        utils_1.trace("funcType", "Parameter " + i + " " + param.type);
     }
     var retType = f instanceof heron_defs_1.FuncDef ? typeFromNode(f.retTypeNode, genParams) : null;
     if (retType) {
@@ -198,15 +256,17 @@ function computeFuncType(f) {
         var u = new type_system_1.TypeResolver(exports.typeStrategy);
         var te = new FunctionTypeEvaluator(f.name, f.params.length, body, exports.typeStrategy, u, f.type);
         f.type = te.result;
-        console.log("HeronType for " + f);
-        console.log(" is " + type_system_1.normalizeType(f.type));
+        console.log(" " + u.state);
+        console.log("Type for " + f + " is " + type_system_1.normalizeType(f.type));
     }
     return f.type;
 }
 exports.computeFuncType = computeFuncType;
 function getLambdaType(l, u, shape) {
     if (!l.type) {
-        l.type = computeFuncTypeFromSig(l, []);
+        l.type = shape;
+        for (var i = 0; i < l.params.length; ++i)
+            l.params[i].type = getFuncArgType(shape, i);
         var te = new FunctionTypeEvaluator('_lambda_', l.params.length, l.body, exports.typeStrategy, u, shape);
         l.type = te.result;
     }
@@ -415,15 +475,14 @@ var FunctionTypeEvaluator = /** @class */ (function () {
             throw new Error("Missing function shape: create a generic function HeronType if you don't know what to pass");
         //this._function = freshParameterNames(shape) as PolyType;
         this._function = shape;
-        utils_1.trace('funcType', 'Getting function HeronType for ' + name);
-        utils_1.trace('funcType', '  with shape HeronType ' + shape);
-        //trace('funcType', 'Fresh parameters ' + this._function);
+        utils_1.trace('funcType', 'Getting function type for ' + name);
+        utils_1.trace('funcType', '  given type ' + this._function);
         if (body)
             this.getType(body);
         if (body instanceof heron_expr_1.Expr)
             this.unifyReturn(body);
         this.result = this.unifier.getUnifiedType(this._function);
-        utils_1.trace('funcType', "Final HeronType for " + name + " is " + this.result);
+        utils_1.trace('funcType', "Final type for " + name + " originally type " + this._function + " is " + this.result);
         //trace('funcType', "Unifier state:");
         //trace('funcType', this.unifier.state);
     }
@@ -453,10 +512,10 @@ var FunctionTypeEvaluator = /** @class */ (function () {
             else {
                 var rawType = this.getExprType(x);
                 if (rawType instanceof FunctionSet)
-                    return rawType;
+                    return x.type = rawType;
                 var uniType = this.unifier.getUnifiedType(rawType);
                 console.log("Expression     : " + x.toString());
-                console.log("  has raw type : " + rawType);
+                //console.log("  has raw type : " + rawType);
                 console.log("  has type     : " + uniType);
                 //return x.type = rawType;
                 if (!uniType)
@@ -576,6 +635,8 @@ var FunctionTypeEvaluator = /** @class */ (function () {
                 var argType = this.getType(a);
                 if (!argType)
                     throw new Error("Could not get type of argument: " + a);
+                if (!a.type)
+                    throw new Error("Type was not set on argument: " + a);
                 argTypes.push(argType);
             }
             utils_1.trace("chooseFunc", "Function call: " + expr);
@@ -594,18 +655,26 @@ var FunctionTypeEvaluator = /** @class */ (function () {
                 for (var i = 0; i < expr.args.length; ++i) {
                     var arg = expr.args[i];
                     var exp = getFuncArgType(funcType_1, i);
+                    if (argTypes[i].toString() !== arg.type.toString())
+                        throw new Error("Mismatch argument types");
+                    this.unify(exp, argTypes[i]);
+                    /*
                     // I can see this being something we want for arrays as well.
-                    if (arg instanceof heron_expr_1.Lambda && exp instanceof type_system_1.PolyType) {
+                    if (arg instanceof Lambda && exp instanceof PolyType) {
                         // Recompute the HeronType now based on the expected HeronType.
-                        utils_1.trace("funcType", "Getting an improved lambda type");
-                        utils_1.trace("funcType", "Original: " + arg.type);
-                        utils_1.trace("funcType", "Shape: " + exp);
+                        trace("funcType", "Getting an improved lambda type");
+                        trace("funcType", "Original: " + arg.type);
+                        trace("funcType", "Shape: " + exp);
                         arg.type = getLambdaType(arg, this.unifier, exp);
-                        utils_1.trace("funcType", "Updated: " + arg.type);
+                        trace("funcType", "Updated: " + arg.type);
                         if (!arg.type)
                             throw new Error("Failed to get a recomputed lambda type");
                         argTypes[i] = arg.type;
                     }
+
+                    // Unify again.
+                    this.unify(arg.type, exp);
+                    */
                 }
                 utils_1.trace("chooseFunc", "final arg types : " + argTypes.join(", "));
                 // We have to create new HeronType variable names when calling a
@@ -703,7 +772,14 @@ var FunctionTypeEvaluator = /** @class */ (function () {
             a = this.getType(a);
         if (b instanceof heron_expr_1.Expr)
             b = this.getType(b);
-        return this.unifier.unifyTypes(a, b);
+        // TODO: unify function sets? 
+        if (b instanceof FunctionSet)
+            return a;
+        if (a instanceof FunctionSet)
+            return b;
+        var ret = this.unifier.unifyTypes(a, b);
+        utils_1.trace("funcType", "Unification of " + a + " and " + b + " is " + ret);
+        return ret;
     };
     FunctionTypeEvaluator.prototype.unifyBool = function (x) {
         return this.unify(x, Types.BoolType);
