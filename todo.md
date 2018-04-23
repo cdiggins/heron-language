@@ -125,3 +125,5 @@ I need to track the actions of a specific function.
 When I make a function call, with a function that is an argument, I should unify it? 
 
 * Map has type T => T, which is wrong.
+
+I think the problem is the presence of `T` which is incorrect. It gets confused. Every function type has to have its type variables replaced. 

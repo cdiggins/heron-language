@@ -3,7 +3,7 @@ import { Statement, CompoundStatement, IfStatement, EmptyStatement, VarDeclState
 import { throwError, HeronAstNode, validateNode } from "./heron-ast-rewrite";
 import { FuncDef } from "./heron-defs";
 import { FuncRef, TypeRef, TypeParamRef, FuncParamRef, VarRef, ForLoopVarRef } from "./heron-refs";
-import { Type, PolyType, TypeVariable, TypeResolver, TypeStrategy, typeConstant, polyType, typeVariable, TypeConstant, isTypeConstant, newTypeVar, normalizeType } from "./type-system";
+import { Type, PolyType, TypeVariable, TypeResolver, TypeStrategy, typeConstant, polyType, typeVariable, TypeConstant, isTypeConstant, newTypeVar, normalizeType, Lookup } from "./type-system";
 import { trace } from "./utils";
 
 export class FunctionSet { 
@@ -43,7 +43,7 @@ export module Types
     export const FuncType = typeConstant('Func');
 }
 
-export function typeFromNode(node: HeronAstNode, typeParams: string[]): HeronType|null {
+export function typeFromNode(node: HeronAstNode, typeParams: Lookup<string>): HeronType|null {
     if (!node) return null;
     validateNode(node, "typeExpr", "typeName");
     if (node.name === "typeExpr") {
@@ -58,8 +58,8 @@ export function typeFromNode(node: HeronAstNode, typeParams: string[]): HeronTyp
     }
     else if (node.name === "typeName") {
         const text = node.allText;
-        if (typeParams.indexOf(text) >= 0) 
-            return typeVariable(text);
+        if (text in typeParams) 
+            return typeVariable(typeParams[text]);
         else             
             return typeConstant(text);
     }
@@ -221,7 +221,8 @@ export function callFunction(funOriginal: PolyType, args: Expr[], argTypes: Hero
     return finalRetType;
 }    
 */
-export function computeFuncTypeFromSig(f: FuncDef|Lambda, genParams: string[]): PolyType {
+export function computeFuncTypeFromSig(f: FuncDef|Lambda, genParams: Lookup<string>): PolyType {
+    // TODO: rename the genParams 
     const u = new TypeResolver(typeStrategy);
     const t = genericFuncType(f.params.length);
     let hasSpecType = false;
@@ -249,6 +250,13 @@ export function computeFuncTypeFromSig(f: FuncDef|Lambda, genParams: string[]): 
         return t;
 }
 
+export function genParamsToNewVarLookup(genParams: string[]) : Lookup<string> {
+    const r: Lookup<string> = {};
+    for (const p of genParams)
+        r[p] = newTypeVar().name;
+    return r;
+}
+
 export function computeFuncType(f: FuncDef): PolyType {
     if (!f.type) {
         console.log("Computing function type for " + f);
@@ -258,7 +266,7 @@ export function computeFuncType(f: FuncDef): PolyType {
         const body = f.body ? (f.body.expr ? f.body.expr || null : f.body.statement || null) : null;
         // This is important, because it is used when a recursive call is made. 
         // Additionally, if types are present in the signature we use those
-        f.type = computeFuncTypeFromSig(f, genParams);
+        f.type = computeFuncTypeFromSig(f, genParamsToNewVarLookup(genParams));
         const u = new TypeResolver(typeStrategy);
         const te = new FunctionTypeEvaluator(f.name, f.params.length, body, typeStrategy, u, f.type as PolyType);
         f.type = te.result;
@@ -804,7 +812,7 @@ export class FunctionTypeEvaluator
             return a;
         if (a instanceof FunctionSet)
             return b;     
-            
+
         const ret = this.unifier.unifyTypes(a, b);
         trace("funcType", "Unification of " + a + " and " + b + " is " + ret);
         return ret;

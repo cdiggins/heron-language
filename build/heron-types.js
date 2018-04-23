@@ -58,8 +58,8 @@ function typeFromNode(node, typeParams) {
     }
     else if (node.name === "typeName") {
         var text = node.allText;
-        if (typeParams.indexOf(text) >= 0)
-            return type_system_1.typeVariable(text);
+        if (text in typeParams)
+            return type_system_1.typeVariable(typeParams[text]);
         else
             return type_system_1.typeConstant(text);
     }
@@ -216,6 +216,7 @@ export function callFunction(funOriginal: PolyType, args: Expr[], argTypes: Hero
 }
 */
 function computeFuncTypeFromSig(f, genParams) {
+    // TODO: rename the genParams 
     var u = new type_system_1.TypeResolver(exports.typeStrategy);
     var t = genericFuncType(f.params.length);
     var hasSpecType = false;
@@ -243,6 +244,15 @@ function computeFuncTypeFromSig(f, genParams) {
         return t;
 }
 exports.computeFuncTypeFromSig = computeFuncTypeFromSig;
+function genParamsToNewVarLookup(genParams) {
+    var r = {};
+    for (var _i = 0, genParams_1 = genParams; _i < genParams_1.length; _i++) {
+        var p = genParams_1[_i];
+        r[p] = type_system_1.newTypeVar().name;
+    }
+    return r;
+}
+exports.genParamsToNewVarLookup = genParamsToNewVarLookup;
 function computeFuncType(f) {
     if (!f.type) {
         console.log("Computing function type for " + f);
@@ -252,7 +262,7 @@ function computeFuncType(f) {
         var body = f.body ? (f.body.expr ? f.body.expr || null : f.body.statement || null) : null;
         // This is important, because it is used when a recursive call is made. 
         // Additionally, if types are present in the signature we use those
-        f.type = computeFuncTypeFromSig(f, genParams);
+        f.type = computeFuncTypeFromSig(f, genParamsToNewVarLookup(genParams));
         var u = new type_system_1.TypeResolver(exports.typeStrategy);
         var te = new FunctionTypeEvaluator(f.name, f.params.length, body, exports.typeStrategy, u, f.type);
         f.type = te.result;
