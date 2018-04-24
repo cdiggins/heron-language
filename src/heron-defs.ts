@@ -39,7 +39,7 @@ export class FuncDef extends Def
     { super(node, name); }
     
     toString(): string {
-        return this.name + "(" + this.params.join(", ") + ") : " + typeNodeToStr(this.retTypeNode);
+        return this.name + "(" + this.params.join(", ") + ")";  // + " : " + typeNodeToStr(this.retTypeNode);
     }
 
     get isIntrinsic(): boolean {
@@ -58,7 +58,7 @@ export class FuncParamDef extends Def
     { super(node, name); }
 
     toString(): string {
-        return this.name +  " : " + typeNodeToStr(this.typeNode);
+        return this.name;// + (this.typeNode && this.typeNode.allText ? " : " + typeNodeToStr(this.typeNode)  : '');
     }
 }
 

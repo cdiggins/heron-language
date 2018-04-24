@@ -46,7 +46,7 @@ var FuncDef = /** @class */ (function (_super) {
         return _this;
     }
     FuncDef.prototype.toString = function () {
-        return this.name + "(" + this.params.join(", ") + ") : " + typeNodeToStr(this.retTypeNode);
+        return this.name + "(" + this.params.join(", ") + ")"; // + " : " + typeNodeToStr(this.retTypeNode);
     };
     Object.defineProperty(FuncDef.prototype, "isIntrinsic", {
         get: function () {
@@ -69,7 +69,7 @@ var FuncParamDef = /** @class */ (function (_super) {
         return _this;
     }
     FuncParamDef.prototype.toString = function () {
-        return this.name + " : " + typeNodeToStr(this.typeNode);
+        return this.name; // + (this.typeNode && this.typeNode.allText ? " : " + typeNodeToStr(this.typeNode)  : '');
     };
     return FuncParamDef;
 }(Def));

@@ -142,7 +142,7 @@ function outputFunctionTypes(pkg: Package) {
         let t = computeFuncType(f);
         if (f.body) {
             const finalType = normalizeType(t);
-            console.log(f.toString() + " : " + finalType);
+            console.log(f.toString() + " :: " + finalType);
         }
     }
 }

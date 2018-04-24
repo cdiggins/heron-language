@@ -130,7 +130,7 @@ function outputFunctionTypes(pkg) {
         var t = heron_types_1.computeFuncType(f);
         if (f.body) {
             var finalType = type_system_1.normalizeType(t);
-            console.log(f.toString() + " : " + finalType);
+            console.log(f.toString() + " :: " + finalType);
         }
     }
 }
