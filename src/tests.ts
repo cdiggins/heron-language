@@ -141,11 +141,8 @@ function outputFunctionTypes(pkg: Package) {
     for (const f of pkg.allFuncDefs) {
         let t = computeFuncType(f);
         if (f.body) {
-            console.log(f.toString());
-            // NOTE: I don't really need to track the oirginal type
-            //console.log(" : " + t); 
             const finalType = normalizeType(t);
-            console.log(" : " + finalType);
+            console.log(f.toString() + " : " + finalType);
         }
     }
 }

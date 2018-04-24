@@ -470,7 +470,7 @@ export class FunctionTypeEvaluator
         if (n.expr) {
             if (n.expr instanceof FunCall) 
                 this.resolveFunCall(n.expr);
-                
+
             n.expr.type = this.unifier.getUnifiedType(n.expr.type);
         }
     }
@@ -507,11 +507,6 @@ export class FunctionTypeEvaluator
                 if (rawType instanceof FunctionSet)
                     return x.type = rawType;
                 const uniType = this.unifier.getUnifiedType(rawType);
-
-                console.log("Expression     : " + x.toString());
-                //console.log("  has raw type : " + rawType);
-                console.log("  has type     : " + uniType);
-                //return x.type = rawType;
 
                 if (!uniType)
                     throw new Error("Missing unified type")

@@ -490,10 +490,6 @@ var FunctionTypeEvaluator = /** @class */ (function () {
                 if (rawType instanceof FunctionSet)
                     return x.type = rawType;
                 var uniType = this.unifier.getUnifiedType(rawType);
-                console.log("Expression     : " + x.toString());
-                //console.log("  has raw type : " + rawType);
-                console.log("  has type     : " + uniType);
-                //return x.type = rawType;
                 if (!uniType)
                     throw new Error("Missing unified type");
                 return x.type = uniType;
