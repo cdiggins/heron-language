@@ -25,7 +25,6 @@ function assure(t) {
     return t;
 }
 exports.assure = assure;
-var id = 0;
 var Types;
 (function (Types) {
     // A simplistic HeronType-system for now. 
@@ -142,79 +141,6 @@ function callFunction(funOriginal, args, argTypes, mainUnifier) {
     return finalRetType;
 }
 exports.callFunction = callFunction;
-/*
-export function callFunction(funOriginal: PolyType, args: Expr[], argTypes: HeronType[], mainUnifier: TypeResolver): HeronType {
-    // We have to create fresh variable names.
-    const fun = freshVariableNames(funOriginal) as PolyType;
-    const u = new TypeResolver(typeStrategy);
-    const paramTypes = getFuncArgTypes(fun);
-    const returnType = getFuncReturnType(fun);
-
-    // Parameters should match the number of arguments given to it.
-    if (paramTypes.length !== args.length)
-        throw new Error("Mismatched number of arguments was " + args.length + " expected " + paramTypes.length);
-
-    // Unify the passed arguments with the parameter types.
-    const finalArgTypes: Type[] = [];
-    for (let i=0; i < args.length; ++i) {
-        let argType = argTypes[i];
-        if (!argType)
-            throw new Error("illegal argument type");
-
-        const paramType = paramTypes[i];
-        const arg = args[i];
-        if (argType instanceof FunctionSet) {
-            trace("chooseFunc", "Function set as argument");
-            let n = -1;
-            if (!(paramType instanceof PolyType)) {
-                n = chooseMostGeneric(argType);
-                trace("chooseFunc", "Parameter is not a poly-rype: can't figure out best match, defaulting to most generic");
-            }
-            else {
-                // We have to figure out which type is the best here.
-                n = chooseBestFunctionIndex(paramType as PolyType, argType);
-            }
-
-            if (n < 0)
-                throw new Error("No function found");
-            argType = argType.functions[n];
-            if (!argType)
-                throw new Error("No function type found");
-            arg.functionIndex = n;
-        }
-
-        // Do the local unification to get the proper return HeronType
-        trace("funcType", "Unifying argument " + arg + " of type " + argType + " with type " + paramType);
-        const uniType = u.unifyTypes(paramType, argType);
-        trace("funcType", "Local unified type " + uniType);
-
-        // Do the unification of the arguments with the types.
-        const globalType = mainUnifier.unifyTypes(argType, paramType);
-        trace("funcType", "Global unified type " + globalType)
-        finalArgTypes.push(globalType);
-
-        // In case the referenced node is a variable or parameter,
-        // we are going to unify it with the resulting global HeronType.
-        if (arg.node.ref instanceof FuncParamRef || arg.node.ref instanceof VarRef) {
-            const refType = arg.node.ref.def.type;
-            trace("funcType", "Reference type " + refType);
-            const uniRefType = mainUnifier.unifyTypes(refType, globalType);
-            trace("funcType", "Reference type after unification " + uniRefType);
-            //arg.node.ref.def.type = uniRefType;
-        }
-    }
-
-    // Create a final function type, and unify it.
-    const finalRetType = u.getUnifiedType(returnType);
-
-    // TODO: figure out if I need this.
-    //const finalType = funcType(finalArgTypes, finalRetType);
-    //mainUnifier.unifyTypes(funOriginal, finalType);
-
-    // We return the unified version of the return HeronType.
-    return finalRetType;
-}
-*/
 function computeFuncTypeFromSig(f, genParams) {
     // TODO: rename the genParams 
     var u = new type_system_1.TypeResolver(exports.typeStrategy);
@@ -269,7 +195,8 @@ function computeFuncType(f) {
         console.log(" " + u.state);
         console.log("Type for " + f + " is " + type_system_1.normalizeType(f.type));
     }
-    return f.type;
+    // When getting a function def type we generate new variable names each time. 
+    return type_system_1.freshVariableNames(f.type);
 }
 exports.computeFuncType = computeFuncType;
 function getLambdaType(l, u, shape) {
@@ -302,12 +229,8 @@ function makeArrayType(elementType) {
     return type_system_1.polyType([type_system_1.typeConstant('Array'), elementType]);
 }
 exports.makeArrayType = makeArrayType;
-function makeNewTypeVar() {
-    return new type_system_1.TypeVariable('$' + id++);
-}
-exports.makeNewTypeVar = makeNewTypeVar;
 function makeNewArrayType() {
-    return makeArrayType(makeNewTypeVar());
+    return makeArrayType(type_system_1.newTypeVar());
 }
 exports.makeNewArrayType = makeNewArrayType;
 function getArrayElementType(t) {
@@ -340,6 +263,8 @@ function getFuncArgCount(f) {
 }
 exports.getFuncArgCount = getFuncArgCount;
 function getFuncArgType(f, n) {
+    if (n < 0 || n > getFuncArgCount(f))
+        throw new Error("Argument index out of bounds");
     return getFuncArgTypes(f)[n];
 }
 exports.getFuncArgType = getFuncArgType;
@@ -385,10 +310,6 @@ function canPassArg(arg, param, exact) {
     return true;
 }
 exports.canPassArg = canPassArg;
-function functionSetOptions(f) {
-    return f.types[1].types.map(function (t) { return t; });
-}
-exports.functionSetOptions = functionSetOptions;
 // Gives a score to a function based on how many concrete types it has  
 function functionSpecificity(func) {
     var args = getFuncArgTypes(func);
@@ -401,6 +322,7 @@ function functionSpecificity(func) {
     return n;
 }
 exports.functionSpecificity = functionSpecificity;
+// TODO: this is a horrible algorithm. It will choose functions that are absolutely no good. 
 function chooseMostGeneric(funcSet) {
     var options = funcSet.functions;
     var scores = options.map(functionSpecificity);
@@ -414,27 +336,48 @@ function chooseMostGeneric(funcSet) {
     return many ? -1 : result;
 }
 exports.chooseMostGeneric = chooseMostGeneric;
-function chooseBestFunctionIndexFromArgs(args, funcSet) {
+function chooseBestFunctionIndexFromArgs(args, originalFuncSet) {
+    // Removes functions that don't have the right number of arguments.
+    // TODO: this code is ugly as sin, clean it up
+    var newFunctions = [];
+    var remap = [];
+    for (var i = 0; i < originalFuncSet.functions.length; ++i) {
+        var f = originalFuncSet.functions[i];
+        if (getFuncArgCount(f) === args.length) {
+            remap.push(i);
+            newFunctions.push(f);
+        }
+    }
+    if (newFunctions.length === 0)
+        throw new Error("No function matches the number of arguments " + args.length);
+    if (newFunctions.length === 1)
+        return remap[0];
+    var funcSet = new FunctionSet(newFunctions);
+    // Remove functions that are absolutely no good. 
     utils_1.trace("chooseFunc", "Choosing function using args: " + args.join(", "));
     utils_1.trace("chooseFunc", "Choosing function from choices:");
-    for (var _i = 0, _a = funcSet.functions; _i < _a.length; _i++) {
-        var opt = _a[_i];
-        utils_1.trace("chooseFunc", "    " + opt);
+    var r = -1;
+    while (r < 0) {
+        for (var _i = 0, _a = funcSet.functions; _i < _a.length; _i++) {
+            var opt = _a[_i];
+            utils_1.trace("chooseFunc", "    " + opt);
+        }
+        r = chooseBestFunctionIndexFromArgsHelper(args, funcSet, true);
+        if (r >= 0)
+            break;
+        utils_1.trace('chooseFunc', 'No exact match found, trying inexact matches');
+        // Try an inexact match (casting)
+        r = chooseBestFunctionIndexFromArgsHelper(args, funcSet, false);
+        if (r >= 0)
+            break;
+        utils_1.trace('chooseFunc', 'No inexact match found, trying generic matches');
+        // If nothing else works, just try the most generic option
+        r = chooseMostGeneric(funcSet);
+        if (r >= 0)
+            break;
+        throw new Error("Found no matching function");
     }
-    var tmp = chooseBestFunctionIndexFromArgsHelper(args, funcSet, true);
-    if (tmp >= 0)
-        return tmp;
-    utils_1.trace('chooseFunc', 'No exact match found, trying inexact matches');
-    // Try an inexact match (casting)
-    tmp = chooseBestFunctionIndexFromArgsHelper(args, funcSet, false);
-    if (tmp >= 0)
-        return tmp;
-    utils_1.trace('chooseFunc', 'No inexact match found, trying generic matches');
-    // If nothing else works, just try the most generic option
-    tmp = chooseMostGeneric(funcSet);
-    if (tmp >= 0)
-        return tmp;
-    throw new Error("Found no matching function");
+    return remap[r];
 }
 exports.chooseBestFunctionIndexFromArgs = chooseBestFunctionIndexFromArgs;
 function chooseBestFunctionIndexFromArgsHelper(args, funcSet, exact) {
@@ -658,33 +601,23 @@ var FunctionTypeEvaluator = /** @class */ (function () {
                 var n = chooseBestFunctionIndexFromArgs(argTypes, funcType_1);
                 expr.func.functionIndex = n;
                 funcType_1 = funcs[n];
+                if (!funcType_1)
+                    throw new Error("Could not get the func type");
             }
             if (funcType_1 instanceof type_system_1.PolyType) {
                 if (!isFunctionType(funcType_1))
                     throw new Error("Can't call " + funcType_1);
+                var nArgTypes = getFuncArgCount(funcType_1);
+                if (expr.args.length !== nArgTypes)
+                    throw new Error("Mismatched number of args");
                 for (var i = 0; i < expr.args.length; ++i) {
                     var arg = expr.args[i];
                     var exp = getFuncArgType(funcType_1, i);
+                    if (!exp)
+                        throw new Error("Missing arg type in position " + i);
                     if (argTypes[i].toString() !== arg.type.toString())
                         throw new Error("Mismatch argument types");
                     this.unify(exp, argTypes[i]);
-                    /*
-                    // I can see this being something we want for arrays as well.
-                    if (arg instanceof Lambda && exp instanceof PolyType) {
-                        // Recompute the HeronType now based on the expected HeronType.
-                        trace("funcType", "Getting an improved lambda type");
-                        trace("funcType", "Original: " + arg.type);
-                        trace("funcType", "Shape: " + exp);
-                        arg.type = getLambdaType(arg, this.unifier, exp);
-                        trace("funcType", "Updated: " + arg.type);
-                        if (!arg.type)
-                            throw new Error("Failed to get a recomputed lambda type");
-                        argTypes[i] = arg.type;
-                    }
-
-                    // Unify again.
-                    this.unify(arg.type, exp);
-                    */
                 }
                 utils_1.trace("chooseFunc", "final arg types : " + argTypes.join(", "));
                 // We have to create new HeronType variable names when calling a
@@ -777,18 +710,31 @@ var FunctionTypeEvaluator = /** @class */ (function () {
             throw new Error("Not a recognized expression " + expr);
         }
     };
+    FunctionTypeEvaluator.prototype.chooseBestFunctionTypeForUnification = function (set, func) {
+        if (!(func instanceof type_system_1.PolyType && isFunctionType(func)))
+            throw new Error("Expected a function type");
+        var index = chooseBestFunctionIndex(func, set);
+        return set.functions[index];
+    };
     FunctionTypeEvaluator.prototype.unify = function (a, b) {
-        if (a instanceof heron_expr_1.Expr)
-            a = this.getType(a);
-        if (b instanceof heron_expr_1.Expr)
-            b = this.getType(b);
-        // TODO: unify function sets? 
-        if (b instanceof FunctionSet)
-            return a;
-        if (a instanceof FunctionSet)
-            return b;
-        var ret = this.unifier.unifyTypes(a, b);
-        utils_1.trace("funcType", "Unification of " + a + " and " + b + " is " + ret);
+        if (!a)
+            throw new Error("No type or expression provided for argument 'a'");
+        if (!b)
+            throw new Error("No type or expression provided for argument 'b'");
+        var aType = (a instanceof heron_expr_1.Expr) ? this.getType(a) : a;
+        var bType = (b instanceof heron_expr_1.Expr) ? this.getType(b) : b;
+        if (!aType)
+            throw new Error("Could not get type for " + a);
+        if (!bType)
+            throw new Error("Could not get type for " + b);
+        if (aType instanceof FunctionSet) {
+            aType = this.chooseBestFunctionTypeForUnification(aType, bType);
+        }
+        if (bType instanceof FunctionSet) {
+            bType = this.chooseBestFunctionTypeForUnification(bType, aType);
+        }
+        var ret = this.unifier.unifyTypes(aType, bType);
+        utils_1.trace("funcType", "Unification of " + aType + " and " + bType + " is " + ret);
         return ret;
     };
     FunctionTypeEvaluator.prototype.unifyBool = function (x) {

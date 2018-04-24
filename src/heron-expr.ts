@@ -28,7 +28,7 @@ export class Expr {
     // If the type is a function set, there are multiple defs, this indicates which one. 
     // TODO: maybe the defs and the type should be updated at the same time, rather than leaving us 
     // to check these values. 
-    functionIndex: number = 0;
+    functionIndex: number = -1;
 }
 
 export class PostfixDec extends Expr {

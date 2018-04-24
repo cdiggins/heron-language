@@ -144,7 +144,8 @@ var TypeResolver = /** @class */ (function () {
         if (t1 === t2)
             return t1;
         if (t1 instanceof TypeVariable) {
-            return this._updateUnifier(t1, t2, depth);
+            if (this.getUnifier)
+                return this._updateUnifier(t1, t2, depth);
         }
         else if (t2 instanceof TypeVariable) {
             return this._updateUnifier(t2, t1, depth);
@@ -178,7 +179,7 @@ var TypeResolver = /** @class */ (function () {
     /** Given a type variable, will return the unifier for it. */
     TypeResolver.prototype.getUnifier = function (v) {
         return (v.name in this.unifiers)
-            ? freshParameterNames(this.unifiers[v.name])
+            ? this.unifiers // TODO: freshParameterNames(this.unifiers[v.name])
             : v;
     };
     /** Returns a unified version of the type.
@@ -269,7 +270,10 @@ var TypeResolver = /** @class */ (function () {
     TypeResolver.prototype._updateUnifier = function (a, t, depth) {
         var u = this._getOrCreateUnifier(a);
         var v = (t instanceof TypeVariable) ? this._getOrCreateUnifier(t) : t;
-        // Choise the best unifier 
+        // If the unifier for u is not a type-variable, we are going to unify the given type with it. 
+        if (!(u instanceof TypeVariable))
+            this.unifyTypes(u, t);
+        // Choise the best unifier
         var best = this._chooseBestUnifier(u, v);
         // Each of these is potentially a type variable, and should point to the new best unifier    
         this._updateVariableUnifiers(a, best);

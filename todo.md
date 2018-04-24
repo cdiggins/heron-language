@@ -127,3 +127,33 @@ When I make a function call, with a function that is an argument, I should unify
 * Map has type T => T, which is wrong.
 
 I think the problem is the presence of `T` which is incorrect. It gets confused. Every function type has to have its type variables replaced. 
+
+I see a problem where a lot of array operations are "Int" where they are actually number.
+
+For example: "average"
+The flatMap is correct. 
+BUT flatten is incorrect.
+
+We can see the problem with flatten right here: 
+
+Unifying argument concat with !'@9.(Func (Array '@9) (Array '@9) (Array '@9)) and (Func '@93 '$1 '@93) is !'@9!'$3.(Func (Array '$3) (Array '@9) (Array '$3))
+
+I think this goes right to the heart of the problem.
+
+                    /*
+                    // I can see this being something we want for arrays as well.
+                    if (arg instanceof Lambda && exp instanceof PolyType) {
+                        // Recompute the HeronType now based on the expected HeronType.
+                        trace("funcType", "Getting an improved lambda type");
+                        trace("funcType", "Original: " + arg.type);
+                        trace("funcType", "Shape: " + exp);
+                        arg.type = getLambdaType(arg, this.unifier, exp);
+                        trace("funcType", "Updated: " + arg.type);                        
+                        if (!arg.type)
+                            throw new Error("Failed to get a recomputed lambda type");
+                        argTypes[i] = arg.type;
+                    }
+
+                    // Unify again.
+                    this.unify(arg.type, exp);
+                    */

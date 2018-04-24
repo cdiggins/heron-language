@@ -23,7 +23,7 @@ var Expr = /** @class */ (function () {
         // If the type is a function set, there are multiple defs, this indicates which one. 
         // TODO: maybe the defs and the type should be updated at the same time, rather than leaving us 
         // to check these values. 
-        this.functionIndex = 0;
+        this.functionIndex = -1;
         node.expr = this;
     }
     Expr.prototype.toString = function () {

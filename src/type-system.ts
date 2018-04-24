@@ -128,6 +128,7 @@ export class TypeResolver
 
         if (t1 instanceof TypeVariable) 
         {
+            if (this.getUnifier)
             return this._updateUnifier(t1, t2, depth);
         }
         else if (t2 instanceof TypeVariable) 
@@ -164,7 +165,7 @@ export class TypeResolver
     /** Given a type variable, will return the unifier for it. */
     getUnifier(v: TypeVariable) {
         return (v.name in this.unifiers)
-            ? freshParameterNames(this.unifiers[v.name])
+            ? this.unifiers // TODO: freshParameterNames(this.unifiers[v.name])
             : v;
     }
 
@@ -265,7 +266,11 @@ export class TypeResolver
         const u = this._getOrCreateUnifier(a); 
         const v = (t instanceof TypeVariable) ? this._getOrCreateUnifier(t) : t;
 
-        // Choise the best unifier 
+        // If the unifier for u is not a type-variable, we are going to unify the given type with it. 
+        if (!(u instanceof TypeVariable)) 
+            this.unifyTypes(u, t);
+
+        // Choise the best unifier
         const best = this._chooseBestUnifier(u, v);
 
         // Each of these is potentially a type variable, and should point to the new best unifier    
