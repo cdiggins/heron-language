@@ -93,11 +93,7 @@ class TypeStrategyClass {
 
 export const typeStrategy = new TypeStrategyClass();
 
-export function callFunction(funOriginal: PolyType, args: Expr[], argTypes: HeronType[], mainUnifier: TypeResolver): HeronType {                
-    // TODO: I used to think this but it is not correct 
-    // We have to create fresh variable names.
-    const fun = funOriginal; // freshVariableNames(funOriginal) as PolyType;
-    trace("funcType", "New version of function " + fun);
+export function callFunction(fun: PolyType, args: Expr[], argTypes: HeronType[], mainUnifier: TypeResolver): HeronType {                
     const paramTypes = getFuncArgTypes(fun); 
 
     // Parameters should match the number of arguments given to it. 
@@ -472,10 +468,9 @@ export class FunctionTypeEvaluator
 
     refineType(n: HeronAstNode) {
         if (n.expr) {
-            if (n.expr instanceof FunCall) {
-                // TODO:  get a more accurate function here.
-            }
-
+            if (n.expr instanceof FunCall) 
+                this.resolveFunCall(n.expr);
+                
             n.expr.type = this.unifier.getUnifiedType(n.expr.type);
         }
     }
@@ -594,6 +589,68 @@ export class FunctionTypeEvaluator
         }
     }
 
+    resolveFunCall(expr: FunCall) {
+        let funcType = this.getType(expr.func);
+        if (!funcType)
+            throw new Error("Could not get type of function");
+        const argTypes: HeronType[]  = [];
+        for (const a of expr.args) {
+            const argType = this.getType(a);
+            if (!argType)
+                throw new Error("Could not get type of argument: " + a);
+            if (!a.type)
+                throw new Error("Type was not set on argument: " + a);
+            argTypes.push(argType);
+        }
+        trace("chooseFunc", "Function call: " + expr);
+        trace("chooseFunc", "Has function type " + funcType);
+        trace("chooseFunc", "arg types : " + argTypes.join(", "));
+        
+        if (funcType instanceof FunctionSet) {
+            const funcs = funcType.functions;
+            //trace('chooseFunc', 'Looking for function match for: ' + expr.toString());
+            let n = chooseBestFunctionIndexFromArgs(argTypes, funcType); 
+            expr.func.functionIndex = n;
+            funcType = funcs[n];
+            if (!funcType)
+                throw new Error("Could not get the func type");
+        }
+
+        if (funcType instanceof PolyType) {
+            if (!isFunctionType(funcType)) 
+                throw new Error("Can't call " + funcType);                
+            
+            const nArgTypes = getFuncArgCount(funcType);
+            if(expr.args.length !== nArgTypes)
+                throw new Error("Mismatched number of args");
+            for (let i=0; i < expr.args.length; ++i) 
+                this.unifyExpr(expr.args[i], getFuncArgType(funcType, i));                                
+
+            trace("chooseFunc", "final arg types : " + argTypes.join(", "));
+
+            // We have to create new HeronType variable names when calling a
+            return callFunction(funcType as PolyType, expr.args, argTypes, this.unifier);
+        }
+        else if (funcType instanceof TypeVariable) {
+            trace("chooseFunc", "The functionType is a variable: " + funcType);
+            const genFunc = genericFuncTypeFromArgs(argTypes);
+            trace("chooseFunc", "Created a generic function: " + genFunc);
+            this.unifyExpr(expr.func, genFunc);
+            const retType = getFuncReturnType(genFunc);
+            const r = callFunction(genFunc, expr.args, argTypes, this.unifier);
+            for (const argType of argTypes) {
+                trace("chooseFunc", "Argument type is " + argType + ", unified is " + this.unifier.getUnifiedType(argType));
+            }
+            trace("chooseFunc", "Final unification for the function " + this.unifier.getUnifiedType(genFunc));
+            trace("chooseFunc", "Final unification for the variable " + this.unifier.getUnifiedType(funcType));
+            this.unifyTypes(retType, r);
+            return r;
+        }
+        else {
+            throw new Error("Can't call " + funcType);
+        }    
+    }
+
     getExprType(expr: Expr): HeronType {
         if (expr === null)
             throw new Error("No HeronType available on a null expression");
@@ -629,66 +686,7 @@ export class FunctionTypeEvaluator
             throw new Error("Unrecognized expression");
         }
         else if (expr instanceof FunCall) {
-            let funcType = this.getType(expr.func);
-            if (!funcType)
-                throw new Error("Could not get type of function");
-            const argTypes: HeronType[]  = [];
-            for (const a of expr.args) {
-                const argType = this.getType(a);
-                if (!argType)
-                    throw new Error("Could not get type of argument: " + a);
-                if (!a.type)
-                    throw new Error("Type was not set on argument: " + a);
-                argTypes.push(argType);
-            }
-            trace("chooseFunc", "Function call: " + expr);
-            trace("chooseFunc", "Has function type " + funcType);
-            trace("chooseFunc", "arg types : " + argTypes.join(", "));
-            
-            if (funcType instanceof FunctionSet) {
-                const funcs = funcType.functions;
-                //trace('chooseFunc', 'Looking for function match for: ' + expr.toString());
-                let n = chooseBestFunctionIndexFromArgs(argTypes, funcType); 
-                expr.func.functionIndex = n;
-                funcType = funcs[n];
-                if (!funcType)
-                    throw new Error("Could not get the func type");
-            }
-
-            if (funcType instanceof PolyType) {
-                if (!isFunctionType(funcType)) 
-                    throw new Error("Can't call " + funcType);                
-                
-                const nArgTypes = getFuncArgCount(funcType);
-                if(expr.args.length !== nArgTypes)
-                    throw new Error("Mismatched number of args");
-                for (let i=0; i < expr.args.length; ++i) {
-                    this.unifyExpr(expr.args[i], getFuncArgType(funcType, i));                    
-                }
-
-                trace("chooseFunc", "final arg types : " + argTypes.join(", "));
-
-                // We have to create new HeronType variable names when calling a
-                return callFunction(funcType as PolyType, expr.args, argTypes, this.unifier);
-            }
-            else if (funcType instanceof TypeVariable) {
-                trace("chooseFunc", "The functionType is a variable: " + funcType);
-                const genFunc = genericFuncTypeFromArgs(argTypes);
-                trace("chooseFunc", "Created a generic function: " + genFunc);
-                this.unifyExpr(expr.func, genFunc);
-                const retType = getFuncReturnType(genFunc);
-                const r = callFunction(genFunc, expr.args, argTypes, this.unifier);
-                for (const argType of argTypes) {
-                    trace("chooseFunc", "Argument type is " + argType + ", unified is " + this.unifier.getUnifiedType(argType));
-                }
-                trace("chooseFunc", "Final unification for the function " + this.unifier.getUnifiedType(genFunc));
-                trace("chooseFunc", "Final unification for the variable " + this.unifier.getUnifiedType(funcType));
-                this.unifyTypes(retType, r);
-                return r;
-            }
-            else {
-                throw new Error("Can't call " + funcType);
-            }
+            return this.resolveFunCall(expr);
         }
         else if (expr instanceof ConditionalExpr) {
             this.unifyBool(expr.condition);

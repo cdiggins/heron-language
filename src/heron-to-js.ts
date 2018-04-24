@@ -181,7 +181,7 @@ export class HeronToJs
         }
     }
 
-    visitExpr(expr: Expr)
+    visitExpr(expr: Expr, noType = false)
     {
         if (expr instanceof VarName) {
             if (expr.node.ref instanceof FuncRef)
@@ -277,11 +277,11 @@ export class HeronToJs
                 this.visit(expr.bodyNode.statement);
         }
         else if (expr instanceof PostfixDec) {
-            this.visit(expr.lvalue);
+            this.visitExpr(expr.lvalue, true);
             this.cb.push('--');
         }
         else if (expr instanceof PostfixInc) {
-            this.visit(expr.lvalue);
+            this.visitExpr(expr.lvalue, true);
             this.cb.push('++');
         }
         else if (expr instanceof VarAssignmentExpr) {
@@ -292,7 +292,7 @@ export class HeronToJs
             throw new Error("Not a recognized expression " + expr);
         }
 
-        if (expr.type) {
+        if (expr.type && !noType) {
             this.cb.pushLine(' // ' + expr.type);
         }
     }

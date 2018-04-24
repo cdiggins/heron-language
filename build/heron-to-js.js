@@ -179,7 +179,8 @@ var HeronToJs = /** @class */ (function () {
             this.visit(xs[i]);
         }
     };
-    HeronToJs.prototype.visitExpr = function (expr) {
+    HeronToJs.prototype.visitExpr = function (expr, noType) {
+        if (noType === void 0) { noType = false; }
         if (expr instanceof heron_expr_1.VarName) {
             if (expr.node.ref instanceof heron_refs_1.FuncRef) {
                 if (expr.node.ref.defs.length === 1) {
@@ -270,11 +271,11 @@ var HeronToJs = /** @class */ (function () {
                 this.visit(expr.bodyNode.statement);
         }
         else if (expr instanceof heron_expr_1.PostfixDec) {
-            this.visit(expr.lvalue);
+            this.visitExpr(expr.lvalue, true);
             this.cb.push('--');
         }
         else if (expr instanceof heron_expr_1.PostfixInc) {
-            this.visit(expr.lvalue);
+            this.visitExpr(expr.lvalue, true);
             this.cb.push('++');
         }
         else if (expr instanceof heron_expr_1.VarAssignmentExpr) {
@@ -284,7 +285,7 @@ var HeronToJs = /** @class */ (function () {
         else {
             throw new Error("Not a recognized expression " + expr);
         }
-        if (expr.type) {
+        if (expr.type && !noType) {
             this.cb.pushLine(' // ' + expr.type);
         }
     };
