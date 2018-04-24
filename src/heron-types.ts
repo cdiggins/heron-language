@@ -1,7 +1,7 @@
 import { VarName, FunCall, ConditionalExpr, ObjectLiteral, ArrayLiteral, BoolLiteral, IntLiteral, FloatLiteral, StrLiteral, VarExpr, PostfixDec, Lambda, PostfixInc, Expr, ObjectField, VarAssignmentExpr } from "./heron-expr";
 import { Statement, CompoundStatement, IfStatement, EmptyStatement, VarDeclStatement, WhileStatement, DoStatement, ForStatement, ExprStatement, ContinueStatement, ReturnStatement } from "./heron-statement";
 import { throwError, HeronAstNode, validateNode } from "./heron-ast-rewrite";
-import { FuncDef } from "./heron-defs";
+import { FuncDef, VarDef } from "./heron-defs";
 import { FuncRef, TypeRef, TypeParamRef, FuncParamRef, VarRef, ForLoopVarRef } from "./heron-refs";
 import { Type, PolyType, TypeVariable, TypeResolver, TypeStrategy, typeConstant, polyType, typeVariable, TypeConstant, isTypeConstant, newTypeVar, normalizeType, Lookup, freshVariableNames } from "./type-system";
 import { trace } from "./utils";
@@ -180,6 +180,18 @@ export function genParamsToNewVarLookup(genParams: string[]) : Lookup<string> {
     for (const p of genParams)
         r[p] = newTypeVar().name;
     return r;
+}
+
+export function computeVarType(v: VarDef): Type {
+    if (!v.type) {
+        const expr = v.exprNode.expr;
+        const tmp = genericFuncType(0);
+        const u = new TypeResolver(typeStrategy);
+        const te = new FunctionTypeEvaluator(v.name, 0, expr, typeStrategy, u, tmp);
+        const r = getFuncReturnType(te.result);
+        v.type = r;
+    }
+    return v.type;
 }
 
 export function computeFuncType(f: FuncDef): PolyType {
@@ -520,7 +532,7 @@ export class FunctionTypeEvaluator
             if (statement.expr)
                 this.unifyReturn(statement.expr);
             else 
-                this.unifyReturn(Types.VoidType);
+                this.unifyTypes(this.getReturnType(), Types.VoidType);
         }
         else if (statement instanceof ContinueStatement) {
             // Do nothing 
@@ -537,10 +549,10 @@ export class FunctionTypeEvaluator
             const arrayType = makeNewArrayType();
             const elementType = getArrayElementType(arrayType);
             if (forLoopVar.type)
-                this.unify(forLoopVar.type, elementType);
+                this.unifyTypes(forLoopVar.type, elementType);
             else   
                 forLoopVar.type = elementType;
-            this.unify(statement.array, arrayType);
+            this.unifyExpr(statement.array, arrayType);
             this.getType(statement.loop);
         }
         else if (statement instanceof DoStatement) {
@@ -635,13 +647,7 @@ export class FunctionTypeEvaluator
                 if(expr.args.length !== nArgTypes)
                     throw new Error("Mismatched number of args");
                 for (let i=0; i < expr.args.length; ++i) {
-                    const arg = expr.args[i];            
-                    const exp = getFuncArgType(funcType, i);
-                    if (!exp)
-                        throw new Error("Missing arg type in position " + i);
-                    if (argTypes[i].toString() !== arg.type.toString())
-                        throw new Error("Mismatch argument types");
-                    this.unify(exp, argTypes[i]);                    
+                    this.unifyExpr(expr.args[i], getFuncArgType(funcType, i));                    
                 }
 
                 trace("chooseFunc", "final arg types : " + argTypes.join(", "));
@@ -653,7 +659,7 @@ export class FunctionTypeEvaluator
                 trace("chooseFunc", "The functionType is a variable: " + funcType);
                 const genFunc = genericFuncTypeFromArgs(argTypes);
                 trace("chooseFunc", "Created a generic function: " + genFunc);
-                this.unify(funcType, genFunc);
+                this.unifyExpr(expr.func, genFunc);
                 const retType = getFuncReturnType(genFunc);
                 const r = callFunction(genFunc, expr.args, argTypes, this.unifier);
                 for (const argType of argTypes) {
@@ -661,7 +667,7 @@ export class FunctionTypeEvaluator
                 }
                 trace("chooseFunc", "Final unification for the function " + this.unifier.getUnifiedType(genFunc));
                 trace("chooseFunc", "Final unification for the variable " + this.unifier.getUnifiedType(funcType));
-                this.unify(retType, r);
+                this.unifyTypes(retType, r);
                 return r;
             }
             else {
@@ -670,9 +676,7 @@ export class FunctionTypeEvaluator
         }
         else if (expr instanceof ConditionalExpr) {
             this.unifyBool(expr.condition);
-            const onTrue = this.getType(expr.onTrue);
-            const onFalse = this.getType(expr.onFalse);
-            return this.unify(onTrue, onFalse);
+            return this.unifyExprWithExpr(expr.onTrue, expr.onFalse);
         }
         else if (expr instanceof ObjectLiteral || expr instanceof ObjectField) {
             throw new Error("Object literals not yet supported");
@@ -681,7 +685,7 @@ export class FunctionTypeEvaluator
             const arrayType = makeNewArrayType();
             const elemType = getArrayElementType(arrayType);
             for (const v of expr.vals)
-                this.unify(v, elemType);
+                this.unifyExpr(v, elemType);
             return arrayType;
         }
         else if (expr instanceof BoolLiteral) {
@@ -726,51 +730,61 @@ export class FunctionTypeEvaluator
             if (ref.defs.length < 1) 
                 throwError(expr.node, "No defs found");
             const def = ref.defs[0];
-            return this.unify(def.type, expr.value);
+            return this.unifyExpr(expr.value, def.type);
         }
         else {
             throw new Error("Not a recognized expression " + expr);
         }
     }
 
-    chooseBestFunctionTypeForUnification(set: FunctionSet, func: HeronType): HeronType {
-        if (!(func instanceof PolyType && isFunctionType(func)))
-            throw new Error("Expected a function type");            
-        const index = chooseBestFunctionIndex(func as PolyType, set);
-        return set.functions[index];
+    unifyExprWithExpr(exprA: Expr, exprB: Expr): HeronType {
+        return this.unifyExpr(exprA, this.getType(exprB));
     }
     
-    unify(a: HeronType | Expr, b: HeronType | Expr): HeronType {
-        if (!a) throw new Error("No type or expression provided for argument 'a'");
-        if (!b) throw new Error("No type or expression provided for argument 'b'");
-        let aType: HeronType = (a instanceof Expr) ? this.getType(a) : a;
-        let bType: HeronType = (b instanceof Expr) ? this.getType(b) : b;
-        if (!aType) 
-            throw new Error("Could not get type for " + a);
-        if (!bType) 
-            throw new Error("Could not get type for " + b);
+    unifyExpr(expr: Expr, givenType: HeronType): HeronType {
+        if (!expr) throw new Error("Expected expression");
+        if (!givenType) throw new Error("Expected type");
+        if (!(expr instanceof Expr))
+            throw new Error("Expected expr to be of Expr type");
+        if (!(givenType instanceof Type || givenType instanceof FunctionSet))
+            throw new Error("Expected givenType to be of type HeronTypes");
+        let exprType = this.getType(expr);
 
-        if (aType instanceof FunctionSet) {            
-            aType = this.chooseBestFunctionTypeForUnification(aType, bType);
-        }
-        if (bType instanceof FunctionSet) {
-            bType = this.chooseBestFunctionTypeForUnification(bType, aType);
+        if (exprType instanceof FunctionSet) {       
+            if (!(givenType instanceof PolyType))
+                throw new Error("Expected a PolyType to unify a fucnction set");
+            const index = chooseBestFunctionIndex(givenType, exprType);
+            exprType = exprType.functions[index];
+            expr.functionIndex = index;
         }
 
-        const ret = this.unifier.unifyTypes(aType, bType);
-        trace("funcType", "Unification of " + aType + " and " + bType + " is " + ret);
+        if (givenType instanceof FunctionSet) {
+            if (!(exprType instanceof PolyType))
+                throw new Error("Expected a PolyType to unify a fucnction set");
+            const index = chooseBestFunctionIndex(exprType, givenType);
+            givenType = givenType.functions[index];            
+        }
+
+        return this.unifyTypes(exprType, givenType)
+    }
+
+    unifyTypes(a: HeronType, b: HeronType): HeronType {
+        if (!a || !b || a instanceof FunctionSet || b instanceof FunctionSet)
+            throw new Error("Invalid argument");
+        const ret = this.unifier.unifyTypes(a, b);
+        trace("funcType", "Unification of " + a + " and " + b + " is " + ret);
         return ret;
     }
 
-    unifyBool(x: HeronType | Expr): HeronType {
-        return this.unify(x, Types.BoolType);
+    unifyBool(x: Expr): HeronType {
+        return this.unifyExpr(x, Types.BoolType);
     }
 
-    unifyInt(x: HeronType | Expr): HeronType {
-        return this.unify(x, Types.IntType);
+    unifyInt(x: Expr): HeronType {
+        return this.unifyExpr(x, Types.IntType);
     }
 
-    unifyReturn(x: HeronType | Expr): HeronType {
-        return this.unify(x, this.getReturnType());
-    }
+    unifyReturn(x: Expr): HeronType {
+        return this.unifyExpr(x, this.getReturnType());
+    }    
 }

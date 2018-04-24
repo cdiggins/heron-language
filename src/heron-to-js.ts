@@ -190,7 +190,12 @@ export class HeronToJs
                     this.cb.push(funcDefName(expr.node.ref.defs[0]));                       
                 } 
                 else {
-                    this.cb.push(funcDefName(expr.node.ref.defs[expr.functionIndex]));
+                    if (expr.functionIndex === -1) {
+                        this.cb.push("_UNRESOLVED_");
+                    }
+                    else {
+                        this.cb.push(funcDefName(expr.node.ref.defs[expr.functionIndex]));
+                    }
                 }
             }
             else 

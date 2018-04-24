@@ -38,6 +38,16 @@ export class Package
         return r;
     }
 
+    get allVarDefs(): VarDef[] {
+        let r: VarDef[] = [];
+        for (let m of this.modules) 
+            for (let c of m.body.children)
+                if (c.def instanceof VarDef)
+                    r.push(c.def);
+        r.sort((d1, d2) => (d1.name < d2.name) ? -1 : (d1.name > d2.name ? 1 : 0));
+        return r;
+    }
+
     // When done adding files call "processModules" to sort the dependencies 
     addFile(node: HeronAstNode, intrinsic: boolean, filePath: string) {        
         validateNode(node, 'file');

@@ -33,8 +33,13 @@ function createPackage(moduleNames) {
     // The package is doing the heavy lifting 
     pkg.processModules();
     // Compute types 
-    for (var _b = 0, _c = pkg.allFuncDefs; _b < _c.length; _b++) {
-        var f = _c[_b];
+    for (var _b = 0, _c = pkg.allVarDefs; _b < _c.length; _b++) {
+        var v = _c[_b];
+        heron_types_1.computeVarType(v);
+    }
+    // Compute types 
+    for (var _d = 0, _e = pkg.allFuncDefs; _d < _e.length; _d++) {
+        var f = _e[_d];
         heron_types_1.computeFuncType(f);
     }
     return pkg;

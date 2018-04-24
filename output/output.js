@@ -1,4 +1,4 @@
-// Generated using Heron on Sun Apr 22 2018 18:20:50 GMT-0400 (Eastern Daylight Time)
+// Generated using Heron on Tue Apr 24 2018 00:04:55 GMT-0400 (Eastern Daylight Time)
 var heronMain = (function () {
 function arrayFromJavaScript(xs) {
   return {
@@ -172,52 +172,52 @@ const op_mod_930 = op_mod;
 // (Func Float2 Float2 Float2)
 function op_add_982(a, b)
 {
-  return float2_62(op_add_518(x_134(a),x_134(b)),op_add_518(y_149(a),y_149(b)));
+  return float2_62(op_add_842(x_134(a),x_134(b)),op_add_842(y_149(a),y_149(b)));
 }
 // (Func Float2 Float2 Float2)
 function op_sub_1034(a, b)
 {
-  return float2_62(op_sub_542(x_134(a),x_134(b)),op_sub_542(y_149(a),y_149(b)));
+  return float2_62(op_sub_864(x_134(a),x_134(b)),op_sub_864(y_149(a),y_149(b)));
 }
 // (Func Float2 Float2 Float2)
 function op_mul_1086(a, b)
 {
-  return float2_62(op_mul_566(x_134(a),x_134(b)),op_mul_566(y_149(a),y_149(b)));
+  return float2_62(op_mul_886(x_134(a),x_134(b)),op_mul_886(y_149(a),y_149(b)));
 }
 // (Func Float2 Float2 Float2)
 function op_div_1138(a, b)
 {
-  return float2_62(op_div_590(x_134(a),x_134(b)),op_div_590(y_149(a),y_149(b)));
+  return float2_62(op_div_908(x_134(a),x_134(b)),op_div_908(y_149(a),y_149(b)));
 }
 // (Func Float2 Float2 Float2)
 function op_mod_1190(a, b)
 {
-  return float2_62(op_mod_614(x_134(a),x_134(b)),op_mod_614(y_149(a),y_149(b)));
+  return float2_62(op_mod_930(x_134(a),x_134(b)),op_mod_930(y_149(a),y_149(b)));
 }
 // (Func Float3 Float3 Float3)
 function op_add_1255(a, b)
 {
-  return float3_119(op_add_518(x_134(a),x_134(b)),op_add_518(y_149(a),y_149(b)),op_add_518(z_164(a),z_164(b)));
+  return float3_119(op_add_842(x_134(a),x_134(b)),op_add_842(y_149(a),y_149(b)),op_add_842(z_164(a),z_164(b)));
 }
 // (Func Float3 Float3 Float3)
 function op_sub_1320(a, b)
 {
-  return float3_119(op_sub_542(x_134(a),x_134(b)),op_sub_542(y_149(a),y_149(b)),op_sub_542(z_164(a),z_164(b)));
+  return float3_119(op_sub_864(x_134(a),x_134(b)),op_sub_864(y_149(a),y_149(b)),op_sub_864(z_164(a),z_164(b)));
 }
 // (Func Float3 Float3 Float3)
 function op_mul_1385(a, b)
 {
-  return float3_119(op_mul_566(x_134(a),x_134(b)),op_mul_566(y_149(a),y_149(b)),op_mul_566(z_164(a),z_164(b)));
+  return float3_119(op_mul_886(x_134(a),x_134(b)),op_mul_886(y_149(a),y_149(b)),op_mul_886(z_164(a),z_164(b)));
 }
 // (Func Float3 Float3 Float3)
 function op_div_1450(a, b)
 {
-  return float3_119(op_div_590(x_134(a),x_134(b)),op_div_590(y_149(a),y_149(b)),op_div_590(z_164(a),z_164(b)));
+  return float3_119(op_div_908(x_134(a),x_134(b)),op_div_908(y_149(a),y_149(b)),op_div_908(z_164(a),z_164(b)));
 }
 // (Func Float3 Float3 Float3)
 function op_mod_1515(a, b)
 {
-  return float3_119(op_mod_614(x_134(a),x_134(b)),op_mod_614(y_149(a),y_149(b)),op_mod_614(z_164(a),z_164(b)));
+  return float3_119(op_mod_930(x_134(a),x_134(b)),op_mod_930(y_149(a),y_149(b)),op_mod_930(z_164(a),z_164(b)));
 }
 // (Func T0 T0 Bool)
 const op_not_eq_1539 = op_not_eq;
@@ -277,7 +277,7 @@ function reify_1990(xs)
 // (Func Int Int (Array Int))
 function op_dot_dot_2038(from, upto)
 {
-  return array_1691(op_sub_542(upto,from),(i) => op_add_518(i,from));
+  return array_1691(op_sub_754(upto,from),(i) => op_add_732(i,from));
 }
 // (Func (Array T0) Int T0)
 function op_obr_cbr_2073(xs, i)
@@ -296,11 +296,11 @@ const vertexBuffer_2151 = vertexBuffer;
 const indexBuffer_2169 = indexBuffer;
 // Module heron:geometry.vector:0.1
 // file input\geometry-vector3.heron
-const origin = vector_98(0,0,0);
-const ones = vector_98(1,1,1);
-const xaxis = vector_98(1,0,0);
-const yaxis = vector_98(0,1,0);
-const zaxis = vector_98(0,0,1);
+const origin = _UNRESOLVED_(0,0,0);
+const ones = _UNRESOLVED_(1,1,1);
+const xaxis = _UNRESOLVED_(1,0,0);
+const yaxis = _UNRESOLVED_(0,1,0);
+const zaxis = _UNRESOLVED_(0,0,1);
 // (Func Float Float Float Float3)
 function vector_98(x, y, z)
 {
@@ -324,7 +324,7 @@ function array_176(v)
 // (Func Float3 Float)
 function sumComponents_206(v)
 {
-  return op_add_518(op_add_518(x_134(v),y_149(v)),z_164(v));
+  return op_add_842(op_add_842(x_134(v),y_149(v)),z_164(v));
 }
 // (Func Float3 Float3 Float)
 function dot_229(a, b)
@@ -354,22 +354,22 @@ function distance2_309(a, b)
 // (Func Float3 Float)
 function normal_328(v)
 {
-  return op_div_590(v,length_247(v));
+  return op_div_908(v,length_247(v));
 }
 // (Func Float3 Float3 Float3)
 function cross_431(a, b)
 {
-  return vector_98(op_sub_542(op_mul_566(y_149(a),z_164(b)),op_mul_566(z_164(a),y_149(b))),op_sub_542(op_mul_566(z_164(a),x_134(b)),op_mul_566(x_134(a),z_164(b))),op_sub_542(op_mul_566(x_134(a),y_149(b)),op_mul_566(y_149(a),x_134(b))));
+  return vector_98(op_sub_864(op_mul_886(y_149(a),z_164(b)),op_mul_886(z_164(a),y_149(b))),op_sub_864(op_mul_886(z_164(a),x_134(b)),op_mul_886(x_134(a),z_164(b))),op_sub_864(op_mul_886(x_134(a),y_149(b)),op_mul_886(y_149(a),x_134(b))));
 }
 // (Func Float3 Float3 Float)
 function reflect_466(v, n)
 {
-  return op_sub_542(v,op_mul_566(op_mul_566(n,dot_229(v,n)),2));
+  return op_sub_864(v,op_mul_886(op_mul_886(n,dot_229(v,n)),2));
 }
 // (Func Float Float Float Float)
 function lerp_503(a, b, x)
 {
-  return op_add_518(op_mul_566(a,op_sub_542(1,x)),op_mul_566(b,x));
+  return op_add_842(op_mul_886(a,op_sub_864(1,x)),op_mul_886(b,x));
 }
 // (Func Float3 Float3)
 function negate_540(v)
@@ -423,7 +423,7 @@ function empty_245(xs)
 {
   return op_eq_eq_1563(count_1711(xs),0);
 }
-// (Func (Array T0) (Array T1) (Array T0))
+// (Func (Array T0) (Array Int) (Array T0))
 function selectByIndex_274(xs, indices)
 {
   return map_53(indices,(i) => at_1737(xs,i));
@@ -433,33 +433,28 @@ function indices_292(xs)
 {
   return op_dot_dot_2038(0,count_1711(xs));
 }
-// (Func (Array T0) (Array T1) (Func T2 T1 T3) (Array T3))
+// (Func (Array T0) (Array T1) (Func T0 T1 T2) (Array T2))
 function zip_372(xs, ys, f)
 {
   return op_lt_eq_710(count_1711(xs),count_1711(ys)) ? mapWithIndex_92(xs,(x, i) => f(x,op_obr_cbr_2073(ys,i))) : mapWithIndex_92(ys,(y, i) => f(op_obr_cbr_2073(xs,i),y));
 }
-// (Func (Array T0) (Func T1 Bool) Bool)
+// (Func (Array T0) (Func T0 Bool) Bool)
 function all_408(xs, p)
 {
-  return reduce_1941(xs,true,(prev, x) => op_amp_amp_1585(prev,p(x)));
+  return reduce_1900(xs,true,(prev, x) => op_amp_amp_1585(prev,p(x)));
 }
-// (Func (Array T0) (Func T1 Bool) Bool)
+// (Func (Array T0) (Func T0 Bool) Bool)
 function any_444(xs, p)
 {
-  return reduce_1941(xs,false,(prev, x) => op_bar_bar_1607(prev,p(x)));
-}
-// (Func (Array T0) (Func T1 Bool) Int)
-function count_485(xs, p)
-{
-  return reduce_1941(xs,0,(prev, x) => p(x) ? op_add_518(prev,1) : prev);
+  return reduce_1900(xs,false,(prev, x) => op_bar_bar_1607(prev,p(x)));
 }
 // (Func (Array T0) (Array T1) Bool)
-function eq_510(xs, ys)
+function eq_469(xs, ys)
 {
   return op_eq_eq_1563(count_1711(xs),count_1711(ys));
 }
 // (Func (Array T0) (Func T0 Bool) (Array T0))
-function filter_578(xs, p)
+function filter_537(xs, p)
 {
   let ys = mutable_1760(xs);
   let i = 0;
@@ -475,15 +470,15 @@ function filter_578(xs, p)
       { }
     }
   }
-  return take_1008(immutable_1847(ys),i);
+  return take_967(immutable_1847(ys),i);
 }
 // (Func T0 Int (Array T0))
-function repeat_607(x, n)
+function repeat_566(x, n)
 {
   return map_53(op_dot_dot_2038(0,n),(i) => x);
 }
 // (Func (Array T0) (Func T0 T0 T0) (Array T0))
-function prefixScan_703(xs, op)
+function prefixScan_662(xs, op)
 {
   if (empty_245(xs))
   {
@@ -491,135 +486,135 @@ function prefixScan_703(xs, op)
   }
   else
   { }
-  let ys = mutable_1760(repeat_607(op_obr_cbr_2073(xs,0),count_1711(xs)));
+  let ys = mutable_1760(repeat_566(op_obr_cbr_2073(xs,0),count_1711(xs)));
   for (let i2=0; i2 < op_dot_dot_2038(1,count_1711(ys)).count; ++i2)
   {
     const i = op_dot_dot_2038(1,count_1711(ys)).at(i2);
     {
-      ys = set_1824(ys,i,op(op_obr_cbr_2073(xs,i),op_obr_cbr_2073(ys,op_sub_542(i,1))));
+      ys = set_1824(ys,i,op(op_obr_cbr_2073(xs,i),op_obr_cbr_2073(ys,op_sub_754(i,1))));
     }
   }
   return immutable_1847(ys);
 }
 // (Func (Array T0) (Array T0))
-function adjacentDifferences_761(xs)
+function adjacentDifferences_720(xs)
 {
-  return map_53(indices_292(xs),(i) => op_gt_638(i,0) ? op_sub_542(op_obr_cbr_2073(xs,i),op_obr_cbr_2073(xs,op_sub_542(i,1))) : op_obr_cbr_2073(xs,i));
+  return map_53(indices_292(xs),(i) => op_gt_638(i,0) ? op_sub_542(op_obr_cbr_2073(xs,i),op_obr_cbr_2073(xs,op_sub_754(i,1))) : op_obr_cbr_2073(xs,i));
 }
 // (Func (Array T0) Int Int (Array T0))
-function slice_799(xs, from, to)
+function slice_758(xs, from, to)
 {
   return map_53(op_dot_dot_2038(from,to),(i) => at_1737(xs,i));
 }
 // (Func (Array T0) Int (Array T0))
-function stride_846(xs, n)
+function stride_805(xs, n)
 {
-  return map_53(op_dot_dot_2038(0,op_div_590(count_1711(xs),n)),(i) => op_obr_cbr_2073(xs,op_mul_566(i,n)));
+  return map_53(op_dot_dot_2038(0,op_div_798(count_1711(xs),n)),(i) => op_obr_cbr_2073(xs,op_mul_776(i,n)));
 }
 // (Func (Array T0) Int Int (Array T0))
-function stride_901(xs, from, n)
+function stride_860(xs, from, n)
 {
-  return map_53(op_dot_dot_2038(0,op_div_590(count_1711(xs),n)),(i) => op_obr_cbr_2073(xs,op_add_518(from,op_mul_566(i,n))));
+  return map_53(op_dot_dot_2038(0,op_div_798(count_1711(xs),n)),(i) => op_obr_cbr_2073(xs,op_add_732(from,op_mul_776(i,n))));
 }
 // (Func (Array T0) Int (Array (Array T0)))
-function strides_937(xs, n)
+function strides_896(xs, n)
 {
-  return map_53(op_dot_dot_2038(0,n),(i) => stride_846(xs,i,n));
+  return map_53(op_dot_dot_2038(0,n),(i) => stride_860(xs,i,n));
 }
 // (Func (Array T0) Int (Array (Array T0)))
-function slices_988(xs, n)
+function slices_947(xs, n)
 {
-  return map_53(op_dot_dot_2038(0,n),(i) => slice_799(xs,op_mul_566(i,n),op_mul_566(op_add_518(i,1),n)));
+  return map_53(op_dot_dot_2038(0,n),(i) => slice_758(xs,op_mul_776(i,n),op_mul_776(op_add_732(i,1),n)));
 }
 // (Func (Array T0) Int (Array T0))
-function take_1008(xs, n)
+function take_967(xs, n)
 {
-  return slice_799(xs,0,n);
+  return slice_758(xs,0,n);
 }
-// (Func (Array T0) Int Int (Array T1))
-function take_1035(xs, i, n)
+// (Func (Array T0) Int Int (Array T0))
+function take_994(xs, i, n)
 {
-  return take_1008(skip_1064(xs,i),n);
+  return take_967(skip_1023(xs,i),n);
 }
-// (Func (Array T0) Int (Array T1))
-function skip_1064(xs, n)
+// (Func (Array T0) Int (Array T0))
+function skip_1023(xs, n)
 {
-  return slice_799(xs,n,op_sub_542(count_1711(xs),n));
+  return slice_758(xs,n,op_sub_754(count_1711(xs),n));
 }
-// (Func (Array T0) Int (Array T1))
-function drop_1091(xs, n)
+// (Func (Array T0) Int (Array T0))
+function drop_1050(xs, n)
 {
-  return take_1008(xs,op_sub_542(count_1711(xs),n));
+  return take_967(xs,op_sub_754(count_1711(xs),n));
 }
-// (Func (Array T0) Int (Array T1))
-function last_1118(xs, n)
+// (Func (Array T0) Int (Array T0))
+function last_1077(xs, n)
 {
-  return skip_1064(xs,op_sub_542(count_1711(xs),n));
+  return skip_1023(xs,op_sub_754(count_1711(xs),n));
 }
 // (Func (Array T0) T1 (Array T0))
-function reverse_1162(xs, n)
+function reverse_1121(xs, n)
 {
-  return map_53(indices_292(xs),(i) => op_obr_cbr_2073(xs,op_sub_542(op_sub_542(count_1711(xs),1),i)));
+  return map_53(indices_292(xs),(i) => op_obr_cbr_2073(xs,op_sub_754(op_sub_754(count_1711(xs),1),i)));
 }
 // (Func Int (Func Int T0) (Array T0))
-function gen_1186(cnt, f)
+function gen_1145(cnt, f)
 {
   return map_53(op_dot_dot_2038(0,cnt),f);
 }
 // (Func (Array T0) (Array T0) (Array T0))
-function concat_1254(xs, ys)
+function concat_1213(xs, ys)
 {
-  return gen_1186(op_add_518(count_1711(xs),count_1711(ys)),(i) => op_lt_686(i,count_1711(xs)) ? op_obr_cbr_2073(xs,i) : op_obr_cbr_2073(ys,op_sub_542(i,count_1711(xs))));
+  return gen_1145(op_add_732(count_1711(xs),count_1711(ys)),(i) => op_lt_686(i,count_1711(xs)) ? op_obr_cbr_2073(xs,i) : op_obr_cbr_2073(ys,op_sub_754(i,count_1711(xs))));
 }
 // (Func (Array T0) Int Int (Array T0))
-function cut_1316(xs, from, n)
+function cut_1275(xs, from, n)
 {
-  return gen_1186(op_sub_542(count_1711(xs),n),(i) => op_lt_686(i,from) ? op_obr_cbr_2073(xs,i) : op_obr_cbr_2073(xs,op_add_518(i,n)));
+  return gen_1145(op_sub_754(count_1711(xs),n),(i) => op_lt_686(i,from) ? op_obr_cbr_2073(xs,i) : op_obr_cbr_2073(xs,op_add_732(i,n)));
 }
 // (Func (Array T0) Int (Array T0) (Array T0))
-function splice_1353(xs, from, ys)
+function splice_1312(xs, from, ys)
 {
-  return concat_1254(concat_1254(take_1008(xs,from),ys),skip_1064(xs,from));
+  return concat_1213(concat_1213(take_967(xs,from),ys),skip_1023(xs,from));
 }
 // (Func (Array Int) Int)
-function sum_1371(xs)
+function sum_1330(xs)
 {
-  return reduce_1941(xs,0,op_add_518);
+  return reduce_1900(xs,0,op_add_518);
 }
 // (Func (Array Int) Int)
-function product_1389(xs)
+function product_1348(xs)
 {
-  return reduce_1941(xs,1,op_mul_566);
+  return reduce_1900(xs,1,op_mul_566);
 }
 // (Func (Array Int) Int)
-function average_1411(xs)
+function average_1370(xs)
 {
-  return op_div_590(sum_1371(xs),count_1711(xs));
+  return op_div_798(sum_1330(xs),count_1711(xs));
 }
 // (Func (Array T0) T0)
-function min_1433(xs)
+function min_1392(xs)
 {
-  return reduce_1941(xs,op_obr_cbr_2073(xs,0),min_140);
+  return reduce_1900(xs,op_obr_cbr_2073(xs,0),min_140);
 }
 // (Func (Array T0) T0)
-function max_1455(xs)
+function max_1414(xs)
 {
-  return reduce_1941(xs,op_obr_cbr_2073(xs,0),max_165);
+  return reduce_1900(xs,op_obr_cbr_2073(xs,0),max_165);
 }
 // (Func (ArrayBuilder T0) Int Int (ArrayBuilder T0))
-function swapElements_1521(xs, i, j)
+function swapElements_1480(xs, i, j)
 {
   let tmp = op_obr_cbr_2073(xs,i);
   xs = set_1824(xs,i,op_obr_cbr_2073(xs,j));
   xs = set_1824(xs,j,tmp);
   return xs;
 }
-// (Func (ArrayBuilder T0) Int Int Int)
-function partition_1636(a, lo, hi)
+// (Func (Array T0) Int Int Int)
+function partition_1595(a, lo, hi)
 {
   let p = op_obr_cbr_2073(a,lo);
-  let i = op_sub_542(lo,1);
-  let j = op_add_518(hi,1);
+  let i = op_sub_754(lo,1);
+  let j = op_add_732(hi,1);
   while (true)
   {
     do
@@ -638,50 +633,50 @@ function partition_1636(a, lo, hi)
     }
     else
     { }
-    swapElements_1521(a,i,j);
+    swapElements_1480(a,i,j);
   }
 }
-// (Func (ArrayBuilder T0) Int Int (ArrayBuilder T0))
-function qsort_1705(a, lo, hi)
+// (Func (Array T0) Int Int (Array T0))
+function qsort_1664(a, lo, hi)
 {
   if (op_lt_686(lo,hi))
   {
-    let p = partition_1636(a,lo,hi);
-    qsort_1705(a,lo,p);
-    qsort_1705(a,op_add_518(p,1),hi);
+    let p = partition_1595(a,lo,hi);
+    qsort_1664(a,lo,p);
+    qsort_1664(a,op_add_732(p,1),hi);
   }
   else
   { }
   return a;
 }
 // (Func (Array T0) (Array T0))
-function sort_1735(xs)
+function sort_1694(xs)
 {
-  return immutable_1847(qsort_1705(mutable_1760(xs),0,op_sub_542(count_1711(xs),1)));
+  return immutable_1847(qsort_1664(mutable_1760(xs),0,op_sub_754(count_1711(xs),1)));
 }
 // (Func (Array Int) Int)
-function median_1835(xs)
+function median_1794(xs)
 {
-  let ys = sort_1735(xs);
-  return op_eq_eq_1563(op_mod_614(op_sub_542(count_1711(ys),1),2),0) ? op_obr_cbr_2073(ys,op_div_590(op_sub_542(count_1711(ys),1),2)) : op_add_518(op_obr_cbr_2073(ys,op_div_590(op_sub_542(count_1711(ys),2),2)),op_div_590(op_obr_cbr_2073(ys,op_div_590(count_1711(ys),2)),2));
+  let ys = sort_1694(xs);
+  return op_eq_eq_1563(op_mod_820(op_sub_754(count_1711(ys),1),2),0) ? op_obr_cbr_2073(ys,op_div_798(op_sub_754(count_1711(ys),1),2)) : op_add_732(op_obr_cbr_2073(ys,op_div_798(op_sub_754(count_1711(ys),2),2)),op_div_798(op_obr_cbr_2073(ys,op_div_798(count_1711(ys),2)),2));
 }
 // (Func (Array T0) Int Bool)
-function inRange_1866(xs, n)
+function inRange_1825(xs, n)
 {
   return op_amp_amp_1585(op_gt_eq_662(n,0),op_lt_686(n,count_1711(xs)));
 }
-// (Func (Array T0) T1)
-function last_1889(xs)
+// (Func (Array T0) T0)
+function last_1848(xs)
 {
-  return op_obr_cbr_2073(xs,op_sub_542(count_1711(xs),1));
+  return op_obr_cbr_2073(xs,op_sub_754(count_1711(xs),1));
 }
 // (Func (Array T0) T0)
-function first_1904(xs)
+function first_1863(xs)
 {
   return op_obr_cbr_2073(xs,0);
 }
 // (Func (Array T0) T1 (Func T1 T0 T1) T1)
-function reduce_1941(xs, acc, f)
+function reduce_1900(xs, acc, f)
 {
   for (let i3=0; i3 < xs.count; ++i3)
   {
@@ -692,20 +687,20 @@ function reduce_1941(xs, acc, f)
   }
   return acc;
 }
-// (Func (Array (Array T0)) (Array T1))
-function flatten_1958(xs)
+// (Func (Array (Array T0)) (Array T0))
+function flatten_1917(xs)
 {
-  return reduce_1941(xs,arrayFromJavaScript([]),concat_1254);
+  return reduce_1900(xs,arrayFromJavaScript([]),concat_1213);
 }
-// (Func (Array T0) (Func T0 (Array T1)) (Array T2))
-function flatMap_1980(xs, f)
+// (Func (Array T0) (Func T0 (Array T1)) (Array T1))
+function flatMap_1939(xs, f)
 {
-  return flatten_1958(map_53(xs,f));
+  return flatten_1917(map_53(xs,f));
 }
-// (Func (Array T0) (Array T1) (Func T2 T3 T4) (Array T5))
-function cartesianProduct_2023(xs, ys, f)
+// (Func (Array T0) (Array T1) (Func T0 T1 T2) (Array T2))
+function cartesianProduct_1982(xs, ys, f)
 {
-  return flatMap_1980(xs,(x) => map_53(ys,(y) => f(x,y)));
+  return flatMap_1939(xs,(x) => map_53(ys,(y) => f(x,y)));
 }
 // Module heron:geometry.mesh:0.1
 // file input\geometry-mesh.heron
@@ -714,17 +709,17 @@ function cartesianProduct_2023(xs, ys, f)
 const tetrahedron = mesh_2133(arrayFromJavaScript([1,1,1,op_negate_1659(1),op_negate_1659(1),1,op_negate_1659(1),1,op_negate_1659(1),1,op_negate_1659(1),op_negate_1659(1)]),arrayFromJavaScript([2,1,0,0,3,2,1,3,0,2,3,1]));
 const cube = mesh_2133(arrayFromJavaScript([op_negate_1659(1),op_negate_1659(1),1,1,op_negate_1659(1),1,1,1,1,op_negate_1659(1),1,1,op_negate_1659(1),op_negate_1659(1),op_negate_1659(1),1,op_negate_1659(1),op_negate_1659(1),1,1,op_negate_1659(1),op_negate_1659(1),1,op_negate_1659(1)]),arrayFromJavaScript([0,1,2,2,3,0,1,5,6,6,2,1,7,6,5,5,4,7,4,0,3,3,7,4,4,5,1,1,0,4,3,2,6,6,7,3]));
 const octahedron = mesh_2133(arrayFromJavaScript([1,0,0,op_negate_1659(1),0,0,0,1,0,0,op_negate_1659(1),0,0,0,1,0,0,op_negate_1659(1)]),arrayFromJavaScript([0,2,4,0,4,3,0,3,5,0,5,2,1,2,5,1,5,3,1,3,4,1,4,2]));
-const dodecahedron = ((t) => ((r) => mesh_2133(arrayFromJavaScript([op_negate_1659(1),op_negate_1659(1),op_negate_1659(1),op_negate_1659(1),op_negate_1659(1),1,op_negate_1659(1),1,op_negate_1659(1),op_negate_1659(1),1,1,1,op_negate_1659(1),op_negate_1659(1),1,op_negate_1659(1),1,1,1,op_negate_1659(1),1,1,1,0,op_negate_1659(r),op_negate_1659(t),0,op_negate_1659(r),t,0,r,op_negate_1659(t),0,r,t,op_negate_1659(r),op_negate_1659(t),0,op_negate_1659(r),t,0,r,op_negate_1659(t),0,r,t,0,op_negate_1659(t),0,op_negate_1659(r),t,0,op_negate_1659(r),op_negate_1659(t),0,r,t,0,r]),arrayFromJavaScript([3,11,7,3,7,15,3,15,13,7,19,17,7,17,6,7,6,15,17,4,8,17,8,10,17,10,6,8,0,16,8,16,2,8,2,10,0,12,1,0,1,18,0,18,16,6,10,2,6,2,13,6,13,15,2,16,18,2,18,3,2,3,13,18,1,9,18,9,11,18,11,3,4,14,12,4,12,0,4,0,8,11,9,5,11,5,19,11,19,7,19,5,14,19,14,4,19,4,17,1,12,14,1,14,5,1,5,9])))(op_div_590(1,t))
-)(op_div_590(op_add_518(1,sqrt_479(5)),2))
+const dodecahedron = ((t) => ((r) => mesh_2133(arrayFromJavaScript([op_negate_1659(1),op_negate_1659(1),op_negate_1659(1),op_negate_1659(1),op_negate_1659(1),1,op_negate_1659(1),1,op_negate_1659(1),op_negate_1659(1),1,1,1,op_negate_1659(1),op_negate_1659(1),1,op_negate_1659(1),1,1,1,op_negate_1659(1),1,1,1,0,op_negate_1659(r),op_negate_1659(t),0,op_negate_1659(r),t,0,r,op_negate_1659(t),0,r,t,op_negate_1659(r),op_negate_1659(t),0,op_negate_1659(r),t,0,r,op_negate_1659(t),0,r,t,0,op_negate_1659(t),0,op_negate_1659(r),t,0,op_negate_1659(r),op_negate_1659(t),0,r,t,0,r]),arrayFromJavaScript([3,11,7,3,7,15,3,15,13,7,19,17,7,17,6,7,6,15,17,4,8,17,8,10,17,10,6,8,0,16,8,16,2,8,2,10,0,12,1,0,1,18,0,18,16,6,10,2,6,2,13,6,13,15,2,16,18,2,18,3,2,3,13,18,1,9,18,9,11,18,11,3,4,14,12,4,12,0,4,0,8,11,9,5,11,5,19,11,19,7,19,5,14,19,14,4,19,4,17,1,12,14,1,14,5,1,5,9])))(_UNRESOLVED_(1,t))
+)(_UNRESOLVED_(_UNRESOLVED_(1,sqrt_479(5)),2))
 ;
-const icosahedron = ((t) => mesh_2133(arrayFromJavaScript([op_negate_1659(1),t,0,1,t,0,op_negate_1659(1),op_negate_1659(t),0,1,op_negate_1659(t),0,0,op_negate_1659(1),t,0,1,t,0,op_negate_1659(1),op_negate_1659(t),0,1,op_negate_1659(t),t,0,op_negate_1659(1),t,0,1,op_negate_1659(t),0,op_negate_1659(1),op_negate_1659(t),0,1]),arrayFromJavaScript([0,11,5,0,5,1,0,1,7,0,7,10,0,10,11,1,5,9,5,11,4,11,10,2,10,7,6,7,1,8,3,9,4,3,4,2,3,2,6,3,6,8,3,8,9,4,9,5,2,4,11,6,2,10,8,6,7,9,8,1])))(op_div_590(op_add_518(1,sqrt_479(5)),2))
+const icosahedron = ((t) => mesh_2133(arrayFromJavaScript([op_negate_1659(1),t,0,1,t,0,op_negate_1659(1),op_negate_1659(t),0,1,op_negate_1659(t),0,0,op_negate_1659(1),t,0,1,t,0,op_negate_1659(1),op_negate_1659(t),0,1,op_negate_1659(t),t,0,op_negate_1659(1),t,0,1,op_negate_1659(t),0,op_negate_1659(1),op_negate_1659(t),0,1]),arrayFromJavaScript([0,11,5,0,5,1,0,1,7,0,7,10,0,10,11,1,5,9,5,11,4,11,10,2,10,7,6,7,1,8,3,9,4,3,4,2,3,2,6,3,6,8,3,8,9,4,9,5,2,4,11,6,2,10,8,6,7,9,8,1])))(_UNRESOLVED_(_UNRESOLVED_(1,sqrt_479(5)),2))
 ;
 // (Func (Array T0) Int Bool Bool (Array Int))
 function quadStripToMeshIndices_966(vertices, rows, connectRows, connectCols)
 {
-  let cols = op_div_590(count_1711(vertices),rows);
-  let nr = connectRows ? rows : op_sub_542(rows,1);
-  let nc = connectCols ? cols : op_sub_542(cols,1);
+  let cols = op_div_798(count_1711(vertices),rows);
+  let nr = connectRows ? rows : op_sub_754(rows,1);
+  let nc = connectCols ? cols : op_sub_754(cols,1);
   let indices = mutable_1760(arrayFromJavaScript([]));
   for (let i4=0; i4 < op_dot_dot_2038(0,nr).count; ++i4)
   {
@@ -734,10 +729,10 @@ function quadStripToMeshIndices_966(vertices, rows, connectRows, connectCols)
       {
         const col = op_dot_dot_2038(0,nc).at(i5);
         {
-          let a = op_add_518(col,op_mul_566(row,cols));
-          let b = op_add_518(op_mod_614(op_add_518(col,1),cols),op_mul_566(row,cols));
-          let c = op_add_518(op_mod_614(op_add_518(col,1),cols),op_mul_566(op_mod_614(op_add_518(row,1),rows),cols));
-          let d = op_add_518(col,op_mul_566(op_mod_614(op_add_518(row,1),rows),cols));
+          let a = op_add_732(col,op_mul_776(row,cols));
+          let b = op_add_732(op_mod_820(op_add_732(col,1),cols),op_mul_776(row,cols));
+          let c = op_add_732(op_mod_820(op_add_732(col,1),cols),op_mul_776(op_mod_820(op_add_732(row,1),rows),cols));
+          let d = op_add_732(col,op_mul_776(op_mod_820(op_add_732(row,1),rows),cols));
           indices = pushMany_1959(indices,arrayFromJavaScript([a,b,d]));
           indices = pushMany_1959(indices,arrayFromJavaScript([b,c,d]));
         }
@@ -746,29 +741,29 @@ function quadStripToMeshIndices_966(vertices, rows, connectRows, connectCols)
   }
   return immutable_1847(indices);
 }
-// (Func (Array T0) (Array T1))
+// (Func (Array Float3) (Array Float))
 function toVertexBuffer_1001(xs)
 {
-  return flatMap_1980(xs,(v) => arrayFromJavaScript([x_134(v),y_149(v),z_164(v)]));
+  return flatMap_1939(xs,(v) => arrayFromJavaScript([x_134(v),y_149(v),z_164(v)]));
 }
 // (Func Float2 Float3)
 function vector_1066(uv)
 {
-  return float3_119(op_mul_566(op_negate_1659(cos_353(x_134(uv))),sin_449(y_149(uv))),cos_353(x_134(uv)),op_mul_566(sin_449(x_134(uv)),sin_449(y_149(uv))));
+  return float3_119(op_mul_886(op_negate_1659(cos_353(x_134(uv))),sin_449(y_149(uv))),cos_353(x_134(uv)),op_mul_886(sin_449(x_134(uv)),sin_449(y_149(uv))));
 }
 // (Func T0 T0 T0 T0)
 function rescale_1094(v, from, length)
 {
   return op_add_518(from,op_mul_566(v,length));
 }
-// (Func (Func Float Float T0) Int Int Float Float Float Float Mesh)
+// (Func (Func Float Float Float3) Int Int Float Float Float Float Mesh)
 function meshFromUV_1221(f, uCount, vCount, uStart, vStart, uLength, vLength)
 {
-  let points = cartesianProduct_2023(op_dot_dot_2038(0,uCount),op_dot_dot_2038(0,vCount),(u, v) => f(op_add_518(op_mul_566(op_div_590(u,float_41(uCount)),uLength),uStart),op_add_518(op_mul_566(op_div_590(v,float_41(vCount)),vLength),vStart)));
+  let points = cartesianProduct_1982(op_dot_dot_2038(0,uCount),op_dot_dot_2038(0,vCount),(u, v) => f(op_add_842(op_mul_886(op_div_908(u,float_41(uCount)),uLength),uStart),op_add_842(op_mul_886(op_div_908(v,float_41(vCount)),vLength),vStart)));
   let indices = quadStripToMeshIndices_966(points,vCount,true,true);
   return mesh_2133(toVertexBuffer_1001(points),indices);
 }
-// (Func (Func Float Float T0) Int Mesh)
+// (Func (Func Float Float Float3) Int Mesh)
 function meshFromUV_1247(f, segments)
 {
   return meshFromUV_1221(f,segments,segments,0,0,1,1);
@@ -776,12 +771,12 @@ function meshFromUV_1247(f, segments)
 // (Func Int Int Float3)
 function spherePoint_1347(u, v)
 {
-  return vector_98(op_mul_566(op_negate_1659(cos_353(op_mul_566(op_mul_566(u,2),pi))),sin_449(op_mul_566(op_mul_566(v,2),pi))),cos_353(op_mul_566(op_mul_566(v,2),pi)),op_mul_566(sin_449(op_mul_566(op_mul_566(u,2),pi)),sin_449(op_mul_566(op_mul_566(v,2),pi))));
+  return vector_98(op_mul_886(op_negate_1659(cos_353(op_mul_566(op_mul_776(u,2),pi))),sin_449(op_mul_566(op_mul_776(v,2),pi))),cos_353(op_mul_566(op_mul_776(v,2),pi)),op_mul_886(sin_449(op_mul_566(op_mul_776(u,2),pi)),sin_449(op_mul_566(op_mul_776(v,2),pi))));
 }
 // (Func Int Mesh)
 function sphere_1364(segments)
 {
-  return meshFromUV_1221(spherePoint_1347,segments);
+  return meshFromUV_1247(spherePoint_1347,segments);
 }
 // (Func Mesh)
 function sphere_1375()
@@ -791,12 +786,12 @@ function sphere_1375()
 // (Func Int Float Float3)
 function cylinderPoint_1423(u, v)
 {
-  return vector_98(sin_449(op_mul_566(op_mul_566(u,2),pi)),v,cos_353(op_mul_566(op_mul_566(u,2),pi)));
+  return vector_98(sin_449(op_mul_566(op_mul_776(u,2),pi)),v,cos_353(op_mul_566(op_mul_776(u,2),pi)));
 }
 // (Func Int Mesh)
 function cylinder_1440(segments)
 {
-  return meshFromUV_1221(cylinderPoint_1423,segments);
+  return meshFromUV_1247(cylinderPoint_1423,segments);
 }
 // (Func Mesh)
 function cylinder_1451()
@@ -806,12 +801,12 @@ function cylinder_1451()
 // (Func Float Float Int Mesh)
 function torus_1491(r1, r2, segments)
 {
-  return meshFromUV_1221((u, v) => torusPoint_1621(u,v,r1,r2),segments);
+  return meshFromUV_1247((u, v) => torusPoint_1621(u,v,r1,r2),segments);
 }
 // (Func Int Int Float Float Float3)
 function torusPoint_1621(u, v, r1, r2)
 {
-  return vector_98(op_mul_566(op_add_518(r1,op_mul_566(r2,cos_353(op_mul_566(op_mul_566(v,2),pi)))),cos_353(op_mul_566(op_mul_566(u,2),pi))),op_mul_566(op_add_518(r1,op_mul_566(r2,cos_353(op_mul_566(op_mul_566(v,2),pi)))),sin_449(op_mul_566(op_mul_566(u,2),pi))),op_mul_566(r2,sin_449(op_mul_566(op_mul_566(v,2),pi))));
+  return vector_98(op_mul_886(op_add_842(r1,op_mul_886(r2,cos_353(op_mul_566(op_mul_776(v,2),pi)))),cos_353(op_mul_566(op_mul_776(u,2),pi))),op_mul_886(op_add_842(r1,op_mul_886(r2,cos_353(op_mul_566(op_mul_776(v,2),pi)))),sin_449(op_mul_566(op_mul_776(u,2),pi))),op_mul_886(r2,sin_449(op_mul_566(op_mul_776(v,2),pi))));
 }
 // (Func Mesh)
 function torus_1634()
@@ -821,39 +816,39 @@ function torus_1634()
 // (Func Mesh Int)
 function vertexCount_1655(mesh)
 {
-  return op_div_590(count_1711(vertexBuffer_2151(mesh)),3);
+  return op_div_798(count_1711(vertexBuffer_2151(mesh)),3);
 }
 // (Func Mesh Int)
 function faceCount_1676(mesh)
 {
-  return op_div_590(count_1711(indexBuffer_2169(mesh)),3);
+  return op_div_798(count_1711(indexBuffer_2169(mesh)),3);
 }
 // (Func Mesh Int Float3)
 function vertex_1706(mesh, i)
 {
-  return vector_98(take_1008(vertexBuffer_2151(mesh),op_mul_566(i,3),3));
+  return vector_151(take_994(vertexBuffer_2151(mesh),op_mul_776(i,3),3));
 }
 // (Func Mesh (Array Float3))
 function vertices_1736(mesh)
 {
   return array_1691(vertexCount_1655(mesh),(i) => vertex_1706(mesh,i));
 }
-// (Func Mesh (Array T0) Mesh)
+// (Func Mesh (Array Float3) Mesh)
 function setVertices_1762(m, points)
 {
   return mesh_2133(toVertexBuffer_1001(points),indexBuffer_2169(m));
 }
-// (Func Mesh (Func Float3 T0) Mesh)
+// (Func Mesh (Func Float3 Float3) Mesh)
 function transform_1789(m, f)
 {
   return setVertices_1762(m,map_53(vertices_1736(m),f));
 }
-// (Func Mesh T0 Mesh)
+// (Func Mesh Float3 Mesh)
 function translate_1818(m, amount)
 {
   return transform_1789(m,(v) => op_add_518(v,amount));
 }
-// (Func Mesh T0 Mesh)
+// (Func Mesh Float3 Mesh)
 function scale_1847(m, amount)
 {
   return transform_1789(m,(v) => op_mul_566(v,amount));
@@ -888,19 +883,19 @@ function simpleArrayTest_439()
   print_2094("'Expect 3'");
   print_2094(count_1711(xs));
   print_2094("'Expect 1'");
-  print_2094(first_1904(xs));
+  print_2094(first_1863(xs));
   print_2094("'Expect 3'");
-  print_2094(last_1118(xs));
+  print_2094(last_1848(xs));
   print_2094("'Expect 1'");
-  print_2094(min_140(xs));
+  print_2094(min_1392(xs));
   print_2094("'Expect 11'");
-  print_2094(max_165(xs));
+  print_2094(max_1414(xs));
   let ys = mutable_1760(xs);
   ys = set_1824(ys,1,5);
   print_2094("'Expect 5'");
   print_2094(op_obr_cbr_2073(ys,1));
   print_2094("'Expect 1, 3, 11'");
-  let zs = sort_1735(xs);
+  let zs = sort_1694(xs);
   for (let i7=0; i7 < zs.count; ++i7)
   {
     const z = zs.at(i7);
@@ -909,16 +904,16 @@ function simpleArrayTest_439()
     }
   }
   print_2094("'Expect 3'");
-  print_2094(median_1835(xs));
+  print_2094(median_1794(xs));
   print_2094("'Expect 15'");
-  print_2094(sum_1371(xs));
+  print_2094(sum_1330(xs));
   print_2094("'Expect 5'");
-  print_2094(average_1411(xs));
+  print_2094(average_1370(xs));
 }
 // (Func Float Float Float Mesh)
 function testSphere_481(offX, offY, offZ)
 {
-  let offset = vector_1066(offX,offY,offZ);
+  let offset = vector_98(offX,offY,offZ);
   return translate_1818(sphere_1364(32),offset);
 }
 // (Func (Array (Func Float Float Float Mesh)))

@@ -55,6 +55,23 @@ var Package = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(Package.prototype, "allVarDefs", {
+        get: function () {
+            var r = [];
+            for (var _i = 0, _a = this.modules; _i < _a.length; _i++) {
+                var m = _a[_i];
+                for (var _b = 0, _c = m.body.children; _b < _c.length; _b++) {
+                    var c = _c[_b];
+                    if (c.def instanceof heron_defs_1.VarDef)
+                        r.push(c.def);
+                }
+            }
+            r.sort(function (d1, d2) { return (d1.name < d2.name) ? -1 : (d1.name > d2.name ? 1 : 0); });
+            return r;
+        },
+        enumerable: true,
+        configurable: true
+    });
     // When done adding files call "processModules" to sort the dependencies 
     Package.prototype.addFile = function (node, intrinsic, filePath) {
         var _this = this;

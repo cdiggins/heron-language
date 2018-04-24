@@ -1,7 +1,7 @@
 import {HeronAstNode } from "./heron-ast-rewrite";
 import { parseHeron, heronGrammar } from "./heron-parser";
 import { Package } from "./heron-package";
-import { computeFuncType } from "./heron-types";
+import { computeFuncType, computeVarType } from "./heron-types";
 
 const g = heronGrammar;
 
@@ -40,6 +40,11 @@ export function createPackage(moduleNames: string[]): Package {
     // The package is doing the heavy lifting 
     pkg.processModules();
     
+    // Compute types 
+    for (const v of pkg.allVarDefs) {
+        computeVarType(v);
+    }
+
     // Compute types 
     for (const f of pkg.allFuncDefs) {
         computeFuncType(f);

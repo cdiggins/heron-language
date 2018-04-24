@@ -179,6 +179,18 @@ function genParamsToNewVarLookup(genParams) {
     return r;
 }
 exports.genParamsToNewVarLookup = genParamsToNewVarLookup;
+function computeVarType(v) {
+    if (!v.type) {
+        var expr = v.exprNode.expr;
+        var tmp = genericFuncType(0);
+        var u = new type_system_1.TypeResolver(exports.typeStrategy);
+        var te = new FunctionTypeEvaluator(v.name, 0, expr, exports.typeStrategy, u, tmp);
+        var r = getFuncReturnType(te.result);
+        v.type = r;
+    }
+    return v.type;
+}
+exports.computeVarType = computeVarType;
 function computeFuncType(f) {
     if (!f.type) {
         console.log("Computing function type for " + f);
@@ -501,7 +513,7 @@ var FunctionTypeEvaluator = /** @class */ (function () {
             if (statement.expr)
                 this.unifyReturn(statement.expr);
             else
-                this.unifyReturn(Types.VoidType);
+                this.unifyTypes(this.getReturnType(), Types.VoidType);
         }
         else if (statement instanceof heron_statement_1.ContinueStatement) {
             // Do nothing 
@@ -518,10 +530,10 @@ var FunctionTypeEvaluator = /** @class */ (function () {
             var arrayType = makeNewArrayType();
             var elementType = getArrayElementType(arrayType);
             if (forLoopVar.type)
-                this.unify(forLoopVar.type, elementType);
+                this.unifyTypes(forLoopVar.type, elementType);
             else
                 forLoopVar.type = elementType;
-            this.unify(statement.array, arrayType);
+            this.unifyExpr(statement.array, arrayType);
             this.getType(statement.loop);
         }
         else if (statement instanceof heron_statement_1.DoStatement) {
@@ -611,13 +623,7 @@ var FunctionTypeEvaluator = /** @class */ (function () {
                 if (expr.args.length !== nArgTypes)
                     throw new Error("Mismatched number of args");
                 for (var i = 0; i < expr.args.length; ++i) {
-                    var arg = expr.args[i];
-                    var exp = getFuncArgType(funcType_1, i);
-                    if (!exp)
-                        throw new Error("Missing arg type in position " + i);
-                    if (argTypes[i].toString() !== arg.type.toString())
-                        throw new Error("Mismatch argument types");
-                    this.unify(exp, argTypes[i]);
+                    this.unifyExpr(expr.args[i], getFuncArgType(funcType_1, i));
                 }
                 utils_1.trace("chooseFunc", "final arg types : " + argTypes.join(", "));
                 // We have to create new HeronType variable names when calling a
@@ -627,7 +633,7 @@ var FunctionTypeEvaluator = /** @class */ (function () {
                 utils_1.trace("chooseFunc", "The functionType is a variable: " + funcType_1);
                 var genFunc = genericFuncTypeFromArgs(argTypes);
                 utils_1.trace("chooseFunc", "Created a generic function: " + genFunc);
-                this.unify(funcType_1, genFunc);
+                this.unifyExpr(expr.func, genFunc);
                 var retType = getFuncReturnType(genFunc);
                 var r = callFunction(genFunc, expr.args, argTypes, this.unifier);
                 for (var _b = 0, argTypes_1 = argTypes; _b < argTypes_1.length; _b++) {
@@ -636,7 +642,7 @@ var FunctionTypeEvaluator = /** @class */ (function () {
                 }
                 utils_1.trace("chooseFunc", "Final unification for the function " + this.unifier.getUnifiedType(genFunc));
                 utils_1.trace("chooseFunc", "Final unification for the variable " + this.unifier.getUnifiedType(funcType_1));
-                this.unify(retType, r);
+                this.unifyTypes(retType, r);
                 return r;
             }
             else {
@@ -645,9 +651,7 @@ var FunctionTypeEvaluator = /** @class */ (function () {
         }
         else if (expr instanceof heron_expr_1.ConditionalExpr) {
             this.unifyBool(expr.condition);
-            var onTrue = this.getType(expr.onTrue);
-            var onFalse = this.getType(expr.onFalse);
-            return this.unify(onTrue, onFalse);
+            return this.unifyExprWithExpr(expr.onTrue, expr.onFalse);
         }
         else if (expr instanceof heron_expr_1.ObjectLiteral || expr instanceof heron_expr_1.ObjectField) {
             throw new Error("Object literals not yet supported");
@@ -657,7 +661,7 @@ var FunctionTypeEvaluator = /** @class */ (function () {
             var elemType = getArrayElementType(arrayType);
             for (var _c = 0, _d = expr.vals; _c < _d.length; _c++) {
                 var v = _d[_c];
-                this.unify(v, elemType);
+                this.unifyExpr(v, elemType);
             }
             return arrayType;
         }
@@ -704,47 +708,55 @@ var FunctionTypeEvaluator = /** @class */ (function () {
             if (ref.defs.length < 1)
                 heron_ast_rewrite_1.throwError(expr.node, "No defs found");
             var def = ref.defs[0];
-            return this.unify(def.type, expr.value);
+            return this.unifyExpr(expr.value, def.type);
         }
         else {
             throw new Error("Not a recognized expression " + expr);
         }
     };
-    FunctionTypeEvaluator.prototype.chooseBestFunctionTypeForUnification = function (set, func) {
-        if (!(func instanceof type_system_1.PolyType && isFunctionType(func)))
-            throw new Error("Expected a function type");
-        var index = chooseBestFunctionIndex(func, set);
-        return set.functions[index];
+    FunctionTypeEvaluator.prototype.unifyExprWithExpr = function (exprA, exprB) {
+        return this.unifyExpr(exprA, this.getType(exprB));
     };
-    FunctionTypeEvaluator.prototype.unify = function (a, b) {
-        if (!a)
-            throw new Error("No type or expression provided for argument 'a'");
-        if (!b)
-            throw new Error("No type or expression provided for argument 'b'");
-        var aType = (a instanceof heron_expr_1.Expr) ? this.getType(a) : a;
-        var bType = (b instanceof heron_expr_1.Expr) ? this.getType(b) : b;
-        if (!aType)
-            throw new Error("Could not get type for " + a);
-        if (!bType)
-            throw new Error("Could not get type for " + b);
-        if (aType instanceof FunctionSet) {
-            aType = this.chooseBestFunctionTypeForUnification(aType, bType);
+    FunctionTypeEvaluator.prototype.unifyExpr = function (expr, givenType) {
+        if (!expr)
+            throw new Error("Expected expression");
+        if (!givenType)
+            throw new Error("Expected type");
+        if (!(expr instanceof heron_expr_1.Expr))
+            throw new Error("Expected expr to be of Expr type");
+        if (!(givenType instanceof type_system_1.Type || givenType instanceof FunctionSet))
+            throw new Error("Expected givenType to be of type HeronTypes");
+        var exprType = this.getType(expr);
+        if (exprType instanceof FunctionSet) {
+            if (!(givenType instanceof type_system_1.PolyType))
+                throw new Error("Expected a PolyType to unify a fucnction set");
+            var index = chooseBestFunctionIndex(givenType, exprType);
+            exprType = exprType.functions[index];
+            expr.functionIndex = index;
         }
-        if (bType instanceof FunctionSet) {
-            bType = this.chooseBestFunctionTypeForUnification(bType, aType);
+        if (givenType instanceof FunctionSet) {
+            if (!(exprType instanceof type_system_1.PolyType))
+                throw new Error("Expected a PolyType to unify a fucnction set");
+            var index = chooseBestFunctionIndex(exprType, givenType);
+            givenType = givenType.functions[index];
         }
-        var ret = this.unifier.unifyTypes(aType, bType);
-        utils_1.trace("funcType", "Unification of " + aType + " and " + bType + " is " + ret);
+        return this.unifyTypes(exprType, givenType);
+    };
+    FunctionTypeEvaluator.prototype.unifyTypes = function (a, b) {
+        if (!a || !b || a instanceof FunctionSet || b instanceof FunctionSet)
+            throw new Error("Invalid argument");
+        var ret = this.unifier.unifyTypes(a, b);
+        utils_1.trace("funcType", "Unification of " + a + " and " + b + " is " + ret);
         return ret;
     };
     FunctionTypeEvaluator.prototype.unifyBool = function (x) {
-        return this.unify(x, Types.BoolType);
+        return this.unifyExpr(x, Types.BoolType);
     };
     FunctionTypeEvaluator.prototype.unifyInt = function (x) {
-        return this.unify(x, Types.IntType);
+        return this.unifyExpr(x, Types.IntType);
     };
     FunctionTypeEvaluator.prototype.unifyReturn = function (x) {
-        return this.unify(x, this.getReturnType());
+        return this.unifyExpr(x, this.getReturnType());
     };
     return FunctionTypeEvaluator;
 }());
