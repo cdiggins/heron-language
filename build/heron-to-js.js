@@ -60,7 +60,7 @@ var HeronToJs = /** @class */ (function () {
     };
     HeronToJs.prototype.visitVarDef = function (v) {
         // TODO: the 'v' has no type!
-        //this.cb.pushLine('// ' +  normalizeType(v.type));
+        this.cb.pushLine('// ' + type_system_1.normalizeType(v.type));
         this.cb.push("const " + v.name + ' = ');
         this.visit(v.exprNode.expr);
         this.cb.pushLine(';');
@@ -186,7 +186,7 @@ var HeronToJs = /** @class */ (function () {
                     this.cb.push(funcDefName(expr.node.ref.defs[0]));
                 }
                 else {
-                    // TODO: if I could find a better way to compute this, so it was nearly impossible,
+                    // TODO: if I could find a better way to compute this, so it was nearly impossible to screw up,
                     // that would be great.
                     if (expr.functionIndex === -1) {
                         throw new Error("No function index was computed for expression: " + expr);
@@ -283,6 +283,9 @@ var HeronToJs = /** @class */ (function () {
         }
         else {
             throw new Error("Not a recognized expression " + expr);
+        }
+        if (expr.type) {
+            this.cb.pushLine(' // ' + expr.type);
         }
     };
     return HeronToJs;

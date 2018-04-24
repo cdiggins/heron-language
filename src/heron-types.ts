@@ -1,6 +1,6 @@
 import { VarName, FunCall, ConditionalExpr, ObjectLiteral, ArrayLiteral, BoolLiteral, IntLiteral, FloatLiteral, StrLiteral, VarExpr, PostfixDec, Lambda, PostfixInc, Expr, ObjectField, VarAssignmentExpr } from "./heron-expr";
 import { Statement, CompoundStatement, IfStatement, EmptyStatement, VarDeclStatement, WhileStatement, DoStatement, ForStatement, ExprStatement, ContinueStatement, ReturnStatement } from "./heron-statement";
-import { throwError, HeronAstNode, validateNode } from "./heron-ast-rewrite";
+import { throwError, HeronAstNode, validateNode, visitAst } from "./heron-ast-rewrite";
 import { FuncDef, VarDef } from "./heron-defs";
 import { FuncRef, TypeRef, TypeParamRef, FuncParamRef, VarRef, ForLoopVarRef } from "./heron-refs";
 import { Type, PolyType, TypeVariable, TypeResolver, TypeStrategy, typeConstant, polyType, typeVariable, TypeConstant, isTypeConstant, newTypeVar, normalizeType, Lookup, freshVariableNames } from "./type-system";
@@ -196,7 +196,7 @@ export function computeVarType(v: VarDef): Type {
 
 export function computeFuncType(f: FuncDef): PolyType {
     if (!f.type) {
-        console.log("Computing function type for " + f);
+        trace("funcType", "Computing function type for " + f);
         const sigNode = validateNode(f.node.children[0], "funcSig");
         const genParamsNode = validateNode(sigNode.children[1], "genericParams");
         const genParams = genParamsNode.children.map(p => p.allText);
@@ -206,9 +206,10 @@ export function computeFuncType(f: FuncDef): PolyType {
         f.type = computeFuncTypeFromSig(f, genParamsToNewVarLookup(genParams));
         const u = new TypeResolver(typeStrategy);
         const te = new FunctionTypeEvaluator(f.name, f.params.length, body, typeStrategy, u, f.type as PolyType);
+        te.refineTypes();
         f.type = te.result;
-        console.log(" " + u.state)
-        console.log("Type for " + f + " is " + normalizeType(f.type));
+        trace('funcType', " " + u.state)
+        trace('funcType', "Type for " + f + " is " + normalizeType(f.type));
     }
     // When getting a function def type we generate new variable names each time. 
     return freshVariableNames(f.type) as PolyType;
@@ -462,6 +463,24 @@ export class FunctionTypeEvaluator
         //trace('funcType', this.unifier.state);
     }
 
+    // Pass through all of the statements and expressions and recompute the types. 
+    // This allows us to get a bit further in the types 
+    refineTypes() {
+        if (this.body)
+            visitAst(this.body.node, n => this.refineType(n));
+    }
+
+    refineType(n: HeronAstNode) {
+        if (n.expr) {
+            if (n.expr instanceof FunCall) {
+                // TODO:  get a more accurate function here.
+            }
+
+            n.expr.type = this.unifier.getUnifiedType(n.expr.type);
+        }
+    }
+    
+
     get numArgs(): number{
         return getFuncArgCount(this._function);
     }
@@ -514,9 +533,6 @@ export class FunctionTypeEvaluator
     {
         if (statement.type)
             return statement.type; 
-
-        //console.log("Computing statement HeronType:");
-        //console.log(statement.node.allText);
 
         if (statement instanceof CompoundStatement) 
         {

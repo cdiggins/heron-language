@@ -157,3 +157,42 @@ I think this goes right to the heart of the problem.
                     // Unify again.
                     this.unify(arg.type, exp);
                     */
+
+The problem right now comes to the fact that the right function is not known. 
+
+1) Everybody is working out their type fine. At least functions are.
+2) Possibly the expressions are as well. I should check that.
+3) It is possible that the wrong function is being used temporarily, but is figured out afterwards. 
+
+The issue really is that some things reference a function set, and when they do, we want to know which 
+function it is they chose. 
+
+A similar problem is going to arise when we try to figure out constants. 
+
+Basically it is all an issue of abstract value. Every expression refers to a value. 
+
+That abtsract value could be a: 
+1. A number, string, function set, actual function, a type, a range, an array, a boolean, a 'type' value,   
+
+Doing this I think is going to simplify things. 
+
+The problem is that I have been kind of hacking stuff to get it to work. 
+
+So how am I going to associate expressions with values? 
+
+And what about defs? Well those are just types.
+
+Note: the thing is that the compiler needs to track functions down as much as possible. It has to do some inlining. 
+
+Multiple expressions might share the same value. So I need an abstract evaluator? 
+
+The thing is that "assignment" is different than the values. Two things might have the same unified type, but they 
+could also have different values. (X = Y), (X = A), (B = Y). 
+
+Assignment is different than unification. Getting the value isi much different than getting the type. 
+
+However, there is still an issue. Types get improved. 
+
+I think I am going to have to make another pass of a function. I have all of the types at the end. 
+
+Next, I need to figure out if each functionIndex is the best bet.

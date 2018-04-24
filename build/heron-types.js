@@ -193,7 +193,7 @@ function computeVarType(v) {
 exports.computeVarType = computeVarType;
 function computeFuncType(f) {
     if (!f.type) {
-        console.log("Computing function type for " + f);
+        utils_1.trace("funcType", "Computing function type for " + f);
         var sigNode = heron_ast_rewrite_1.validateNode(f.node.children[0], "funcSig");
         var genParamsNode = heron_ast_rewrite_1.validateNode(sigNode.children[1], "genericParams");
         var genParams = genParamsNode.children.map(function (p) { return p.allText; });
@@ -203,9 +203,10 @@ function computeFuncType(f) {
         f.type = computeFuncTypeFromSig(f, genParamsToNewVarLookup(genParams));
         var u = new type_system_1.TypeResolver(exports.typeStrategy);
         var te = new FunctionTypeEvaluator(f.name, f.params.length, body, exports.typeStrategy, u, f.type);
+        te.refineTypes();
         f.type = te.result;
-        console.log(" " + u.state);
-        console.log("Type for " + f + " is " + type_system_1.normalizeType(f.type));
+        utils_1.trace('funcType', " " + u.state);
+        utils_1.trace('funcType', "Type for " + f + " is " + type_system_1.normalizeType(f.type));
     }
     // When getting a function def type we generate new variable names each time. 
     return type_system_1.freshVariableNames(f.type);
@@ -451,6 +452,21 @@ var FunctionTypeEvaluator = /** @class */ (function () {
         //trace('funcType', "Unifier state:");
         //trace('funcType', this.unifier.state);
     }
+    // Pass through all of the statements and expressions and recompute the types. 
+    // This allows us to get a bit further in the types 
+    FunctionTypeEvaluator.prototype.refineTypes = function () {
+        var _this = this;
+        if (this.body)
+            heron_ast_rewrite_1.visitAst(this.body.node, function (n) { return _this.refineType(n); });
+    };
+    FunctionTypeEvaluator.prototype.refineType = function (n) {
+        if (n.expr) {
+            if (n.expr instanceof heron_expr_1.FunCall) {
+                // TODO:  get a more accurate function here.
+            }
+            n.expr.type = this.unifier.getUnifiedType(n.expr.type);
+        }
+    };
     Object.defineProperty(FunctionTypeEvaluator.prototype, "numArgs", {
         get: function () {
             return getFuncArgCount(this._function);
@@ -496,8 +512,6 @@ var FunctionTypeEvaluator = /** @class */ (function () {
     FunctionTypeEvaluator.prototype.getStatementType = function (statement) {
         if (statement.type)
             return statement.type;
-        //console.log("Computing statement HeronType:");
-        //console.log(statement.node.allText);
         if (statement instanceof heron_statement_1.CompoundStatement) {
             for (var _i = 0, _a = statement.statements; _i < _a.length; _i++) {
                 var st = _a[_i];

@@ -58,7 +58,7 @@ export class HeronToJs
 
     visitVarDef(v: VarDef) {        
         // TODO: the 'v' has no type!
-        //this.cb.pushLine('// ' +  normalizeType(v.type));
+        this.cb.pushLine('// ' +  normalizeType(v.type));
         this.cb.push("const " + v.name + ' = ');
         this.visit(v.exprNode.expr);
         this.cb.pushLine(';');
@@ -190,7 +190,7 @@ export class HeronToJs
                     this.cb.push(funcDefName(expr.node.ref.defs[0]));                       
                 } 
                 else {
-                    // TODO: if I could find a better way to compute this, so it was nearly impossible,
+                    // TODO: if I could find a better way to compute this, so it was nearly impossible to screw up,
                     // that would be great.
                     if (expr.functionIndex === -1) {
                         throw new Error("No function index was computed for expression: " + expr);
@@ -291,5 +291,9 @@ export class HeronToJs
         else {
             throw new Error("Not a recognized expression " + expr);
         }
-    }    
+
+        if (expr.type) {
+            this.cb.pushLine(' // ' + expr.type);
+        }
+    }
 }

@@ -28,6 +28,7 @@ var CodeBuilder = /** @class */ (function () {
     };
     CodeBuilder.prototype.push = function (s) {
         var indentDelta = count(s, '{') - count(s, '}');
+        indentDelta += count(s, '(') - count(s, ')');
         this.indent += indentDelta;
         if (indentDelta < 0) {
             if (this.lines.length > 0) {

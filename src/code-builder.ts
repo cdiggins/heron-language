@@ -21,7 +21,8 @@ export class CodeBuilder
         this.lines.push(this.indentString);
     }
     push(s: string) {
-        const indentDelta = count(s, '{') - count(s, '}');
+        let indentDelta = count(s, '{') - count(s, '}');
+        indentDelta += count(s, '(') - count(s, ')');
         this.indent += indentDelta;
         if (indentDelta < 0) {            
             if (this.lines.length > 0) {
