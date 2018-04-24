@@ -62,8 +62,12 @@ var Package = /** @class */ (function () {
                 var m = _a[_i];
                 for (var _b = 0, _c = m.body.children; _b < _c.length; _b++) {
                     var c = _c[_b];
-                    if (c.def instanceof heron_defs_1.VarDef)
-                        r.push(c.def);
+                    // TODO: I hate that var decl statements are compound. We should really really rewrite them.
+                    if (c.statement instanceof heron_statement_1.VarDeclStatement)
+                        for (var _d = 0, _e = c.statement.vars; _d < _e.length; _d++) {
+                            var vd = _e[_d];
+                            r.push(vd);
+                        }
                 }
             }
             r.sort(function (d1, d2) { return (d1.name < d2.name) ? -1 : (d1.name > d2.name ? 1 : 0); });

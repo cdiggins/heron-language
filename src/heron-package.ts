@@ -42,8 +42,10 @@ export class Package
         let r: VarDef[] = [];
         for (let m of this.modules) 
             for (let c of m.body.children)
-                if (c.def instanceof VarDef)
-                    r.push(c.def);
+                // TODO: I hate that var decl statements are compound. We should really really rewrite them.
+                if (c.statement instanceof VarDeclStatement)
+                    for (const vd of c.statement.vars)
+                        r.push(vd);
         r.sort((d1, d2) => (d1.name < d2.name) ? -1 : (d1.name > d2.name ? 1 : 0));
         return r;
     }

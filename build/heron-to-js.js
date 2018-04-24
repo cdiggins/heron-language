@@ -186,8 +186,10 @@ var HeronToJs = /** @class */ (function () {
                     this.cb.push(funcDefName(expr.node.ref.defs[0]));
                 }
                 else {
+                    // TODO: if I could find a better way to compute this, so it was nearly impossible,
+                    // that would be great.
                     if (expr.functionIndex === -1) {
-                        this.cb.push("_UNRESOLVED_");
+                        throw new Error("No function index was computed for expression: " + expr);
                     }
                     else {
                         this.cb.push(funcDefName(expr.node.ref.defs[expr.functionIndex]));
