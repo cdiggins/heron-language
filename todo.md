@@ -196,3 +196,13 @@ However, there is still an issue. Types get improved.
 I think I am going to have to make another pass of a function. I have all of the types at the end. 
 
 Next, I need to figure out if each functionIndex is the best bet.
+
+//==
+
+average(xs) :: (Func (Array Int) Int)
+cylinderPoint(u, v) :: (Func Int Float Float3)
+eq(xs, ys) :: (Func (Array T0) (Array T1) Bool)
+
+//==
+
+Trailing commas kill the compiler with no user feedback!

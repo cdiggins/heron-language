@@ -121,13 +121,13 @@ module heron:std.array:0.1
         = xs.take(from).concat(ys).concat(xs.skip(from));    
 
     function sum(xs) 
-        = xs.reduce(0, op+);    
+        = xs.reduce(0.0, op+);    
 
     function product(xs) 
-        = xs.reduce(1, op*);    
+        = xs.reduce(1.0, op*);    
     
     function average(xs) 
-        = xs.sum / xs.count;    
+        = xs.sum / xs.count.float;    
 
     function min(xs) 
         = xs.reduce(xs[0], min);    
@@ -181,6 +181,9 @@ module heron:std.array:0.1
 
     function first(xs) 
         = xs[0];
+
+    function tail(xs) 
+        = xs.skip(1);
 
     function reduce(xs, acc, f) {
         for (var x in xs)

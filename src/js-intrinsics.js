@@ -16,13 +16,16 @@ function toMutable(xs) {
 
 function int(x) { return Math.round(x); }
 function float(x) { return x; }
-function float2(x, y) { return ({ x: x, y: y }); }
+function float2(u, v) { return ({ u: u, v: v }); }
 function float3(x, y, z) { return ({ x: x, y: y, z: z }); }
 function float4(x, y, z, w) { return ({ x: x, y: y, z: z, w: w }); }
+function u(v) { return v.u; }
+function v(v) { return v.v; }
 function x(v) { return v.x; }
 function y(v) { return v.y; }
 function z(v) { return v.z; }
 function w(v) { return v.w; }
+function xyz(v) { return float3(v.x, v.y, v.z); }
 function abs(x) { return Math.abs(x); }
 function acos(x) { return Math.acos(x); }
 function asin(x) { return Math.asin(x); }

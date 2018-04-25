@@ -58,14 +58,15 @@ module heron:tests:0.1
         print(xs.average);
     }
 
-    function testSphere(offX, offY, offZ) 
-    {
-        var offset = vector(offX, offY, offZ);
-        return sphere(32).translate(offset);
-    }
+    // Given a geometry, gives us a function that returns an offset version of that geometry 
+    function testMoveGeometry(g) 
+        = (offX, offY, offZ) => 
+            g.translate(vector(offX, offY, offZ));
 
     function geometryTest() 
         = [
-            testSphere 
+            testMoveGeometry(sphere()),
+            testMoveGeometry(cylinder()),
+            testMoveGeometry(torus())
         ];
 }

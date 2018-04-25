@@ -48,7 +48,12 @@
 		<script>
 			// Used for controlling which geometry is show in the UI
 			const heronData = { 
-				geometryIndex: 0
+				geometryIndex: 0,
+				offset: {
+					x: 0,
+					y: 0,
+					z: 0,
+				}
 			};
 
 			function heronArrayToJavaScript(xs) {
@@ -75,24 +80,22 @@
 
 				function generateGeometry() {					
 					const f = heronGeometries[heronData.geometryIndex];
-					const hg = f(3, 4, 5);
+					const hg = f(heronData.offset.x / 10, heronData.offset.y / 10, heronData.offset.z / 10);
 					const g = heronGeometryToThreeJsGeometry(hg);
 					updateGroupGeometry( sceneObject, g );
 				}
 
 				const folder = gui.addFolder( 'Heron' );
 				const geometryIndices = { 
-					'tetrahedron':0, 
-					'cube':1, 
-					'octahedron':2, 
-					'dodecahedron':3, 
-					'icosahedron':4, 
-					'sphere':5, 
-					'cylinder':6, 
-					'torus':7
+					'sphere':0, 
+					'cylinder':1, 
+					'torus':2
 				};
 
 				gui.add(heronData, 'geometryIndex', geometryIndices).onChange( generateGeometry );
+				gui.add(heronData.offset, 'x').onChange( generateGeometry );
+				gui.add(heronData.offset, 'y').onChange( generateGeometry );
+				gui.add(heronData.offset, 'z').onChange( generateGeometry );
 				generateGeometry();
 								
 				return { };

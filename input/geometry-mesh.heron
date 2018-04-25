@@ -179,7 +179,7 @@ module heron:geometry.mesh:0.1
 
     // Given UV coordinates on the surface of a sphere u=[0,1), v=[0,1) computes the 3D location.
     function spherePoint(u, v)
-        = vector(-cos(u*2*pi) * sin(v*2*pi), cos(v*2*pi), sin(u*2*pi) * sin(v*2*pi));
+        = vector(-cos(u*2.0*pi) * sin(v*2.0*pi), cos(v*2.0*pi), sin(u*2.0*pi) * sin(v*2.0*pi));
 
     function sphere(segments) 
         = meshFromUV(spherePoint, segments);
