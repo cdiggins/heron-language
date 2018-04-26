@@ -17,7 +17,26 @@
 [] - Start running linter 
 [] - replace sumComponents with sum. For some reason, it is struggling to figure out the type of that.
 [] - Output the AST: with types 
-[] - 
+[] - Trailing commas kill the compiler with no user feedback!
+[] - No parse error.
+[] - Missing the semicolon at end of sentence. l
+[] - More types in the output 
+[] - Start inlining 
+[] - Add some colors 
+[] - Animate the motion
+[] - Perlin noise the thing? 
+[] - Poissonian point distribution
+[] - Point cloud render support 
+[] - Instancing support 
+[] - Teapot 
+[] - Mobius strip
+[] - Klein bottle
+[] - Physics
+[] - Bounce 
+[] - Cone
+[] - Arrow.
+
+//== 
 
 Notes:
 
@@ -205,4 +224,6 @@ eq(xs, ys) :: (Func (Array T0) (Array T1) Bool)
 
 //==
 
-Trailing commas kill the compiler with no user feedback!
+
+//== 
+

@@ -68,6 +68,8 @@ function push(xs, x) { return (xs.array.push(x), xs); };
 function set(xs, i, x) { return (xs.array[i] = x, xs); };
 function print(x) { return console.log(x); }
 function assert(condition) { if (!condition) throw new Error("assertion failed"); };
-function mesh(vertexBuffer, indexBuffer) { return ({ vertexBuffer: vertexBuffer, indexBuffer: indexBuffer }); };
+function mesh(vertexBuffer, indexBuffer, uvBuffer, colorBuffer) { return ({ vertexBuffer, indexBuffer, uvBuffer, colorBuffer }); };
 function vertexBuffer(mesh) { return mesh.vertexBuffer; };
 function indexBuffer(mesh) { return mesh.indexBuffer; };
+function colorBuffer(mesh) { return mesh.colorBuffer; };
+function uvBuffer(mesh) { return mesh.uvBuffer; };

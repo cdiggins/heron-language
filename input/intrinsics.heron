@@ -151,7 +151,9 @@ module heron:intrinsics:0.1
     intrinsic assert(x: Bool);    
 
     // Geometry stuff
-    intrinsic mesh(vertexBuffer: Array<Float>, indexBuffer: Array<Int>): Mesh;
+    intrinsic mesh(vertexBuffer: Array<Float>, indexBuffer: Array<Int>, uvBuffer: Array<Float>, colorBuffer: Array<Float>): Mesh;
     intrinsic vertexBuffer(mesh: Mesh): Array<Float>;
     intrinsic indexBuffer(mesh: Mesh): Array<Int>;
+    intrinsic uvBuffer(mesh: Mesh):  Array<Float>;
+    intrinsic colorBuffer(mesh: Mesh): Array<Float>;
 }

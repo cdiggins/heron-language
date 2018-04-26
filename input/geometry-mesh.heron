@@ -2,14 +2,30 @@ language heron:std:0.1;
 
 // https://prideout.net/blog/?p=44
 // https://github.com/mrdoob/three.js/blob/master/src/geometries/ParametricGeometry.js
+// https://github.com/mrdoob/three.js/blob/master/examples/js/ParametricGeometries.js
 // https://paulbourke.net/geometry/
 // https://github.com/mrdoob/three.js/tree/master/src/geometries
 
-// TODO: https://github.com/mrdoob/three.js/blob/master/src/geometries/TorusKnotGeometry.js
+// TODO: https://github.com/mrdoob/three.js/blob/master/examples/js/CurveExtras.js
+// TODO: https://github.com/mrdoob/three.js/blob/master/src/math/Color.js
+// TODO: extrude, lathe, spirograph, colors (See tubeGeometry in Three.JS)
+// TODO: https://github.com/mrdoob/three.js/blob/master/examples/js/geometries/TeapotBufferGeometry.js
+
 module heron:geometry.mesh:0.1
 {
     import heron:std.array:0.1;
     import heron:geometry.vector:0.1;
+
+    // Alternative constructors 
+
+    function mesh(vertexBuffer)
+        = mesh(vertexBuffer, vertexBuffer.indices);
+
+    function mesh(vertexBuffer, indexBuffer)
+        = mesh(vertexBuffer, indexBuffer, vertexBuffer.setAll(0.0));
+
+    function mesh(vertexBuffer, indexBuffer, uvBuffer)
+        = mesh(vertexBuffer, indexBuffer, uvBuffer, vertexBuffer.setAll(0.0));
 
     // Platonic solids 
 
@@ -160,22 +176,26 @@ module heron:geometry.mesh:0.1
     
     // Works for Float, Float2, Float3, and Float4
     function rescale(v, from, length)
-        = from + (v * length);
+        = from + (v * length);    
 
     // Given a function that converts UV coordinates to vectors, creates an 
     // array of points (uCount x vCount) starting at uStart,vStart (0,0) going to 
     // uLength, vLength (1,1)
-    function meshFromUV(f, uCount, vCount, uStart, vStart, uLength, vLength) {
-        var points = cartesianProduct(0..uCount, 0..vCount, 
-            (u, v) => f(
-                u / uCount.float * uLength + uStart, 
-                v / vCount.float * vLength + vStart));
-        var indices = quadStripToMeshIndices(points, vCount, true, true);
-        return mesh(points.toVertexBuffer, indices);
+    function meshFromUV(f, uCount, vCount, uStart, vStart, uLength, vLength, uJoin, vJoin) {
+        var uMax = uJoin ? uCount.float : (uCount - 1).float;
+        var vMax = vJoin ? vCount.float : (vCount - 1).float;
+        var uvs = cartesianProduct(0..uCount, 0..vCount, (u, v) 
+            => vector(u / uMax * uLength + uStart, v / vMax * vLength + vStart, 0));
+        var points = uvs.map(uvw => f(uvw.x, uvw.y));
+        var indices = quadStripToMeshIndices(points, vCount, uJoin, vJoin);
+        return mesh(points.toVertexBuffer, indices, uvs.toVertexBuffer);
     }
 
     function meshFromUV(f, segments)
-        = meshFromUV(f, segments, segments, 0, 0, 1, 1);
+        = meshFromUV(f, segments, true);
+
+    function meshFromUV(f, segments, join)
+        = meshFromUV(f, segments, segments, 0.0, 0.0, 1.0, 1.0, join, join);
 
     // Given UV coordinates on the surface of a sphere u=[0,1), v=[0,1) computes the 3D location.
     function spherePoint(u, v)
@@ -189,7 +209,7 @@ module heron:geometry.mesh:0.1
 
     // Given UV coordinates on the surface of a cylinder u=[0,1), v=[0,1) computes the 3D location.
     function cylinderPoint(u, v) 
-        = vector(sin(u*2*pi), v, cos(u*2*pi));
+        = vector(sin(u*2.0*pi), v, cos(u*2.0*pi));
 
     function cylinder(segments) 
         = meshFromUV(cylinderPoint, segments);
@@ -198,18 +218,18 @@ module heron:geometry.mesh:0.1
         = cylinder(32);
 
     function torus(r1, r2, segments)
-        = meshFromUV((u,v) => torusPoint(u, v, r1, r2), segments);
+        = meshFromUV((u, v) => torusPoint(u, v, r1, r2), segments);
 
     // Given UV coordinates u=[0,1), v=[0,1), and a major radius (donut) 
     // and a minor radius (tube) computes the 3D location of the torus
     function torusPoint(u, v, r1, r2)
         = vector(
-			(r1 + r2 * cos(v*2*pi)) * cos(u*2*pi),
-			(r1 + r2 * cos(v*2*pi)) * sin(u*2*pi),
-			r2 * sin(v*2*pi));
+			(r1 + r2 * cos(v*2.0*pi)) * cos(u*2.0*pi),
+			(r1 + r2 * cos(v*2.0*pi)) * sin(u*2.0*pi),
+			r2 * sin(v*2.0*pi));
 
     function torus()
-        = torus(10, 2, 32);
+        = torus(2, 0.5, 32);
 
     function vertexCount(mesh)
         = mesh.vertexBuffer.count / 3;
@@ -220,11 +240,29 @@ module heron:geometry.mesh:0.1
     function vertex(mesh, i)
         = mesh.vertexBuffer.take(i * 3, 3).vector;
 
+    function vertexColor(mesh, i)
+        = mesh.colorBuffer.take(i * 3, 3).vector;
+
+    function vertexUV(mesh, i)
+        = mesh.uvBuffer.take(i * 3, 3).vector;
+
+    function vertexColors(mesh)
+        = mesh.vertexCount.array(i => mesh.vertexColor(i));
+
+    function vertexUVs(mesh)
+        = mesh.vertexCount.array(i => mesh.vertexUV(i));
+
     function vertices(mesh) 
         = mesh.vertexCount.array(i => vertex(mesh, i));
 
     function setVertices(m, points)
-        = mesh(points.toVertexBuffer, m.indexBuffer);
+        = mesh(points.toVertexBuffer, m.indexBuffer, m.uvBuffer, m.colorBuffer);
+
+    function setVertexColors(m, colors)
+        = mesh(m.vertexBuffer, m.indexBuffer, m.uvBuffer, colors.toVertexBuffer);
+
+    function setVertexUVs(m, uvs)
+        = mesh(m.vertexBuffer, m.indexBuffer, uvs.toVertexBuffer, m.colorBuffer);
 
     function transform(m, f)
         = m.setVertices(m.vertices.map(f));
@@ -234,4 +272,44 @@ module heron:geometry.mesh:0.1
 
     function scale(m, amount)
         = m.transform(v => v * amount);
+
+    function kleinPoint(a, b) {
+        var u = a * pi * 2.0;
+        var v = b * pi * 2.0;
+        var x = 0.0, y = 0.0, z = 0.0;
+        if (u < pi) {
+			x = 3.0 * u.cos * ( 1.0 + u.sin ) + ( 2.0 * ( 1.0 - u.cos / 2.0 ) ) * u.cos * v.cos;
+			z = -8.0 * u.sin - 2.0 * ( 1.0 - u.cos / 2.0 ) * u.sin * v.cos;
+		} else {
+			x = 3.0 * u.cos * ( 1.0 + u.sin ) + ( 2.0 * ( 1.0 - u.cos / 2.0 ) ) * cos( v + pi );
+			z = -8.0 * u.sin;
+		}
+		y = -2.0 * ( 1.0 - u.cos / 2.0 ) * v.sin;
+        return vector(x, y, z);
+    }
+
+    function klein() 
+        = meshFromUV(kleinPoint, 32, false);
+
+    function planeXYPoint(u, v) = vector(u, v, 0);
+    function planeXZPoint(u, v) = vector(u, 0, v);
+    function planeYZPoint(u, v) = vector(0, u, v);
+    function planeYXPoint(u, v) = vector(v, u, 0);
+    function planeZXPoint(u, v) = vector(v, 0, u);
+    function planeZYPoint(u, v) = vector(0, v, u);
+
+    function plane()
+        = meshFromUV(planeXYPoint, 16, false);
+
+    function mobiusPoint(a, b) {
+        var u = a - 0.5;
+        var v = b * 2.0 * pi;    
+        return vector(
+            v.cos * (2 + u * cos( v / 2 )), 
+		    v.sin * (2 + u * cos( v / 2 )),
+		    u * sin( v / 2 ));
+    }
+
+    function mobius()
+        = meshFromUV(mobiusPoint, 20, false);
 }
