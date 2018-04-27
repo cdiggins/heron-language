@@ -182,8 +182,8 @@ function tests() {
     var main = pkg.findFunction("main");
     text += '\nreturn ' + heron_to_js_1.funcDefName(main) + ';\n';
     text += '})();\n';
-    fs.writeFileSync(path.join(heron_compiler_1.outputFolder, 'output.js'), text);
-    fs.writeFileSync(path.join(heron_compiler_1.outputFolder, 'demo', 'output.js'), text);
+    //fs.writeFileSync(path.join(outputFolder, 'output.js'), text);
+    fs.writeFileSync(path.join('demo', 'output.js'), text);
     //outputPackageStats(pkg);
     // find the main entry point and call into it. 
     var modName = 'heron:tests:0.1';

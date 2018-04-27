@@ -1,25 +1,18 @@
-// Generated using Heron on Thu Apr 26 2018 08:16:33 GMT-0400 (Eastern Daylight Time)
+// Generated using Heron on Thu Apr 26 2018 23:40:39 GMT-0400 (Eastern Daylight Time)
 var heronMain = (function () {
-function arrayFromJavaScript(xs) {
-  return xs;
-}
-
-function toMutable(xs) {
-  return xs;
-}
-
+function op_dot_dot(from, to) { const r=[]; for (let i=from; i < to; ++i) r.push(i); return r; }
 function int(x) { return Math.round(x); }
 function float(x) { return x; }
-function float2(u, v) { return [u, v]; }
-function float3(x, y, z) { return [x, y, z]; }
-function float4(x, y, z, w) { return [x, y, z, w]; }
-function u(v) { return v[0]; }
-function v(v) { return v[1]; }
-function x(v) { return v[0]; }
-function y(v) { return v[1]; }
-function z(v) { return v[2]; }
-function w(v) { return v[3]; }
-function xyz(v) { return v; }
+function float2(u, v) { return ({ u: u, v: v }); }
+function float3(x, y, z) { return ({ x: x, y: y, z: z }); }
+function float4(x, y, z, w) { return ({ x: x, y: y, z: z, w: w }); }
+function u(v) { return v.u; }
+function v(v) { return v.v; }
+function x(v) { return v.x; }
+function y(v) { return v.y; }
+function z(v) { return v.z; }
+function w(v) { return v.w; }
+function xyz(v) { return float3(v.x, v.y, v.z); }
 function abs(x) { return Math.abs(x); }
 function acos(x) { return Math.acos(x); }
 function asin(x) { return Math.asin(x); }
@@ -55,10 +48,11 @@ function op_not(x) { return !x; };
 function op_negate(x) { return -x; };
 function count(xs) { return xs.length; };
 function at(xs, i) { return xs[i]; };
-function array(count, at) { var r = []; for (var i=0; i < count; ++i) r.push(at(i)); return r; }
-function mutable(x) { return x; }
+function array(count, at) { const r=[]; for (let i=0; i < count; ++i) r.push(at(i)); return r; }
+function mutable(xs) { return xs; }
 function immutable(xs) { return xs; }
 function push(xs, x) { return (xs.push(x), xs); };
+function pushMany(xs, ys) { return (xs.push(...ys), xs); };
 function set(xs, i, x) { return (xs[i] = x, xs); };
 function print(x) { return console.log(x); }
 function assert(condition) { if (!condition) throw new Error("assertion failed"); };
@@ -173,7 +167,7 @@ const op_mod_930 = op_mod;
 function op_add_982(a, b)
 {
   return float2_62 // (Func Float Float Float2)
-  (op_add_842 // [!'@225.(Func '@225 '@225 '@225) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+  (op_add_842 // [!'@270.(Func '@270 '@270 '@270) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (x_134 // (Func Float3 Float)
       (a // Float2
       ) // Float
@@ -181,7 +175,7 @@ function op_add_982(a, b)
       (b // Float2
       ) // Float
     ) // Float
-    ,op_add_842 // [!'@226.(Func '@226 '@226 '@226) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    ,op_add_842 // [!'@271.(Func '@271 '@271 '@271) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (y_149 // (Func Float3 Float)
       (a // Float2
       ) // Float
@@ -196,7 +190,7 @@ function op_add_982(a, b)
 function op_sub_1034(a, b)
 {
   return float2_62 // (Func Float Float Float2)
-  (op_sub_864 // [!'@196.(Func '@196 '@196 '@196) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+  (op_sub_864 // [!'@365.(Func '@365 '@365 '@365) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (x_134 // (Func Float3 Float)
       (a // Float2
       ) // Float
@@ -204,7 +198,7 @@ function op_sub_1034(a, b)
       (b // Float2
       ) // Float
     ) // Float
-    ,op_sub_864 // [!'@197.(Func '@197 '@197 '@197) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    ,op_sub_864 // [!'@366.(Func '@366 '@366 '@366) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (y_149 // (Func Float3 Float)
       (a // Float2
       ) // Float
@@ -242,7 +236,7 @@ function op_mul_1086(a, b)
 function op_div_1138(a, b)
 {
   return float2_62 // (Func Float Float Float2)
-  (op_div_908 // [!'@262.(Func '@262 '@262 '@262) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+  (op_div_908 // [!'@237.(Func '@237 '@237 '@237) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (x_134 // (Func Float3 Float)
       (a // Float2
       ) // Float
@@ -250,7 +244,7 @@ function op_div_1138(a, b)
       (b // Float2
       ) // Float
     ) // Float
-    ,op_div_908 // [!'@263.(Func '@263 '@263 '@263) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    ,op_div_908 // [!'@238.(Func '@238 '@238 '@238) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (y_149 // (Func Float3 Float)
       (a // Float2
       ) // Float
@@ -265,7 +259,7 @@ function op_div_1138(a, b)
 function op_mod_1190(a, b)
 {
   return float2_62 // (Func Float Float Float2)
-  (op_mod_930 // [!'@644.(Func '@644 '@644 '@644) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+  (op_mod_930 // [!'@640.(Func '@640 '@640 '@640) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (x_134 // (Func Float3 Float)
       (a // Float2
       ) // Float
@@ -273,7 +267,7 @@ function op_mod_1190(a, b)
       (b // Float2
       ) // Float
     ) // Float
-    ,op_mod_930 // [!'@645.(Func '@645 '@645 '@645) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    ,op_mod_930 // [!'@641.(Func '@641 '@641 '@641) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (y_149 // (Func Float3 Float)
       (a // Float2
       ) // Float
@@ -288,7 +282,7 @@ function op_mod_1190(a, b)
 function op_add_1255(a, b)
 {
   return float3_119 // [(Func Float Float Float Float3) | (Func (Array Float) Float3)]
-  (op_add_842 // [!'@221.(Func '@221 '@221 '@221) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+  (op_add_842 // [!'@266.(Func '@266 '@266 '@266) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (x_134 // (Func Float3 Float)
       (a // Float3
       ) // Float
@@ -296,7 +290,7 @@ function op_add_1255(a, b)
       (b // Float3
       ) // Float
     ) // Float
-    ,op_add_842 // [!'@222.(Func '@222 '@222 '@222) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    ,op_add_842 // [!'@267.(Func '@267 '@267 '@267) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (y_149 // (Func Float3 Float)
       (a // Float3
       ) // Float
@@ -304,7 +298,7 @@ function op_add_1255(a, b)
       (b // Float3
       ) // Float
     ) // Float
-    ,op_add_842 // [!'@223.(Func '@223 '@223 '@223) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    ,op_add_842 // [!'@268.(Func '@268 '@268 '@268) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (z_164 // (Func Float3 Float)
       (a // Float3
       ) // Float
@@ -319,7 +313,7 @@ function op_add_1255(a, b)
 function op_sub_1320(a, b)
 {
   return float3_119 // [(Func Float Float Float Float3) | (Func (Array Float) Float3)]
-  (op_sub_864 // [!'@192.(Func '@192 '@192 '@192) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+  (op_sub_864 // [!'@361.(Func '@361 '@361 '@361) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (x_134 // (Func Float3 Float)
       (a // Float3
       ) // Float
@@ -327,7 +321,7 @@ function op_sub_1320(a, b)
       (b // Float3
       ) // Float
     ) // Float
-    ,op_sub_864 // [!'@193.(Func '@193 '@193 '@193) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    ,op_sub_864 // [!'@362.(Func '@362 '@362 '@362) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (y_149 // (Func Float3 Float)
       (a // Float3
       ) // Float
@@ -335,7 +329,7 @@ function op_sub_1320(a, b)
       (b // Float3
       ) // Float
     ) // Float
-    ,op_sub_864 // [!'@194.(Func '@194 '@194 '@194) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    ,op_sub_864 // [!'@363.(Func '@363 '@363 '@363) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (z_164 // (Func Float3 Float)
       (a // Float3
       ) // Float
@@ -381,7 +375,7 @@ function op_mul_1385(a, b)
 function op_div_1450(a, b)
 {
   return float3_119 // [(Func Float Float Float Float3) | (Func (Array Float) Float3)]
-  (op_div_908 // [!'@258.(Func '@258 '@258 '@258) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+  (op_div_908 // [!'@233.(Func '@233 '@233 '@233) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (x_134 // (Func Float3 Float)
       (a // Float3
       ) // Float
@@ -389,7 +383,7 @@ function op_div_1450(a, b)
       (b // Float3
       ) // Float
     ) // Float
-    ,op_div_908 // [!'@259.(Func '@259 '@259 '@259) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    ,op_div_908 // [!'@234.(Func '@234 '@234 '@234) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (y_149 // (Func Float3 Float)
       (a // Float3
       ) // Float
@@ -397,7 +391,7 @@ function op_div_1450(a, b)
       (b // Float3
       ) // Float
     ) // Float
-    ,op_div_908 // [!'@260.(Func '@260 '@260 '@260) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    ,op_div_908 // [!'@235.(Func '@235 '@235 '@235) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (z_164 // (Func Float3 Float)
       (a // Float3
       ) // Float
@@ -412,7 +406,7 @@ function op_div_1450(a, b)
 function op_mod_1515(a, b)
 {
   return float3_119 // [(Func Float Float Float Float3) | (Func (Array Float) Float3)]
-  (op_mod_930 // [!'@640.(Func '@640 '@640 '@640) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+  (op_mod_930 // [!'@636.(Func '@636 '@636 '@636) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (x_134 // (Func Float3 Float)
       (a // Float3
       ) // Float
@@ -420,7 +414,7 @@ function op_mod_1515(a, b)
       (b // Float3
       ) // Float
     ) // Float
-    ,op_mod_930 // [!'@641.(Func '@641 '@641 '@641) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    ,op_mod_930 // [!'@637.(Func '@637 '@637 '@637) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (y_149 // (Func Float3 Float)
       (a // Float3
       ) // Float
@@ -428,7 +422,7 @@ function op_mod_1515(a, b)
       (b // Float3
       ) // Float
     ) // Float
-    ,op_mod_930 // [!'@642.(Func '@642 '@642 '@642) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    ,op_mod_930 // [!'@638.(Func '@638 '@638 '@638) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (z_164 // (Func Float3 Float)
       (a // Float3
       ) // Float
@@ -459,96 +453,64 @@ const array_1691 = array;
 const count_1711 = count;
 // (Func (Array T0) Int T0)
 const at_1737 = at;
+// (Func Int Int (Array Int))
+const op_dot_dot_1762 = op_dot_dot;
 // (Func (Array T0) (ArrayBuilder T0))
-const mutable_1760 = mutable;
+const mutable_1785 = mutable;
 // (Func (ArrayBuilder T0) T0 (ArrayBuilder T0))
-const push_1789 = push;
+const push_1814 = push;
+// (Func (ArrayBuilder T0) (Array T0) (ArrayBuilder T0))
+const pushMany_1846 = pushMany;
 // (Func (ArrayBuilder T0) Int T0 (ArrayBuilder T0))
-const set_1824 = set;
+const set_1881 = set;
 // (Func (ArrayBuilder T0) (Array T0))
-const immutable_1847 = immutable;
+const immutable_1904 = immutable;
 // (Func Float3 (Array Float))
-function array_1875(v)
+function array_1932(v)
 {
-  return arrayFromJavaScript([x_134 // (Func Float3 Float)
-    (v // Float3
-    ) // Float
-    ,y_149 // (Func Float3 Float)
-    (v // Float3
-    ) // Float
-    ,z_164 // (Func Float3 Float)
-    (v // Float3
-    ) // Float
-  ]) // (Array Float)
+  return [x_134 // (Func Float3 Float)
+  (v // Float3
+  ) // Float
+  ,y_149 // (Func Float3 Float)
+  (v // Float3
+  ) // Float
+  ,z_164 // (Func Float3 Float)
+  (v // Float3
+  ) // Float
+  ] // (Array Float)
   ;
 }
 // (Func (Array Float) Float3)
-function float3_1906(xs)
+function float3_1963(xs)
 {
   return float3_119 // [(Func Float Float Float Float3) | !'@23!'@24.(Func '@23 '@24)]
-  (op_obr_cbr_2073 // (Func (Array Float) Int Float)
+  (op_obr_cbr_2029 // (Func (Array Float) Int Float)
     (xs // (Array Float)
       ,0 // Int
     ) // Float
-    ,op_obr_cbr_2073 // (Func (Array Float) Int Float)
+    ,op_obr_cbr_2029 // (Func (Array Float) Int Float)
     (xs // (Array Float)
       ,1 // Int
     ) // Float
-    ,op_obr_cbr_2073 // (Func (Array Float) Int Float)
+    ,op_obr_cbr_2029 // (Func (Array Float) Int Float)
     (xs // (Array Float)
       ,2 // Int
     ) // Float
   ) // Float3
   ;
 }
-// (Func (ArrayBuilder T0) (Array T0) (ArrayBuilder T0))
-function pushMany_1959(xs, ys)
-{
-  for (let i0=0; i0 < ys // !'@658.(Array '@658)
-  .length; ++i0)
-  {
-    const y = ys // !'@658.(Array '@658)
-    [i0];
-    {
-      xs = push_1789 // !'@658.(Func (ArrayBuilder '@658) '@658 (ArrayBuilder '@658))
-      (xs // !'@658.(ArrayBuilder '@658)
-        ,y // '@658
-      ) // !'@658.(ArrayBuilder '@658)
-       // !'@658.(ArrayBuilder '@658)
-      ;
-    }
-  }
-  return xs // !'@658.(ArrayBuilder '@658)
-  ;
-}
 // (Func (Array T0) (Array T0))
-function reify_1990(xs)
+function reify_1994(xs)
 {
-  return immutable_1847 // !'@1434.(Func (ArrayBuilder '@1434) (Array '@1434))
-  (mutable_1760 // !'@1434.(Func (Array '@1434) (ArrayBuilder '@1434))
-    (xs // !'@1434.(Array '@1434)
-    ) // !'@1434.(ArrayBuilder '@1434)
-  ) // !'@1434.(Array '@1434)
-  ;
-}
-// (Func Int Int (Array Int))
-function op_dot_dot_2038(from, upto)
-{
-  return array_1691 // [!'@229.(Func Int (Func Int '@229) (Array '@229)) | (Func Float3 (Array Float))]
-  (op_sub_754 // [!'@227.(Func '@227 '@227 '@227) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-    (upto // Int
-      ,from // Int
-    ) // Int
-    ,(i) => op_add_732 // [!'@228.(Func '@228 '@228 '@228) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-    (i // Int
-      ,from // Int
-    ) // Int
-     // (Func Int Int)
-  ) // (Array Int)
+  return immutable_1904 // !'@1470.(Func (ArrayBuilder '@1470) (Array '@1470))
+  (mutable_1785 // !'@1470.(Func (Array '@1470) (ArrayBuilder '@1470))
+    (xs // !'@1470.(Array '@1470)
+    ) // !'@1470.(ArrayBuilder '@1470)
+  ) // !'@1470.(Array '@1470)
   ;
 }
 // (Func (Array T0) Int T0)
-function op_obr_cbr_2073(xs, i)
+function op_obr_cbr_2029(xs, i)
 {
   return at_1737 // !'@11.(Func !'@11.(Array '@11) Int '@11)
   (xs // !'@11.(Array '@11)
@@ -557,19 +519,19 @@ function op_obr_cbr_2073(xs, i)
   ;
 }
 // (Func T0 T1)
-const print_2094 = print;
+const print_2050 = print;
 // (Func Bool T0)
-const assert_2106 = assert;
-// (Func (Array Float) (Array Int) (Array Float) (Array Float) Mesh)
-const mesh_2151 = mesh;
-// (Func Mesh (Array Float))
-const vertexBuffer_2169 = vertexBuffer;
+const assert_2062 = assert;
+// (Func (Array Float3) (Array Int) (Array Float3) (Array Float3) Mesh)
+const mesh_2107 = mesh;
+// (Func Mesh (Array Float3))
+const vertexBuffer_2125 = vertexBuffer;
 // (Func Mesh (Array Int))
-const indexBuffer_2187 = indexBuffer;
-// (Func Mesh (Array Float))
-const uvBuffer_2205 = uvBuffer;
-// (Func Mesh (Array Float))
-const colorBuffer_2223 = colorBuffer;
+const indexBuffer_2143 = indexBuffer;
+// (Func Mesh (Array Float3))
+const uvBuffer_2161 = uvBuffer;
+// (Func Mesh (Array Float3))
+const colorBuffer_2179 = colorBuffer;
 // Module heron:geometry.vector:0.1
 // file input\geometry-vector3.heron
 // Float3
@@ -631,15 +593,15 @@ function vector_120(x)
 function vector_151(xs)
 {
   return vector_98 // [(Func Float Float Float Float3) | !'@85.(Func Float '@85) | !'@86!'@87.(Func '@86 '@87)]
-  (op_obr_cbr_2073 // (Func (Array Float) Int Float)
+  (op_obr_cbr_2029 // (Func (Array Float) Int Float)
     (xs // (Array Float)
       ,0 // Int
     ) // Float
-    ,op_obr_cbr_2073 // (Func (Array Float) Int Float)
+    ,op_obr_cbr_2029 // (Func (Array Float) Int Float)
     (xs // (Array Float)
       ,1 // Int
     ) // Float
-    ,op_obr_cbr_2073 // (Func (Array Float) Int Float)
+    ,op_obr_cbr_2029 // (Func (Array Float) Int Float)
     (xs // (Array Float)
       ,2 // Int
     ) // Float
@@ -649,23 +611,23 @@ function vector_151(xs)
 // (Func Float3 (Array Float))
 function array_176(v)
 {
-  return arrayFromJavaScript([x_134 // (Func Float3 Float)
-    (v // Float3
-    ) // Float
-    ,y_149 // (Func Float3 Float)
-    (v // Float3
-    ) // Float
-    ,z_164 // (Func Float3 Float)
-    (v // Float3
-    ) // Float
-  ]) // (Array Float)
+  return [x_134 // (Func Float3 Float)
+  (v // Float3
+  ) // Float
+  ,y_149 // (Func Float3 Float)
+  (v // Float3
+  ) // Float
+  ,z_164 // (Func Float3 Float)
+  (v // Float3
+  ) // Float
+  ] // (Array Float)
   ;
 }
 // (Func Float3 Float)
 function sumComponents_206(v)
 {
-  return op_add_842 // [!'@803.(Func '@803 '@803 '@803) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-  (op_add_842 // [!'@802.(Func '@802 '@802 '@802) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+  return op_add_842 // [!'@789.(Func '@789 '@789 '@789) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+  (op_add_842 // [!'@788.(Func '@788 '@788 '@788) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (x_134 // (Func Float3 Float)
       (v // Float3
       ) // Float
@@ -683,7 +645,7 @@ function sumComponents_206(v)
 function dot_229(a, b)
 {
   return sumComponents_206 // (Func Float3 Float)
-  (op_mul_1385 // [!'@805.(Func '@805 '@805 '@805) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+  (op_mul_1385 // [!'@791.(Func '@791 '@791 '@791) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (a // Float3
       ,b // Float3
     ) // Float3
@@ -713,7 +675,7 @@ function length2_263(v)
 function distance_286(a, b)
 {
   return length_247 // (Func Float3 Float)
-  (op_sub_1320 // [!'@807.(Func '@807 '@807 '@807) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+  (op_sub_1320 // [!'@793.(Func '@793 '@793 '@793) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (a // Float3
       ,b // Float3
     ) // Float3
@@ -724,7 +686,7 @@ function distance_286(a, b)
 function distance2_309(a, b)
 {
   return length2_263 // (Func Float3 Float)
-  (op_sub_1320 // [!'@812.(Func '@812 '@812 '@812) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+  (op_sub_1320 // [!'@798.(Func '@798 '@798 '@798) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (a // Float3
       ,b // Float3
     ) // Float3
@@ -734,7 +696,7 @@ function distance2_309(a, b)
 // (Func Float3 Float)
 function normal_328(v)
 {
-  return op_div_590 // [!'@1345.(Func '@1345 '@1345 '@1345) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+  return op_div_590 // [!'@1381.(Func '@1381 '@1381 '@1381) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
   (v // Float3
     ,length_247 // (Func Float3 Float)
     (v // Float3
@@ -746,8 +708,8 @@ function normal_328(v)
 function cross_431(a, b)
 {
   return vector_98 // [(Func Float Float Float Float3) | (Func Float Float3) | (Func (Array Float) Float3)]
-  (op_sub_864 // [!'@545.(Func '@545 '@545 '@545) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-    (op_mul_886 // [!'@543.(Func '@543 '@543 '@543) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+  (op_sub_864 // [!'@544.(Func '@544 '@544 '@544) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    (op_mul_886 // [!'@542.(Func '@542 '@542 '@542) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
       (y_149 // (Func Float3 Float)
         (a // Float3
         ) // Float
@@ -755,7 +717,7 @@ function cross_431(a, b)
         (b // Float3
         ) // Float
       ) // Float
-      ,op_mul_886 // [!'@544.(Func '@544 '@544 '@544) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+      ,op_mul_886 // [!'@543.(Func '@543 '@543 '@543) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
       (z_164 // (Func Float3 Float)
         (a // Float3
         ) // Float
@@ -764,8 +726,8 @@ function cross_431(a, b)
         ) // Float
       ) // Float
     ) // Float
-    ,op_sub_864 // [!'@548.(Func '@548 '@548 '@548) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-    (op_mul_886 // [!'@546.(Func '@546 '@546 '@546) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    ,op_sub_864 // [!'@547.(Func '@547 '@547 '@547) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    (op_mul_886 // [!'@545.(Func '@545 '@545 '@545) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
       (z_164 // (Func Float3 Float)
         (a // Float3
         ) // Float
@@ -773,7 +735,7 @@ function cross_431(a, b)
         (b // Float3
         ) // Float
       ) // Float
-      ,op_mul_886 // [!'@547.(Func '@547 '@547 '@547) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+      ,op_mul_886 // [!'@546.(Func '@546 '@546 '@546) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
       (x_134 // (Func Float3 Float)
         (a // Float3
         ) // Float
@@ -782,8 +744,8 @@ function cross_431(a, b)
         ) // Float
       ) // Float
     ) // Float
-    ,op_sub_864 // [!'@551.(Func '@551 '@551 '@551) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-    (op_mul_886 // [!'@549.(Func '@549 '@549 '@549) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    ,op_sub_864 // [!'@550.(Func '@550 '@550 '@550) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    (op_mul_886 // [!'@548.(Func '@548 '@548 '@548) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
       (x_134 // (Func Float3 Float)
         (a // Float3
         ) // Float
@@ -791,7 +753,7 @@ function cross_431(a, b)
         (b // Float3
         ) // Float
       ) // Float
-      ,op_mul_886 // [!'@550.(Func '@550 '@550 '@550) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+      ,op_mul_886 // [!'@549.(Func '@549 '@549 '@549) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
       (y_149 // (Func Float3 Float)
         (a // Float3
         ) // Float
@@ -806,10 +768,10 @@ function cross_431(a, b)
 // (Func Float3 Float3 Float)
 function reflect_466(v, n)
 {
-  return op_sub_542 // [!'@1433.(Func '@1433 '@1433 '@1433) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+  return op_sub_542 // [!'@1469.(Func '@1469 '@1469 '@1469) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
   (v // Float3
-    ,op_mul_886 // [!'@1432.(Func '@1432 '@1432 '@1432) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-    (op_mul_566 // [!'@1431.(Func '@1431 '@1431 '@1431) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    ,op_mul_886 // [!'@1468.(Func '@1468 '@1468 '@1468) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    (op_mul_566 // [!'@1467.(Func '@1467 '@1467 '@1467) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
       (n // Float3
         ,dot_229 // (Func Float3 Float3 Float)
         (v // Float3
@@ -824,15 +786,15 @@ function reflect_466(v, n)
 // (Func Float Float Float Float)
 function lerp_503(a, b, x)
 {
-  return op_add_842 // [!'@1114.(Func '@1114 '@1114 '@1114) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-  (op_mul_886 // [!'@1112.(Func '@1112 '@1112 '@1112) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+  return op_add_842 // [!'@1147.(Func '@1147 '@1147 '@1147) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+  (op_mul_886 // [!'@1145.(Func '@1145 '@1145 '@1145) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (a // Float
-      ,op_sub_864 // [!'@1111.(Func '@1111 '@1111 '@1111) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+      ,op_sub_864 // [!'@1144.(Func '@1144 '@1144 '@1144) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
       (1 // Float
         ,x // Float
       ) // Float
     ) // Float
-    ,op_mul_886 // [!'@1113.(Func '@1113 '@1113 '@1113) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    ,op_mul_886 // [!'@1146.(Func '@1146 '@1146 '@1146) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (b // Float
       ,x // Float
     ) // Float
@@ -866,118 +828,118 @@ function negate_540(v)
 // (Func T0 (Array T0))
 function unit_16(x)
 {
-  return arrayFromJavaScript([x // '@1577
-  ]) // !'@1577.(Array '@1577)
+  return [x // '@1619
+  ] // !'@1619.(Array '@1619)
   ;
 }
 // (Func (Array T0) (Func T0 T1) (Array T1))
 function map_53(xs, f)
 {
-  return array_1691 // [!'@142.(Func Int (Func Int '@142) (Array '@142)) | (Func Float3 (Array Float))]
-  (count_1711 // (Func !'@137.(Array '@137) Int)
-    (xs // !'@137.(Array '@137)
+  return array_1691 // [!'@156.(Func Int (Func Int '@156) (Array '@156)) | (Func Float3 (Array Float))]
+  (count_1711 // (Func !'@151.(Array '@151) Int)
+    (xs // !'@151.(Array '@151)
     ) // Int
-    ,(i) => f // !'@137!'@141.(Func '@137 '@141)
-    (op_obr_cbr_2073 // !'@137.(Func !'@137.(Array '@137) Int '@137)
-      (xs // !'@137.(Array '@137)
+    ,(i) => f // !'@151!'@155.(Func '@151 '@155)
+    (op_obr_cbr_2029 // !'@151.(Func !'@151.(Array '@151) Int '@151)
+      (xs // !'@151.(Array '@151)
         ,i // Int
-      ) // '@137
-    ) // '@141
-     // !'@141.(Func Int '@141)
-  ) // !'@141.(Array '@141)
+      ) // '@151
+    ) // '@155
+     // !'@155.(Func Int '@155)
+  ) // !'@155.(Array '@155)
   ;
 }
 // (Func (Array T0) (Func T0 Int T1) (Array T1))
 function mapWithIndex_92(xs, f)
 {
-  return array_1691 // [!'@1332.(Func Int (Func Int '@1332) (Array '@1332)) | (Func Float3 (Array Float))]
-  (count_1711 // (Func !'@1327.(Array '@1327) Int)
-    (xs // !'@1327.(Array '@1327)
+  return array_1691 // [!'@1365.(Func Int (Func Int '@1365) (Array '@1365)) | (Func Float3 (Array Float))]
+  (count_1711 // (Func !'@1360.(Array '@1360) Int)
+    (xs // !'@1360.(Array '@1360)
     ) // Int
-    ,(i) => f // !'@1327!'@1331.(Func '@1327 Int '@1331)
-    (op_obr_cbr_2073 // !'@1327.(Func !'@1327.(Array '@1327) Int '@1327)
-      (xs // !'@1327.(Array '@1327)
+    ,(i) => f // !'@1360!'@1364.(Func '@1360 Int '@1364)
+    (op_obr_cbr_2029 // !'@1360.(Func !'@1360.(Array '@1360) Int '@1360)
+      (xs // !'@1360.(Array '@1360)
         ,i // Int
-      ) // '@1327
+      ) // '@1360
       ,i // Int
-    ) // '@1331
-     // !'@1331.(Func Int '@1331)
-  ) // !'@1331.(Array '@1331)
+    ) // '@1364
+     // !'@1364.(Func Int '@1364)
+  ) // !'@1364.(Array '@1364)
   ;
 }
 // (Func (Array T0) (Func Int T1) (Array T1))
 function mapIndex_115(xs, f)
 {
-  return array_1691 // [!'@1320.(Func Int (Func Int '@1320) (Array '@1320)) | (Func Float3 (Array Float))]
-  (count_1711 // (Func !'@1319.(Array '@1319) Int)
-    (xs // !'@1319.(Array '@1319)
+  return array_1691 // [!'@1353.(Func Int (Func Int '@1353) (Array '@1353)) | (Func Float3 (Array Float))]
+  (count_1711 // (Func !'@1352.(Array '@1352) Int)
+    (xs // !'@1352.(Array '@1352)
     ) // Int
-    ,f // !'@1318.(Func Int '@1318)
-  ) // !'@1318.(Array '@1318)
+    ,f // !'@1351.(Func Int '@1351)
+  ) // !'@1351.(Array '@1351)
   ;
 }
 // (Func T0 T0 T0)
 function min_140(x, y)
 {
-  return op_lt_eq_710 // !'@1164.(Func '@1164 '@1164 Bool)
-  (x // '@1164
-    ,y // '@1164
+  return op_lt_eq_710 // !'@1197.(Func '@1197 '@1197 Bool)
+  (x // '@1197
+    ,y // '@1197
   ) // Bool
-   ? x // '@1164
-   : y // '@1164
-   // '@1164
+   ? x // '@1197
+   : y // '@1197
+   // '@1197
   ;
 }
 // (Func T0 T0 T0)
 function max_165(x, y)
 {
-  return op_gt_eq_662 // !'@1189.(Func '@1189 '@1189 Bool)
-  (x // '@1189
-    ,y // '@1189
+  return op_gt_eq_662 // !'@1222.(Func '@1222 '@1222 Bool)
+  (x // '@1222
+    ,y // '@1222
   ) // Bool
-   ? x // '@1189
-   : y // '@1189
-   // '@1189
+   ? x // '@1222
+   : y // '@1222
+   // '@1222
   ;
 }
 // (Func (Array T0) (Array T0) (Array T0))
 function shorter_196(xs, ys)
 {
   return op_lt_eq_710 // (Func Int Int Bool)
-  (count_1711 // (Func !'@1487.(Array '@1487) Int)
-    (xs // !'@1487.(Array '@1487)
+  (count_1711 // (Func !'@1529.(Array '@1529) Int)
+    (xs // !'@1529.(Array '@1529)
     ) // Int
-    ,count_1711 // (Func !'@1487.(Array '@1487) Int)
-    (ys // !'@1487.(Array '@1487)
+    ,count_1711 // (Func !'@1529.(Array '@1529) Int)
+    (ys // !'@1529.(Array '@1529)
     ) // Int
   ) // Bool
-   ? xs // !'@1487.(Array '@1487)
-   : ys // !'@1487.(Array '@1487)
-   // !'@1487.(Array '@1487)
+   ? xs // !'@1529.(Array '@1529)
+   : ys // !'@1529.(Array '@1529)
+   // !'@1529.(Array '@1529)
   ;
 }
 // (Func (Array T0) (Array T0) (Array T0))
 function longer_227(xs, ys)
 {
   return op_gt_eq_662 // (Func Int Int Bool)
-  (count_1711 // (Func !'@1121.(Array '@1121) Int)
-    (xs // !'@1121.(Array '@1121)
+  (count_1711 // (Func !'@1154.(Array '@1154) Int)
+    (xs // !'@1154.(Array '@1154)
     ) // Int
-    ,count_1711 // (Func !'@1121.(Array '@1121) Int)
-    (ys // !'@1121.(Array '@1121)
+    ,count_1711 // (Func !'@1154.(Array '@1154) Int)
+    (ys // !'@1154.(Array '@1154)
     ) // Int
   ) // Bool
-   ? xs // !'@1121.(Array '@1121)
-   : ys // !'@1121.(Array '@1121)
-   // !'@1121.(Array '@1121)
+   ? xs // !'@1154.(Array '@1154)
+   : ys // !'@1154.(Array '@1154)
+   // !'@1154.(Array '@1154)
   ;
 }
 // (Func (Array T0) Bool)
 function empty_245(xs)
 {
   return op_eq_eq_1563 // (Func Int Int Bool)
-  (count_1711 // (Func !'@831.(Array '@831) Int)
-    (xs // !'@831.(Array '@831)
+  (count_1711 // (Func !'@852.(Array '@852) Int)
+    (xs // !'@852.(Array '@852)
     ) // Int
     ,0 // Int
   ) // Bool
@@ -986,23 +948,23 @@ function empty_245(xs)
 // (Func (Array T0) (Array Int) (Array T0))
 function selectByIndex_274(xs, indices)
 {
-  return map_53 // !'@1475.(Func (Array Int) (Func Int '@1475) (Array '@1475))
+  return map_53 // !'@1511.(Func (Array Int) (Func Int '@1511) (Array '@1511))
   (indices // (Array Int)
-    ,(i) => at_1737 // !'@1475.(Func !'@1475.(Array '@1475) Int '@1475)
-    (xs // !'@1475.(Array '@1475)
+    ,(i) => at_1737 // !'@1511.(Func !'@1511.(Array '@1511) Int '@1511)
+    (xs // !'@1511.(Array '@1511)
       ,i // Int
-    ) // '@1475
-     // !'@1475.(Func Int '@1475)
-  ) // !'@1475.(Array '@1475)
+    ) // '@1511
+     // !'@1511.(Func Int '@1511)
+  ) // !'@1511.(Array '@1511)
   ;
 }
 // (Func (Array T0) (Array Int))
 function indices_292(xs)
 {
-  return op_dot_dot_2038 // (Func Int Int (Array Int))
+  return op_dot_dot_1762 // (Func Int Int (Array Int))
   (0 // Int
-    ,count_1711 // (Func !'@230.(Array '@230) Int)
-    (xs // !'@230.(Array '@230)
+    ,count_1711 // (Func !'@198.(Array '@198) Int)
+    (xs // !'@198.(Array '@198)
     ) // Int
   ) // (Array Int)
   ;
@@ -1011,67 +973,67 @@ function indices_292(xs)
 function zip_372(xs, ys, f)
 {
   return op_lt_eq_710 // (Func Int Int Bool)
-  (count_1711 // (Func !'@1618.(Array '@1618) Int)
-    (xs // !'@1618.(Array '@1618)
+  (count_1711 // (Func !'@1648.(Array '@1648) Int)
+    (xs // !'@1648.(Array '@1648)
     ) // Int
-    ,count_1711 // (Func !'@1611.(Array '@1611) Int)
-    (ys // !'@1611.(Array '@1611)
+    ,count_1711 // (Func !'@1641.(Array '@1641) Int)
+    (ys // !'@1641.(Array '@1641)
     ) // Int
   ) // Bool
-   ? mapWithIndex_92 // !'@1618!'@1615.(Func (Array '@1618) (Func '@1618 Int '@1615) (Array '@1615))
-  (xs // !'@1618.(Array '@1618)
-    ,(x, i) => f // !'@1618!'@1611!'@1615.(Func '@1618 '@1611 '@1615)
-    (x // '@1618
-      ,op_obr_cbr_2073 // !'@1611.(Func !'@1611.(Array '@1611) Int '@1611)
-      (ys // !'@1611.(Array '@1611)
+   ? mapWithIndex_92 // !'@1648!'@1645.(Func (Array '@1648) (Func '@1648 Int '@1645) (Array '@1645))
+  (xs // !'@1648.(Array '@1648)
+    ,(x, i) => f // !'@1648!'@1641!'@1645.(Func '@1648 '@1641 '@1645)
+    (x // '@1648
+      ,op_obr_cbr_2029 // !'@1641.(Func !'@1641.(Array '@1641) Int '@1641)
+      (ys // !'@1641.(Array '@1641)
         ,i // Int
-      ) // '@1611
-    ) // '@1615
-     // !'@1618!'@1615.(Func '@1618 Int '@1615)
-  ) // !'@1615.(Array '@1615)
-   : mapWithIndex_92 // !'@1611!'@1615.(Func (Array '@1611) (Func '@1611 Int '@1615) (Array '@1615))
-  (ys // !'@1611.(Array '@1611)
-    ,(y, i) => f // !'@1618!'@1611!'@1615.(Func '@1618 '@1611 '@1615)
-    (op_obr_cbr_2073 // !'@1618.(Func !'@1618.(Array '@1618) Int '@1618)
-      (xs // !'@1618.(Array '@1618)
+      ) // '@1641
+    ) // '@1645
+     // !'@1648!'@1645.(Func '@1648 Int '@1645)
+  ) // !'@1645.(Array '@1645)
+   : mapWithIndex_92 // !'@1641!'@1645.(Func (Array '@1641) (Func '@1641 Int '@1645) (Array '@1645))
+  (ys // !'@1641.(Array '@1641)
+    ,(y, i) => f // !'@1648!'@1641!'@1645.(Func '@1648 '@1641 '@1645)
+    (op_obr_cbr_2029 // !'@1648.(Func !'@1648.(Array '@1648) Int '@1648)
+      (xs // !'@1648.(Array '@1648)
         ,i // Int
-      ) // '@1618
-      ,y // '@1611
-    ) // '@1615
-     // !'@1611!'@1615.(Func '@1611 Int '@1615)
-  ) // !'@1615.(Array '@1615)
-   // !'@1615.(Array '@1615)
+      ) // '@1648
+      ,y // '@1641
+    ) // '@1645
+     // !'@1641!'@1645.(Func '@1641 Int '@1645)
+  ) // !'@1645.(Array '@1645)
+   // !'@1645.(Array '@1645)
   ;
 }
 // (Func (Array T0) (Func T0 Bool) Bool)
 function all_408(xs, p)
 {
-  return reduce_1918 // !'@326.(Func (Array '@326) Bool (Func Bool '@326 Bool) Bool)
-  (xs // !'@326.(Array '@326)
+  return reduce_1918 // !'@385.(Func (Array '@385) Bool (Func Bool '@385 Bool) Bool)
+  (xs // !'@385.(Array '@385)
     ,true // Bool
     ,(prev, x) => op_amp_amp_1585 // (Func Bool Bool Bool)
     (prev // Bool
-      ,p // !'@326.(Func '@326 Bool)
-      (x // '@326
+      ,p // !'@385.(Func '@385 Bool)
+      (x // '@385
       ) // Bool
     ) // Bool
-     // !'@326.(Func Bool '@326 Bool)
+     // !'@385.(Func Bool '@385 Bool)
   ) // Bool
   ;
 }
 // (Func (Array T0) (Func T0 Bool) Bool)
 function any_444(xs, p)
 {
-  return reduce_1918 // !'@339.(Func (Array '@339) Bool (Func Bool '@339 Bool) Bool)
-  (xs // !'@339.(Array '@339)
+  return reduce_1918 // !'@398.(Func (Array '@398) Bool (Func Bool '@398 Bool) Bool)
+  (xs // !'@398.(Array '@398)
     ,false // Bool
     ,(prev, x) => op_bar_bar_1607 // (Func Bool Bool Bool)
     (prev // Bool
-      ,p // !'@339.(Func '@339 Bool)
-      (x // '@339
+      ,p // !'@398.(Func '@398 Bool)
+      (x // '@398
       ) // Bool
     ) // Bool
-     // !'@339.(Func Bool '@339 Bool)
+     // !'@398.(Func Bool '@398 Bool)
   ) // Bool
   ;
 }
@@ -1079,11 +1041,11 @@ function any_444(xs, p)
 function eq_469(xs, ys)
 {
   return op_eq_eq_1563 // (Func Int Int Bool)
-  (count_1711 // (Func !'@837.(Array '@837) Int)
-    (xs // !'@837.(Array '@837)
+  (count_1711 // (Func !'@858.(Array '@858) Int)
+    (xs // !'@858.(Array '@858)
     ) // Int
-    ,count_1711 // (Func !'@838.(Array '@838) Int)
-    (ys // !'@838.(Array '@838)
+    ,count_1711 // (Func !'@859.(Array '@859) Int)
+    (ys // !'@859.(Array '@859)
     ) // Int
   ) // Bool
   ;
@@ -1091,409 +1053,409 @@ function eq_469(xs, ys)
 // (Func (Array T0) (Func T0 Bool) (Array T0))
 function filter_537(xs, p)
 {
-  let ys = mutable_1760 // !'@851.(Func (Array '@851) (ArrayBuilder '@851))
-  (xs // !'@851.(Array '@851)
-  ) // !'@851.(ArrayBuilder '@851)
+  let ys = mutable_1785 // !'@872.(Func (Array '@872) (ArrayBuilder '@872))
+  (xs // !'@872.(Array '@872)
+  ) // !'@872.(ArrayBuilder '@872)
   ;
   let i = 0 // Int
   ;
-  for (let i1=0; i1 < xs // !'@851.(Array '@851)
-  .length; ++i1)
+  for (let i0=0; i0 < xs // !'@872.(Array '@872)
+  .length; ++i0)
   {
-    const x = xs // !'@851.(Array '@851)
-    [i1];
+    const x = xs // !'@872.(Array '@872)
+    [i0];
     {
-      if (p // !'@851.(Func '@851 Bool)
-        (x // '@851
+      if (p // !'@872.(Func '@872 Bool)
+        (x // '@872
         ) // Bool
       )
       {
-        ys = set_1824 // !'@851.(Func (ArrayBuilder '@851) Int '@851 (ArrayBuilder '@851))
-        (ys // !'@851.(ArrayBuilder '@851)
+        ys = set_1881 // !'@872.(Func (ArrayBuilder '@872) Int '@872 (ArrayBuilder '@872))
+        (ys // !'@872.(ArrayBuilder '@872)
           ,i++ // Int
-          ,x // '@851
-        ) // !'@851.(ArrayBuilder '@851)
-         // !'@851.(ArrayBuilder '@851)
+          ,x // '@872
+        ) // !'@872.(ArrayBuilder '@872)
+         // !'@872.(ArrayBuilder '@872)
         ;
       }
       else
       { }
     }
   }
-  return take_967 // [!'@863.(Func (Array '@863) Int (Array '@863)) | !'@864.(Func (Array '@864) Int Int (Array '@864))]
-  (immutable_1847 // !'@851.(Func (ArrayBuilder '@851) (Array '@851))
-    (ys // !'@851.(ArrayBuilder '@851)
-    ) // !'@851.(Array '@851)
+  return take_967 // [!'@884.(Func (Array '@884) Int (Array '@884)) | !'@885.(Func (Array '@885) Int Int (Array '@885))]
+  (immutable_1904 // !'@872.(Func (ArrayBuilder '@872) (Array '@872))
+    (ys // !'@872.(ArrayBuilder '@872)
+    ) // !'@872.(Array '@872)
     ,i // Int
-  ) // !'@851.(Array '@851)
+  ) // !'@872.(Array '@872)
   ;
 }
 // (Func T0 Int (Array T0))
 function repeat_566(x, n)
 {
-  return map_53 // !'@1391.(Func (Array Int) (Func Int '@1391) (Array '@1391))
-  (op_dot_dot_2038 // (Func Int Int (Array Int))
+  return map_53 // !'@1427.(Func (Array Int) (Func Int '@1427) (Array '@1427))
+  (op_dot_dot_1762 // (Func Int Int (Array Int))
     (0 // Int
       ,n // Int
     ) // (Array Int)
-    ,(i) => x // '@1391
-     // !'@1391.(Func Int '@1391)
-  ) // !'@1391.(Array '@1391)
+    ,(i) => x // '@1427
+     // !'@1427.(Func Int '@1427)
+  ) // !'@1427.(Array '@1427)
   ;
 }
 // (Func (Array T0) (Func T0 T0 T0) (Array T0))
 function prefixScan_662(xs, op)
 {
-  if (empty_245 // (Func !'@1407.(Array '@1407) Bool)
-    (xs // !'@1407.(Array '@1407)
+  if (empty_245 // (Func !'@1443.(Array '@1443) Bool)
+    (xs // !'@1443.(Array '@1443)
     ) // Bool
   )
   {
-    return xs // !'@1407.(Array '@1407)
+    return xs // !'@1443.(Array '@1443)
     ;
   }
   else
   { }
-  let ys = mutable_1760 // !'@1407.(Func (Array '@1407) (ArrayBuilder '@1407))
-  (repeat_566 // !'@1407.(Func '@1407 Int (Array '@1407))
-    (op_obr_cbr_2073 // !'@1407.(Func !'@1407.(Array '@1407) Int '@1407)
-      (xs // !'@1407.(Array '@1407)
+  let ys = mutable_1785 // !'@1443.(Func (Array '@1443) (ArrayBuilder '@1443))
+  (repeat_566 // !'@1443.(Func '@1443 Int (Array '@1443))
+    (op_obr_cbr_2029 // !'@1443.(Func !'@1443.(Array '@1443) Int '@1443)
+      (xs // !'@1443.(Array '@1443)
         ,0 // Int
-      ) // '@1407
-      ,count_1711 // (Func !'@1407.(Array '@1407) Int)
-      (xs // !'@1407.(Array '@1407)
+      ) // '@1443
+      ,count_1711 // (Func !'@1443.(Array '@1443) Int)
+      (xs // !'@1443.(Array '@1443)
       ) // Int
-    ) // !'@1407.(Array '@1407)
-  ) // !'@1407.(ArrayBuilder '@1407)
+    ) // !'@1443.(Array '@1443)
+  ) // !'@1443.(ArrayBuilder '@1443)
   ;
-  for (let i2=0; i2 < op_dot_dot_2038 // (Func Int Int (Array Int))
+  for (let i1=0; i1 < op_dot_dot_1762 // (Func Int Int (Array Int))
     (1 // Int
-      ,count_1711 // (Func !'@1407.(Array '@1407) Int)
-      (ys // !'@1407.(ArrayBuilder '@1407)
+      ,count_1711 // (Func !'@1443.(Array '@1443) Int)
+      (ys // !'@1443.(ArrayBuilder '@1443)
       ) // Int
     ) // (Array Int)
-  .length; ++i2)
+  .length; ++i1)
   {
-    const i = op_dot_dot_2038 // (Func Int Int (Array Int))
+    const i = op_dot_dot_1762 // (Func Int Int (Array Int))
     (1 // Int
-      ,count_1711 // (Func !'@1407.(Array '@1407) Int)
-      (ys // !'@1407.(ArrayBuilder '@1407)
+      ,count_1711 // (Func !'@1443.(Array '@1443) Int)
+      (ys // !'@1443.(ArrayBuilder '@1443)
       ) // Int
     ) // (Array Int)
-    [i2];
+    [i1];
     {
-      ys = set_1824 // !'@1407.(Func (ArrayBuilder '@1407) Int '@1407 (ArrayBuilder '@1407))
-      (ys // !'@1407.(ArrayBuilder '@1407)
+      ys = set_1881 // !'@1443.(Func (ArrayBuilder '@1443) Int '@1443 (ArrayBuilder '@1443))
+      (ys // !'@1443.(ArrayBuilder '@1443)
         ,i // Int
-        ,op // !'@1407.(Func '@1407 '@1407 '@1407)
-        (op_obr_cbr_2073 // !'@1407.(Func !'@1407.(Array '@1407) Int '@1407)
-          (xs // !'@1407.(Array '@1407)
+        ,op // !'@1443.(Func '@1443 '@1443 '@1443)
+        (op_obr_cbr_2029 // !'@1443.(Func !'@1443.(Array '@1443) Int '@1443)
+          (xs // !'@1443.(Array '@1443)
             ,i // Int
-          ) // '@1407
-          ,op_obr_cbr_2073 // !'@1407.(Func !'@1407.(Array '@1407) Int '@1407)
-          (ys // !'@1407.(ArrayBuilder '@1407)
-            ,op_sub_754 // [!'@1409.(Func '@1409 '@1409 '@1409) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+          ) // '@1443
+          ,op_obr_cbr_2029 // !'@1443.(Func !'@1443.(Array '@1443) Int '@1443)
+          (ys // !'@1443.(ArrayBuilder '@1443)
+            ,op_sub_754 // [!'@1445.(Func '@1445 '@1445 '@1445) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
             (i // Int
               ,1 // Int
             ) // Int
-          ) // '@1407
-        ) // '@1407
-      ) // !'@1407.(ArrayBuilder '@1407)
-       // !'@1407.(ArrayBuilder '@1407)
+          ) // '@1443
+        ) // '@1443
+      ) // !'@1443.(ArrayBuilder '@1443)
+       // !'@1443.(ArrayBuilder '@1443)
       ;
     }
   }
-  return immutable_1847 // !'@1407.(Func (ArrayBuilder '@1407) (Array '@1407))
-  (ys // !'@1407.(ArrayBuilder '@1407)
-  ) // !'@1407.(Array '@1407)
+  return immutable_1904 // !'@1443.(Func (ArrayBuilder '@1443) (Array '@1443))
+  (ys // !'@1443.(ArrayBuilder '@1443)
+  ) // !'@1443.(Array '@1443)
   ;
 }
 // (Func (Array T0) (Array T0))
 function adjacentDifferences_720(xs)
 {
-  return map_53 // !'@298.(Func (Array Int) (Func Int '@298) (Array '@298))
-  (indices_292 // (Func !'@298.(Array '@298) (Array Int))
-    (xs // !'@298.(Array '@298)
+  return map_53 // !'@331.(Func (Array Int) (Func Int '@331) (Array '@331))
+  (indices_292 // (Func !'@331.(Array '@331) (Array Int))
+    (xs // !'@331.(Array '@331)
     ) // (Array Int)
     ,(i) => op_gt_638 // (Func Int Int Bool)
     (i // Int
       ,0 // Int
     ) // Bool
-     ? op_sub_542 // [!'@312.(Func '@312 '@312 '@312) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-    (op_obr_cbr_2073 // !'@298.(Func !'@298.(Array '@298) Int '@298)
-      (xs // !'@298.(Array '@298)
+     ? op_sub_542 // [!'@371.(Func '@371 '@371 '@371) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    (op_obr_cbr_2029 // !'@331.(Func !'@331.(Array '@331) Int '@331)
+      (xs // !'@331.(Array '@331)
         ,i // Int
-      ) // '@298
-      ,op_obr_cbr_2073 // !'@298.(Func !'@298.(Array '@298) Int '@298)
-      (xs // !'@298.(Array '@298)
-        ,op_sub_754 // [!'@311.(Func '@311 '@311 '@311) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+      ) // '@331
+      ,op_obr_cbr_2029 // !'@331.(Func !'@331.(Array '@331) Int '@331)
+      (xs // !'@331.(Array '@331)
+        ,op_sub_754 // [!'@370.(Func '@370 '@370 '@370) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
         (i // Int
           ,1 // Int
         ) // Int
-      ) // '@298
-    ) // '@298
-     : op_obr_cbr_2073 // !'@298.(Func !'@298.(Array '@298) Int '@298)
-    (xs // !'@298.(Array '@298)
+      ) // '@331
+    ) // '@331
+     : op_obr_cbr_2029 // !'@331.(Func !'@331.(Array '@331) Int '@331)
+    (xs // !'@331.(Array '@331)
       ,i // Int
-    ) // '@298
-     // '@298
-     // !'@298.(Func Int '@298)
-  ) // !'@298.(Array '@298)
+    ) // '@331
+     // '@331
+     // !'@331.(Func Int '@331)
+  ) // !'@331.(Array '@331)
   ;
 }
 // (Func (Array T0) Int Int (Array T0))
 function slice_758(xs, from, to)
 {
-  return map_53 // !'@480.(Func (Array Int) (Func Int '@480) (Array '@480))
-  (op_dot_dot_2038 // (Func Int Int (Array Int))
+  return map_53 // !'@813.(Func (Array Int) (Func Int '@813) (Array '@813))
+  (op_dot_dot_1762 // (Func Int Int (Array Int))
     (from // Int
       ,to // Int
     ) // (Array Int)
-    ,(i) => at_1737 // !'@480.(Func !'@480.(Array '@480) Int '@480)
-    (xs // !'@480.(Array '@480)
+    ,(i) => at_1737 // !'@813.(Func !'@813.(Array '@813) Int '@813)
+    (xs // !'@813.(Array '@813)
       ,i // Int
-    ) // '@480
-     // !'@480.(Func Int '@480)
-  ) // !'@480.(Array '@480)
+    ) // '@813
+     // !'@813.(Func Int '@813)
+  ) // !'@813.(Array '@813)
   ;
 }
 // (Func (Array T0) Int (Array T0))
 function stride_805(xs, n)
 {
-  return map_53 // !'@1546.(Func (Array Int) (Func Int '@1546) (Array '@1546))
-  (op_dot_dot_2038 // (Func Int Int (Array Int))
+  return map_53 // !'@1571.(Func (Array Int) (Func Int '@1571) (Array '@1571))
+  (op_dot_dot_1762 // (Func Int Int (Array Int))
     (0 // Int
-      ,op_div_798 // [!'@1551.(Func '@1551 '@1551 '@1551) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-      (count_1711 // (Func !'@1546.(Array '@1546) Int)
-        (xs // !'@1546.(Array '@1546)
+      ,op_div_798 // [!'@1576.(Func '@1576 '@1576 '@1576) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+      (count_1711 // (Func !'@1571.(Array '@1571) Int)
+        (xs // !'@1571.(Array '@1571)
         ) // Int
         ,n // Int
       ) // Int
     ) // (Array Int)
-    ,(i) => op_obr_cbr_2073 // !'@1546.(Func !'@1546.(Array '@1546) Int '@1546)
-    (xs // !'@1546.(Array '@1546)
-      ,op_mul_776 // [!'@1552.(Func '@1552 '@1552 '@1552) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    ,(i) => op_obr_cbr_2029 // !'@1571.(Func !'@1571.(Array '@1571) Int '@1571)
+    (xs // !'@1571.(Array '@1571)
+      ,op_mul_776 // [!'@1577.(Func '@1577 '@1577 '@1577) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
       (i // Int
         ,n // Int
       ) // Int
-    ) // '@1546
-     // !'@1546.(Func Int '@1546)
-  ) // !'@1546.(Array '@1546)
+    ) // '@1571
+     // !'@1571.(Func Int '@1571)
+  ) // !'@1571.(Array '@1571)
   ;
 }
 // (Func (Array T0) Int Int (Array T0))
 function stride_860(xs, from, n)
 {
-  return map_53 // !'@1530.(Func (Array Int) (Func Int '@1530) (Array '@1530))
-  (op_dot_dot_2038 // (Func Int Int (Array Int))
+  return map_53 // !'@1586.(Func (Array Int) (Func Int '@1586) (Array '@1586))
+  (op_dot_dot_1762 // (Func Int Int (Array Int))
     (0 // Int
-      ,op_div_798 // [!'@1536.(Func '@1536 '@1536 '@1536) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-      (count_1711 // (Func !'@1530.(Array '@1530) Int)
-        (xs // !'@1530.(Array '@1530)
+      ,op_div_798 // [!'@1592.(Func '@1592 '@1592 '@1592) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+      (count_1711 // (Func !'@1586.(Array '@1586) Int)
+        (xs // !'@1586.(Array '@1586)
         ) // Int
         ,n // Int
       ) // Int
     ) // (Array Int)
-    ,(i) => op_obr_cbr_2073 // !'@1530.(Func !'@1530.(Array '@1530) Int '@1530)
-    (xs // !'@1530.(Array '@1530)
-      ,op_add_732 // [!'@1538.(Func '@1538 '@1538 '@1538) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    ,(i) => op_obr_cbr_2029 // !'@1586.(Func !'@1586.(Array '@1586) Int '@1586)
+    (xs // !'@1586.(Array '@1586)
+      ,op_add_732 // [!'@1594.(Func '@1594 '@1594 '@1594) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
       (from // Int
-        ,op_mul_776 // [!'@1537.(Func '@1537 '@1537 '@1537) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+        ,op_mul_776 // [!'@1593.(Func '@1593 '@1593 '@1593) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
         (i // Int
           ,n // Int
         ) // Int
       ) // Int
-    ) // '@1530
-     // !'@1530.(Func Int '@1530)
-  ) // !'@1530.(Array '@1530)
+    ) // '@1586
+     // !'@1586.(Func Int '@1586)
+  ) // !'@1586.(Array '@1586)
   ;
 }
 // (Func (Array T0) Int (Array (Array T0)))
 function strides_896(xs, n)
 {
-  return map_53 // !'@1562.(Func (Array Int) (Func Int (Array '@1562)) (Array (Array '@1562)))
-  (op_dot_dot_2038 // (Func Int Int (Array Int))
+  return map_53 // !'@1604.(Func (Array Int) (Func Int (Array '@1604)) (Array (Array '@1604)))
+  (op_dot_dot_1762 // (Func Int Int (Array Int))
     (0 // Int
       ,n // Int
     ) // (Array Int)
-    ,(i) => stride_860 // [!'@1563.(Func (Array '@1563) Int (Array '@1563)) | !'@1564.(Func (Array '@1564) Int Int (Array '@1564))]
-    (xs // !'@1562.(Array '@1562)
+    ,(i) => stride_860 // [!'@1605.(Func (Array '@1605) Int (Array '@1605)) | !'@1606.(Func (Array '@1606) Int Int (Array '@1606))]
+    (xs // !'@1604.(Array '@1604)
       ,i // Int
       ,n // Int
-    ) // !'@1562.(Array '@1562)
-     // !'@1562.(Func Int (Array '@1562))
-  ) // (Array !'@1562.(Array '@1562))
+    ) // !'@1604.(Array '@1604)
+     // !'@1604.(Func Int (Array '@1604))
+  ) // (Array !'@1604.(Array '@1604))
   ;
 }
 // (Func (Array T0) Int (Array (Array T0)))
 function slices_947(xs, n)
 {
-  return map_53 // !'@1502.(Func (Array Int) (Func Int (Array '@1502)) (Array (Array '@1502)))
-  (op_dot_dot_2038 // (Func Int Int (Array Int))
+  return map_53 // !'@1544.(Func (Array Int) (Func Int (Array '@1544)) (Array (Array '@1544)))
+  (op_dot_dot_1762 // (Func Int Int (Array Int))
     (0 // Int
       ,n // Int
     ) // (Array Int)
-    ,(i) => slice_758 // !'@1502.(Func (Array '@1502) Int Int (Array '@1502))
-    (xs // !'@1502.(Array '@1502)
-      ,op_mul_776 // [!'@1506.(Func '@1506 '@1506 '@1506) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    ,(i) => slice_758 // !'@1544.(Func (Array '@1544) Int Int (Array '@1544))
+    (xs // !'@1544.(Array '@1544)
+      ,op_mul_776 // [!'@1548.(Func '@1548 '@1548 '@1548) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
       (i // Int
         ,n // Int
       ) // Int
-      ,op_mul_776 // [!'@1508.(Func '@1508 '@1508 '@1508) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-      (op_add_732 // [!'@1507.(Func '@1507 '@1507 '@1507) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+      ,op_mul_776 // [!'@1550.(Func '@1550 '@1550 '@1550) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+      (op_add_732 // [!'@1549.(Func '@1549 '@1549 '@1549) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
         (i // Int
           ,1 // Int
         ) // Int
         ,n // Int
       ) // Int
-    ) // !'@1502.(Array '@1502)
-     // !'@1502.(Func Int (Array '@1502))
-  ) // (Array !'@1502.(Array '@1502))
+    ) // !'@1544.(Array '@1544)
+     // !'@1544.(Func Int (Array '@1544))
+  ) // (Array !'@1544.(Array '@1544))
   ;
 }
 // (Func (Array T0) Int (Array T0))
 function take_967(xs, n)
 {
-  return slice_758 // !'@481.(Func (Array '@481) Int Int (Array '@481))
-  (xs // !'@481.(Array '@481)
+  return slice_758 // !'@814.(Func (Array '@814) Int Int (Array '@814))
+  (xs // !'@814.(Array '@814)
     ,0 // Int
     ,n // Int
-  ) // !'@481.(Array '@481)
+  ) // !'@814.(Array '@814)
   ;
 }
 // (Func (Array T0) Int Int (Array T0))
 function take_994(xs, i, n)
 {
-  return take_967 // [!'@500.(Func (Array '@500) Int (Array '@500)) | !'@501!'@502!'@503!'@504.(Func '@501 '@502 '@503 '@504)]
-  (skip_1023 // !'@499.(Func (Array '@499) Int (Array '@499))
-    (xs // !'@499.(Array '@499)
+  return take_967 // [!'@833.(Func (Array '@833) Int (Array '@833)) | !'@834!'@835!'@836!'@837.(Func '@834 '@835 '@836 '@837)]
+  (skip_1023 // !'@832.(Func (Array '@832) Int (Array '@832))
+    (xs // !'@832.(Array '@832)
       ,i // Int
-    ) // !'@499.(Array '@499)
+    ) // !'@832.(Array '@832)
     ,n // Int
-  ) // !'@499.(Array '@499)
+  ) // !'@832.(Array '@832)
   ;
 }
 // (Func (Array T0) Int (Array T0))
 function skip_1023(xs, n)
 {
-  return slice_758 // !'@497.(Func (Array '@497) Int Int (Array '@497))
-  (xs // !'@497.(Array '@497)
+  return slice_758 // !'@830.(Func (Array '@830) Int Int (Array '@830))
+  (xs // !'@830.(Array '@830)
     ,n // Int
-    ,op_sub_754 // [!'@498.(Func '@498 '@498 '@498) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-    (count_1711 // (Func !'@497.(Array '@497) Int)
-      (xs // !'@497.(Array '@497)
+    ,op_sub_754 // [!'@831.(Func '@831 '@831 '@831) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    (count_1711 // (Func !'@830.(Array '@830) Int)
+      (xs // !'@830.(Array '@830)
       ) // Int
       ,n // Int
     ) // Int
-  ) // !'@497.(Array '@497)
+  ) // !'@830.(Array '@830)
   ;
 }
 // (Func (Array T0) Int (Array T0))
 function drop_1050(xs, n)
 {
-  return take_967 // [!'@821.(Func (Array '@821) Int (Array '@821)) | !'@822.(Func (Array '@822) Int Int (Array '@822))]
-  (xs // !'@819.(Array '@819)
-    ,op_sub_754 // [!'@820.(Func '@820 '@820 '@820) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-    (count_1711 // (Func !'@819.(Array '@819) Int)
-      (xs // !'@819.(Array '@819)
+  return take_967 // [!'@842.(Func (Array '@842) Int (Array '@842)) | !'@843.(Func (Array '@843) Int Int (Array '@843))]
+  (xs // !'@840.(Array '@840)
+    ,op_sub_754 // [!'@841.(Func '@841 '@841 '@841) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    (count_1711 // (Func !'@840.(Array '@840) Int)
+      (xs // !'@840.(Array '@840)
       ) // Int
       ,n // Int
     ) // Int
-  ) // !'@819.(Array '@819)
+  ) // !'@840.(Array '@840)
   ;
 }
 // (Func (Array T0) Int (Array T0))
 function last_1077(xs, n)
 {
-  return skip_1023 // !'@1093.(Func (Array '@1093) Int (Array '@1093))
-  (xs // !'@1093.(Array '@1093)
-    ,op_sub_754 // [!'@1094.(Func '@1094 '@1094 '@1094) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-    (count_1711 // (Func !'@1093.(Array '@1093) Int)
-      (xs // !'@1093.(Array '@1093)
+  return skip_1023 // !'@1133.(Func (Array '@1133) Int (Array '@1133))
+  (xs // !'@1133.(Array '@1133)
+    ,op_sub_754 // [!'@1134.(Func '@1134 '@1134 '@1134) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    (count_1711 // (Func !'@1133.(Array '@1133) Int)
+      (xs // !'@1133.(Array '@1133)
       ) // Int
       ,n // Int
     ) // Int
-  ) // !'@1093.(Array '@1093)
+  ) // !'@1133.(Array '@1133)
   ;
 }
 // (Func (Array T0) T1 (Array T0))
 function reverse_1121(xs, n)
 {
-  return map_53 // !'@1455.(Func (Array Int) (Func Int '@1455) (Array '@1455))
-  (indices_292 // (Func !'@1455.(Array '@1455) (Array Int))
-    (xs // !'@1455.(Array '@1455)
+  return map_53 // !'@1491.(Func (Array Int) (Func Int '@1491) (Array '@1491))
+  (indices_292 // (Func !'@1491.(Array '@1491) (Array Int))
+    (xs // !'@1491.(Array '@1491)
     ) // (Array Int)
-    ,(i) => op_obr_cbr_2073 // !'@1455.(Func !'@1455.(Array '@1455) Int '@1455)
-    (xs // !'@1455.(Array '@1455)
-      ,op_sub_754 // [!'@1463.(Func '@1463 '@1463 '@1463) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-      (op_sub_754 // [!'@1462.(Func '@1462 '@1462 '@1462) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-        (count_1711 // (Func !'@1455.(Array '@1455) Int)
-          (xs // !'@1455.(Array '@1455)
+    ,(i) => op_obr_cbr_2029 // !'@1491.(Func !'@1491.(Array '@1491) Int '@1491)
+    (xs // !'@1491.(Array '@1491)
+      ,op_sub_754 // [!'@1499.(Func '@1499 '@1499 '@1499) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+      (op_sub_754 // [!'@1498.(Func '@1498 '@1498 '@1498) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+        (count_1711 // (Func !'@1491.(Array '@1491) Int)
+          (xs // !'@1491.(Array '@1491)
           ) // Int
           ,1 // Int
         ) // Int
         ,i // Int
       ) // Int
-    ) // '@1455
-     // !'@1455.(Func Int '@1455)
-  ) // !'@1455.(Array '@1455)
+    ) // '@1491
+     // !'@1491.(Func Int '@1491)
+  ) // !'@1491.(Array '@1491)
   ;
 }
 // (Func Int (Func Int T0) (Array T0))
 function gen_1145(cnt, f)
 {
-  return map_53 // !'@393.(Func (Array Int) (Func Int '@393) (Array '@393))
-  (op_dot_dot_2038 // (Func Int Int (Array Int))
+  return map_53 // !'@509.(Func (Array Int) (Func Int '@509) (Array '@509))
+  (op_dot_dot_1762 // (Func Int Int (Array Int))
     (0 // Int
       ,cnt // Int
     ) // (Array Int)
-    ,f // !'@393.(Func Int '@393)
-  ) // !'@393.(Array '@393)
+    ,f // !'@509.(Func Int '@509)
+  ) // !'@509.(Array '@509)
   ;
 }
 // (Func (Array T0) (Array T0) (Array T0))
 function concat_1213(xs, ys)
 {
-  return gen_1145 // !'@396.(Func Int (Func Int '@396) (Array '@396))
-  (op_add_732 // [!'@410.(Func '@410 '@410 '@410) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-    (count_1711 // (Func !'@396.(Array '@396) Int)
-      (xs // !'@396.(Array '@396)
+  return gen_1145 // !'@512.(Func Int (Func Int '@512) (Array '@512))
+  (op_add_732 // [!'@526.(Func '@526 '@526 '@526) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    (count_1711 // (Func !'@512.(Array '@512) Int)
+      (xs // !'@512.(Array '@512)
       ) // Int
-      ,count_1711 // (Func !'@396.(Array '@396) Int)
-      (ys // !'@396.(Array '@396)
+      ,count_1711 // (Func !'@512.(Array '@512) Int)
+      (ys // !'@512.(Array '@512)
       ) // Int
     ) // Int
     ,(i) => op_lt_686 // (Func Int Int Bool)
     (i // Int
-      ,count_1711 // (Func !'@396.(Array '@396) Int)
-      (xs // !'@396.(Array '@396)
+      ,count_1711 // (Func !'@512.(Array '@512) Int)
+      (xs // !'@512.(Array '@512)
       ) // Int
     ) // Bool
-     ? op_obr_cbr_2073 // !'@396.(Func !'@396.(Array '@396) Int '@396)
-    (xs // !'@396.(Array '@396)
+     ? op_obr_cbr_2029 // !'@512.(Func !'@512.(Array '@512) Int '@512)
+    (xs // !'@512.(Array '@512)
       ,i // Int
-    ) // '@396
-     : op_obr_cbr_2073 // !'@396.(Func !'@396.(Array '@396) Int '@396)
-    (ys // !'@396.(Array '@396)
-      ,op_sub_754 // [!'@411.(Func '@411 '@411 '@411) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    ) // '@512
+     : op_obr_cbr_2029 // !'@512.(Func !'@512.(Array '@512) Int '@512)
+    (ys // !'@512.(Array '@512)
+      ,op_sub_754 // [!'@527.(Func '@527 '@527 '@527) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
       (i // Int
-        ,count_1711 // (Func !'@396.(Array '@396) Int)
-        (xs // !'@396.(Array '@396)
+        ,count_1711 // (Func !'@512.(Array '@512) Int)
+        (xs // !'@512.(Array '@512)
         ) // Int
       ) // Int
-    ) // '@396
-     // '@396
-     // !'@396.(Func Int '@396)
-  ) // !'@396.(Array '@396)
+    ) // '@512
+     // '@512
+     // !'@512.(Func Int '@512)
+  ) // !'@512.(Array '@512)
   ;
 }
 // (Func (Array T0) Int Int (Array T0))
 function cut_1275(xs, from, n)
 {
-  return gen_1145 // !'@558.(Func Int (Func Int '@558) (Array '@558))
-  (op_sub_754 // [!'@565.(Func '@565 '@565 '@565) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-    (count_1711 // (Func !'@558.(Array '@558) Int)
-      (xs // !'@558.(Array '@558)
+  return gen_1145 // !'@557.(Func Int (Func Int '@557) (Array '@557))
+  (op_sub_754 // [!'@564.(Func '@564 '@564 '@564) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    (count_1711 // (Func !'@557.(Array '@557) Int)
+      (xs // !'@557.(Array '@557)
       ) // Int
       ,n // Int
     ) // Int
@@ -1501,38 +1463,38 @@ function cut_1275(xs, from, n)
     (i // Int
       ,from // Int
     ) // Bool
-     ? op_obr_cbr_2073 // !'@558.(Func !'@558.(Array '@558) Int '@558)
-    (xs // !'@558.(Array '@558)
+     ? op_obr_cbr_2029 // !'@557.(Func !'@557.(Array '@557) Int '@557)
+    (xs // !'@557.(Array '@557)
       ,i // Int
-    ) // '@558
-     : op_obr_cbr_2073 // !'@558.(Func !'@558.(Array '@558) Int '@558)
-    (xs // !'@558.(Array '@558)
-      ,op_add_732 // [!'@566.(Func '@566 '@566 '@566) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    ) // '@557
+     : op_obr_cbr_2029 // !'@557.(Func !'@557.(Array '@557) Int '@557)
+    (xs // !'@557.(Array '@557)
+      ,op_add_732 // [!'@565.(Func '@565 '@565 '@565) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
       (i // Int
         ,n // Int
       ) // Int
-    ) // '@558
-     // '@558
-     // !'@558.(Func Int '@558)
-  ) // !'@558.(Array '@558)
+    ) // '@557
+     // '@557
+     // !'@557.(Func Int '@557)
+  ) // !'@557.(Array '@557)
   ;
 }
 // (Func (Array T0) Int (Array T0) (Array T0))
 function splice_1312(xs, from, ys)
 {
-  return concat_1213 // !'@1517.(Func (Array '@1517) (Array '@1517) (Array '@1517))
-  (concat_1213 // !'@1517.(Func (Array '@1517) (Array '@1517) (Array '@1517))
-    (take_967 // [!'@1520.(Func (Array '@1520) Int (Array '@1520)) | !'@1521.(Func (Array '@1521) Int Int (Array '@1521))]
-      (xs // !'@1517.(Array '@1517)
+  return concat_1213 // !'@1559.(Func (Array '@1559) (Array '@1559) (Array '@1559))
+  (concat_1213 // !'@1559.(Func (Array '@1559) (Array '@1559) (Array '@1559))
+    (take_967 // [!'@1562.(Func (Array '@1562) Int (Array '@1562)) | !'@1563.(Func (Array '@1563) Int Int (Array '@1563))]
+      (xs // !'@1559.(Array '@1559)
         ,from // Int
-      ) // !'@1517.(Array '@1517)
-      ,ys // !'@1517.(Array '@1517)
-    ) // !'@1517.(Array '@1517)
-    ,skip_1023 // !'@1517.(Func (Array '@1517) Int (Array '@1517))
-    (xs // !'@1517.(Array '@1517)
+      ) // !'@1559.(Array '@1559)
+      ,ys // !'@1559.(Array '@1559)
+    ) // !'@1559.(Array '@1559)
+    ,skip_1023 // !'@1559.(Func (Array '@1559) Int (Array '@1559))
+    (xs // !'@1559.(Array '@1559)
       ,from // Int
-    ) // !'@1517.(Array '@1517)
-  ) // !'@1517.(Array '@1517)
+    ) // !'@1559.(Array '@1559)
+  ) // !'@1559.(Array '@1559)
   ;
 }
 // (Func (Array Float) Float)
@@ -1541,7 +1503,7 @@ function sum_1330(xs)
   return reduce_1918 // (Func (Array Float) Float (Func Float Float Float) Float)
   (xs // (Array Float)
     ,0 // Float
-    ,op_add_842 // [!'@369.(Func '@369 '@369 '@369) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    ,op_add_842 // [!'@428.(Func '@428 '@428 '@428) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
   ) // Float
   ;
 }
@@ -1551,14 +1513,14 @@ function product_1348(xs)
   return reduce_1918 // (Func (Array Float) Float (Func Float Float Float) Float)
   (xs // (Array Float)
     ,1 // Float
-    ,op_mul_886 // [!'@1418.(Func '@1418 '@1418 '@1418) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    ,op_mul_886 // [!'@1454.(Func '@1454 '@1454 '@1454) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
   ) // Float
   ;
 }
 // (Func (Array Float) Float)
 function average_1373(xs)
 {
-  return op_div_908 // [!'@373.(Func '@373 '@373 '@373) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+  return op_div_908 // [!'@432.(Func '@432 '@432 '@432) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
   (sum_1330 // (Func (Array Float) Float)
     (xs // (Array Float)
     ) // Float
@@ -1573,71 +1535,71 @@ function average_1373(xs)
 // (Func (Array T0) T0)
 function min_1395(xs)
 {
-  return reduce_1918 // !'@1177.(Func (Array '@1177) '@1177 (Func '@1177 '@1177 '@1177) '@1177)
-  (xs // !'@1177.(Array '@1177)
-    ,op_obr_cbr_2073 // !'@1177.(Func !'@1177.(Array '@1177) Int '@1177)
-    (xs // !'@1177.(Array '@1177)
+  return reduce_1918 // !'@1210.(Func (Array '@1210) '@1210 (Func '@1210 '@1210 '@1210) '@1210)
+  (xs // !'@1210.(Array '@1210)
+    ,op_obr_cbr_2029 // !'@1210.(Func !'@1210.(Array '@1210) Int '@1210)
+    (xs // !'@1210.(Array '@1210)
       ,0 // Int
-    ) // '@1177
-    ,min_140 // [!'@1180.(Func '@1180 '@1180 '@1180) | !'@1181!'@1182.(Func '@1181 '@1182)]
-  ) // '@1180
+    ) // '@1210
+    ,min_140 // [!'@1213.(Func '@1213 '@1213 '@1213) | !'@1214!'@1215.(Func '@1214 '@1215)]
+  ) // '@1213
   ;
 }
 // (Func (Array T0) T0)
 function max_1417(xs)
 {
-  return reduce_1918 // !'@1198.(Func (Array '@1198) '@1198 (Func '@1198 '@1198 '@1198) '@1198)
-  (xs // !'@1198.(Array '@1198)
-    ,op_obr_cbr_2073 // !'@1198.(Func !'@1198.(Array '@1198) Int '@1198)
-    (xs // !'@1198.(Array '@1198)
+  return reduce_1918 // !'@1231.(Func (Array '@1231) '@1231 (Func '@1231 '@1231 '@1231) '@1231)
+  (xs // !'@1231.(Array '@1231)
+    ,op_obr_cbr_2029 // !'@1231.(Func !'@1231.(Array '@1231) Int '@1231)
+    (xs // !'@1231.(Array '@1231)
       ,0 // Int
-    ) // '@1198
-    ,max_165 // [!'@1201.(Func '@1201 '@1201 '@1201) | !'@1202!'@1203.(Func '@1202 '@1203)]
-  ) // '@1201
+    ) // '@1231
+    ,max_165 // [!'@1234.(Func '@1234 '@1234 '@1234) | !'@1235!'@1236.(Func '@1235 '@1236)]
+  ) // '@1234
   ;
 }
 // (Func (ArrayBuilder T0) Int Int (ArrayBuilder T0))
 function swapElements_1483(xs, i, j)
 {
-  let tmp = op_obr_cbr_2073 // !'@1238.(Func !'@1238.(Array '@1238) Int '@1238)
-  (xs // !'@1238.(ArrayBuilder '@1238)
+  let tmp = op_obr_cbr_2029 // !'@1271.(Func !'@1271.(Array '@1271) Int '@1271)
+  (xs // !'@1271.(ArrayBuilder '@1271)
     ,i // Int
-  ) // '@1238
+  ) // '@1271
   ;
-  xs = set_1824 // !'@1238.(Func (ArrayBuilder '@1238) Int '@1238 (ArrayBuilder '@1238))
-  (xs // !'@1238.(Array '@1238)
+  xs = set_1881 // !'@1271.(Func (ArrayBuilder '@1271) Int '@1271 (ArrayBuilder '@1271))
+  (xs // !'@1271.(Array '@1271)
     ,i // Int
-    ,op_obr_cbr_2073 // !'@1238.(Func !'@1238.(Array '@1238) Int '@1238)
-    (xs // !'@1238.(Array '@1238)
+    ,op_obr_cbr_2029 // !'@1271.(Func !'@1271.(Array '@1271) Int '@1271)
+    (xs // !'@1271.(Array '@1271)
       ,j // Int
-    ) // '@1238
-  ) // !'@1238.(ArrayBuilder '@1238)
-   // !'@1238.(ArrayBuilder '@1238)
+    ) // '@1271
+  ) // !'@1271.(ArrayBuilder '@1271)
+   // !'@1271.(ArrayBuilder '@1271)
   ;
-  xs = set_1824 // !'@1238.(Func (ArrayBuilder '@1238) Int '@1238 (ArrayBuilder '@1238))
-  (xs // !'@1238.(ArrayBuilder '@1238)
+  xs = set_1881 // !'@1271.(Func (ArrayBuilder '@1271) Int '@1271 (ArrayBuilder '@1271))
+  (xs // !'@1271.(ArrayBuilder '@1271)
     ,j // Int
-    ,tmp // '@1238
-  ) // !'@1238.(ArrayBuilder '@1238)
-   // !'@1238.(ArrayBuilder '@1238)
+    ,tmp // '@1271
+  ) // !'@1271.(ArrayBuilder '@1271)
+   // !'@1271.(ArrayBuilder '@1271)
   ;
-  return xs // !'@1238.(ArrayBuilder '@1238)
+  return xs // !'@1271.(ArrayBuilder '@1271)
   ;
 }
 // (Func (Array T0) Int Int Int)
 function partition_1598(a, lo, hi)
 {
-  let p = op_obr_cbr_2073 // !'@1226.(Func !'@1226.(Array '@1226) Int '@1226)
-  (a // !'@1226.(Array '@1226)
+  let p = op_obr_cbr_2029 // !'@1259.(Func !'@1259.(Array '@1259) Int '@1259)
+  (a // !'@1259.(Array '@1259)
     ,lo // Int
-  ) // '@1226
+  ) // '@1259
   ;
-  let i = op_sub_754 // [!'@1243.(Func '@1243 '@1243 '@1243) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+  let i = op_sub_754 // [!'@1276.(Func '@1276 '@1276 '@1276) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
   (lo // Int
     ,1 // Int
   ) // Int
   ;
-  let j = op_add_732 // [!'@1244.(Func '@1244 '@1244 '@1244) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+  let j = op_add_732 // [!'@1277.(Func '@1277 '@1277 '@1277) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
   (hi // Int
     ,1 // Int
   ) // Int
@@ -1650,12 +1612,12 @@ function partition_1598(a, lo, hi)
       i++ // Int
       ;
     }
-    while (op_lt_686 // !'@1226.(Func '@1226 '@1226 Bool)
-      (op_obr_cbr_2073 // !'@1226.(Func !'@1226.(Array '@1226) Int '@1226)
-        (a // !'@1226.(Array '@1226)
+    while (op_lt_686 // !'@1259.(Func '@1259 '@1259 Bool)
+      (op_obr_cbr_2029 // !'@1259.(Func !'@1259.(Array '@1259) Int '@1259)
+        (a // !'@1259.(Array '@1259)
           ,i // Int
-        ) // '@1226
-        ,p // '@1226
+        ) // '@1259
+        ,p // '@1259
       ) // Bool
     )
     do
@@ -1663,12 +1625,12 @@ function partition_1598(a, lo, hi)
       j-- // Int
       ;
     }
-    while (op_gt_638 // !'@1226.(Func '@1226 '@1226 Bool)
-      (op_obr_cbr_2073 // !'@1226.(Func !'@1226.(Array '@1226) Int '@1226)
-        (a // !'@1226.(Array '@1226)
+    while (op_gt_638 // !'@1259.(Func '@1259 '@1259 Bool)
+      (op_obr_cbr_2029 // !'@1259.(Func !'@1259.(Array '@1259) Int '@1259)
+        (a // !'@1259.(Array '@1259)
           ,j // Int
-        ) // '@1226
-        ,p // '@1226
+        ) // '@1259
+        ,p // '@1259
       ) // Bool
     )
     if (op_gt_eq_662 // (Func Int Int Bool)
@@ -1682,11 +1644,11 @@ function partition_1598(a, lo, hi)
     }
     else
     { }
-    swapElements_1483 // !'@1226.(Func (ArrayBuilder '@1226) Int Int (ArrayBuilder '@1226))
-    (a // !'@1226.(Array '@1226)
+    swapElements_1483 // !'@1259.(Func (ArrayBuilder '@1259) Int Int (ArrayBuilder '@1259))
+    (a // !'@1259.(Array '@1259)
       ,i // Int
       ,j // Int
-    ) // !'@1226.(ArrayBuilder '@1226)
+    ) // !'@1259.(ArrayBuilder '@1259)
     ;
   }
 }
@@ -1699,50 +1661,50 @@ function qsort_1667(a, lo, hi)
     ) // Bool
   )
   {
-    let p = partition_1598 // (Func !'@1245.(Array '@1245) Int Int Int)
-    (a // !'@1245.(Array '@1245)
+    let p = partition_1598 // (Func !'@1278.(Array '@1278) Int Int Int)
+    (a // !'@1278.(Array '@1278)
       ,lo // Int
       ,hi // Int
     ) // Int
     ;
-    qsort_1667 // !'@1249.(Func !'@1245.(Array '@1245) Int Int '@1249)
-    (a // !'@1245.(Array '@1245)
+    qsort_1667 // !'@1282.(Func !'@1278.(Array '@1278) Int Int '@1282)
+    (a // !'@1278.(Array '@1278)
       ,lo // Int
       ,p // Int
-    ) // '@1249
+    ) // '@1282
     ;
-    qsort_1667 // !'@1253.(Func !'@1245.(Array '@1245) Int Int '@1253)
-    (a // !'@1245.(Array '@1245)
-      ,op_add_732 // [!'@1255.(Func '@1255 '@1255 '@1255) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    qsort_1667 // !'@1286.(Func !'@1278.(Array '@1278) Int Int '@1286)
+    (a // !'@1278.(Array '@1278)
+      ,op_add_732 // [!'@1288.(Func '@1288 '@1288 '@1288) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
       (p // Int
         ,1 // Int
       ) // Int
       ,hi // Int
-    ) // '@1253
+    ) // '@1286
     ;
   }
   else
   { }
-  return a // !'@1245.(Array '@1245)
+  return a // !'@1278.(Array '@1278)
   ;
 }
 // (Func (Array T0) (Array T0))
 function sort_1697(xs)
 {
-  return immutable_1847 // !'@1257.(Func (ArrayBuilder '@1257) (Array '@1257))
-  (qsort_1667 // !'@1257.(Func (Array '@1257) Int Int (Array '@1257))
-    (mutable_1760 // !'@1257.(Func (Array '@1257) (ArrayBuilder '@1257))
-      (xs // !'@1257.(Array '@1257)
-      ) // !'@1257.(ArrayBuilder '@1257)
+  return immutable_1904 // !'@1290.(Func (ArrayBuilder '@1290) (Array '@1290))
+  (qsort_1667 // !'@1290.(Func (Array '@1290) Int Int (Array '@1290))
+    (mutable_1785 // !'@1290.(Func (Array '@1290) (ArrayBuilder '@1290))
+      (xs // !'@1290.(Array '@1290)
+      ) // !'@1290.(ArrayBuilder '@1290)
       ,0 // Int
-      ,op_sub_754 // [!'@1260.(Func '@1260 '@1260 '@1260) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-      (count_1711 // (Func !'@1257.(Array '@1257) Int)
-        (xs // !'@1257.(Array '@1257)
+      ,op_sub_754 // [!'@1293.(Func '@1293 '@1293 '@1293) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+      (count_1711 // (Func !'@1290.(Array '@1290) Int)
+        (xs // !'@1290.(Array '@1290)
         ) // Int
         ,1 // Int
       ) // Int
-    ) // !'@1257.(Array '@1257)
-  ) // !'@1257.(Array '@1257)
+    ) // !'@1290.(Array '@1290)
+  ) // !'@1290.(Array '@1290)
   ;
 }
 // (Func (Array Int) Int)
@@ -1753,8 +1715,8 @@ function median_1797(xs)
   ) // (Array Int)
   ;
   return op_eq_eq_1563 // (Func Int Int Bool)
-  (op_mod_820 // [!'@1290.(Func '@1290 '@1290 '@1290) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-    (op_sub_754 // [!'@1289.(Func '@1289 '@1289 '@1289) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+  (op_mod_820 // [!'@1323.(Func '@1323 '@1323 '@1323) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    (op_sub_754 // [!'@1322.(Func '@1322 '@1322 '@1322) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
       (count_1711 // (Func (Array Int) Int)
         (ys // (Array Int)
         ) // Int
@@ -1764,10 +1726,10 @@ function median_1797(xs)
     ) // Int
     ,0 // Int
   ) // Bool
-   ? op_obr_cbr_2073 // (Func (Array Int) Int Int)
+   ? op_obr_cbr_2029 // (Func (Array Int) Int Int)
   (ys // (Array Int)
-    ,op_div_798 // [!'@1292.(Func '@1292 '@1292 '@1292) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-    (op_sub_754 // [!'@1291.(Func '@1291 '@1291 '@1291) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    ,op_div_798 // [!'@1325.(Func '@1325 '@1325 '@1325) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    (op_sub_754 // [!'@1324.(Func '@1324 '@1324 '@1324) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
       (count_1711 // (Func (Array Int) Int)
         (ys // (Array Int)
         ) // Int
@@ -1776,11 +1738,11 @@ function median_1797(xs)
       ,2 // Int
     ) // Int
   ) // Int
-   : op_add_732 // [!'@1297.(Func '@1297 '@1297 '@1297) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-  (op_obr_cbr_2073 // (Func (Array Int) Int Int)
+   : op_add_732 // [!'@1330.(Func '@1330 '@1330 '@1330) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+  (op_obr_cbr_2029 // (Func (Array Int) Int Int)
     (ys // (Array Int)
-      ,op_div_798 // [!'@1294.(Func '@1294 '@1294 '@1294) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-      (op_sub_754 // [!'@1293.(Func '@1293 '@1293 '@1293) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+      ,op_div_798 // [!'@1327.(Func '@1327 '@1327 '@1327) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+      (op_sub_754 // [!'@1326.(Func '@1326 '@1326 '@1326) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
         (count_1711 // (Func (Array Int) Int)
           (ys // (Array Int)
           ) // Int
@@ -1789,10 +1751,10 @@ function median_1797(xs)
         ,2 // Int
       ) // Int
     ) // Int
-    ,op_div_798 // [!'@1296.(Func '@1296 '@1296 '@1296) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-    (op_obr_cbr_2073 // (Func (Array Int) Int Int)
+    ,op_div_798 // [!'@1329.(Func '@1329 '@1329 '@1329) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    (op_obr_cbr_2029 // (Func (Array Int) Int Int)
       (ys // (Array Int)
-        ,op_div_798 // [!'@1295.(Func '@1295 '@1295 '@1295) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+        ,op_div_798 // [!'@1328.(Func '@1328 '@1328 '@1328) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
         (count_1711 // (Func (Array Int) Int)
           (ys // (Array Int)
           ) // Int
@@ -1815,8 +1777,8 @@ function inRange_1828(xs, n)
     ) // Bool
     ,op_lt_686 // (Func Int Int Bool)
     (n // Int
-      ,count_1711 // (Func !'@1085.(Array '@1085) Int)
-      (xs // !'@1085.(Array '@1085)
+      ,count_1711 // (Func !'@1118.(Array '@1118) Int)
+      (xs // !'@1118.(Array '@1118)
       ) // Int
     ) // Bool
   ) // Bool
@@ -1825,108 +1787,120 @@ function inRange_1828(xs, n)
 // (Func (Array T0) T0)
 function last_1851(xs)
 {
-  return op_obr_cbr_2073 // !'@1100.(Func !'@1100.(Array '@1100) Int '@1100)
-  (xs // !'@1100.(Array '@1100)
-    ,op_sub_754 // [!'@1101.(Func '@1101 '@1101 '@1101) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-    (count_1711 // (Func !'@1100.(Array '@1100) Int)
-      (xs // !'@1100.(Array '@1100)
+  return op_obr_cbr_2029 // !'@1125.(Func !'@1125.(Array '@1125) Int '@1125)
+  (xs // !'@1125.(Array '@1125)
+    ,op_sub_754 // [!'@1126.(Func '@1126 '@1126 '@1126) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    (count_1711 // (Func !'@1125.(Array '@1125) Int)
+      (xs // !'@1125.(Array '@1125)
       ) // Int
       ,1 // Int
     ) // Int
-  ) // '@1100
+  ) // '@1125
   ;
 }
 // (Func (Array T0) T0)
 function first_1866(xs)
 {
-  return op_obr_cbr_2073 // !'@868.(Func !'@868.(Array '@868) Int '@868)
-  (xs // !'@868.(Array '@868)
+  return op_obr_cbr_2029 // !'@889.(Func !'@889.(Array '@889) Int '@889)
+  (xs // !'@889.(Array '@889)
     ,0 // Int
-  ) // '@868
+  ) // '@889
   ;
 }
 // (Func (Array T0) (Array T0))
 function tail_1881(xs)
 {
-  return skip_1023 // !'@1569.(Func (Array '@1569) Int (Array '@1569))
-  (xs // !'@1569.(Array '@1569)
+  return skip_1023 // !'@1611.(Func (Array '@1611) Int (Array '@1611))
+  (xs // !'@1611.(Array '@1611)
     ,1 // Int
-  ) // !'@1569.(Array '@1569)
+  ) // !'@1611.(Array '@1611)
   ;
 }
 // (Func (Array T0) T1 (Func T1 T0 T1) T1)
 function reduce_1918(xs, acc, f)
 {
-  for (let i3=0; i3 < xs // !'@321.(Array '@321)
-  .length; ++i3)
+  for (let i2=0; i2 < xs // !'@380.(Array '@380)
+  .length; ++i2)
   {
-    const x = xs // !'@321.(Array '@321)
-    [i3];
+    const x = xs // !'@380.(Array '@380)
+    [i2];
     {
-      acc = f // !'@322!'@321.(Func '@322 '@321 '@322)
-      (acc // '@322
-        ,x // '@321
-      ) // '@322
-       // '@322
+      acc = f // !'@381!'@380.(Func '@381 '@380 '@381)
+      (acc // '@381
+        ,x // '@380
+      ) // '@381
+       // '@381
       ;
     }
   }
-  return acc // '@322
+  return acc // '@381
   ;
 }
 // (Func (Array (Array T0)) (Array T0))
 function flatten_1935(xs)
 {
-  return reduce_1918 // !'@385.(Func (Array (Array '@385)) (Array '@385) (Func (Array '@385) (Array '@385) (Array '@385)) (Array '@385))
-  (xs // (Array !'@385.(Array '@385))
-    ,arrayFromJavaScript([]) // !'@385.(Array '@385)
-    ,concat_1213 // !'@385.(Func (Array '@385) (Array '@385) (Array '@385))
-  ) // !'@385.(Array '@385)
+  return reduce_1918 // !'@898.(Func (Array (Array '@898)) (Array '@898) (Func (Array '@898) (Array '@898) (Array '@898)) (Array '@898))
+  (xs // (Array !'@898.(Array '@898))
+    ,[] // !'@898.(Array '@898)
+    ,concat_1213 // !'@898.(Func (Array '@898) (Array '@898) (Array '@898))
+  ) // !'@898.(Array '@898)
   ;
 }
 // (Func (Array T0) (Func T0 (Array T1)) (Array T1))
 function flatMap_1957(xs, f)
 {
-  return flatten_1935 // !'@413.(Func (Array (Array '@413)) (Array '@413))
-  (map_53 // !'@414!'@413.(Func (Array '@414) (Func '@414 (Array '@413)) (Array (Array '@413)))
-    (xs // !'@414.(Array '@414)
-      ,f // !'@414!'@413.(Func '@414 (Array '@413))
-    ) // (Array !'@413.(Array '@413))
-  ) // !'@413.(Array '@413)
+  return flatten_1935 // !'@900.(Func (Array (Array '@900)) (Array '@900))
+  (map_53 // !'@901!'@900.(Func (Array '@901) (Func '@901 (Array '@900)) (Array (Array '@900)))
+    (xs // !'@901.(Array '@901)
+      ,f // !'@901!'@900.(Func '@901 (Array '@900))
+    ) // (Array !'@900.(Array '@900))
+  ) // !'@900.(Array '@900)
   ;
 }
 // (Func (Array T0) (Array T1) (Func T0 T1 T2) (Array T2))
-function cartesianProduct_2000(xs, ys, f)
+function cartesianProduct_2010(xs, ys, f)
 {
-  const r = [];
-  for (let i=0; i < xs.length; ++i) 
-    for (let j=0; j < ys.length; ++j)
-      r.push(f(xs[i], ys[j]));
-  return arrayFromJavaScript(r);
-
-  /*
-  return flatMap_1957 // !'@418!'@424.(Func (Array '@418) (Func '@418 (Array '@424)) (Array '@424))
-  (xs // !'@418.(Array '@418)
-    ,(x) => map_53 // !'@422!'@424.(Func (Array '@422) (Func '@422 '@424) (Array '@424))
-    (ys // !'@422.(Array '@422)
-      ,(y) => f // !'@418!'@422!'@424.(Func '@418 '@422 '@424)
-      (x // '@418
-        ,y // '@422
-      ) // '@424
-       // !'@422!'@424.(Func '@422 '@424)
-    ) // !'@424.(Array '@424)
-     // !'@418!'@424.(Func '@418 (Array '@424))
-  ) // !'@424.(Array '@424)
-  ;*/
+  let r = mutable_1785 // !'@449.(Func (Array '@449) (ArrayBuilder '@449))
+  ([] // !'@449.(Array '@449)
+  ) // !'@449.(ArrayBuilder '@449)
+  ;
+  for (let i3=0; i3 < xs // !'@442.(Array '@442)
+  .length; ++i3)
+  {
+    const x = xs // !'@442.(Array '@442)
+    [i3];
+    {
+      for (let i4=0; i4 < ys // !'@443.(Array '@443)
+      .length; ++i4)
+      {
+        const y = ys // !'@443.(Array '@443)
+        [i4];
+        {
+          push_1814 // !'@449.(Func (ArrayBuilder '@449) '@449 (ArrayBuilder '@449))
+          (r // !'@449.(ArrayBuilder '@449)
+            ,f // !'@442!'@443!'@449.(Func '@442 '@443 '@449)
+            (x // '@442
+              ,y // '@443
+            ) // '@449
+          ) // !'@449.(ArrayBuilder '@449)
+          ;
+        }
+      }
+    }
+  }
+  return immutable_1904 // !'@449.(Func (ArrayBuilder '@449) (Array '@449))
+  (r // !'@449.(ArrayBuilder '@449)
+  ) // !'@449.(Array '@449)
+  ;
 }
 // (Func (Array T0) T1 (Array T1))
-function setAll_2024(xs, x)
+function setAll_2034(xs, x)
 {
-  return map_53 // !'@145!'@121.(Func (Array '@145) (Func '@145 '@121) (Array '@121))
-  (xs // !'@145.(Array '@145)
-    ,(_) => x // '@121
-     // !'@145!'@121.(Func '@145 '@121)
-  ) // !'@121.(Array '@121)
+  return map_53 // !'@159!'@135.(Func (Array '@159) (Func '@159 '@135) (Array '@135))
+  (xs // !'@159.(Array '@159)
+    ,(_) => x // '@135
+     // !'@159!'@135.(Func '@159 '@135)
+  ) // !'@135.(Array '@135)
   ;
 }
 // Module heron:geometry.mesh:0.1
@@ -1934,8 +1908,9 @@ function setAll_2024(xs, x)
 // imports heron:std.array:0.1
 // imports heron:geometry.vector:0.1
 // Mesh
-const tetrahedron = mesh_62 // [(Func (Array Float) (Array Int) (Array Float) (Array Float) Mesh) | (Func (Array Float) Mesh) | (Func (Array Float) (Array Int) Mesh) | (Func (Array Float) (Array Int) (Array Float) Mesh)]
-(arrayFromJavaScript([1 // Int
+const tetrahedron = mesh_81 // [(Func (Array Float3) (Array Int) (Array Float3) (Array Float3) Mesh) | (Func (Array Float3) Mesh) | !'@315!'@316!'@317.(Func '@315 '@316 '@317) | (Func (Array Float3) (Array Int) Mesh) | (Func (Array Float3) (Array Int) (Array Float3) Mesh)]
+(toVectors_1936 // (Func (Array Float) (Array Float3))
+  ([1 // Int
     ,1 // Int
     ,1 // Int
     ,op_negate_1659 // (Func Float Float)
@@ -1959,25 +1934,27 @@ const tetrahedron = mesh_62 // [(Func (Array Float) (Array Int) (Array Float) (A
     ,op_negate_1659 // (Func Float Float)
     (1 // Int
     ) // Float
-  ]) // (Array Float)
-  ,arrayFromJavaScript([2 // Int
-    ,1 // Int
-    ,0 // Int
-    ,0 // Int
-    ,3 // Int
-    ,2 // Int
-    ,1 // Int
-    ,3 // Int
-    ,0 // Int
-    ,2 // Int
-    ,3 // Int
-    ,1 // Int
-  ]) // (Array Int)
+    ] // (Array Float)
+  ) // (Array Float3)
+  ,[2 // Int
+  ,1 // Int
+  ,0 // Int
+  ,0 // Int
+  ,3 // Int
+  ,2 // Int
+  ,1 // Int
+  ,3 // Int
+  ,0 // Int
+  ,2 // Int
+  ,3 // Int
+  ,1 // Int
+  ] // (Array Int)
 ) // Mesh
 ;
 // Mesh
-const cube = mesh_62 // [(Func (Array Float) (Array Int) (Array Float) (Array Float) Mesh) | (Func (Array Float) Mesh) | (Func (Array Float) (Array Int) Mesh) | (Func (Array Float) (Array Int) (Array Float) Mesh)]
-(arrayFromJavaScript([op_negate_1659 // (Func Float Float)
+const cube = mesh_81 // [(Func (Array Float3) (Array Int) (Array Float3) (Array Float3) Mesh) | (Func (Array Float3) Mesh) | !'@205!'@206!'@207.(Func '@205 '@206 '@207) | (Func (Array Float3) (Array Int) Mesh) | (Func (Array Float3) (Array Int) (Array Float3) Mesh)]
+(toVectors_1936 // (Func (Array Float) (Array Float3))
+  ([op_negate_1659 // (Func Float Float)
     (1 // Float
     ) // Float
     ,op_negate_1659 // (Func Float Float)
@@ -2025,49 +2002,51 @@ const cube = mesh_62 // [(Func (Array Float) (Array Int) (Array Float) (Array Fl
     ,op_negate_1659 // (Func Float Float)
     (1 // Float
     ) // Float
-  ]) // (Array Float)
-  ,arrayFromJavaScript([0 // Int
-    ,1 // Int
-    ,2 // Int
-    ,2 // Int
-    ,3 // Int
-    ,0 // Int
-    ,1 // Int
-    ,5 // Int
-    ,6 // Int
-    ,6 // Int
-    ,2 // Int
-    ,1 // Int
-    ,7 // Int
-    ,6 // Int
-    ,5 // Int
-    ,5 // Int
-    ,4 // Int
-    ,7 // Int
-    ,4 // Int
-    ,0 // Int
-    ,3 // Int
-    ,3 // Int
-    ,7 // Int
-    ,4 // Int
-    ,4 // Int
-    ,5 // Int
-    ,1 // Int
-    ,1 // Int
-    ,0 // Int
-    ,4 // Int
-    ,3 // Int
-    ,2 // Int
-    ,6 // Int
-    ,6 // Int
-    ,7 // Int
-    ,3 // Int
-  ]) // (Array Int)
+    ] // (Array Float)
+  ) // (Array Float3)
+  ,[0 // Int
+  ,1 // Int
+  ,2 // Int
+  ,2 // Int
+  ,3 // Int
+  ,0 // Int
+  ,1 // Int
+  ,5 // Int
+  ,6 // Int
+  ,6 // Int
+  ,2 // Int
+  ,1 // Int
+  ,7 // Int
+  ,6 // Int
+  ,5 // Int
+  ,5 // Int
+  ,4 // Int
+  ,7 // Int
+  ,4 // Int
+  ,0 // Int
+  ,3 // Int
+  ,3 // Int
+  ,7 // Int
+  ,4 // Int
+  ,4 // Int
+  ,5 // Int
+  ,1 // Int
+  ,1 // Int
+  ,0 // Int
+  ,4 // Int
+  ,3 // Int
+  ,2 // Int
+  ,6 // Int
+  ,6 // Int
+  ,7 // Int
+  ,3 // Int
+  ] // (Array Int)
 ) // Mesh
 ;
 // Mesh
-const octahedron = mesh_62 // [(Func (Array Float) (Array Int) (Array Float) (Array Float) Mesh) | (Func (Array Float) Mesh) | (Func (Array Float) (Array Int) Mesh) | (Func (Array Float) (Array Int) (Array Float) Mesh)]
-(arrayFromJavaScript([1 // Int
+const octahedron = mesh_81 // [(Func (Array Float3) (Array Int) (Array Float3) (Array Float3) Mesh) | (Func (Array Float3) Mesh) | !'@306!'@307!'@308.(Func '@306 '@307 '@308) | (Func (Array Float3) (Array Int) Mesh) | (Func (Array Float3) (Array Int) (Array Float3) Mesh)]
+(toVectors_1936 // (Func (Array Float) (Array Float3))
+  ([1 // Int
     ,0 // Int
     ,0 // Int
     ,op_negate_1659 // (Func Float Float)
@@ -2091,37 +2070,39 @@ const octahedron = mesh_62 // [(Func (Array Float) (Array Int) (Array Float) (Ar
     ,op_negate_1659 // (Func Float Float)
     (1 // Int
     ) // Float
-  ]) // (Array Float)
-  ,arrayFromJavaScript([0 // Int
-    ,2 // Int
-    ,4 // Int
-    ,0 // Int
-    ,4 // Int
-    ,3 // Int
-    ,0 // Int
-    ,3 // Int
-    ,5 // Int
-    ,0 // Int
-    ,5 // Int
-    ,2 // Int
-    ,1 // Int
-    ,2 // Int
-    ,5 // Int
-    ,1 // Int
-    ,5 // Int
-    ,3 // Int
-    ,1 // Int
-    ,3 // Int
-    ,4 // Int
-    ,1 // Int
-    ,4 // Int
-    ,2 // Int
-  ]) // (Array Int)
+    ] // (Array Float)
+  ) // (Array Float3)
+  ,[0 // Int
+  ,2 // Int
+  ,4 // Int
+  ,0 // Int
+  ,4 // Int
+  ,3 // Int
+  ,0 // Int
+  ,3 // Int
+  ,5 // Int
+  ,0 // Int
+  ,5 // Int
+  ,2 // Int
+  ,1 // Int
+  ,2 // Int
+  ,5 // Int
+  ,1 // Int
+  ,5 // Int
+  ,3 // Int
+  ,1 // Int
+  ,3 // Int
+  ,4 // Int
+  ,1 // Int
+  ,4 // Int
+  ,2 // Int
+  ] // (Array Int)
 ) // Mesh
 ;
 // Mesh
-const dodecahedron = ((t) => ((r) => mesh_62 // [(Func (Array Float) (Array Int) (Array Float) (Array Float) Mesh) | (Func (Array Float) Mesh) | (Func (Array Float) (Array Int) Mesh) | (Func (Array Float) (Array Int) (Array Float) Mesh)]
-    (arrayFromJavaScript([op_negate_1659 // (Func Float Float)
+const dodecahedron = ((t) => ((r) => mesh_81 // [(Func (Array Float3) (Array Int) (Array Float3) (Array Float3) Mesh) | (Func (Array Float3) Mesh) | !'@290!'@291!'@292.(Func '@290 '@291 '@292) | (Func (Array Float3) (Array Int) Mesh) | (Func (Array Float3) (Array Int) (Array Float3) Mesh)]
+    (toVectors_1936 // (Func (Array Float) (Array Float3))
+      ([op_negate_1659 // (Func Float Float)
         (1 // Int
         ) // Float
         ,op_negate_1659 // (Func Float Float)
@@ -2229,125 +2210,126 @@ const dodecahedron = ((t) => ((r) => mesh_62 // [(Func (Array Float) (Array Int)
         ,t // Float
         ,0 // Int
         ,r // Float
-      ]) // (Array Float)
-      ,arrayFromJavaScript([3 // Int
-        ,11 // Int
-        ,7 // Int
-        ,3 // Int
-        ,7 // Int
-        ,15 // Int
-        ,3 // Int
-        ,15 // Int
-        ,13 // Int
-        ,7 // Int
-        ,19 // Int
-        ,17 // Int
-        ,7 // Int
-        ,17 // Int
-        ,6 // Int
-        ,7 // Int
-        ,6 // Int
-        ,15 // Int
-        ,17 // Int
-        ,4 // Int
-        ,8 // Int
-        ,17 // Int
-        ,8 // Int
-        ,10 // Int
-        ,17 // Int
-        ,10 // Int
-        ,6 // Int
-        ,8 // Int
-        ,0 // Int
-        ,16 // Int
-        ,8 // Int
-        ,16 // Int
-        ,2 // Int
-        ,8 // Int
-        ,2 // Int
-        ,10 // Int
-        ,0 // Int
-        ,12 // Int
-        ,1 // Int
-        ,0 // Int
-        ,1 // Int
-        ,18 // Int
-        ,0 // Int
-        ,18 // Int
-        ,16 // Int
-        ,6 // Int
-        ,10 // Int
-        ,2 // Int
-        ,6 // Int
-        ,2 // Int
-        ,13 // Int
-        ,6 // Int
-        ,13 // Int
-        ,15 // Int
-        ,2 // Int
-        ,16 // Int
-        ,18 // Int
-        ,2 // Int
-        ,18 // Int
-        ,3 // Int
-        ,2 // Int
-        ,3 // Int
-        ,13 // Int
-        ,18 // Int
-        ,1 // Int
-        ,9 // Int
-        ,18 // Int
-        ,9 // Int
-        ,11 // Int
-        ,18 // Int
-        ,11 // Int
-        ,3 // Int
-        ,4 // Int
-        ,14 // Int
-        ,12 // Int
-        ,4 // Int
-        ,12 // Int
-        ,0 // Int
-        ,4 // Int
-        ,0 // Int
-        ,8 // Int
-        ,11 // Int
-        ,9 // Int
-        ,5 // Int
-        ,11 // Int
-        ,5 // Int
-        ,19 // Int
-        ,11 // Int
-        ,19 // Int
-        ,7 // Int
-        ,19 // Int
-        ,5 // Int
-        ,14 // Int
-        ,19 // Int
-        ,14 // Int
-        ,4 // Int
-        ,19 // Int
-        ,4 // Int
-        ,17 // Int
-        ,1 // Int
-        ,12 // Int
-        ,14 // Int
-        ,1 // Int
-        ,14 // Int
-        ,5 // Int
-        ,1 // Int
-        ,5 // Int
-        ,9 // Int
-      ]) // (Array Int)
+        ] // (Array Float)
+      ) // (Array Float3)
+      ,[3 // Int
+      ,11 // Int
+      ,7 // Int
+      ,3 // Int
+      ,7 // Int
+      ,15 // Int
+      ,3 // Int
+      ,15 // Int
+      ,13 // Int
+      ,7 // Int
+      ,19 // Int
+      ,17 // Int
+      ,7 // Int
+      ,17 // Int
+      ,6 // Int
+      ,7 // Int
+      ,6 // Int
+      ,15 // Int
+      ,17 // Int
+      ,4 // Int
+      ,8 // Int
+      ,17 // Int
+      ,8 // Int
+      ,10 // Int
+      ,17 // Int
+      ,10 // Int
+      ,6 // Int
+      ,8 // Int
+      ,0 // Int
+      ,16 // Int
+      ,8 // Int
+      ,16 // Int
+      ,2 // Int
+      ,8 // Int
+      ,2 // Int
+      ,10 // Int
+      ,0 // Int
+      ,12 // Int
+      ,1 // Int
+      ,0 // Int
+      ,1 // Int
+      ,18 // Int
+      ,0 // Int
+      ,18 // Int
+      ,16 // Int
+      ,6 // Int
+      ,10 // Int
+      ,2 // Int
+      ,6 // Int
+      ,2 // Int
+      ,13 // Int
+      ,6 // Int
+      ,13 // Int
+      ,15 // Int
+      ,2 // Int
+      ,16 // Int
+      ,18 // Int
+      ,2 // Int
+      ,18 // Int
+      ,3 // Int
+      ,2 // Int
+      ,3 // Int
+      ,13 // Int
+      ,18 // Int
+      ,1 // Int
+      ,9 // Int
+      ,18 // Int
+      ,9 // Int
+      ,11 // Int
+      ,18 // Int
+      ,11 // Int
+      ,3 // Int
+      ,4 // Int
+      ,14 // Int
+      ,12 // Int
+      ,4 // Int
+      ,12 // Int
+      ,0 // Int
+      ,4 // Int
+      ,0 // Int
+      ,8 // Int
+      ,11 // Int
+      ,9 // Int
+      ,5 // Int
+      ,11 // Int
+      ,5 // Int
+      ,19 // Int
+      ,11 // Int
+      ,19 // Int
+      ,7 // Int
+      ,19 // Int
+      ,5 // Int
+      ,14 // Int
+      ,19 // Int
+      ,14 // Int
+      ,4 // Int
+      ,19 // Int
+      ,4 // Int
+      ,17 // Int
+      ,1 // Int
+      ,12 // Int
+      ,14 // Int
+      ,1 // Int
+      ,14 // Int
+      ,5 // Int
+      ,1 // Int
+      ,5 // Int
+      ,9 // Int
+      ] // (Array Int)
     ) // Mesh
-    )(op_div_590 // [!'@267.(Func '@267 '@267 '@267) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    )(op_div_590 // [!'@289.(Func '@289 '@289 '@289) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (1 // Int
       ,t // Float
     ) // Float
   )
    // Mesh
-  )(op_div_590 // [!'@241.(Func '@241 '@241 '@241) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-  (op_add_518 // [!'@264.(Func '@264 '@264 '@264) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+  )(op_div_590 // [!'@285.(Func '@285 '@285 '@285) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+  (op_add_518 // [!'@286.(Func '@286 '@286 '@286) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (1 // Int
       ,sqrt_479 // (Func Float Float)
       (5 // Int
@@ -2359,8 +2341,9 @@ const dodecahedron = ((t) => ((r) => mesh_62 // [(Func (Array Float) (Array Int)
  // Mesh
 ;
 // Mesh
-const icosahedron = ((t) => mesh_62 // [(Func (Array Float) (Array Int) (Array Float) (Array Float) Mesh) | (Func (Array Float) Mesh) | (Func (Array Float) (Array Int) Mesh) | (Func (Array Float) (Array Int) (Array Float) Mesh)]
-  (arrayFromJavaScript([op_negate_1659 // (Func Float Float)
+const icosahedron = ((t) => mesh_81 // [(Func (Array Float3) (Array Int) (Array Float3) (Array Float3) Mesh) | (Func (Array Float3) Mesh) | !'@300!'@301!'@302.(Func '@300 '@301 '@302) | (Func (Array Float3) (Array Int) Mesh) | (Func (Array Float3) (Array Int) (Array Float3) Mesh)]
+  (toVectors_1936 // (Func (Array Float) (Array Float3))
+    ([op_negate_1659 // (Func Float Float)
       (1 // Int
       ) // Float
       ,t // Float
@@ -2420,71 +2403,72 @@ const icosahedron = ((t) => mesh_62 // [(Func (Array Float) (Array Int) (Array F
       ) // Float
       ,0 // Int
       ,1 // Int
-    ]) // (Array Float)
-    ,arrayFromJavaScript([0 // Int
-      ,11 // Int
-      ,5 // Int
-      ,0 // Int
-      ,5 // Int
-      ,1 // Int
-      ,0 // Int
-      ,1 // Int
-      ,7 // Int
-      ,0 // Int
-      ,7 // Int
-      ,10 // Int
-      ,0 // Int
-      ,10 // Int
-      ,11 // Int
-      ,1 // Int
-      ,5 // Int
-      ,9 // Int
-      ,5 // Int
-      ,11 // Int
-      ,4 // Int
-      ,11 // Int
-      ,10 // Int
-      ,2 // Int
-      ,10 // Int
-      ,7 // Int
-      ,6 // Int
-      ,7 // Int
-      ,1 // Int
-      ,8 // Int
-      ,3 // Int
-      ,9 // Int
-      ,4 // Int
-      ,3 // Int
-      ,4 // Int
-      ,2 // Int
-      ,3 // Int
-      ,2 // Int
-      ,6 // Int
-      ,3 // Int
-      ,6 // Int
-      ,8 // Int
-      ,3 // Int
-      ,8 // Int
-      ,9 // Int
-      ,4 // Int
-      ,9 // Int
-      ,5 // Int
-      ,2 // Int
-      ,4 // Int
-      ,11 // Int
-      ,6 // Int
-      ,2 // Int
-      ,10 // Int
-      ,8 // Int
-      ,6 // Int
-      ,7 // Int
-      ,9 // Int
-      ,8 // Int
-      ,1 // Int
-    ]) // (Array Int)
+      ] // (Array Float)
+    ) // (Array Float3)
+    ,[0 // Int
+    ,11 // Int
+    ,5 // Int
+    ,0 // Int
+    ,5 // Int
+    ,1 // Int
+    ,0 // Int
+    ,1 // Int
+    ,7 // Int
+    ,0 // Int
+    ,7 // Int
+    ,10 // Int
+    ,0 // Int
+    ,10 // Int
+    ,11 // Int
+    ,1 // Int
+    ,5 // Int
+    ,9 // Int
+    ,5 // Int
+    ,11 // Int
+    ,4 // Int
+    ,11 // Int
+    ,10 // Int
+    ,2 // Int
+    ,10 // Int
+    ,7 // Int
+    ,6 // Int
+    ,7 // Int
+    ,1 // Int
+    ,8 // Int
+    ,3 // Int
+    ,9 // Int
+    ,4 // Int
+    ,3 // Int
+    ,4 // Int
+    ,2 // Int
+    ,3 // Int
+    ,2 // Int
+    ,6 // Int
+    ,3 // Int
+    ,6 // Int
+    ,8 // Int
+    ,3 // Int
+    ,8 // Int
+    ,9 // Int
+    ,4 // Int
+    ,9 // Int
+    ,5 // Int
+    ,2 // Int
+    ,4 // Int
+    ,11 // Int
+    ,6 // Int
+    ,2 // Int
+    ,10 // Int
+    ,8 // Int
+    ,6 // Int
+    ,7 // Int
+    ,9 // Int
+    ,8 // Int
+    ,1 // Int
+    ] // (Array Int)
   ) // Mesh
-  )(op_div_590 // [!'@273.(Func '@273 '@273 '@273) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-  (op_add_518 // [!'@274.(Func '@274 '@274 '@274) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+  )(op_div_590 // [!'@298.(Func '@298 '@298 '@298) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+  (op_add_518 // [!'@299.(Func '@299 '@299 '@299) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (1 // Int
       ,sqrt_479 // (Func Float Float)
       (5 // Int
@@ -2495,57 +2479,65 @@ const icosahedron = ((t) => mesh_62 // [(Func (Array Float) (Array Int) (Array F
 )
  // Mesh
 ;
-// (Func (Array Float) Mesh)
+// (Func (Array Float3) Mesh)
 function mesh_36(vertexBuffer)
 {
-  return mesh_62 // [(Func (Array Float) (Array Int) (Array Float) (Array Float) Mesh) | !'@232!'@233.(Func '@232 '@233) | (Func (Array Float) (Array Int) Mesh) | (Func (Array Float) (Array Int) (Array Float) Mesh)]
-  (vertexBuffer // (Array Float)
-    ,indices_292 // (Func (Array Float) (Array Int))
-    (vertexBuffer // (Array Float)
+  return mesh_81 // [(Func (Array Float3) (Array Int) (Array Float3) (Array Float3) Mesh) | !'@200!'@201.(Func '@200 '@201) | !'@202!'@203!'@204.(Func '@202 '@203 '@204) | (Func (Array Float3) (Array Int) Mesh) | (Func (Array Float3) (Array Int) (Array Float3) Mesh)]
+  (vertexBuffer // (Array Float3)
+    ,indices_292 // (Func (Array Float3) (Array Int))
+    (vertexBuffer // (Array Float3)
     ) // (Array Int)
   ) // Mesh
   ;
 }
-// (Func (Array Float) (Array Int) Mesh)
-function mesh_62(vertexBuffer, indexBuffer)
+// (Func T0 T1 T2)
+function mesh_54(vertexBuffer, indexBuffer)
 {
-  return mesh_93 // [(Func (Array Float) (Array Int) (Array Float) (Array Float) Mesh) | !'@160!'@161.(Func '@160 '@161) | !'@162!'@163!'@164.(Func '@162 '@163 '@164) | (Func (Array Float) (Array Int) (Array Float) Mesh)]
-  (vertexBuffer // (Array Float)
+  return mesh_36 // [(Func (Array Float3) (Array Int) (Array Float3) (Array Float3) Mesh) | !'@185!'@186.(Func '@185 '@186) | !'@187!'@188!'@189.(Func '@187 '@188 '@189) | (Func (Array Float3) (Array Int) Mesh) | (Func (Array Float3) (Array Int) (Array Float3) Mesh)]
+  (vertexBuffer // '@99
+  ) // '@103
+  ;
+}
+// (Func (Array Float3) (Array Int) Mesh)
+function mesh_81(vertexBuffer, indexBuffer)
+{
+  return mesh_113 // [(Func (Array Float3) (Array Int) (Array Float3) (Array Float3) Mesh) | !'@177!'@178.(Func '@177 '@178) | !'@179!'@180!'@181.(Func '@179 '@180 '@181) | !'@182!'@183!'@184.(Func '@182 '@183 '@184) | (Func (Array Float3) (Array Int) (Array Float3) Mesh)]
+  (vertexBuffer // (Array Float3)
     ,indexBuffer // (Array Int)
-    ,setAll_2024 // (Func (Array Float) Float (Array Float))
-    (vertexBuffer // (Array Float)
-      ,0 // Float
-    ) // (Array Float)
+    ,setAll_2034 // (Func (Array Float3) Float3 (Array Float3))
+    (vertexBuffer // (Array Float3)
+      ,origin // Float3
+    ) // (Array Float3)
   ) // Mesh
   ;
 }
-// (Func (Array Float) (Array Int) (Array Float) Mesh)
-function mesh_93(vertexBuffer, indexBuffer, uvBuffer)
+// (Func (Array Float3) (Array Int) (Array Float3) Mesh)
+function mesh_113(vertexBuffer, indexBuffer, uvBuffer)
 {
-  return mesh_2151 // [(Func (Array Float) (Array Int) (Array Float) (Array Float) Mesh) | !'@149!'@150.(Func '@149 '@150) | !'@151!'@152!'@153.(Func '@151 '@152 '@153) | !'@154!'@155!'@156!'@157.(Func '@154 '@155 '@156 '@157)]
-  (vertexBuffer // (Array Float)
+  return mesh_2107 // [(Func (Array Float3) (Array Int) (Array Float3) (Array Float3) Mesh) | !'@163!'@164.(Func '@163 '@164) | !'@165!'@166!'@167.(Func '@165 '@166 '@167) | !'@168!'@169!'@170.(Func '@168 '@169 '@170) | !'@171!'@172!'@173!'@174.(Func '@171 '@172 '@173 '@174)]
+  (vertexBuffer // (Array Float3)
     ,indexBuffer // (Array Int)
-    ,uvBuffer // (Array Float)
-    ,setAll_2024 // (Func (Array Float) Float (Array Float))
-    (vertexBuffer // (Array Float)
-      ,0 // Float
-    ) // (Array Float)
+    ,uvBuffer // (Array Float3)
+    ,setAll_2034 // (Func (Array Float3) Float3 (Array Float3))
+    (vertexBuffer // (Array Float3)
+      ,origin // Float3
+    ) // (Array Float3)
   ) // Mesh
   ;
 }
 // (Func (Array T0) Int Bool Bool (Array Int))
-function quadStripToMeshIndices_1043(vertices, rows, connectRows, connectCols)
+function quadStripToMeshIndices_1078(vertices, rows, connectRows, connectCols)
 {
-  let cols = op_div_798 // [!'@676.(Func '@676 '@676 '@676) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-  (count_1711 // (Func !'@606.(Array '@606) Int)
-    (vertices // !'@606.(Array '@606)
+  let cols = op_div_798 // [!'@663.(Func '@663 '@663 '@663) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+  (count_1711 // (Func !'@605.(Array '@605) Int)
+    (vertices // !'@605.(Array '@605)
     ) // Int
     ,rows // Int
   ) // Int
   ;
   let nr = connectRows // Bool
    ? rows // Int
-   : op_sub_754 // [!'@677.(Func '@677 '@677 '@677) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+   : op_sub_754 // [!'@664.(Func '@664 '@664 '@664) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
   (rows // Int
     ,1 // Int
   ) // Int
@@ -2553,73 +2545,73 @@ function quadStripToMeshIndices_1043(vertices, rows, connectRows, connectCols)
   ;
   let nc = connectCols // Bool
    ? cols // Int
-   : op_sub_754 // [!'@678.(Func '@678 '@678 '@678) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+   : op_sub_754 // [!'@665.(Func '@665 '@665 '@665) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
   (cols // Int
     ,1 // Int
   ) // Int
    // Int
   ;
-  let indices = mutable_1760 // (Func (Array Int) (ArrayBuilder Int))
-  (arrayFromJavaScript([]) // (Array Int)
+  let indices = mutable_1785 // (Func (Array Int) (ArrayBuilder Int))
+  ([] // (Array Int)
   ) // (ArrayBuilder Int)
   ;
-  for (let i4=0; i4 < op_dot_dot_2038 // (Func Int Int (Array Int))
+  for (let i5=0; i5 < op_dot_dot_1762 // (Func Int Int (Array Int))
     (0 // Int
       ,nr // Int
     ) // (Array Int)
-  .length; ++i4)
+  .length; ++i5)
   {
-    const row = op_dot_dot_2038 // (Func Int Int (Array Int))
+    const row = op_dot_dot_1762 // (Func Int Int (Array Int))
     (0 // Int
       ,nr // Int
     ) // (Array Int)
-    [i4];
+    [i5];
     {
-      for (let i5=0; i5 < op_dot_dot_2038 // (Func Int Int (Array Int))
+      for (let i6=0; i6 < op_dot_dot_1762 // (Func Int Int (Array Int))
         (0 // Int
           ,nc // Int
         ) // (Array Int)
-      .length; ++i5)
+      .length; ++i6)
       {
-        const col = op_dot_dot_2038 // (Func Int Int (Array Int))
+        const col = op_dot_dot_1762 // (Func Int Int (Array Int))
         (0 // Int
           ,nc // Int
         ) // (Array Int)
-        [i5];
+        [i6];
         {
-          let a = op_add_732 // [!'@680.(Func '@680 '@680 '@680) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+          let a = op_add_732 // [!'@667.(Func '@667 '@667 '@667) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
           (col // Int
-            ,op_mul_776 // [!'@679.(Func '@679 '@679 '@679) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+            ,op_mul_776 // [!'@666.(Func '@666 '@666 '@666) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
             (row // Int
               ,cols // Int
             ) // Int
           ) // Int
           ;
-          let b = op_add_732 // [!'@684.(Func '@684 '@684 '@684) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-          (op_mod_820 // [!'@682.(Func '@682 '@682 '@682) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-            (op_add_732 // [!'@681.(Func '@681 '@681 '@681) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+          let b = op_add_732 // [!'@671.(Func '@671 '@671 '@671) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+          (op_mod_820 // [!'@669.(Func '@669 '@669 '@669) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+            (op_add_732 // [!'@668.(Func '@668 '@668 '@668) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
               (col // Int
                 ,1 // Int
               ) // Int
               ,cols // Int
             ) // Int
-            ,op_mul_776 // [!'@683.(Func '@683 '@683 '@683) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+            ,op_mul_776 // [!'@670.(Func '@670 '@670 '@670) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
             (row // Int
               ,cols // Int
             ) // Int
           ) // Int
           ;
-          let c = op_add_732 // [!'@690.(Func '@690 '@690 '@690) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-          (op_mod_820 // [!'@686.(Func '@686 '@686 '@686) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-            (op_add_732 // [!'@685.(Func '@685 '@685 '@685) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+          let c = op_add_732 // [!'@677.(Func '@677 '@677 '@677) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+          (op_mod_820 // [!'@673.(Func '@673 '@673 '@673) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+            (op_add_732 // [!'@672.(Func '@672 '@672 '@672) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
               (col // Int
                 ,1 // Int
               ) // Int
               ,cols // Int
             ) // Int
-            ,op_mul_776 // [!'@689.(Func '@689 '@689 '@689) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-            (op_mod_820 // [!'@688.(Func '@688 '@688 '@688) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-              (op_add_732 // [!'@687.(Func '@687 '@687 '@687) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+            ,op_mul_776 // [!'@676.(Func '@676 '@676 '@676) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+            (op_mod_820 // [!'@675.(Func '@675 '@675 '@675) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+              (op_add_732 // [!'@674.(Func '@674 '@674 '@674) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
                 (row // Int
                   ,1 // Int
                 ) // Int
@@ -2629,11 +2621,11 @@ function quadStripToMeshIndices_1043(vertices, rows, connectRows, connectCols)
             ) // Int
           ) // Int
           ;
-          let d = op_add_732 // [!'@694.(Func '@694 '@694 '@694) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+          let d = op_add_732 // [!'@681.(Func '@681 '@681 '@681) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
           (col // Int
-            ,op_mul_776 // [!'@693.(Func '@693 '@693 '@693) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-            (op_mod_820 // [!'@692.(Func '@692 '@692 '@692) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-              (op_add_732 // [!'@691.(Func '@691 '@691 '@691) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+            ,op_mul_776 // [!'@680.(Func '@680 '@680 '@680) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+            (op_mod_820 // [!'@679.(Func '@679 '@679 '@679) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+              (op_add_732 // [!'@678.(Func '@678 '@678 '@678) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
                 (row // Int
                   ,1 // Int
                 ) // Int
@@ -2643,21 +2635,21 @@ function quadStripToMeshIndices_1043(vertices, rows, connectRows, connectCols)
             ) // Int
           ) // Int
           ;
-          indices = pushMany_1959 // (Func (ArrayBuilder Int) (Array Int) (ArrayBuilder Int))
+          indices = pushMany_1846 // (Func (ArrayBuilder Int) (Array Int) (ArrayBuilder Int))
           (indices // (ArrayBuilder Int)
-            ,arrayFromJavaScript([a // Int
-              ,b // Int
-              ,d // Int
-            ]) // (Array Int)
+            ,[a // Int
+            ,b // Int
+            ,d // Int
+            ] // (Array Int)
           ) // (ArrayBuilder Int)
            // (ArrayBuilder Int)
           ;
-          indices = pushMany_1959 // (Func (ArrayBuilder Int) (Array Int) (ArrayBuilder Int))
+          indices = pushMany_1846 // (Func (ArrayBuilder Int) (Array Int) (ArrayBuilder Int))
           (indices // (ArrayBuilder Int)
-            ,arrayFromJavaScript([b // Int
-              ,c // Int
-              ,d // Int
-            ]) // (Array Int)
+            ,[b // Int
+            ,c // Int
+            ,d // Int
+            ] // (Array Int)
           ) // (ArrayBuilder Int)
            // (ArrayBuilder Int)
           ;
@@ -2665,20 +2657,10 @@ function quadStripToMeshIndices_1043(vertices, rows, connectRows, connectCols)
       }
     }
   }
-  return immutable_1847 // (Func (ArrayBuilder Int) (Array Int))
+  return immutable_1904 // (Func (ArrayBuilder Int) (Array Int))
   (indices // (ArrayBuilder Int)
   ) // (Array Int)
   ;
-}
-// (Func (Array Float3) (Array Float))
-function toVertexBuffer_1078(xs)
-{
-  var r=[];
-  for (var i=0; i < xs.length; ++i) {
-    var x = xs[i];
-    r.push(x[0], x[1], x[2]);    
-  }
-  return r;
 }
 // (Func Float2 Float3)
 function vector_1143(uv)
@@ -2721,24 +2703,24 @@ function vector_1143(uv)
 // (Func T0 T0 T0 T0)
 function rescale_1171(v, from, length)
 {
-  return op_add_518 // [!'@1448.(Func '@1448 '@1448 '@1448) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-  (from // '@1443
-    ,op_mul_566 // [!'@1447.(Func '@1447 '@1447 '@1447) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-    (v // '@1443
-      ,length // '@1443
-    ) // '@1443
-  ) // '@1443
+  return op_add_518 // [!'@1484.(Func '@1484 '@1484 '@1484) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+  (from // '@1479
+    ,op_mul_566 // [!'@1483.(Func '@1483 '@1483 '@1483) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    (v // '@1479
+      ,length // '@1479
+    ) // '@1479
+  ) // '@1479
   ;
 }
 // (Func (Func Float Float Float3) Int Int Float Float Float Float Bool Bool Mesh)
-function meshFromUV_1383(f, uCount, vCount, uStart, vStart, uLength, vLength, uJoin, vJoin)
+function meshFromUV_1377(f, uCount, vCount, uStart, vStart, uLength, vLength, uJoin, vJoin)
 {
   let uMax = uJoin // Bool
    ? float_41 // (Func Int Float)
   (uCount // Int
   ) // Float
    : float_41 // (Func Int Float)
-  (op_sub_754 // [!'@696.(Func '@696 '@696 '@696) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+  (op_sub_754 // [!'@686.(Func '@686 '@686 '@686) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (uCount // Int
       ,1 // Int
     ) // Int
@@ -2750,26 +2732,26 @@ function meshFromUV_1383(f, uCount, vCount, uStart, vStart, uLength, vLength, uJ
   (vCount // Int
   ) // Float
    : float_41 // (Func Int Float)
-  (op_sub_754 // [!'@697.(Func '@697 '@697 '@697) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+  (op_sub_754 // [!'@687.(Func '@687 '@687 '@687) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (vCount // Int
       ,1 // Int
     ) // Int
   ) // Float
    // Float
   ;
-  let uvs = cartesianProduct_2000 // (Func (Array Float) (Array Float) (Func Float Float Float3) (Array Float3))
-  (op_dot_dot_2038 // (Func Int Int (Array Int))
+  let uvs = cartesianProduct_2010 // (Func (Array Float) (Array Float) (Func Float Float Float3) (Array Float3))
+  (op_dot_dot_1762 // (Func Int Int (Array Int))
     (0 // Int
       ,uCount // Int
     ) // (Array Int)
-    ,op_dot_dot_2038 // (Func Int Int (Array Int))
+    ,op_dot_dot_1762 // (Func Int Int (Array Int))
     (0 // Int
       ,vCount // Int
     ) // (Array Int)
     ,(u, v) => vector_98 // [(Func Float Float Float Float3) | (Func Float Float3) | (Func (Array Float) Float3) | (Func Float2 Float3)]
-    (op_add_842 // [!'@700.(Func '@700 '@700 '@700) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-      (op_mul_886 // [!'@699.(Func '@699 '@699 '@699) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-        (op_div_908 // [!'@698.(Func '@698 '@698 '@698) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    (op_add_842 // [!'@690.(Func '@690 '@690 '@690) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+      (op_mul_886 // [!'@689.(Func '@689 '@689 '@689) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+        (op_div_908 // [!'@688.(Func '@688 '@688 '@688) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
           (u // Float
             ,uMax // Float
           ) // Float
@@ -2777,9 +2759,9 @@ function meshFromUV_1383(f, uCount, vCount, uStart, vStart, uLength, vLength, uJ
         ) // Float
         ,uStart // Float
       ) // Float
-      ,op_add_842 // [!'@703.(Func '@703 '@703 '@703) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-      (op_mul_886 // [!'@702.(Func '@702 '@702 '@702) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-        (op_div_908 // [!'@701.(Func '@701 '@701 '@701) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+      ,op_add_842 // [!'@693.(Func '@693 '@693 '@693) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+      (op_mul_886 // [!'@692.(Func '@692 '@692 '@692) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+        (op_div_908 // [!'@691.(Func '@691 '@691 '@691) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
           (v // Float
             ,vMax // Float
           ) // Float
@@ -2805,28 +2787,24 @@ function meshFromUV_1383(f, uCount, vCount, uStart, vStart, uLength, vLength, uJ
      // (Func Float3 Float3)
   ) // (Array Float3)
   ;
-  let indices = quadStripToMeshIndices_1043 // (Func (Array Float3) Int Bool Bool (Array Int))
+  let indices = quadStripToMeshIndices_1078 // (Func (Array Float3) Int Bool Bool (Array Int))
   (points // (Array Float3)
     ,vCount // Int
     ,uJoin // Bool
     ,vJoin // Bool
   ) // (Array Int)
   ;
-  return mesh_93 // [(Func (Array Float) (Array Int) (Array Float) (Array Float) Mesh) | (Func (Array Float) Mesh) | (Func (Array Float) (Array Int) Mesh) | (Func (Array Float) (Array Int) (Array Float) Mesh)]
-  (toVertexBuffer_1078 // (Func (Array Float3) (Array Float))
-    (points // (Array Float3)
-    ) // (Array Float)
+  return mesh_113 // [(Func (Array Float3) (Array Int) (Array Float3) (Array Float3) Mesh) | (Func (Array Float3) Mesh) | !'@694!'@695!'@696.(Func '@694 '@695 '@696) | (Func (Array Float3) (Array Int) Mesh) | (Func (Array Float3) (Array Int) (Array Float3) Mesh)]
+  (points // (Array Float3)
     ,indices // (Array Int)
-    ,toVertexBuffer_1078 // (Func (Array Float3) (Array Float))
-    (uvs // (Array Float3)
-    ) // (Array Float)
+    ,uvs // (Array Float3)
   ) // Mesh
   ;
 }
 // (Func (Func Float Float Float3) Int Mesh)
-function meshFromUV_1404(f, segments)
+function meshFromUV_1398(f, segments)
 {
-  return meshFromUV_1437 // [(Func (Func Float Float Float3) Int Int Float Float Float Float Bool Bool Mesh) | !'@728!'@729!'@730.(Func '@728 '@729 '@730) | (Func (Func Float Float Float3) Int Bool Mesh)]
+  return meshFromUV_1431 // [(Func (Func Float Float Float3) Int Int Float Float Float Float Bool Bool Mesh) | !'@721!'@722!'@723.(Func '@721 '@722 '@723) | (Func (Func Float Float Float3) Int Bool Mesh)]
   (f // (Func Float Float Float3)
     ,segments // Int
     ,true // Bool
@@ -2834,9 +2812,9 @@ function meshFromUV_1404(f, segments)
   ;
 }
 // (Func (Func Float Float Float3) Int Bool Mesh)
-function meshFromUV_1437(f, segments, join)
+function meshFromUV_1431(f, segments, join)
 {
-  return meshFromUV_1383 // [(Func (Func Float Float Float3) Int Int Float Float Float Float Bool Bool Mesh) | !'@721!'@722!'@723.(Func '@721 '@722 '@723) | !'@724!'@725!'@726!'@727.(Func '@724 '@725 '@726 '@727)]
+  return meshFromUV_1377 // [(Func (Func Float Float Float3) Int Int Float Float Float Float Bool Bool Mesh) | !'@714!'@715!'@716.(Func '@714 '@715 '@716) | !'@717!'@718!'@719!'@720.(Func '@717 '@718 '@719 '@720)]
   (f // (Func Float Float Float3)
     ,segments // Int
     ,segments // Int
@@ -2850,14 +2828,14 @@ function meshFromUV_1437(f, segments, join)
   ;
 }
 // (Func Float Float Float3)
-function spherePoint_1537(u, v)
+function spherePoint_1531(u, v)
 {
   return vector_98 // [(Func Float Float Float Float3) | (Func Float Float3) | (Func (Array Float) Float3) | (Func Float2 Float3)]
-  (op_mul_886 // [!'@902.(Func '@902 '@902 '@902) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+  (op_mul_886 // [!'@935.(Func '@935 '@935 '@935) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (op_negate_1659 // (Func Float Float)
       (cos_353 // (Func Float Float)
-        (op_mul_886 // [!'@899.(Func '@899 '@899 '@899) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-          (op_mul_886 // [!'@898.(Func '@898 '@898 '@898) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+        (op_mul_886 // [!'@932.(Func '@932 '@932 '@932) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+          (op_mul_886 // [!'@931.(Func '@931 '@931 '@931) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
             (u // Float
               ,2 // Float
             ) // Float
@@ -2866,8 +2844,8 @@ function spherePoint_1537(u, v)
         ) // Float
       ) // Float
       ,sin_449 // (Func Float Float)
-      (op_mul_886 // [!'@901.(Func '@901 '@901 '@901) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-        (op_mul_886 // [!'@900.(Func '@900 '@900 '@900) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+      (op_mul_886 // [!'@934.(Func '@934 '@934 '@934) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+        (op_mul_886 // [!'@933.(Func '@933 '@933 '@933) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
           (v // Float
             ,2 // Float
           ) // Float
@@ -2876,18 +2854,18 @@ function spherePoint_1537(u, v)
       ) // Float
     ) // Float
     ,cos_353 // (Func Float Float)
-    (op_mul_886 // [!'@904.(Func '@904 '@904 '@904) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-      (op_mul_886 // [!'@903.(Func '@903 '@903 '@903) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    (op_mul_886 // [!'@937.(Func '@937 '@937 '@937) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+      (op_mul_886 // [!'@936.(Func '@936 '@936 '@936) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
         (v // Float
           ,2 // Float
         ) // Float
         ,pi // Float
       ) // Float
     ) // Float
-    ,op_mul_886 // [!'@909.(Func '@909 '@909 '@909) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    ,op_mul_886 // [!'@942.(Func '@942 '@942 '@942) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (sin_449 // (Func Float Float)
-      (op_mul_886 // [!'@906.(Func '@906 '@906 '@906) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-        (op_mul_886 // [!'@905.(Func '@905 '@905 '@905) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+      (op_mul_886 // [!'@939.(Func '@939 '@939 '@939) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+        (op_mul_886 // [!'@938.(Func '@938 '@938 '@938) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
           (u // Float
             ,2 // Float
           ) // Float
@@ -2895,8 +2873,8 @@ function spherePoint_1537(u, v)
         ) // Float
       ) // Float
       ,sin_449 // (Func Float Float)
-      (op_mul_886 // [!'@908.(Func '@908 '@908 '@908) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-        (op_mul_886 // [!'@907.(Func '@907 '@907 '@907) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+      (op_mul_886 // [!'@941.(Func '@941 '@941 '@941) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+        (op_mul_886 // [!'@940.(Func '@940 '@940 '@940) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
           (v // Float
             ,2 // Float
           ) // Float
@@ -2908,39 +2886,42 @@ function spherePoint_1537(u, v)
   ;
 }
 // (Func Int Mesh)
-function sphere_1554(segments)
+function sphere_1548(segments)
 {
-  return meshFromUV_1404 // [(Func (Func Float Float Float3) Int Int Float Float Float Float Bool Bool Mesh) | (Func (Func Float Float Float3) Int Mesh) | (Func (Func Float Float Float3) Int Bool Mesh)]
-  (spherePoint_1537 // (Func Float Float Float3)
+  return meshFromUV_1398 // [(Func (Func Float Float Float3) Int Int Float Float Float Float Bool Bool Mesh) | (Func (Func Float Float Float3) Int Mesh) | (Func (Func Float Float Float3) Int Bool Mesh)]
+  (spherePoint_1531 // (Func Float Float Float3)
     ,segments // Int
   ) // Mesh
   ;
 }
 // (Func Mesh)
-function sphere_1565()
+function sphere_1559()
 {
-  return sphere_1554 // [(Func Int Mesh) | !'@912.(Func '@912)]
+  return sphere_1548 // [(Func Int Mesh) | !'@945.(Func '@945)]
   (32 // Int
   ) // Mesh
   ;
 }
-// (Func Float Float Float3)
-function cylinderPoint_1613(u, v)
+// (Func Float Int Float3)
+function cylinderPoint_1611(u, v)
 {
   return vector_98 // [(Func Float Float Float Float3) | (Func Float Float3) | (Func (Array Float) Float3) | (Func Float2 Float3)]
   (sin_449 // (Func Float Float)
-    (op_mul_886 // [!'@739.(Func '@739 '@739 '@739) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-      (op_mul_886 // [!'@738.(Func '@738 '@738 '@738) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    (op_mul_886 // [!'@733.(Func '@733 '@733 '@733) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+      (op_mul_886 // [!'@732.(Func '@732 '@732 '@732) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
         (u // Float
           ,2 // Float
         ) // Float
         ,pi // Float
       ) // Float
     ) // Float
-    ,v // Float
+    ,op_mul_776 // [!'@734.(Func '@734 '@734 '@734) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    (v // Int
+      ,2 // Int
+    ) // Int
     ,cos_353 // (Func Float Float)
-    (op_mul_886 // [!'@741.(Func '@741 '@741 '@741) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-      (op_mul_886 // [!'@740.(Func '@740 '@740 '@740) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    (op_mul_886 // [!'@736.(Func '@736 '@736 '@736) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+      (op_mul_886 // [!'@735.(Func '@735 '@735 '@735) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
         (u // Float
           ,2 // Float
         ) // Float
@@ -2951,27 +2932,27 @@ function cylinderPoint_1613(u, v)
   ;
 }
 // (Func Int Mesh)
-function cylinder_1630(segments)
+function cylinder_1628(segments)
 {
-  return meshFromUV_1404 // [(Func (Func Float Float Float3) Int Int Float Float Float Float Bool Bool Mesh) | (Func (Func Float Float Float3) Int Mesh) | (Func (Func Float Float Float3) Int Bool Mesh)]
-  (cylinderPoint_1613 // (Func Float Float Float3)
+  return meshFromUV_1398 // [(Func (Func Float Float Float3) Int Int Float Float Float Float Bool Bool Mesh) | (Func (Func Float Float Float3) Int Mesh) | (Func (Func Float Float Float3) Int Bool Mesh)]
+  (cylinderPoint_1611 // (Func Float Int Float3)
     ,segments // Int
   ) // Mesh
   ;
 }
 // (Func Mesh)
-function cylinder_1641()
+function cylinder_1639()
 {
-  return cylinder_1630 // [(Func Int Mesh) | !'@743.(Func '@743)]
-  (32 // Int
+  return cylinder_1628 // [(Func Int Mesh) | !'@738.(Func '@738)]
+  (16 // Int
   ) // Mesh
   ;
 }
 // (Func Float Float Int Mesh)
-function torus_1681(r1, r2, segments)
+function torus_1679(r1, r2, segments)
 {
-  return meshFromUV_1404 // [(Func (Func Float Float Float3) Int Int Float Float Float Float Bool Bool Mesh) | (Func (Func Float Float Float3) Int Mesh) | (Func (Func Float Float Float3) Int Bool Mesh)]
-  ((u, v) => torusPoint_1811 // (Func Float Float Float Float Float3)
+  return meshFromUV_1398 // [(Func (Func Float Float Float3) Int Int Float Float Float Float Bool Bool Mesh) | (Func (Func Float Float Float3) Int Mesh) | (Func (Func Float Float Float3) Int Bool Mesh)]
+  ((u, v) => torusPoint_1809 // (Func Float Float Float Float Float3)
     (u // Float
       ,v // Float
       ,r1 // Float
@@ -2983,17 +2964,17 @@ function torus_1681(r1, r2, segments)
   ;
 }
 // (Func Float Float Float Float Float3)
-function torusPoint_1811(u, v, r1, r2)
+function torusPoint_1809(u, v, r1, r2)
 {
   return vector_98 // [(Func Float Float Float Float3) | (Func Float Float3) | (Func (Array Float) Float3) | (Func Float2 Float3)]
-  (op_mul_886 // [!'@948.(Func '@948 '@948 '@948) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-    (op_add_842 // [!'@945.(Func '@945 '@945 '@945) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+  (op_mul_886 // [!'@981.(Func '@981 '@981 '@981) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    (op_add_842 // [!'@978.(Func '@978 '@978 '@978) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
       (r1 // Float
-        ,op_mul_886 // [!'@944.(Func '@944 '@944 '@944) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+        ,op_mul_886 // [!'@977.(Func '@977 '@977 '@977) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
         (r2 // Float
           ,cos_353 // (Func Float Float)
-          (op_mul_886 // [!'@943.(Func '@943 '@943 '@943) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-            (op_mul_886 // [!'@942.(Func '@942 '@942 '@942) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+          (op_mul_886 // [!'@976.(Func '@976 '@976 '@976) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+            (op_mul_886 // [!'@975.(Func '@975 '@975 '@975) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
               (v // Float
                 ,2 // Float
               ) // Float
@@ -3003,8 +2984,8 @@ function torusPoint_1811(u, v, r1, r2)
         ) // Float
       ) // Float
       ,cos_353 // (Func Float Float)
-      (op_mul_886 // [!'@947.(Func '@947 '@947 '@947) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-        (op_mul_886 // [!'@946.(Func '@946 '@946 '@946) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+      (op_mul_886 // [!'@980.(Func '@980 '@980 '@980) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+        (op_mul_886 // [!'@979.(Func '@979 '@979 '@979) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
           (u // Float
             ,2 // Float
           ) // Float
@@ -3012,14 +2993,14 @@ function torusPoint_1811(u, v, r1, r2)
         ) // Float
       ) // Float
     ) // Float
-    ,op_mul_886 // [!'@955.(Func '@955 '@955 '@955) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-    (op_add_842 // [!'@952.(Func '@952 '@952 '@952) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    ,op_mul_886 // [!'@988.(Func '@988 '@988 '@988) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    (op_add_842 // [!'@985.(Func '@985 '@985 '@985) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
       (r1 // Float
-        ,op_mul_886 // [!'@951.(Func '@951 '@951 '@951) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+        ,op_mul_886 // [!'@984.(Func '@984 '@984 '@984) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
         (r2 // Float
           ,cos_353 // (Func Float Float)
-          (op_mul_886 // [!'@950.(Func '@950 '@950 '@950) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-            (op_mul_886 // [!'@949.(Func '@949 '@949 '@949) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+          (op_mul_886 // [!'@983.(Func '@983 '@983 '@983) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+            (op_mul_886 // [!'@982.(Func '@982 '@982 '@982) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
               (v // Float
                 ,2 // Float
               ) // Float
@@ -3029,8 +3010,8 @@ function torusPoint_1811(u, v, r1, r2)
         ) // Float
       ) // Float
       ,sin_449 // (Func Float Float)
-      (op_mul_886 // [!'@954.(Func '@954 '@954 '@954) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-        (op_mul_886 // [!'@953.(Func '@953 '@953 '@953) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+      (op_mul_886 // [!'@987.(Func '@987 '@987 '@987) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+        (op_mul_886 // [!'@986.(Func '@986 '@986 '@986) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
           (u // Float
             ,2 // Float
           ) // Float
@@ -3038,11 +3019,11 @@ function torusPoint_1811(u, v, r1, r2)
         ) // Float
       ) // Float
     ) // Float
-    ,op_mul_886 // [!'@958.(Func '@958 '@958 '@958) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    ,op_mul_886 // [!'@991.(Func '@991 '@991 '@991) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (r2 // Float
       ,sin_449 // (Func Float Float)
-      (op_mul_886 // [!'@957.(Func '@957 '@957 '@957) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-        (op_mul_886 // [!'@956.(Func '@956 '@956 '@956) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+      (op_mul_886 // [!'@990.(Func '@990 '@990 '@990) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+        (op_mul_886 // [!'@989.(Func '@989 '@989 '@989) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
           (v // Float
             ,2 // Float
           ) // Float
@@ -3054,9 +3035,9 @@ function torusPoint_1811(u, v, r1, r2)
   ;
 }
 // (Func Mesh)
-function torus_1824()
+function torus_1822()
 {
-  return torus_1681 // [(Func Float Float Int Mesh) | !'@961.(Func '@961)]
+  return torus_1679 // [(Func Float Float Int Mesh) | !'@994.(Func '@994)]
   (2 // Int
     ,0.5 // Float
     ,32 // Int
@@ -3064,24 +3045,21 @@ function torus_1824()
   ;
 }
 // (Func Mesh Int)
-function vertexCount_1845(mesh)
+function vertexCount_1839(mesh)
 {
-  return op_div_798 // [!'@463.(Func '@463 '@463 '@463) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-  (count_1711 // (Func (Array Float) Int)
-    (vertexBuffer_2169 // (Func Mesh (Array Float))
-      (mesh // Mesh
-      ) // (Array Float)
-    ) // Int
-    ,3 // Int
+  return count_1711 // (Func (Array Float3) Int)
+  (vertexBuffer_2125 // (Func Mesh (Array Float3))
+    (mesh // Mesh
+    ) // (Array Float3)
   ) // Int
   ;
 }
 // (Func Mesh Int)
-function faceCount_1866(mesh)
+function faceCount_1860(mesh)
 {
-  return op_div_798 // [!'@847.(Func '@847 '@847 '@847) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+  return op_div_798 // [!'@868.(Func '@868 '@868 '@868) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
   (count_1711 // (Func (Array Int) Int)
-    (indexBuffer_2187 // (Func Mesh (Array Int))
+    (indexBuffer_2143 // (Func Mesh (Array Int))
       (mesh // Mesh
       ) // (Array Int)
     ) // Int
@@ -3089,166 +3067,110 @@ function faceCount_1866(mesh)
   ) // Int
   ;
 }
-// (Func Mesh Int Float3)
-function vertex_1896(mesh, i)
+// (Func (Array Float) (Array Float3))
+function toVectors_1936(xs)
 {
-  return vector_151 // [(Func Float Float Float Float3) | (Func Float Float3) | (Func (Array Float) Float3) | (Func Float2 Float3)]
-  (take_994 // [!'@774.(Func (Array '@774) Int (Array '@774)) | !'@775.(Func (Array '@775) Int Int (Array '@775))]
-    (vertexBuffer_2169 // (Func Mesh (Array Float))
-      (mesh // Mesh
-      ) // (Array Float)
-      ,op_mul_776 // [!'@773.(Func '@773 '@773 '@773) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-      (i // Int
+  return map_53 // (Func (Array Int) (Func Int Float3) (Array Float3))
+  (op_dot_dot_1762 // (Func Int Int (Array Int))
+    (0 // Int
+      ,op_div_798 // [!'@276.(Func '@276 '@276 '@276) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+      (count_1711 // (Func (Array Float) Int)
+        (xs // (Array Float)
+        ) // Int
         ,3 // Int
       ) // Int
-      ,3 // Int
-    ) // (Array Float)
-  ) // Float3
-  ;
-}
-// (Func Mesh Int Float3)
-function vertexColor_1926(mesh, i)
-{
-  return vector_151 // [(Func Float Float Float Float3) | (Func Float Float3) | (Func (Array Float) Float3) | (Func Float2 Float3)]
-  (take_994 // [!'@1590.(Func (Array '@1590) Int (Array '@1590)) | !'@1591.(Func (Array '@1591) Int Int (Array '@1591))]
-    (colorBuffer_2223 // (Func Mesh (Array Float))
-      (mesh // Mesh
-      ) // (Array Float)
-      ,op_mul_776 // [!'@1589.(Func '@1589 '@1589 '@1589) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-      (i // Int
-        ,3 // Int
-      ) // Int
-      ,3 // Int
-    ) // (Array Float)
-  ) // Float3
-  ;
-}
-// (Func Mesh Int Float3)
-function vertexUV_1956(mesh, i)
-{
-  return vector_151 // [(Func Float Float Float Float3) | (Func Float Float3) | (Func (Array Float) Float3) | (Func Float2 Float3)]
-  (take_994 // [!'@508.(Func (Array '@508) Int (Array '@508)) | !'@509.(Func (Array '@509) Int Int (Array '@509))]
-    (uvBuffer_2205 // (Func Mesh (Array Float))
-      (mesh // Mesh
-      ) // (Array Float)
-      ,op_mul_776 // [!'@507.(Func '@507 '@507 '@507) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-      (i // Int
-        ,3 // Int
-      ) // Int
-      ,3 // Int
-    ) // (Array Float)
-  ) // Float3
-  ;
-}
-// (Func Mesh (Array Float3))
-function vertexColors_1985(mesh)
-{
-  return array_1691 // [!'@1597.(Func Int (Func Int '@1597) (Array '@1597)) | (Func Float3 (Array Float)) | (Func Float3 (Array Float))]
-  (vertexCount_1845 // (Func Mesh Int)
-    (mesh // Mesh
-    ) // Int
-    ,(i) => vertexColor_1926 // (Func Mesh Int Float3)
-    (mesh // Mesh
-      ,i // Int
-    ) // Float3
-     // (Func Int Float3)
-  ) // (Array Float3)
-  ;
-}
-// (Func Mesh (Array Float3))
-function vertexUVs_2014(mesh)
-{
-  return array_1691 // [!'@510.(Func Int (Func Int '@510) (Array '@510)) | (Func Float3 (Array Float)) | (Func Float3 (Array Float))]
-  (vertexCount_1845 // (Func Mesh Int)
-    (mesh // Mesh
-    ) // Int
-    ,(i) => vertexUV_1956 // (Func Mesh Int Float3)
-    (mesh // Mesh
-      ,i // Int
-    ) // Float3
-     // (Func Int Float3)
-  ) // (Array Float3)
-  ;
-}
-// (Func Mesh (Array Float3))
-function vertices_2044(mesh)
-{
-  return array_1691 // [!'@776.(Func Int (Func Int '@776) (Array '@776)) | (Func Float3 (Array Float)) | (Func Float3 (Array Float))]
-  (vertexCount_1845 // (Func Mesh Int)
-    (mesh // Mesh
-    ) // Int
-    ,(i) => vertex_1896 // (Func Mesh Int Float3)
-    (mesh // Mesh
-      ,i // Int
+    ) // (Array Int)
+    ,(i) => vector_98 // [(Func Float Float Float Float3) | (Func Float Float3) | (Func (Array Float) Float3) | (Func Float2 Float3)]
+    (op_obr_cbr_2029 // (Func (Array Float) Int Float)
+      (xs // (Array Float)
+        ,op_mul_776 // [!'@277.(Func '@277 '@277 '@277) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+        (i // Int
+          ,3 // Int
+        ) // Int
+      ) // Float
+      ,op_obr_cbr_2029 // (Func (Array Float) Int Float)
+      (xs // (Array Float)
+        ,op_add_732 // [!'@279.(Func '@279 '@279 '@279) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+        (op_mul_776 // [!'@278.(Func '@278 '@278 '@278) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+          (i // Int
+            ,3 // Int
+          ) // Int
+          ,1 // Int
+        ) // Int
+      ) // Float
+      ,op_obr_cbr_2029 // (Func (Array Float) Int Float)
+      (xs // (Array Float)
+        ,op_add_732 // [!'@281.(Func '@281 '@281 '@281) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+        (op_mul_776 // [!'@280.(Func '@280 '@280 '@280) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+          (i // Int
+            ,3 // Int
+          ) // Int
+          ,2 // Int
+        ) // Int
+      ) // Float
     ) // Float3
      // (Func Int Float3)
   ) // (Array Float3)
   ;
 }
 // (Func Mesh (Array Float3) Mesh)
-function setVertices_2080(m, points)
+function setVertices_1969(m, points)
 {
-  return mesh_2151 // [(Func (Array Float) (Array Int) (Array Float) (Array Float) Mesh) | (Func (Array Float) Mesh) | (Func (Array Float) (Array Int) Mesh) | (Func (Array Float) (Array Int) (Array Float) Mesh)]
-  (toVertexBuffer_1078 // (Func (Array Float3) (Array Float))
-    (points // (Array Float3)
-    ) // (Array Float)
-    ,indexBuffer_2187 // (Func Mesh (Array Int))
+  return mesh_2107 // [(Func (Array Float3) (Array Int) (Array Float3) (Array Float3) Mesh) | (Func (Array Float3) Mesh) | !'@758!'@759!'@760.(Func '@758 '@759 '@760) | (Func (Array Float3) (Array Int) Mesh) | (Func (Array Float3) (Array Int) (Array Float3) Mesh)]
+  (points // (Array Float3)
+    ,indexBuffer_2143 // (Func Mesh (Array Int))
     (m // Mesh
     ) // (Array Int)
-    ,uvBuffer_2205 // (Func Mesh (Array Float))
+    ,uvBuffer_2161 // (Func Mesh (Array Float3))
     (m // Mesh
-    ) // (Array Float)
-    ,colorBuffer_2223 // (Func Mesh (Array Float))
+    ) // (Array Float3)
+    ,colorBuffer_2179 // (Func Mesh (Array Float3))
     (m // Mesh
-    ) // (Array Float)
+    ) // (Array Float3)
   ) // Mesh
   ;
 }
 // (Func Mesh (Array Float3) Mesh)
-function setVertexColors_2116(m, colors)
+function setVertexColors_2002(m, colors)
 {
-  return mesh_2151 // [(Func (Array Float) (Array Int) (Array Float) (Array Float) Mesh) | (Func (Array Float) Mesh) | (Func (Array Float) (Array Int) Mesh) | (Func (Array Float) (Array Int) (Array Float) Mesh)]
-  (vertexBuffer_2169 // (Func Mesh (Array Float))
+  return mesh_2107 // [(Func (Array Float3) (Array Int) (Array Float3) (Array Float3) Mesh) | (Func (Array Float3) Mesh) | !'@479!'@480!'@481.(Func '@479 '@480 '@481) | (Func (Array Float3) (Array Int) Mesh) | (Func (Array Float3) (Array Int) (Array Float3) Mesh)]
+  (vertexBuffer_2125 // (Func Mesh (Array Float3))
     (m // Mesh
-    ) // (Array Float)
-    ,indexBuffer_2187 // (Func Mesh (Array Int))
+    ) // (Array Float3)
+    ,indexBuffer_2143 // (Func Mesh (Array Int))
     (m // Mesh
     ) // (Array Int)
-    ,uvBuffer_2205 // (Func Mesh (Array Float))
+    ,uvBuffer_2161 // (Func Mesh (Array Float3))
     (m // Mesh
-    ) // (Array Float)
-    ,toVertexBuffer_1078 // (Func (Array Float3) (Array Float))
-    (colors // (Array Float3)
-    ) // (Array Float)
+    ) // (Array Float3)
+    ,colors // (Array Float3)
   ) // Mesh
   ;
 }
 // (Func Mesh (Array Float3) Mesh)
-function setVertexUVs_2152(m, uvs)
+function setVertexUVs_2035(m, uvs)
 {
-  return mesh_2151 // [(Func (Array Float) (Array Int) (Array Float) (Array Float) Mesh) | (Func (Array Float) Mesh) | (Func (Array Float) (Array Int) Mesh) | (Func (Array Float) (Array Int) (Array Float) Mesh)]
-  (vertexBuffer_2169 // (Func Mesh (Array Float))
+  return mesh_2107 // [(Func (Array Float3) (Array Int) (Array Float3) (Array Float3) Mesh) | (Func (Array Float3) Mesh) | !'@1522!'@1523!'@1524.(Func '@1522 '@1523 '@1524) | (Func (Array Float3) (Array Int) Mesh) | (Func (Array Float3) (Array Int) (Array Float3) Mesh)]
+  (vertexBuffer_2125 // (Func Mesh (Array Float3))
     (m // Mesh
-    ) // (Array Float)
-    ,indexBuffer_2187 // (Func Mesh (Array Int))
+    ) // (Array Float3)
+    ,indexBuffer_2143 // (Func Mesh (Array Int))
     (m // Mesh
     ) // (Array Int)
-    ,toVertexBuffer_1078 // (Func (Array Float3) (Array Float))
-    (uvs // (Array Float3)
-    ) // (Array Float)
-    ,colorBuffer_2223 // (Func Mesh (Array Float))
+    ,uvs // (Array Float3)
+    ,colorBuffer_2179 // (Func Mesh (Array Float3))
     (m // Mesh
-    ) // (Array Float)
+    ) // (Array Float3)
   ) // Mesh
   ;
 }
 // (Func Mesh (Func Float3 Float3) Mesh)
-function transform_2179(m, f)
+function transform_2062(m, f)
 {
-  return setVertices_2080 // (Func Mesh (Array Float3) Mesh)
+  return setVertices_1969 // (Func Mesh (Array Float3) Mesh)
   (m // Mesh
     ,map_53 // (Func (Array Float3) (Func Float3 Float3) (Array Float3))
-    (vertices_2044 // (Func Mesh (Array Float3))
+    (vertexBuffer_2125 // (Func Mesh (Array Float3))
       (m // Mesh
       ) // (Array Float3)
       ,f // (Func Float3 Float3)
@@ -3257,11 +3179,11 @@ function transform_2179(m, f)
   ;
 }
 // (Func Mesh Float3 Mesh)
-function translate_2208(m, amount)
+function translate_2091(m, amount)
 {
-  return transform_2179 // (Func Mesh (Func Float3 Float3) Mesh)
+  return transform_2062 // (Func Mesh (Func Float3 Float3) Mesh)
   (m // Mesh
-    ,(v) => op_add_1255 // [!'@787.(Func '@787 '@787 '@787) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    ,(v) => op_add_1255 // [!'@773.(Func '@773 '@773 '@773) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (v // Float3
       ,amount // Float3
     ) // Float3
@@ -3270,11 +3192,11 @@ function translate_2208(m, amount)
   ;
 }
 // (Func Mesh Float3 Mesh)
-function scale_2237(m, amount)
+function scale_2120(m, amount)
 {
-  return transform_2179 // (Func Mesh (Func Float3 Float3) Mesh)
+  return transform_2062 // (Func Mesh (Func Float3 Float3) Mesh)
   (m // Mesh
-    ,(v) => op_mul_1385 // [!'@780.(Func '@780 '@780 '@780) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    ,(v) => op_mul_1385 // [!'@766.(Func '@766 '@766 '@766) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (v // Float3
       ,amount // Float3
     ) // Float3
@@ -3283,18 +3205,18 @@ function scale_2237(m, amount)
   ;
 }
 // (Func Float Float Float3)
-function kleinPoint_2567(a, b)
+function kleinPoint_2450(a, b)
 {
-  let u = op_mul_886 // [!'@1005.(Func '@1005 '@1005 '@1005) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-  (op_mul_886 // [!'@1004.(Func '@1004 '@1004 '@1004) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+  let u = op_mul_886 // [!'@1038.(Func '@1038 '@1038 '@1038) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+  (op_mul_886 // [!'@1037.(Func '@1037 '@1037 '@1037) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (a // Float
       ,pi // Float
     ) // Float
     ,2 // Float
   ) // Float
   ;
-  let v = op_mul_886 // [!'@1007.(Func '@1007 '@1007 '@1007) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-  (op_mul_886 // [!'@1006.(Func '@1006 '@1006 '@1006) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+  let v = op_mul_886 // [!'@1040.(Func '@1040 '@1040 '@1040) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+  (op_mul_886 // [!'@1039.(Func '@1039 '@1039 '@1039) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (b // Float
       ,pi // Float
     ) // Float
@@ -3313,28 +3235,28 @@ function kleinPoint_2567(a, b)
     ) // Bool
   )
   {
-    x = op_add_842 // [!'@1016.(Func '@1016 '@1016 '@1016) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-    (op_mul_886 // [!'@1010.(Func '@1010 '@1010 '@1010) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-      (op_mul_886 // [!'@1008.(Func '@1008 '@1008 '@1008) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    x = op_add_842 // [!'@1049.(Func '@1049 '@1049 '@1049) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    (op_mul_886 // [!'@1043.(Func '@1043 '@1043 '@1043) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+      (op_mul_886 // [!'@1041.(Func '@1041 '@1041 '@1041) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
         (3 // Float
           ,cos_353 // (Func Float Float)
           (u // Float
           ) // Float
         ) // Float
-        ,op_add_842 // [!'@1009.(Func '@1009 '@1009 '@1009) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+        ,op_add_842 // [!'@1042.(Func '@1042 '@1042 '@1042) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
         (1 // Float
           ,sin_449 // (Func Float Float)
           (u // Float
           ) // Float
         ) // Float
       ) // Float
-      ,op_mul_886 // [!'@1015.(Func '@1015 '@1015 '@1015) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-      (op_mul_886 // [!'@1014.(Func '@1014 '@1014 '@1014) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-        (op_mul_886 // [!'@1013.(Func '@1013 '@1013 '@1013) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+      ,op_mul_886 // [!'@1048.(Func '@1048 '@1048 '@1048) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+      (op_mul_886 // [!'@1047.(Func '@1047 '@1047 '@1047) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+        (op_mul_886 // [!'@1046.(Func '@1046 '@1046 '@1046) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
           (2 // Float
-            ,op_sub_864 // [!'@1012.(Func '@1012 '@1012 '@1012) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+            ,op_sub_864 // [!'@1045.(Func '@1045 '@1045 '@1045) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
             (1 // Float
-              ,op_div_908 // [!'@1011.(Func '@1011 '@1011 '@1011) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+              ,op_div_908 // [!'@1044.(Func '@1044 '@1044 '@1044) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
               (cos_353 // (Func Float Float)
                 (u // Float
                 ) // Float
@@ -3353,8 +3275,8 @@ function kleinPoint_2567(a, b)
     ) // Float
      // Float
     ;
-    z = op_sub_864 // [!'@1023.(Func '@1023 '@1023 '@1023) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-    (op_mul_886 // [!'@1017.(Func '@1017 '@1017 '@1017) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    z = op_sub_864 // [!'@1056.(Func '@1056 '@1056 '@1056) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    (op_mul_886 // [!'@1050.(Func '@1050 '@1050 '@1050) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
       (op_negate_1659 // (Func Float Float)
         (8 // Float
         ) // Float
@@ -3362,13 +3284,13 @@ function kleinPoint_2567(a, b)
         (u // Float
         ) // Float
       ) // Float
-      ,op_mul_886 // [!'@1022.(Func '@1022 '@1022 '@1022) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-      (op_mul_886 // [!'@1021.(Func '@1021 '@1021 '@1021) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-        (op_mul_886 // [!'@1020.(Func '@1020 '@1020 '@1020) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+      ,op_mul_886 // [!'@1055.(Func '@1055 '@1055 '@1055) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+      (op_mul_886 // [!'@1054.(Func '@1054 '@1054 '@1054) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+        (op_mul_886 // [!'@1053.(Func '@1053 '@1053 '@1053) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
           (2 // Float
-            ,op_sub_864 // [!'@1019.(Func '@1019 '@1019 '@1019) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+            ,op_sub_864 // [!'@1052.(Func '@1052 '@1052 '@1052) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
             (1 // Float
-              ,op_div_908 // [!'@1018.(Func '@1018 '@1018 '@1018) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+              ,op_div_908 // [!'@1051.(Func '@1051 '@1051 '@1051) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
               (cos_353 // (Func Float Float)
                 (u // Float
                 ) // Float
@@ -3390,27 +3312,27 @@ function kleinPoint_2567(a, b)
   }
   else
   {
-    x = op_add_842 // [!'@1032.(Func '@1032 '@1032 '@1032) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-    (op_mul_886 // [!'@1026.(Func '@1026 '@1026 '@1026) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-      (op_mul_886 // [!'@1024.(Func '@1024 '@1024 '@1024) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    x = op_add_842 // [!'@1065.(Func '@1065 '@1065 '@1065) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    (op_mul_886 // [!'@1059.(Func '@1059 '@1059 '@1059) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+      (op_mul_886 // [!'@1057.(Func '@1057 '@1057 '@1057) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
         (3 // Float
           ,cos_353 // (Func Float Float)
           (u // Float
           ) // Float
         ) // Float
-        ,op_add_842 // [!'@1025.(Func '@1025 '@1025 '@1025) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+        ,op_add_842 // [!'@1058.(Func '@1058 '@1058 '@1058) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
         (1 // Float
           ,sin_449 // (Func Float Float)
           (u // Float
           ) // Float
         ) // Float
       ) // Float
-      ,op_mul_886 // [!'@1031.(Func '@1031 '@1031 '@1031) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-      (op_mul_886 // [!'@1029.(Func '@1029 '@1029 '@1029) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+      ,op_mul_886 // [!'@1064.(Func '@1064 '@1064 '@1064) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+      (op_mul_886 // [!'@1062.(Func '@1062 '@1062 '@1062) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
         (2 // Float
-          ,op_sub_864 // [!'@1028.(Func '@1028 '@1028 '@1028) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+          ,op_sub_864 // [!'@1061.(Func '@1061 '@1061 '@1061) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
           (1 // Float
-            ,op_div_908 // [!'@1027.(Func '@1027 '@1027 '@1027) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+            ,op_div_908 // [!'@1060.(Func '@1060 '@1060 '@1060) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
             (cos_353 // (Func Float Float)
               (u // Float
               ) // Float
@@ -3419,7 +3341,7 @@ function kleinPoint_2567(a, b)
           ) // Float
         ) // Float
         ,cos_353 // (Func Float Float)
-        (op_add_842 // [!'@1030.(Func '@1030 '@1030 '@1030) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+        (op_add_842 // [!'@1063.(Func '@1063 '@1063 '@1063) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
           (v // Float
             ,pi // Float
           ) // Float
@@ -3428,7 +3350,7 @@ function kleinPoint_2567(a, b)
     ) // Float
      // Float
     ;
-    z = op_mul_886 // [!'@1033.(Func '@1033 '@1033 '@1033) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    z = op_mul_886 // [!'@1066.(Func '@1066 '@1066 '@1066) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (op_negate_1659 // (Func Float Float)
       (8 // Float
       ) // Float
@@ -3439,14 +3361,14 @@ function kleinPoint_2567(a, b)
      // Float
     ;
   }
-  y = op_mul_886 // [!'@1037.(Func '@1037 '@1037 '@1037) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-  (op_mul_886 // [!'@1036.(Func '@1036 '@1036 '@1036) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+  y = op_mul_886 // [!'@1070.(Func '@1070 '@1070 '@1070) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+  (op_mul_886 // [!'@1069.(Func '@1069 '@1069 '@1069) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (op_negate_1659 // (Func Float Float)
       (2 // Float
       ) // Float
-      ,op_sub_864 // [!'@1035.(Func '@1035 '@1035 '@1035) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+      ,op_sub_864 // [!'@1068.(Func '@1068 '@1068 '@1068) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
       (1 // Float
-        ,op_div_908 // [!'@1034.(Func '@1034 '@1034 '@1034) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+        ,op_div_908 // [!'@1067.(Func '@1067 '@1067 '@1067) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
         (cos_353 // (Func Float Float)
           (u // Float
           ) // Float
@@ -3461,15 +3383,15 @@ function kleinPoint_2567(a, b)
    // Float
   ;
   return vector_98 // [(Func Float Float Float Float3) | (Func Float Float3) | (Func (Array Float) Float3) | (Func Float2 Float3)]
-  (op_div_908 // [!'@1038.(Func '@1038 '@1038 '@1038) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+  (op_div_908 // [!'@1071.(Func '@1071 '@1071 '@1071) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (x // Float
       ,4 // Float
     ) // Float
-    ,op_div_908 // [!'@1039.(Func '@1039 '@1039 '@1039) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    ,op_div_908 // [!'@1072.(Func '@1072 '@1072 '@1072) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (y // Float
       ,4 // Float
     ) // Float
-    ,op_div_908 // [!'@1040.(Func '@1040 '@1040 '@1040) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    ,op_div_908 // [!'@1073.(Func '@1073 '@1073 '@1073) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (z // Float
       ,4 // Float
     ) // Float
@@ -3477,17 +3399,17 @@ function kleinPoint_2567(a, b)
   ;
 }
 // (Func Mesh)
-function klein_2581()
+function klein_2464()
 {
-  return meshFromUV_1437 // [(Func (Func Float Float Float3) Int Int Float Float Float Float Bool Bool Mesh) | (Func (Func Float Float Float3) Int Mesh) | (Func (Func Float Float Float3) Int Bool Mesh)]
-  (kleinPoint_2567 // (Func Float Float Float3)
+  return meshFromUV_1431 // [(Func (Func Float Float Float3) Int Int Float Float Float Float Bool Bool Mesh) | (Func (Func Float Float Float3) Int Mesh) | (Func (Func Float Float Float3) Int Bool Mesh)]
+  (kleinPoint_2450 // (Func Float Float Float3)
     ,32 // Int
     ,false // Bool
   ) // Mesh
   ;
 }
 // (Func Float Float Float3)
-function planeXYPoint_2602(u, v)
+function planeXYPoint_2485(u, v)
 {
   return vector_98 // [(Func Float Float Float Float3) | (Func Float Float3) | (Func (Array Float) Float3) | (Func Float2 Float3)]
   (u // Float
@@ -3497,7 +3419,7 @@ function planeXYPoint_2602(u, v)
   ;
 }
 // (Func Float Float Float3)
-function planeXZPoint_2623(u, v)
+function planeXZPoint_2506(u, v)
 {
   return vector_98 // [(Func Float Float Float Float3) | (Func Float Float3) | (Func (Array Float) Float3) | (Func Float2 Float3)]
   (u // Float
@@ -3507,7 +3429,7 @@ function planeXZPoint_2623(u, v)
   ;
 }
 // (Func Float Float Float3)
-function planeYZPoint_2644(u, v)
+function planeYZPoint_2527(u, v)
 {
   return vector_98 // [(Func Float Float Float Float3) | (Func Float Float3) | (Func (Array Float) Float3) | (Func Float2 Float3)]
   (0 // Int
@@ -3517,7 +3439,7 @@ function planeYZPoint_2644(u, v)
   ;
 }
 // (Func Float Float Float3)
-function planeYXPoint_2665(u, v)
+function planeYXPoint_2548(u, v)
 {
   return vector_98 // [(Func Float Float Float Float3) | (Func Float Float3) | (Func (Array Float) Float3) | (Func Float2 Float3)]
   (v // Float
@@ -3527,7 +3449,7 @@ function planeYXPoint_2665(u, v)
   ;
 }
 // (Func Float Float Float3)
-function planeZXPoint_2686(u, v)
+function planeZXPoint_2569(u, v)
 {
   return vector_98 // [(Func Float Float Float Float3) | (Func Float Float3) | (Func (Array Float) Float3) | (Func Float2 Float3)]
   (v // Float
@@ -3537,7 +3459,7 @@ function planeZXPoint_2686(u, v)
   ;
 }
 // (Func Float Float Float3)
-function planeZYPoint_2707(u, v)
+function planeZYPoint_2590(u, v)
 {
   return vector_98 // [(Func Float Float Float Float3) | (Func Float Float3) | (Func (Array Float) Float3) | (Func Float2 Float3)]
   (0 // Int
@@ -3547,25 +3469,25 @@ function planeZYPoint_2707(u, v)
   ;
 }
 // (Func Mesh)
-function plane_2721()
+function plane_2604()
 {
-  return meshFromUV_1437 // [(Func (Func Float Float Float3) Int Int Float Float Float Float Bool Bool Mesh) | (Func (Func Float Float Float3) Int Mesh) | (Func (Func Float Float Float3) Int Bool Mesh)]
-  (planeXYPoint_2602 // (Func Float Float Float3)
+  return meshFromUV_1431 // [(Func (Func Float Float Float3) Int Int Float Float Float Float Bool Bool Mesh) | (Func (Func Float Float Float3) Int Mesh) | (Func (Func Float Float Float3) Int Bool Mesh)]
+  (planeXYPoint_2485 // (Func Float Float Float3)
     ,16 // Int
     ,false // Bool
   ) // Mesh
   ;
 }
 // (Func Float Float Float3)
-function mobiusPoint_2837(a, b)
+function mobiusPoint_2720(a, b)
 {
-  let u = op_sub_864 // [!'@1062.(Func '@1062 '@1062 '@1062) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+  let u = op_sub_864 // [!'@1095.(Func '@1095 '@1095 '@1095) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
   (a // Float
     ,0.5 // Float
   ) // Float
   ;
-  let v = op_mul_886 // [!'@1064.(Func '@1064 '@1064 '@1064) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-  (op_mul_886 // [!'@1063.(Func '@1063 '@1063 '@1063) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+  let v = op_mul_886 // [!'@1097.(Func '@1097 '@1097 '@1097) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+  (op_mul_886 // [!'@1096.(Func '@1096 '@1096 '@1096) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (b // Float
       ,2 // Float
     ) // Float
@@ -3573,16 +3495,16 @@ function mobiusPoint_2837(a, b)
   ) // Float
   ;
   return vector_98 // [(Func Float Float Float Float3) | (Func Float Float3) | (Func (Array Float) Float3) | (Func Float2 Float3)]
-  (op_mul_886 // [!'@1068.(Func '@1068 '@1068 '@1068) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+  (op_mul_886 // [!'@1101.(Func '@1101 '@1101 '@1101) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (cos_353 // (Func Float Float)
       (v // Float
       ) // Float
-      ,op_add_518 // [!'@1067.(Func '@1067 '@1067 '@1067) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+      ,op_add_518 // [!'@1100.(Func '@1100 '@1100 '@1100) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
       (2 // Int
-        ,op_mul_886 // [!'@1066.(Func '@1066 '@1066 '@1066) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+        ,op_mul_886 // [!'@1099.(Func '@1099 '@1099 '@1099) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
         (u // Float
           ,cos_353 // (Func Float Float)
-          (op_div_590 // [!'@1065.(Func '@1065 '@1065 '@1065) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+          (op_div_590 // [!'@1098.(Func '@1098 '@1098 '@1098) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
             (v // Float
               ,2 // Int
             ) // Float
@@ -3590,16 +3512,16 @@ function mobiusPoint_2837(a, b)
         ) // Float
       ) // Float
     ) // Float
-    ,op_mul_886 // [!'@1072.(Func '@1072 '@1072 '@1072) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    ,op_mul_886 // [!'@1105.(Func '@1105 '@1105 '@1105) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (sin_449 // (Func Float Float)
       (v // Float
       ) // Float
-      ,op_add_518 // [!'@1071.(Func '@1071 '@1071 '@1071) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+      ,op_add_518 // [!'@1104.(Func '@1104 '@1104 '@1104) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
       (2 // Int
-        ,op_mul_886 // [!'@1070.(Func '@1070 '@1070 '@1070) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+        ,op_mul_886 // [!'@1103.(Func '@1103 '@1103 '@1103) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
         (u // Float
           ,cos_353 // (Func Float Float)
-          (op_div_590 // [!'@1069.(Func '@1069 '@1069 '@1069) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+          (op_div_590 // [!'@1102.(Func '@1102 '@1102 '@1102) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
             (v // Float
               ,2 // Int
             ) // Float
@@ -3607,10 +3529,10 @@ function mobiusPoint_2837(a, b)
         ) // Float
       ) // Float
     ) // Float
-    ,op_mul_886 // [!'@1074.(Func '@1074 '@1074 '@1074) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+    ,op_mul_886 // [!'@1107.(Func '@1107 '@1107 '@1107) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
     (u // Float
       ,sin_449 // (Func Float Float)
-      (op_div_590 // [!'@1073.(Func '@1073 '@1073 '@1073) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+      (op_div_590 // [!'@1106.(Func '@1106 '@1106 '@1106) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
         (v // Float
           ,2 // Int
         ) // Float
@@ -3620,10 +3542,10 @@ function mobiusPoint_2837(a, b)
   ;
 }
 // (Func Mesh)
-function mobius_2851()
+function mobius_2734()
 {
-  return meshFromUV_1437 // [(Func (Func Float Float Float3) Int Int Float Float Float Float Bool Bool Mesh) | (Func (Func Float Float Float3) Int Mesh) | (Func (Func Float Float Float3) Int Bool Mesh)]
-  (mobiusPoint_2837 // (Func Float Float Float3)
+  return meshFromUV_1431 // [(Func (Func Float Float Float3) Int Int Float Float Float Float Bool Bool Mesh) | (Func (Func Float Float Float3) Int Mesh) | (Func (Func Float Float Float3) Int Bool Mesh)]
+  (mobiusPoint_2720 // (Func Float Float Float3)
     ,20 // Int
     ,false // Bool
   ) // Mesh
@@ -3658,8 +3580,8 @@ const blue = vector_98 // [(Func Float2 Float3) | (Func Float Float Float Float3
 // (Func (Array (Func Float Float Float Float Mesh)))
 function main_39()
 {
-  simpleArrayTest_439 // !'@1312.(Func '@1312)
-  () // '@1312
+  simpleArrayTest_439 // !'@1345.(Func '@1345)
+  () // '@1345
   ;
   return geometryTest_665 // (Func (Array (Func Float Float Float Float Mesh)))
   () // (Array (Func Float Float Float Float Mesh))
@@ -3668,184 +3590,184 @@ function main_39()
 // (Func T0)
 function simpleArrayTest_439()
 {
-  let xs = arrayFromJavaScript([1 // Int
-    ,11 // Int
-    ,3 // Int
-  ]) // (Array Int)
+  let xs = [1 // Int
+  ,11 // Int
+  ,3 // Int
+  ] // (Array Int)
   ;
-  print_2094 // !'@1130.(Func Str '@1130)
+  print_2050 // !'@1163.(Func Str '@1163)
   ("'Expect [1, 11, 3]'" // Str
-  ) // '@1130
+  ) // '@1163
   ;
-  print_2094 // !'@1132.(Func (Array Int) '@1132)
+  print_2050 // !'@1165.(Func (Array Int) '@1165)
   (xs // (Array Int)
-  ) // '@1132
+  ) // '@1165
   ;
-  print_2094 // !'@1134.(Func Str '@1134)
+  print_2050 // !'@1167.(Func Str '@1167)
   ("'Expect 1, 11, 3'" // Str
-  ) // '@1134
+  ) // '@1167
   ;
-  for (let i6=0; i6 < xs // (Array Int)
-  .length; ++i6)
+  for (let i7=0; i7 < xs // (Array Int)
+  .length; ++i7)
   {
     const x = xs // (Array Int)
-    [i6];
+    [i7];
     {
-      print_2094 // !'@1137.(Func Int '@1137)
+      print_2050 // !'@1170.(Func Int '@1170)
       (x // Int
-      ) // '@1137
+      ) // '@1170
       ;
     }
   }
-  print_2094 // !'@1139.(Func Str '@1139)
+  print_2050 // !'@1172.(Func Str '@1172)
   ("'Expect 1'" // Str
-  ) // '@1139
+  ) // '@1172
   ;
-  print_2094 // !'@1141.(Func Int '@1141)
-  (op_obr_cbr_2073 // (Func (Array Int) Int Int)
+  print_2050 // !'@1174.(Func Int '@1174)
+  (op_obr_cbr_2029 // (Func (Array Int) Int Int)
     (xs // (Array Int)
       ,0 // Int
     ) // Int
-  ) // '@1141
+  ) // '@1174
   ;
-  print_2094 // !'@1144.(Func Str '@1144)
+  print_2050 // !'@1177.(Func Str '@1177)
   ("'Expect 3'" // Str
-  ) // '@1144
+  ) // '@1177
   ;
-  print_2094 // !'@1146.(Func Int '@1146)
+  print_2050 // !'@1179.(Func Int '@1179)
   (count_1711 // (Func (Array Int) Int)
     (xs // (Array Int)
     ) // Int
-  ) // '@1146
+  ) // '@1179
   ;
-  print_2094 // !'@1149.(Func Str '@1149)
+  print_2050 // !'@1182.(Func Str '@1182)
   ("'Expect 1'" // Str
-  ) // '@1149
+  ) // '@1182
   ;
-  print_2094 // !'@1151.(Func Int '@1151)
+  print_2050 // !'@1184.(Func Int '@1184)
   (first_1866 // (Func (Array Int) Int)
     (xs // (Array Int)
     ) // Int
-  ) // '@1151
+  ) // '@1184
   ;
-  print_2094 // !'@1154.(Func Str '@1154)
+  print_2050 // !'@1187.(Func Str '@1187)
   ("'Expect 3'" // Str
-  ) // '@1154
-  ;
-  print_2094 // !'@1156.(Func Int '@1156)
-  (last_1851 // [!'@1306.(Func (Array '@1306) Int (Array '@1306)) | !'@1307.(Func !'@1307.(Array '@1307) '@1307)]
-    (xs // (Array Int)
-    ) // Int
-  ) // '@1156
-  ;
-  print_2094 // !'@1160.(Func Str '@1160)
-  ("'Expect 1'" // Str
-  ) // '@1160
-  ;
-  print_2094 // !'@1162.(Func Int '@1162)
-  (min_1395 // [!'@1308.(Func '@1308 '@1308 '@1308) | !'@1309.(Func !'@1309.(Array '@1309) '@1309)]
-    (xs // (Array Int)
-    ) // Int
-  ) // '@1162
-  ;
-  print_2094 // !'@1185.(Func Str '@1185)
-  ("'Expect 11'" // Str
-  ) // '@1185
-  ;
-  print_2094 // !'@1187.(Func Int '@1187)
-  (max_1417 // [!'@1310.(Func '@1310 '@1310 '@1310) | !'@1311.(Func !'@1311.(Array '@1311) '@1311)]
-    (xs // (Array Int)
-    ) // Int
   ) // '@1187
   ;
-  let ys = mutable_1760 // (Func (Array Int) (ArrayBuilder Int))
+  print_2050 // !'@1189.(Func Int '@1189)
+  (last_1851 // [!'@1339.(Func (Array '@1339) Int (Array '@1339)) | !'@1340.(Func !'@1340.(Array '@1340) '@1340)]
+    (xs // (Array Int)
+    ) // Int
+  ) // '@1189
+  ;
+  print_2050 // !'@1193.(Func Str '@1193)
+  ("'Expect 1'" // Str
+  ) // '@1193
+  ;
+  print_2050 // !'@1195.(Func Int '@1195)
+  (min_1395 // [!'@1341.(Func '@1341 '@1341 '@1341) | !'@1342.(Func !'@1342.(Array '@1342) '@1342)]
+    (xs // (Array Int)
+    ) // Int
+  ) // '@1195
+  ;
+  print_2050 // !'@1218.(Func Str '@1218)
+  ("'Expect 11'" // Str
+  ) // '@1218
+  ;
+  print_2050 // !'@1220.(Func Int '@1220)
+  (max_1417 // [!'@1343.(Func '@1343 '@1343 '@1343) | !'@1344.(Func !'@1344.(Array '@1344) '@1344)]
+    (xs // (Array Int)
+    ) // Int
+  ) // '@1220
+  ;
+  let ys = mutable_1785 // (Func (Array Int) (ArrayBuilder Int))
   (xs // (Array Int)
   ) // (ArrayBuilder Int)
   ;
-  ys = set_1824 // (Func (ArrayBuilder Int) Int Int (ArrayBuilder Int))
+  ys = set_1881 // (Func (ArrayBuilder Int) Int Int (ArrayBuilder Int))
   (ys // (ArrayBuilder Int)
     ,1 // Int
     ,5 // Int
   ) // (ArrayBuilder Int)
    // (ArrayBuilder Int)
   ;
-  print_2094 // !'@1208.(Func Str '@1208)
+  print_2050 // !'@1241.(Func Str '@1241)
   ("'Expect 5'" // Str
-  ) // '@1208
+  ) // '@1241
   ;
-  print_2094 // !'@1210.(Func Int '@1210)
-  (op_obr_cbr_2073 // (Func (Array Int) Int Int)
+  print_2050 // !'@1243.(Func Int '@1243)
+  (op_obr_cbr_2029 // (Func (Array Int) Int Int)
     (ys // (ArrayBuilder Int)
       ,1 // Int
     ) // Int
-  ) // '@1210
+  ) // '@1243
   ;
-  print_2094 // !'@1213.(Func Str '@1213)
+  print_2050 // !'@1246.(Func Str '@1246)
   ("'Expect 1, 3, 11'" // Str
-  ) // '@1213
+  ) // '@1246
   ;
   let zs = sort_1697 // (Func (Array Int) (Array Int))
   (xs // (Array Int)
   ) // (Array Int)
   ;
-  for (let i7=0; i7 < zs // (Array Int)
-  .length; ++i7)
+  for (let i8=0; i8 < zs // (Array Int)
+  .length; ++i8)
   {
     const z = zs // (Array Int)
-    [i7];
+    [i8];
     {
-      print_2094 // !'@1264.(Func Int '@1264)
+      print_2050 // !'@1297.(Func Int '@1297)
       (z // Int
-      ) // '@1264
+      ) // '@1297
       ;
     }
   }
-  print_2094 // !'@1266.(Func Str '@1266)
+  print_2050 // !'@1299.(Func Str '@1299)
   ("'Expect 3'" // Str
-  ) // '@1266
+  ) // '@1299
   ;
-  print_2094 // !'@1268.(Func Int '@1268)
+  print_2050 // !'@1301.(Func Int '@1301)
   (median_1797 // (Func (Array Int) Int)
     (xs // (Array Int)
     ) // Int
-  ) // '@1268
+  ) // '@1301
   ;
-  print_2094 // !'@1299.(Func Str '@1299)
+  print_2050 // !'@1332.(Func Str '@1332)
   ("'Expect 15'" // Str
-  ) // '@1299
+  ) // '@1332
   ;
-  print_2094 // !'@1301.(Func Float '@1301)
+  print_2050 // !'@1334.(Func Float '@1334)
   (sum_1330 // (Func (Array Float) Float)
     (xs // (Array Int)
     ) // Float
-  ) // '@1301
+  ) // '@1334
   ;
-  print_2094 // !'@1303.(Func Str '@1303)
+  print_2050 // !'@1336.(Func Str '@1336)
   ("'Expect 5'" // Str
-  ) // '@1303
+  ) // '@1336
   ;
-  print_2094 // !'@1305.(Func Float '@1305)
+  print_2050 // !'@1338.(Func Float '@1338)
   (average_1373 // (Func (Array Float) Float)
     (xs // (Array Int)
     ) // Float
-  ) // '@1305
+  ) // '@1338
   ;
 }
 // (Func Mesh Mesh)
 function colorGeometry_559(g)
 {
-  return setVertexColors_2116 // (Func Mesh (Array Float3) Mesh)
+  return setVertexColors_2002 // (Func Mesh (Array Float3) Mesh)
   (g // Mesh
     ,map_53 // (Func (Array Float3) (Func Float3 Float3) (Array Float3))
-    (vertexUVs_2014 // (Func Mesh (Array Float3))
+    (uvBuffer_2161 // (Func Mesh (Array Float3))
       (g // Mesh
       ) // (Array Float3)
       ,(v) => vector_98 // [(Func Float2 Float3) | (Func Float Float Float Float3) | (Func Float Float3) | (Func (Array Float) Float3)]
-      (op_add_842 // [!'@524.(Func '@524 '@524 '@524) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-        (op_div_908 // [!'@523.(Func '@523 '@523 '@523) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+      (op_add_842 // [!'@497.(Func '@497 '@497 '@497) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+        (op_div_908 // [!'@496.(Func '@496 '@496 '@496) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
           (sin_449 // (Func Float Float)
-            (op_mul_886 // [!'@522.(Func '@522 '@522 '@522) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-              (op_mul_886 // [!'@521.(Func '@521 '@521 '@521) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+            (op_mul_886 // [!'@495.(Func '@495 '@495 '@495) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+              (op_mul_886 // [!'@494.(Func '@494 '@494 '@494) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
                 (x_134 // (Func Float3 Float)
                   (v // Float3
                   ) // Float
@@ -3859,11 +3781,11 @@ function colorGeometry_559(g)
           ,0.5 // Float
         ) // Float
         ,0 // Int
-        ,op_add_842 // [!'@528.(Func '@528 '@528 '@528) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-        (op_div_908 // [!'@527.(Func '@527 '@527 '@527) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+        ,op_add_842 // [!'@501.(Func '@501 '@501 '@501) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+        (op_div_908 // [!'@500.(Func '@500 '@500 '@500) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
           (cos_353 // (Func Float Float)
-            (op_mul_886 // [!'@526.(Func '@526 '@526 '@526) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
-              (op_mul_886 // [!'@525.(Func '@525 '@525 '@525) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+            (op_mul_886 // [!'@499.(Func '@499 '@499 '@499) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
+              (op_mul_886 // [!'@498.(Func '@498 '@498 '@498) | (Func Int Int Int) | (Func Float Float Float) | (Func Float2 Float2 Float2) | (Func Float3 Float3 Float3)]
                 (y_149 // (Func Float3 Float)
                   (v // Float3
                   ) // Float
@@ -3886,8 +3808,8 @@ function colorGeometry_559(g)
 function demoGeometry_610(g)
 {
   return (offX, offY, offZ, scl) => colorGeometry_559 // (Func Mesh Mesh)
-  (scale_2237 // (Func Mesh Float3 Mesh)
-    (translate_2208 // (Func Mesh Float3 Mesh)
+  (scale_2120 // (Func Mesh Float3 Mesh)
+    (translate_2091 // (Func Mesh Float3 Mesh)
       (g // Mesh
         ,vector_98 // [(Func Float2 Float3) | (Func Float Float Float Float3) | (Func Float Float3) | (Func (Array Float) Float3)]
         (offX // Float
@@ -3908,31 +3830,31 @@ function demoGeometry_610(g)
 // (Func (Array (Func Float Float Float Float Mesh)))
 function geometryTest_665()
 {
-  return arrayFromJavaScript([demoGeometry_610 // (Func Mesh (Func Float Float Float Float Mesh))
-    (sphere_1565 // [(Func Int Mesh) | (Func Mesh)]
-      () // Mesh
-    ) // (Func Float Float Float Float Mesh)
-    ,demoGeometry_610 // (Func Mesh (Func Float Float Float Float Mesh))
-    (cylinder_1641 // [(Func Int Mesh) | (Func Mesh)]
-      () // Mesh
-    ) // (Func Float Float Float Float Mesh)
-    ,demoGeometry_610 // (Func Mesh (Func Float Float Float Float Mesh))
-    (torus_1824 // [(Func Float Float Int Mesh) | (Func Mesh)]
-      () // Mesh
-    ) // (Func Float Float Float Float Mesh)
-    ,demoGeometry_610 // (Func Mesh (Func Float Float Float Float Mesh))
-    (klein_2581 // (Func Mesh)
-      () // Mesh
-    ) // (Func Float Float Float Float Mesh)
-    ,demoGeometry_610 // (Func Mesh (Func Float Float Float Float Mesh))
-    (plane_2721 // (Func Mesh)
-      () // Mesh
-    ) // (Func Float Float Float Float Mesh)
-    ,demoGeometry_610 // (Func Mesh (Func Float Float Float Float Mesh))
-    (mobius_2851 // (Func Mesh)
-      () // Mesh
-    ) // (Func Float Float Float Float Mesh)
-  ]) // (Array (Func Float Float Float Float Mesh))
+  return [demoGeometry_610 // (Func Mesh (Func Float Float Float Float Mesh))
+  (sphere_1559 // [(Func Int Mesh) | (Func Mesh)]
+    () // Mesh
+  ) // (Func Float Float Float Float Mesh)
+  ,demoGeometry_610 // (Func Mesh (Func Float Float Float Float Mesh))
+  (cylinder_1639 // [(Func Int Mesh) | (Func Mesh)]
+    () // Mesh
+  ) // (Func Float Float Float Float Mesh)
+  ,demoGeometry_610 // (Func Mesh (Func Float Float Float Float Mesh))
+  (torus_1822 // [(Func Float Float Int Mesh) | (Func Mesh)]
+    () // Mesh
+  ) // (Func Float Float Float Float Mesh)
+  ,demoGeometry_610 // (Func Mesh (Func Float Float Float Float Mesh))
+  (klein_2464 // (Func Mesh)
+    () // Mesh
+  ) // (Func Float Float Float Float Mesh)
+  ,demoGeometry_610 // (Func Mesh (Func Float Float Float Float Mesh))
+  (plane_2604 // (Func Mesh)
+    () // Mesh
+  ) // (Func Float Float Float Float Mesh)
+  ,demoGeometry_610 // (Func Mesh (Func Float Float Float Float Mesh))
+  (mobius_2734 // (Func Mesh)
+    () // Mesh
+  ) // (Func Float Float Float Float Mesh)
+  ] // (Array (Func Float Float Float Float Mesh))
   ;
 }
 

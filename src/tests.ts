@@ -2,7 +2,7 @@ import * as Myna from "myna-parser";
 import { heronGrammar } from './heron-parser';
 import { HeronToJs, funcDefName } from "./heron-to-js";
 import { parseLocation } from "./heron-ast-rewrite";
-import { createPackage, outputFolder } from "./heron-compiler";
+import { createPackage } from "./heron-compiler";
 import { Ref } from "./heron-refs";
 import { Package } from "./heron-package";
 import { computeFuncType } from "./heron-types";
@@ -196,8 +196,8 @@ function tests() {
     const main = pkg.findFunction("main");
     text += '\nreturn ' + funcDefName(main) + ';\n';
     text += '})();\n';
-    fs.writeFileSync(path.join(outputFolder, 'output.js'), text);
-    fs.writeFileSync(path.join(outputFolder, 'demo', 'output.js'), text);
+    //fs.writeFileSync(path.join(outputFolder, 'output.js'), text);
+    fs.writeFileSync(path.join('demo', 'output.js'), text);
 
     //outputPackageStats(pkg);
     // find the main entry point and call into it. 

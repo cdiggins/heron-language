@@ -1,3 +1,4 @@
+function op_dot_dot(from, to) { const r=[]; for (let i=from; i < to; ++i) r.push(i); return r; }
 function int(x) { return Math.round(x); }
 function float(x) { return x; }
 function float2(u, v) { return ({ u: u, v: v }); }

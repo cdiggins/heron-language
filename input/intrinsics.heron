@@ -108,6 +108,7 @@ module heron:intrinsics:0.1
     intrinsic array<T>(n: Int, f: Func<Int, T>): Array<T>;
     intrinsic count<T>(xs: Array<T>): Int;
     intrinsic at<T>(xs: Array<T>, i: Int): T;
+    intrinsic op..(from: Int, to: Int): Array<Int>;
 
     // Array builder functions
     intrinsic mutable<T>(xs: Array<T>): ArrayBuilder<T>;

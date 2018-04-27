@@ -132,13 +132,13 @@ var HeronToJs = /** @class */ (function () {
             var x = "i" + id++;
             this.cb.push("for (let " + x + "=0; " + x + " < ");
             this.visit(statement.array);
-            this.cb.pushLine(".count; ++" + x + ")");
+            this.cb.pushLine(".length; ++" + x + ")");
             this.cb.pushLine('{');
             this.cb.push('const ');
             this.cb.push(statement.identifier);
             this.cb.push(' = ');
             this.visit(statement.array);
-            this.cb.pushLine(".at(" + x + ");");
+            this.cb.pushLine("[" + x + "];");
             this.visit(statement.loop);
             this.cb.pushLine('}');
         }
@@ -227,9 +227,9 @@ var HeronToJs = /** @class */ (function () {
             throw new Error("Object literals not yet supported");
         }
         else if (expr instanceof heron_expr_1.ArrayLiteral) {
-            this.cb.push('arrayFromJavaScript([');
+            this.cb.push('[');
             this.visitDelimited(expr.vals);
-            this.cb.push('])');
+            this.cb.push(']');
         }
         else if (expr instanceof heron_expr_1.BoolLiteral) {
             this.cb.push(expr.value ? "true" : "false");

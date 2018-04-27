@@ -22,7 +22,7 @@ module heron:geometry.mesh:0.1
         = mesh(vertexBuffer, vertexBuffer.indices);
 
     function mesh(vertexBuffer, indexBuffer)
-        = mesh(vertexBuffer)
+        = mesh(vertexBuffer);
 
     function mesh(vertexBuffer, indexBuffer)
         = mesh(vertexBuffer, indexBuffer, vertexBuffer.setAll(origin));
@@ -207,13 +207,13 @@ module heron:geometry.mesh:0.1
 
     // Given UV coordinates on the surface of a cylinder u=[0,1), v=[0,1) computes the 3D location.
     function cylinderPoint(u, v)
-        = vector(sin(u*2.0*pi), v, cos(u*2.0*pi));
+        = vector(sin(u*2.0*pi), v * 2, cos(u*2.0*pi));
 
     function cylinder(segments)
         = meshFromUV(cylinderPoint, segments);
 
     function cylinder()
-        = cylinder(32);
+        = cylinder(16);
 
     function torus(r1, r2, segments)
         = meshFromUV((u, v) => torusPoint(u, v, r1, r2), segments);
@@ -236,7 +236,7 @@ module heron:geometry.mesh:0.1
         = mesh.indexBuffer.count / 3;
 
     function toVectors(xs)
-        = xs.strides(3).map(x => x.vector);
+        = (0 .. xs.count/3).map(i => vector(xs[i*3], xs[i*3+1], xs[i*3+2]));
 
     function setVertices(m, points)
         = mesh(points, m.indexBuffer, m.uvBuffer, m.colorBuffer);
@@ -248,7 +248,7 @@ module heron:geometry.mesh:0.1
         = mesh(m.vertexBuffer, m.indexBuffer, uvs, m.colorBuffer);
 
     function transform(m, f)
-        = m.setVertices(m.vertices.map(f));
+        = m.setVertices(m.vertexBuffer.map(f));
 
     function translate(m, amount)
         = m.transform(v => v + amount);
