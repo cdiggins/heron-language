@@ -1,19 +1,3 @@
-function arrayFromJavaScript(xs) {
-  return {
-      count: xs.length,
-      array: xs,
-      at: (i) => xs[i]
-  }
-}
-
-function toMutable(xs) {
-  const count = xs.count;
-  const array = []; 
-  for (let i=0; i < count; ++i)
-      array.push(xs.at(i));
-  return arrayFromJavaScript(array);
-}
-
 function int(x) { return Math.round(x); }
 function float(x) { return x; }
 function float2(u, v) { return ({ u: u, v: v }); }
@@ -59,13 +43,14 @@ function op_bar_bar(x, y) { return x || y; };
 function op_hat_hat(x, y) { return !!(x ^ y); };
 function op_not(x) { return !x; };
 function op_negate(x) { return -x; };
-function count(xs) { return xs.count; };
-function at(xs, i) { return xs.at(i); };
-function array(count, at) { return { count, at }; }
-function mutable(x) { return toMutable(x); }
-function immutable(xs) { return array(xs.array.length, xs.at); }
-function push(xs, x) { return (xs.array.push(x), xs); };
-function set(xs, i, x) { return (xs.array[i] = x, xs); };
+function count(xs) { return xs.length; };
+function at(xs, i) { return xs[i]; };
+function array(count, at) { const r=[]; for (let i=0; i < count; ++i) r.push(at(i)); return r; }
+function mutable(xs) { return xs; }
+function immutable(xs) { return xs; }
+function push(xs, x) { return (xs.push(x), xs); };
+function pushMany(xs, ys) { return (xs.push(...ys), xs); };
+function set(xs, i, x) { return (xs[i] = x, xs); };
 function print(x) { return console.log(x); }
 function assert(condition) { if (!condition) throw new Error("assertion failed"); };
 function mesh(vertexBuffer, indexBuffer, uvBuffer, colorBuffer) { return ({ vertexBuffer, indexBuffer, uvBuffer, colorBuffer }); };

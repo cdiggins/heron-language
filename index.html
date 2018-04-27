@@ -1,0 +1,41 @@
+<html>
+    <head>
+        <title>Heron</title>        
+        <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
+        <style>
+            body { font-family: 'Source Sans Pro', sans-serif; }
+            .main { display: flex; }
+            .left { width: 33%; }
+            .right { flex-grow: 1; padding: 10px;}
+        </style>
+    </head>
+    <body>
+        <h1>Heron Language 3D Geometry Demo</h1>
+
+        <div class="main">
+        <div class="left">
+            <p style="font-weight: bold">
+                <a href="https://github.com/cdiggins/heron-language">Heron</a> is a new statically typed functional programming language with a JavaScript-like syntax.
+            </p>
+            <p>
+                Heron is being developed for processing of arrays of numerical data and is intended to be easy 
+                to learn for non-programmers. The current implementation of Heron is written in TypeScript and generates JavaScript, but 
+                is designed so that it can easily target different platforms.
+            </p>
+            <p>
+                This demo uses Heron to generate mesh data (vertices, faces, and colors) for 
+                <a href="https://github.com/cdiggins/heron-language/blob/master/input/geometry-mesh.heron">3D meshes</a>
+                and uses Three.JS to display the resulting geometry. 
+            </p>
+            <p>
+                If you are interested in learning more, or collaborating please reach out to me, 
+                <a href="https://cdiggins.github.io/">Christopher Diggins</a>, via <a href="mailto:cdiggins@gmail.com">email</a>
+                <a href="https://www.linkedin.com/in/cdiggins/">LinkedIn</a>, <a href="https://twitter.com/cdiggins">Twitter</a>,
+                or <a href="https://github.com/cdiggins/heron-language">GitHub</a>.
+            </p>
+        </div>
+        <div class="right">
+            <iframe src="demo/demo.html" frameborder="0" scrolling="yes" height="80%" width="100%" />  
+        </div>
+    </body>
+</html>

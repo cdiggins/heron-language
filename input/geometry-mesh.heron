@@ -16,31 +16,34 @@ module heron:geometry.mesh:0.1
     import heron:std.array:0.1;
     import heron:geometry.vector:0.1;
 
-    // Alternative constructors 
+    // Alternative constructors
 
     function mesh(vertexBuffer)
         = mesh(vertexBuffer, vertexBuffer.indices);
 
     function mesh(vertexBuffer, indexBuffer)
-        = mesh(vertexBuffer, indexBuffer, vertexBuffer.setAll(0.0));
+        = mesh(vertexBuffer)
+
+    function mesh(vertexBuffer, indexBuffer)
+        = mesh(vertexBuffer, indexBuffer, vertexBuffer.setAll(origin));
 
     function mesh(vertexBuffer, indexBuffer, uvBuffer)
-        = mesh(vertexBuffer, indexBuffer, uvBuffer, vertexBuffer.setAll(0.0));
+        = mesh(vertexBuffer, indexBuffer, uvBuffer, vertexBuffer.setAll(origin));
 
-    // Platonic solids 
+    // Platonic solids
 
     var tetrahedron
         = mesh(
         [
-            1, 1, 1,   
-            -1, -1, 1,   
-            -1, 1, -1,   
+            1, 1, 1,
+            -1, -1, 1,
+            -1, 1, -1,
             1, -1, -1
-        ], 
+        ].toVectors,
         [
-            2, 1, 0,    
-            0, 3, 2,	
-            1, 3, 0,	 
+            2, 1, 0,
+            0, 3, 2,
+            1, 3, 0,
             2, 3, 1
         ]);
 
@@ -57,7 +60,7 @@ module heron:geometry.mesh:0.1
             1.0, -1.0, -1.0,
             1.0,  1.0, -1.0,
             -1.0,  1.0, -1.0
-        ], 
+        ].toVectors,
         [
             // front
             0, 1, 2, 2, 3, 0,
@@ -76,20 +79,20 @@ module heron:geometry.mesh:0.1
     // https://github.com/mrdoob/three.js/blob/master/src/geometries/OctahedronGeometry.js
     var octahedron
         = mesh(
-            [
+        [
             1, 0, 0, 	-1, 0, 0,	0, 1, 0,
             0, -1, 0, 	0, 0, 1,	0, 0, -1
-	    ],
+        ].toVectors,
         [
             0, 2, 4,	0, 4, 3,	0, 3, 5,
             0, 5, 2,	1, 2, 5,	1, 5, 3,
             1, 3, 4,	1, 4, 2
-    	]);
+        ]);
 
     // https://github.com/mrdoob/three.js/blob/master/src/geometries/DodecahedronGeometry.js
     var dodecahedron =
-	    var t = (1 + sqrt(5)) / 2 in
-	    var r = 1 / t in 
+        var t = (1 + sqrt(5)) / 2 in
+        var r = 1 / t in
         mesh([
             -1, -1, -1,	-1, -1, 1,
             -1, 1, -1, -1, 1, 1,
@@ -107,7 +110,7 @@ module heron:geometry.mesh:0.1
             // (+/-theta, 0, +/-1/theta)
             -t, 0, -r, t, 0, -r,
             -t, 0, r, t, 0, r
-        ],
+        ].toVectors,
         [
             3, 11, 7, 	3, 7, 15, 	3, 15, 13,
             7, 19, 17, 	7, 17, 6, 	7, 6, 15,
@@ -131,13 +134,13 @@ module heron:geometry.mesh:0.1
                 -1, t, 0,   1, t, 0,   -1, -t, 0,   1, -t, 0,
                 0, -1, t,   0, 1, t,   0, -1, -t,   0, 1, -t,
                 t, 0, -1,   t, 0, 1,   -t, 0, -1,   -t, 0, 1
-            ],
+            ].toVectors,
             [
                 0, 11, 5, 	0, 5, 1, 	0, 1, 7, 	0, 7, 10, 	0, 10, 11,
                 1, 5, 9, 	5, 11, 4,	11, 10, 2,	10, 7, 6,	7, 1, 8,
                 3, 9, 4, 	3, 4, 2,	3, 2, 6,	3, 6, 8,	3, 8, 9,
                 4, 9, 5, 	2, 4, 11,	6, 2, 10,	8, 6, 7,	9, 8, 1
-            ]);   
+            ]);
 
     // Parametric geometry creation
 
@@ -149,46 +152,41 @@ module heron:geometry.mesh:0.1
         var nc = connectCols ? cols : cols-1;
         var indices = [].mutable;
         for (var row in 0..nr) {
-            for (var col in 0..nc) {                
+            for (var col in 0..nc) {
                 // Rows increase from bottom to top
                 // Columns increase from left to right
-                // row r + 1 = ... d c ... 
-                // row r     = ... a b ... 
+                // row r + 1 = ... d c ...
+                // row r     = ... a b ...
                 var a = col + row * cols;
                 var b = (col+1) % (cols) + row * cols;
                 var c = (col+1) % (cols) + (row+1) % (rows) * cols;
                 var d = col + (row+1) % (rows) * cols;
                 indices = indices.pushMany([a, b, d]);
-                indices = indices.pushMany([b, c, d]);            
+                indices = indices.pushMany([b, c, d]);
             }
         }
         return indices.immutable;
     }
-    
-    // Converts an array of vectors into a vertex buffer 
-    // which is an array of floating point numbers 
-    function toVertexBuffer(xs) 
-        = xs.flatMap(v => [v.x, v.y, v.z]);
 
     // Converts from UV coordinates to a float3
     function vector(uv: Float2)
         = float3(-uv.x.cos * uv.y.sin, uv.x.cos, uv.x.sin * uv.y.sin);
-    
+
     // Works for Float, Float2, Float3, and Float4
     function rescale(v, from, length)
-        = from + (v * length);    
+        = from + (v * length);
 
-    // Given a function that converts UV coordinates to vectors, creates an 
-    // array of points (uCount x vCount) starting at uStart,vStart (0,0) going to 
+    // Given a function that converts UV coordinates to vectors, creates an
+    // array of points (uCount x vCount) starting at uStart,vStart (0,0) going to
     // uLength, vLength (1,1)
     function meshFromUV(f, uCount, vCount, uStart, vStart, uLength, vLength, uJoin, vJoin) {
         var uMax = uJoin ? uCount.float : (uCount - 1).float;
         var vMax = vJoin ? vCount.float : (vCount - 1).float;
-        var uvs = cartesianProduct(0..uCount, 0..vCount, (u, v) 
+        var uvs = cartesianProduct(0..uCount, 0..vCount, (u, v)
             => vector(u / uMax * uLength + uStart, v / vMax * vLength + vStart, 0));
         var points = uvs.map(uvw => f(uvw.x, uvw.y));
         var indices = quadStripToMeshIndices(points, vCount, uJoin, vJoin);
-        return mesh(points.toVertexBuffer, indices, uvs.toVertexBuffer);
+        return mesh(points, indices, uvs);
     }
 
     function meshFromUV(f, segments)
@@ -201,68 +199,53 @@ module heron:geometry.mesh:0.1
     function spherePoint(u, v)
         = vector(-cos(u*2.0*pi) * sin(v*2.0*pi), cos(v*2.0*pi), sin(u*2.0*pi) * sin(v*2.0*pi));
 
-    function sphere(segments) 
+    function sphere(segments)
         = meshFromUV(spherePoint, segments);
-    
+
     function sphere()
         = sphere(32);
 
     // Given UV coordinates on the surface of a cylinder u=[0,1), v=[0,1) computes the 3D location.
-    function cylinderPoint(u, v) 
+    function cylinderPoint(u, v)
         = vector(sin(u*2.0*pi), v, cos(u*2.0*pi));
 
-    function cylinder(segments) 
+    function cylinder(segments)
         = meshFromUV(cylinderPoint, segments);
-    
+
     function cylinder()
         = cylinder(32);
 
     function torus(r1, r2, segments)
         = meshFromUV((u, v) => torusPoint(u, v, r1, r2), segments);
 
-    // Given UV coordinates u=[0,1), v=[0,1), and a major radius (donut) 
+    // Given UV coordinates u=[0,1), v=[0,1), and a major radius (donut)
     // and a minor radius (tube) computes the 3D location of the torus
     function torusPoint(u, v, r1, r2)
         = vector(
-			(r1 + r2 * cos(v*2.0*pi)) * cos(u*2.0*pi),
-			(r1 + r2 * cos(v*2.0*pi)) * sin(u*2.0*pi),
-			r2 * sin(v*2.0*pi));
+            (r1 + r2 * cos(v*2.0*pi)) * cos(u*2.0*pi),
+            (r1 + r2 * cos(v*2.0*pi)) * sin(u*2.0*pi),
+            r2 * sin(v*2.0*pi));
 
     function torus()
         = torus(2, 0.5, 32);
 
     function vertexCount(mesh)
-        = mesh.vertexBuffer.count / 3;
+        = mesh.vertexBuffer.count;
 
     function faceCount(mesh)
         = mesh.indexBuffer.count / 3;
 
-    function vertex(mesh, i)
-        = mesh.vertexBuffer.take(i * 3, 3).vector;
-
-    function vertexColor(mesh, i)
-        = mesh.colorBuffer.take(i * 3, 3).vector;
-
-    function vertexUV(mesh, i)
-        = mesh.uvBuffer.take(i * 3, 3).vector;
-
-    function vertexColors(mesh)
-        = mesh.vertexCount.array(i => mesh.vertexColor(i));
-
-    function vertexUVs(mesh)
-        = mesh.vertexCount.array(i => mesh.vertexUV(i));
-
-    function vertices(mesh) 
-        = mesh.vertexCount.array(i => vertex(mesh, i));
+    function toVectors(xs)
+        = xs.strides(3).map(x => x.vector);
 
     function setVertices(m, points)
-        = mesh(points.toVertexBuffer, m.indexBuffer, m.uvBuffer, m.colorBuffer);
+        = mesh(points, m.indexBuffer, m.uvBuffer, m.colorBuffer);
 
     function setVertexColors(m, colors)
-        = mesh(m.vertexBuffer, m.indexBuffer, m.uvBuffer, colors.toVertexBuffer);
+        = mesh(m.vertexBuffer, m.indexBuffer, m.uvBuffer, colors);
 
     function setVertexUVs(m, uvs)
-        = mesh(m.vertexBuffer, m.indexBuffer, uvs.toVertexBuffer, m.colorBuffer);
+        = mesh(m.vertexBuffer, m.indexBuffer, uvs, m.colorBuffer);
 
     function transform(m, f)
         = m.setVertices(m.vertices.map(f));
@@ -278,17 +261,19 @@ module heron:geometry.mesh:0.1
         var v = b * pi * 2.0;
         var x = 0.0, y = 0.0, z = 0.0;
         if (u < pi) {
-			x = 3.0 * u.cos * ( 1.0 + u.sin ) + ( 2.0 * ( 1.0 - u.cos / 2.0 ) ) * u.cos * v.cos;
-			z = -8.0 * u.sin - 2.0 * ( 1.0 - u.cos / 2.0 ) * u.sin * v.cos;
-		} else {
-			x = 3.0 * u.cos * ( 1.0 + u.sin ) + ( 2.0 * ( 1.0 - u.cos / 2.0 ) ) * cos( v + pi );
-			z = -8.0 * u.sin;
-		}
-		y = -2.0 * ( 1.0 - u.cos / 2.0 ) * v.sin;
-        return vector(x, y, z);
+            x = 3.0 * u.cos * ( 1.0 + u.sin ) + ( 2.0 * ( 1.0 - u.cos / 2.0 ) ) * u.cos * v.cos;
+            z = -8.0 * u.sin - 2.0 * ( 1.0 - u.cos / 2.0 ) * u.sin * v.cos;
+        } else {
+            x = 3.0 * u.cos * ( 1.0 + u.sin ) + ( 2.0 * ( 1.0 - u.cos / 2.0 ) ) * cos( v + pi );
+            z = -8.0 * u.sin;
+        }
+        y = -2.0 * ( 1.0 - u.cos / 2.0 ) * v.sin;
+
+        // Scale down, because it is big compared to other primitives
+        return vector(x / 4.0, y / 4.0, z / 4.0);
     }
 
-    function klein() 
+    function klein()
         = meshFromUV(kleinPoint, 32, false);
 
     function planeXYPoint(u, v) = vector(u, v, 0);
@@ -303,11 +288,11 @@ module heron:geometry.mesh:0.1
 
     function mobiusPoint(a, b) {
         var u = a - 0.5;
-        var v = b * 2.0 * pi;    
+        var v = b * 2.0 * pi;
         return vector(
-            v.cos * (2 + u * cos( v / 2 )), 
-		    v.sin * (2 + u * cos( v / 2 )),
-		    u * sin( v / 2 ));
+            v.cos * (2 + u * cos( v / 2 )),
+            v.sin * (2 + u * cos( v / 2 )),
+            u * sin( v / 2 ));
     }
 
     function mobius()

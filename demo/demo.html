@@ -1,20 +1,13 @@
 <!DOCTYPE html>
+
 <!-- This file is from the Three.JS source Git repository taken in March 2018 -->
 <!-- saved from url=(0067)https://threejs.org/docs/scenes/geometry-browser.html#TorusGeometry -->
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	
 	<title>Heron Geometry Creation Demo</title>
 	<style>
-		@font-face {
-			font-family: 'inconsolata';
-			src: url('../files/inconsolata.woff') format('woff');
-			font-weight: normal;
-			font-style: normal;
-		}
-
 		body {
 			margin:0;
-			font-family: 'inconsolata';
 			font-size: 15px;
 			line-height: 18px;
 			overflow: hidden;
@@ -33,16 +26,11 @@
 	<style type="text/css">.dg ul{list-style:none;margin:0;padding:0;width:100%;clear:both}.dg.ac{position:fixed;top:0;left:0;right:0;height:0;z-index:0}.dg:not(.ac) .main{overflow:hidden}.dg.main{-webkit-transition:opacity .1s linear;transition:opacity .1s linear}.dg.main.taller-than-window{overflow-y:auto}.dg.main.taller-than-window .close-button{opacity:1;margin-top:-1px;border-top:1px solid #2c2c2c}.dg.main ul.closed .close-button{opacity:1!important}.dg.main .close-button.drag,.dg.main:hover .close-button{opacity:1}.dg.main .close-button{-webkit-transition:opacity .1s linear;transition:opacity .1s linear;border:0;position:absolute;line-height:19px;height:20px;cursor:pointer;text-align:center;background-color:#000}.dg.main .close-button:hover{background-color:#111}.dg.a{float:right;margin-right:15px;overflow-x:hidden}.dg.a.has-save>ul{margin-top:27px}.dg.a.has-save>ul.closed{margin-top:0}.dg.a .save-row{position:fixed;top:0;z-index:1002}.dg li{-webkit-transition:height .1s ease-out;transition:height .1s ease-out}.dg li:not(.folder){cursor:auto;height:27px;line-height:27px;overflow:hidden;padding:0 4px 0 5px}.dg li.folder{padding:0;border-left:4px solid transparent}.dg li.title{cursor:pointer;margin-left:-4px}.dg .closed li:not(.title),.dg .closed ul li,.dg .closed ul li>*{height:0;overflow:hidden;border:0}.dg .cr{clear:both;padding-left:3px;height:27px}.dg .property-name{cursor:default;float:left;clear:left;width:40%;overflow:hidden;text-overflow:ellipsis}.dg .c{float:left;width:60%}.dg .c input[type=text]{border:0;margin-top:4px;padding:3px;width:100%;float:right}.dg .has-slider input[type=text]{width:30%;margin-left:0}.dg .slider{float:left;width:66%;margin-left:-5px;margin-right:0;height:19px;margin-top:4px}.dg .slider-fg{height:100%}.dg .c input[type=checkbox]{margin-top:9px}.dg .c select{margin-top:5px}.dg .cr.boolean,.dg .cr.boolean *,.dg .cr.function,.dg .cr.function *,.dg .cr.function .property-name{cursor:pointer}.dg .selector{display:none;position:absolute;margin-left:-9px;margin-top:23px;z-index:10}.dg .c:hover .selector,.dg .selector.drag{display:block}.dg li.save-row{padding:0}.dg li.save-row .button{display:inline-block;padding:0 6px}.dg.dialogue{background-color:#222;width:460px;padding:15px;font-size:13px;line-height:15px}#dg-new-constructor{padding:10px;color:#222;font-family:Monaco,monospace;font-size:10px;border:0;resize:none;box-shadow:inset 1px 1px 1px #888;word-wrap:break-word;margin:12px 0;display:block;width:440px;overflow-y:scroll;height:100px;position:relative}#dg-local-explain{display:none;font-size:11px;line-height:17px;border-radius:3px;background-color:#333;padding:8px;margin-top:10px}#dg-local-explain code{font-size:10px}#dat-gui-save-locally{display:none}.dg{color:#eee;font:11px Lucida Grande,sans-serif;text-shadow:0 -1px 0 #111}.dg.main::-webkit-scrollbar{width:5px;background:#1a1a1a}.dg.main::-webkit-scrollbar-corner{height:0;display:none}.dg.main::-webkit-scrollbar-thumb{border-radius:5px;background:#676767}.dg li:not(.folder){background:#1a1a1a;border-bottom:1px solid #2c2c2c}.dg li.save-row{line-height:25px;background:#dad5cb;border:0}.dg li.save-row select{margin-left:5px;width:108px}.dg li.save-row .button{margin-left:5px;margin-top:1px;border-radius:2px;font-size:9px;line-height:7px;padding:4px 4px 5px;background:#c5bdad;color:#fff;text-shadow:0 1px 0 #b0a58f;box-shadow:0 -1px 0 #b0a58f;cursor:pointer}.dg li.save-row .button.gears{background:#c5bdad url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAANCAYAAAB/9ZQ7AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAQJJREFUeNpiYKAU/P//PwGIC/ApCABiBSAW+I8AClAcgKxQ4T9hoMAEUrxx2QSGN6+egDX+/vWT4e7N82AMYoPAx/evwWoYoSYbACX2s7KxCxzcsezDh3evFoDEBYTEEqycggWAzA9AuUSQQgeYPa9fPv6/YWm/Acx5IPb7ty/fw+QZblw67vDs8R0YHyQhgObx+yAJkBqmG5dPPDh1aPOGR/eugW0G4vlIoTIfyFcA+QekhhHJhPdQxbiAIguMBTQZrPD7108M6roWYDFQiIAAv6Aow/1bFwXgis+f2LUAynwoIaNcz8XNx3Dl7MEJUDGQpx9gtQ8YCueB+D26OECAAQDadt7e46D42QAAAABJRU5ErkJggg==) 2px 1px no-repeat;height:7px;width:8px}.dg li.save-row .button:hover{background-color:#bab19e;box-shadow:0 -1px 0 #b0a58f}.dg li.folder{border-bottom:0}.dg li.title{padding-left:16px;background:#000 url(data:image/gif;base64,R0lGODlhBQAFAJEAAP////Pz8////////yH5BAEAAAIALAAAAAAFAAUAAAIIlI+hKgFxoCgAOw==) 6px 10px no-repeat;cursor:pointer;border-bottom:1px solid hsla(0,0%,100%,.2)}.dg .closed li.title{background-image:url(data:image/gif;base64,R0lGODlhBQAFAJEAAP////Pz8////////yH5BAEAAAIALAAAAAAFAAUAAAIIlGIWqMCbWAEAOw==)}.dg .cr.boolean{border-left:3px solid #806787}.dg .cr.color{border-left:3px solid}.dg .cr.function{border-left:3px solid #e61d5f}.dg .cr.number{border-left:3px solid #2fa1d6}.dg .cr.number input[type=text]{color:#2fa1d6}.dg .cr.string{border-left:3px solid #1ed36f}.dg .cr.string input[type=text]{color:#1ed36f}.dg .cr.boolean:hover,.dg .cr.function:hover{background:#111}.dg .c input[type=text]{background:#303030;outline:none}.dg .c input[type=text]:hover{background:#3c3c3c}.dg .c input[type=text]:focus{background:#494949;color:#fff}.dg .c .slider{background:#303030;cursor:ew-resize}.dg .c .slider-fg{background:#2fa1d6;max-width:100%}.dg .c .slider:hover{background:#3c3c3c}.dg .c .slider:hover .slider-fg{background:#44abda}</style>
 	</head>
 	<body>
-
-		<!--
-			<a id="newWindow" href="https://threejs.org/docs/scenes/geometry-browser.html#TorusGeometry" target="_blank">Open in New Window</a>
-		-->
-
-		<script src="./geometry-browser_files/three.min.js.download"></script>
-		<script src="./geometry-browser_files/dat.gui.min.js.download"></script>
-		<script src="./geometry-browser_files/OrbitControls.js.download"></script>
-		<script src="./geometry-browser_files/ParametricGeometries.js.download"></script>
-		<script src="./geometry-browser_files/geometry.js.download"></script>		
+		<script src="./js/three.min.js.download"></script>
+		<script src="./js/dat.gui.min.js.download"></script>
+		<script src="./js/OrbitControls.js.download"></script>
+		<script src="./js/ParametricGeometries.js.download"></script>
+		<script src="./js/geometry.js.download"></script>		
 		<script src="./output.js"></script>
 
 		<script>
@@ -57,10 +45,10 @@
 				scale: 3,
 			};
 
-			function heronArrayToJavaScript(xs) {
+			function vectorsToJavaScript(xs) {
 				const r = [];
-				for (let i=0; i < xs.count; ++i) 
-					r.push(xs.at(i));
+				for (const v of xs)
+					r.push(v.x, v.y, v.z);
 				return r;
 			}
 
@@ -72,12 +60,11 @@
 			{
 				function heronGeometryToThreeJsGeometry(heronMesh) {
 					const r = new THREE.BufferGeometry();
-					const indexBuffer = heronArrayToJavaScript(heronMesh.indexBuffer);
-					const vertexBuffer = heronArrayToJavaScript(heronMesh.vertexBuffer);
-					const colorBuffer = heronArrayToJavaScript(heronMesh.colorBuffer);
+					const vertexBuffer = vectorsToJavaScript(heronMesh.vertexBuffer);
+					const colorBuffer = vectorsToJavaScript(heronMesh.colorBuffer);
 					//const normalBuffer = heronArrayToJavaScript(heronMesh.normalBuffer);
 					//const uvBuffer = heronArrayToJavaScript(heronMesh.uvBuffer);
-					r.setIndex( indexBuffer );
+					r.setIndex( heronMesh.indexBuffer );
 					
 					//https://threejs.org/docs/#api/core/BufferGeometry
 					r.addAttribute( 'position', new THREE.Float32BufferAttribute( vertexBuffer, 3 ) );					
@@ -96,7 +83,6 @@
 					updateGroupGeometry( sceneObject, g );
 				}
 
-				const folder = gui.addFolder( 'Heron' );
 				const geometryIndices = { 
 					'sphere':0, 
 					'cylinder':1, 
@@ -107,9 +93,10 @@
 				};
 
 				gui.add(heronData, 'geometryIndex', geometryIndices).onChange( generateGeometry );
-				gui.add(heronData.offset, 'x').onChange( generateGeometry );
-				gui.add(heronData.offset, 'y').onChange( generateGeometry );
-				gui.add(heronData.offset, 'z').onChange( generateGeometry );
+				const f = gui.addFolder('translation');
+				f.add(heronData.offset, 'x').onChange( generateGeometry );
+				f.add(heronData.offset, 'y').onChange( generateGeometry );
+				f.add(heronData.offset, 'z').onChange( generateGeometry );
 				gui.add(heronData, 'scale').onChange( generateGeometry );
 				generateGeometry();
 								
@@ -181,25 +168,20 @@
 			var prevFog = false;
 
 			var render = function () {
-
 				requestAnimationFrame( render );
 
-				if ( ! options.fixed ) {
+				if ( !options.fixed ) {
 					mesh.rotation.x += 0.005;
 					mesh.rotation.y += 0.005;
 				}
 
 				renderer.render( scene, camera );
-
 			};
 
 			window.addEventListener( 'resize', function () {
-
 				camera.aspect = window.innerWidth / window.innerHeight;
 				camera.updateProjectionMatrix();
-
 				renderer.setSize( window.innerWidth, window.innerHeight );
-
 			}, false );
 
 			render();

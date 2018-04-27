@@ -227,3 +227,14 @@ eq(xs, ys) :: (Func (Array T0) (Array T1) Bool)
 
 //== 
 
+function cartesianProduct_2000(xs, ys, f)
+{
+  const r = [];
+  for (let i=0; i < xs.count; ++i) 
+    for (let j=0; j < ys.count; ++j)
+      r.push(f(xs.at(i), ys.at(j)));
+  return arrayFromJavaScript(r);
+
+//== 
+
+

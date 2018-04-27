@@ -197,7 +197,7 @@ function tests() {
     text += '\nreturn ' + funcDefName(main) + ';\n';
     text += '})();\n';
     fs.writeFileSync(path.join(outputFolder, 'output.js'), text);
-    fs.writeFileSync(path.join(outputFolder, '..', 'docs', 'demo', 'output.js'), text);
+    fs.writeFileSync(path.join(outputFolder, 'demo', 'output.js'), text);
 
     //outputPackageStats(pkg);
     // find the main entry point and call into it. 
