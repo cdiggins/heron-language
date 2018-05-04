@@ -1,5 +1,6 @@
 ## Some things to do
 
+[] - Remove my node modules
 [] - Move the type-inference code back into its own repository (making sure to follow the Heron model, with the TS and the JS in the same place?)
 [] - Add linter support 
 [] - Turn on some errors
@@ -35,6 +36,14 @@
 [] - Bounce 
 [] - Cone
 [] - Arrow.
+[] - Clean up code / repo
+[] - Get a browser version of compiler working. 
+[] - de-lint
+
+//==
+
+Get some of the shaders to work. 
+https://www.vertexshaderart.com/new/
 
 //== 
 
@@ -237,4 +246,56 @@ function cartesianProduct_2000(xs, ys, f)
 
 //== 
 
+Clean up code / repot
 
+#define PI radians(180.)
+#define NUM_SEGMENTS 4.0
+#define NUM_POINTS (NUM_SEGMENTS * 2.0)
+#define STEP 5.0
+
+vec3 hsv2rgb(vec3 c) {
+  c = vec3(c.x, clamp(c.yz, 0.0, 1.0));
+  vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+  vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+  return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+}
+
+void main() {
+  float point = mod(floor(vertexId / 2.0) + mod(vertexId, 2.0) * STEP, NUM_SEGMENTS);
+  float count = floor(vertexId / NUM_POINTS);
+  float snd = texture2D(sound, vec2(fract(count / 128.0), fract(count / 20000.0))).a;
+  float offset = count * 0.02;
+  float angle = point * PI * 2.0 / NUM_SEGMENTS + offset;
+  float radius = 0.2 * pow(snd, 5.0);
+  float c = cos(angle + time) * radius;
+  float s = sin(angle + time) * radius;
+  float orbitAngle =  count * 0.0;
+  float innerRadius = count * 0.001;
+  float oC = cos(orbitAngle + time * 0.4 + count * 0.1) * innerRadius;
+  float oS = sin(orbitAngle + time + count * 0.1) * innerRadius;
+
+  vec2 aspect = vec2(1, resolution.x / resolution.y);
+  vec2 xy = vec2(
+      oC + c,
+      oS + s);
+  gl_Position = vec4(sin(xy) * aspect + cos(mouse * 2.0), 0, 1);
+
+  float hue = (time * 0.01 + count * 1.001);
+  v_color = vec4(hsv2rgb(vec3(hue, 1, 1)), 1);
+}
+
+//==
+
+Get some time algorithms happening
+
+//==
+
+I want to get the loft tool working. 
+
+Give the thing a series of matrices, a base shape and it computes the tube following it. 
+
+Note: 
+
+I also really want to define a scene object. And I want to generate C++, and ... 
+
+Generate the types.

@@ -2,7 +2,7 @@ import { Myna as m } from "myna-parser";
 import { HeronAstNode } from "./heron-ast-rewrite";
 
 // Defines a Myna grammar for parsing Cat expressions that support the introduction and usage of scoped variables. 
-const g = new function() {
+export const g = new function() {
     var _this = this;
 
     // Helpers
@@ -13,7 +13,8 @@ const g = new function() {
     this.fullComment    = m.guardedSeq("/*", m.advanceUntilPast("*/"));
     this.lineComment    = m.seq("//", this.untilEol);
     this.comment        = this.fullComment.or(this.lineComment);
-    this.ws             = this.comment.or(m.atWs.advance.oneOrMore).zeroOrMore;
+    this.blankSpace     = m.atWs.advance.oneOrMore;
+    this.ws             = this.comment.or(this.blankSpace).zeroOrMore;
 
     // Helper for whitespace delimited sequences that must start with a specific value
     function guardedWsDelimSeq(...rules): m.Rule {
@@ -80,11 +81,11 @@ const g = new function() {
     this.identifier     = m.choice(this.opName, m.identifier).ast;
 
     // Urns are used for the language definition and the module name 
-    this.urnPart    = m.alphaNumeric.or(m.char('.-')).zeroOrMore.ast;
-    this.urnDiv     = m.choice(':')
-    this.urn        = this.urnPart.then(this.urnDiv.then(this.urnPart).zeroOrMore).ast;
-    this.langVer    = this.urn.ast;
-    this.moduleName = this.urn.ast;
+    this.urnPart        = m.alphaNumeric.or(m.char('.-')).zeroOrMore.ast;
+    this.urnDiv         = m.choice(':')
+    this.urn            = this.urnPart.then(this.urnDiv.then(this.urnPart).zeroOrMore).ast;
+    this.langVer        = this.urn.ast;
+    this.moduleName     = this.urn.ast;
 
     // Type information 
     this.recType        = m.delay(() => _this.typeExpr);

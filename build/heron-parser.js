@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var myna_parser_1 = require("myna-parser");
 // Defines a Myna grammar for parsing Cat expressions that support the introduction and usage of scoped variables. 
-var g = new function () {
+exports.g = new function () {
     var _this = this;
     // Helpers
     this.eos = myna_parser_1.Myna.text(";");
@@ -11,7 +11,8 @@ var g = new function () {
     this.fullComment = myna_parser_1.Myna.guardedSeq("/*", myna_parser_1.Myna.advanceUntilPast("*/"));
     this.lineComment = myna_parser_1.Myna.seq("//", this.untilEol);
     this.comment = this.fullComment.or(this.lineComment);
-    this.ws = this.comment.or(myna_parser_1.Myna.atWs.advance.oneOrMore).zeroOrMore;
+    this.blankSpace = myna_parser_1.Myna.atWs.advance.oneOrMore;
+    this.ws = this.comment.or(this.blankSpace).zeroOrMore;
     // Helper for whitespace delimited sequences that must start with a specific value
     function guardedWsDelimSeq() {
         var rules = [];
@@ -189,7 +190,7 @@ var g = new function () {
     this.file = this.langDecl.opt.then(this.module).ast;
 };
 // Register the grammar, providing a name and the default parse rule
-myna_parser_1.Myna.registerGrammar('heron', g, g.file);
+myna_parser_1.Myna.registerGrammar('heron', exports.g, exports.g.file);
 exports.heronGrammar = myna_parser_1.Myna.grammars['heron'];
 exports.heronParser = myna_parser_1.Myna.parsers['heron'];
 function parseHeron(s, r) {

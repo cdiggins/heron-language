@@ -8,12 +8,14 @@ import { Package } from "./heron-package";
 import { computeFuncType } from "./heron-types";
 import { parseType } from "./type-parser";
 import { normalizeType } from "./type-system";
+import { heronModuleToHtml } from "./heron-to-html";
 
 const m = Myna.Myna;
 const g = heronGrammar;
 
 declare var require;
 const assert = require('assert');
+const path = require('path');
 
 // Assure that two ASTs have the same shape
 // For example if I generate some text, and re-parse it.
@@ -181,8 +183,6 @@ function tests() {
         const text = heronToText(sf.node as HeronAstNode);
         fs.writeFileSync(outputPath, text);
     }*/
-    const path = require('path');
-
     const toJs = new HeronToJs();
     for (const m of pkg.modules) {
         toJs.visit(m);        
@@ -227,6 +227,20 @@ function tests() {
     for (const k in intrinsics)
         console.log(intrinsics[k].toString());
     */
+
+    for (const m of pkg.modules) {
+        const html = heronModuleToHtml(m);
+        //const fileName = path.join('src-html', m.file.filePath + ".html");
+        const fileName = m.file.filePath.replace('.heron', '.html').replace('input', 'output');
+        const fileContents = `<html><head><title>${m.name}</title>
+<link rel="stylesheet" type="text/css" href="styles.css">
+<link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet">
+</head>
+<body>
+${html}
+</body></html>`;
+        fs.writeFileSync(fileName, fileContents);
+    }
 
     console.log('Done');
 }

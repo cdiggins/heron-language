@@ -8,9 +8,11 @@ var heron_compiler_1 = require("./heron-compiler");
 var heron_types_1 = require("./heron-types");
 var type_parser_1 = require("./type-parser");
 var type_system_1 = require("./type-system");
+var heron_to_html_1 = require("./heron-to-html");
 var m = Myna.Myna;
 var g = heron_parser_1.heronGrammar;
 var assert = require('assert');
+var path = require('path');
 // Assure that two ASTs have the same shape
 // For example if I generate some text, and re-parse it.
 /* TOOD: use or throw away.
@@ -167,7 +169,6 @@ function tests() {
         const text = heronToText(sf.node as HeronAstNode);
         fs.writeFileSync(outputPath, text);
     }*/
-    var path = require('path');
     var toJs = new heron_to_js_1.HeronToJs();
     for (var _i = 0, _a = pkg.modules; _i < _a.length; _i++) {
         var m_1 = _a[_i];
@@ -206,6 +207,14 @@ function tests() {
     for (const k in intrinsics)
         console.log(intrinsics[k].toString());
     */
+    for (var _b = 0, _c = pkg.modules; _b < _c.length; _b++) {
+        var m_2 = _c[_b];
+        var html = heron_to_html_1.heronModuleToHtml(m_2);
+        //const fileName = path.join('src-html', m.file.filePath + ".html");
+        var fileName = m_2.file.filePath.replace('.heron', '.html').replace('input', 'output');
+        var fileContents = "<html><head><title>" + m_2.name + "</title>\n<link rel=\"stylesheet\" type=\"text/css\" href=\"styles.css\">\n<link href=\"https://fonts.googleapis.com/css?family=Inconsolata\" rel=\"stylesheet\">\n</head>\n<body>\n" + html + "\n</body></html>";
+        fs.writeFileSync(fileName, fileContents);
+    }
     console.log('Done');
 }
 /*

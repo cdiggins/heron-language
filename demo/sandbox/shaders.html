@@ -1,0 +1,53 @@
+<script id="vertexShader" type="x-shader/x-vertex">
+		precision highp float;
+		uniform mat4 modelViewMatrix;
+		uniform mat4 projectionMatrix;
+		attribute vec3 position;
+		attribute vec3 offset;
+		attribute vec2 uv;
+		attribute vec4 orientation;
+		varying vec2 vUv;
+		void main() {
+			vec3 vPosition = position;
+			vec3 vcV = cross( orientation.xyz, vPosition );
+			vPosition = vcV * ( 2.0 * orientation.w ) + ( cross( orientation.xyz, vcV ) * 2.0 + vPosition );
+			vUv = uv;
+			gl_Position = projectionMatrix * modelViewMatrix * vec4( offset + vPosition, 1.0 );
+		}
+	</script>
+
+	<script id="fragmentShader" type="x-shader/x-fragment">
+		precision highp float;
+		uniform sampler2D map;
+		varying vec2 vUv;
+		void main() {
+			gl_FragColor = texture2D( map, vUv );
+		}
+	</script>
+
+
+    <script id="vertexShader" type="x-shader/x-vertex">
+		precision highp float;
+		attribute vec3 instancePosition;
+		attribute vec4 instanceQuaternion;
+		attribute vec3 instanceScale;
+		varying vec3 vColor;
+		vec3 applyTRS( vec3 position, vec3 translation, vec4 quaternion, vec3 scale ) {
+			position *= scale;
+			position += 2.0 * cross( quaternion.xyz, cross( quaternion.xyz, position ) + quaternion.w * position );
+			return position + translation;
+		}
+		void main(){
+			vColor = color;
+			vec3 transformed = applyTRS( position.xyz, instancePosition, instanceQuaternion, instanceScale );
+			gl_Position = projectionMatrix * modelViewMatrix * vec4( transformed, 1.0 );
+		}
+	</script>
+
+	<script id="fragmentShader" type="x-shader/x-fragment">
+		precision highp float;
+		varying vec3 vColor;
+		void main() {
+			gl_FragColor = vec4( vColor, 1.0 );
+		}
+	</script>

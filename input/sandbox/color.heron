@@ -1,0 +1,16 @@
+module color
+{
+    function HUEtoRGB(hue) {
+        var H = mod(hue,1.0);
+        var R = abs(H * 6.0 - 3.0) - 1.0;
+        var G = 2.0 - abs(H * 6.0 - 2.0);
+        var B = 2.0 - abs(H * 6.0 - 4.0);
+        return clamp(vec(R,G,B),0.0,1.0);
+    }
+    
+    function HSLtoRGB(HSL) {
+        var RGB = HUEtoRGB(HSL.x);
+        var C = (1.0 - abs(2.0 * HSL.z - 1.0)) * HSL.y;
+        return (RGB - 0.5) * C.vector + HSL.z.vector;
+    }
+}

@@ -224,19 +224,6 @@ export function fieldSelectToFunction(node: HeronAstNode): HeronAstNode {
     return node;
 }
 
-/* TODO: finish the postfix increment/decrement. 
-export function rewritePostfixIncAndDec(node: HeronAstNode): HeronAstNode {
-    if (node.name !== 'postfixExpr') return node;
-    let op = '';
-    if (node.children[1].name === 'postIncOp')
-        op = 'op-';
-    else 
-        || node.children[1].name === 'postDecOp') {
-        let op = node.children[1].allText.substr(1);
-        for (let )
-    }
-}
-*/
 
 // Any of the special assignment operations are going to be mapped to a simple assignment 
 // x += 2 => x = x + 2;

@@ -1,0 +1,66 @@
+.code {
+    background-color: #202020;
+    white-space: pre;
+    font-family: 'Inconsolata', 'Courier New', monospace;
+    font-size: 14;
+    color: white;
+    padding: 10px;
+}
+.string {
+    color: rosybrown;
+}
+.number {
+    color: #f099bb;
+}
+.bool {
+    color: #f099bb;
+}
+.fullComment, .lineComment {   
+    color: royalblue; 
+    font-style: italic;
+}
+.varName {
+    color: goldenrod;
+}
+/*
+.langVer, .moduleName, .urn {    
+    color: darkgreen;
+}
+*/
+.keyword {
+    color: #8aabfd; 
+}
+.operator {
+    color: #9497a2;
+}
+.funcName {
+    color: white;
+}
+.funcParamName {
+    color: #f2be3b;    
+}
+.varNameDecl {
+    color: #f2be3b;    
+}
+.hideTypes .functionType {
+    display: none;   
+}
+.hideTypes .functionDef:hover > .functionType {
+    display: inline-block;
+    position: absolute;
+    background-color: #555;
+    margin-top: -1.5em;     
+}
+.showTypes .functionType {
+    display: block;  
+} 
+.button {
+    float: right;
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+}
