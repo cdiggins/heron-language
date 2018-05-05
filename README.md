@@ -1,10 +1,14 @@
 # Heron Programming Language
 
-Heron is a small cross-platform language being designed for ease of use, performance, and safety with a JavaScript like syntax. 
+See a demo of 3D geometry in thre browser at: [https://cdiggins.github.io/heron-language](https://cdiggins.github.io/heron-language)
+
+Heron is a small cross-platform language designed for ease of use, performance, and safety with a JavaScript like syntax. Heron emphasizes pure functional programming code, but looks like a traditional imperative or object-oriented code. 
+
+## Heron Design Principle 
 
 Heron is intended as a language for expressing libraries of algorithms, that can be reused within other languages as opposed to a language for writing full applications. 
 
-Heron is a fully statically typed language that does not require type annotations in the majority of cases, so it looks and feels like a dynamic language, with the potential efficiency, safety, and tooling of a compiled language. 
+Heron is a fully statically typed language that does not require type annotations in most cases (it supports type inference), so it looks and feels like a dynamic language, with the potential efficiency, safety, and tooling of a compiled language. 
 
 The Heron design is influenced most heavily by JavaScript, Haskell, C#, Scala, GLSL, and Scheme, but other languages play a role as well. Heron has a powerful module system built into the language, and a language versioning scheme for maintaining backwards compatibility while the language evolves. 
 
@@ -78,13 +82,14 @@ function sum(xs) =
 var sum = (xs) => 
     xs.reduce(0, op+);
 ```
-### Function Overloads
+
+#### Function Overloads
 
 Unlike JavaScript and TypeScript Heron allows the same name to be used for multiple functions. Like other strongly typed language, multiple functions may have the same name if they differ by the inferred type signature. 
 
 When multiple function can be chosen from a single name, the function with the type parameter that best matches the types of the expressions is chosen. If there is ambiguity, the most general type is chosen. This means that if you have an overloaded set of fucntions with ambiguity (like `op+`) then at least one function should have a generic implementation.   
 
-### Operator Overloads 
+#### Operator Overloads 
 
 Most binary operators can be overloaded. The Heron compiler maps operator calls to functions that have the letters `op` before the operator symbol (e.g. `op+`, `op<=`, `op..` etc.). This allows operators to be passed as function arguments. For several examples of operator definitions see the `intrinsics.heron` file. 
 
@@ -96,7 +101,7 @@ The module named `heron:intrinsics:0.1` is implicitly loaded in every file of a 
 
 ### Module Variable Declarations 
 
-Variables declared at the module level cannot be modified. Apart from that module variables are the same as regular variables.
+Variables declared at the module level cannot be rebinded. Apart from that module variables are the same as regular variables.
 
 ### Imports 
 
@@ -110,11 +115,11 @@ Heron has the following statements:
 
 * Variable declarations
 * While statements
-* Do while statements
+* Do/while statements
 * For statement
 * Compound Statement
-* Empty statement 
 * If statement 
+* Empty statement 
 
 ### For Statements
 
@@ -131,7 +136,7 @@ Heron has the following expression forms:
 * Binary arithmetical operators `+ - * / %`
 * Binary comparison operators `< > <= >= == !=`
 * Boolean operators `&& || ^^`
-* Array indexing: access and assignment
+* Array indexing: access `xs[i]` and assignment `xs[i] = x`
 * Postfix increment and decrement `++ --`
 * Ternary conditional operator `?:`
 * Lambda expression `(args) => body`
@@ -143,7 +148,7 @@ Heron has the following expression forms:
 
 ## Function Calls and Object Oriented Syntax
 
-Heron is explicitly not an object oriented language, but Heron still supportas a dot syntax enabling method and property chaining.
+Heron is explicitly not an object oriented language, but supports a dot syntax enabling method and property chaining.
 
 In Heron every function is a static function (there is no implicit `this` variable) but you can also call any function using a dot syntax, with the first argument on the left of the function. If the the function is a unary function (has only one argument) then when using dot syntax the parentheses are omitted, giving it the appearance of a computed property. 
 
@@ -165,7 +170,13 @@ print(6.sqr())
 
 # The Heron Type System 
 
-Heron is a strongly typed programming language. This means that all variables have a type that is determined at compile-time.  
+Heron is a strongly typed programming language. This means that all variables have a type that is determined at compile-time. 
+
+## Type Inference 
+
+Variable types are deduced from the types of the expressions assigned to them. Function argument types are deduced from how the arguments are used within the function: the mosts specific type satisfying all constraints (i.e. the usage) is assigned.   
+
+## Supported Types 
 
 Heron v0.1 supports the following types:
 
@@ -197,9 +208,9 @@ The following casts happen implicitly:
 
 ## Arrays
 
-Heron arrays cannot be modified. 
+Arrays cannot be modified: you cannot assign new values or add or remove values. You can only do that with an `ArrayBuilder` instance which can be constructed from an `Array`. 
 
-They all support the following operations:  
+Arrays support two basic operations:  
 
 ```
     intrinsic count<T>(xs: Array<T>): Int;
@@ -227,7 +238,7 @@ There most used building block operations used when processing arrays:
 
 ```
     map(xs: Array<T>, f: Func<T, U>): Array<U>;
-    filter(xs: Array<T>, f: Func<T, boo>): Array<T>;
+    filter(xs: Array<T>, f: Func<T, Bool>): Array<T>;
     reduce(xs: Array<T>, U init, Func<T, U, U> f): U;
     zip(xs: Array<T>, ys: Array<U>, f: Func<T, U, V>): Array<V>;
     slice(xs: Array<T>, from: Int, to: Int): Array<T>;
@@ -235,11 +246,27 @@ There most used building block operations used when processing arrays:
 
 ## ArrayBuilder 
 
-An `ArrayBuilder` supports the same operations as an `Array` with the following additional operations:
+An array builder is another immutable data type that allows the user to set values on an array using familiar indexing assignment syntax, and supports adding elements to the end of the array. 
+
+An `ArrayBuilder` supports the same operations as an `Array` with additional operations:
 
 ```
     push<T>(xs: ArrayBuilder<T>, x: T): ArrayBuilder<T>;
     set<T>(xs: ArrayBuilder<T>, i: Int, x: T): ArrayBuilder<T>;
+```
+
+Note that "setting" or "pushing" onto an `ArrayBuilder` instance, creates a new instance: it does not affect the original.
+
+An `ArrayBuilder` supports an index assignment syntax:
+
+```
+    xs[i] = 42
+```
+
+Which is rewritten by the compiler as:
+
+```
+    xs = xs.set(i, 42);
 ```
 
 An `ArrayBuilder` can be constructed from an `Array` as follows:
@@ -248,18 +275,21 @@ An `ArrayBuilder` can be constructed from an `Array` as follows:
     intrinsic mutable<T>(xs: Array<T>): ArrayBuilder<T>;
 ```
 
-An array builder is a special data type allows the user to set values on an array using familiar indexing assignment syntax, and supports adding elements to the end of the array. 
+Example of using `ArrayBuilder`:
 
 ```
-var xs = [1,2,3].mutable
-xs[0] = 5;
-print(xs[0]); // 5
-xs = xs.setAt(0, -1);
-print(xs[0]); // -1
-xs.setAt(0, 3); 
-print(xs[0]); // Still -1
-xs = xs.push(9);
-print(xs.count); // 4
+    var xs = [1,2,3].mutable
+    xs[0] = 5;
+    print(xs[0]); // 5
+
+    xs = xs.setAt(0, -1);
+    print(xs[0]); // -1
+
+    xs.setAt(0, 3); 
+    print(xs[0]); // Still -1
+    
+    xs = xs.push(9);
+    print(xs.count); // 4
 ```
 
 ### QuickSort: An ArrayBuilder Example
