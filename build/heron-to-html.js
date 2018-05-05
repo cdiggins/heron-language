@@ -1,8 +1,4 @@
 "use strict";
-var __makeTemplateObject = (this && this.__makeTemplateObject) || function (cooked, raw) {
-    if (Object.defineProperty) { Object.defineProperty(cooked, "raw", { value: raw }); } else { cooked.raw = raw; }
-    return cooked;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 var myna_parser_1 = require("myna-parser");
 var heron_ast_rewrite_1 = require("./heron-ast-rewrite");
@@ -10,12 +6,15 @@ var heron_parser_1 = require("./heron-parser");
 var myna_1 = require("myna-parser/myna");
 var heron_compiler_1 = require("./heron-compiler");
 var type_system_1 = require("./type-system");
+var heron_types_1 = require("./heron-types");
 var heronKeywords = [
     'var', 'in', 'for', 'while', 'do', 'if', 'else', 'continue', 'return', 'type', 'import', 'function', 'intrinsic', 'type', 'module', 'language'
 ];
 // This grammar is used for tokenizing text content not explicitly represented 
 // by nodes in the Heron AST for syntax coloring
 var nodeLookup = {};
+var fs = require('fs');
+var path = require('path');
 var TokenGrammar = /** @class */ (function () {
     function TokenGrammar() {
         this.fullComment = heron_parser_1.g.fullComment.ast;
@@ -50,6 +49,8 @@ function visitToken(node, lines) {
             lines.push(content);
             break;
         case "lineComment":
+            lines.push(span(node.name, content.trim()));
+            break;
         case "fullComment":
         case "delimiter":
         default:
@@ -65,24 +66,13 @@ function textTokenizer(text, lines) {
     }
 }
 function toHtml(text) {
-    return text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;');
+    return text.replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 }
 function nodeToHtml(source, node, parent, lastPos, lines) {
-    var node2 = nodeLookup[node.start];
-    if (node.name === 'funcDef' && node2 && node2.def) {
-        var t = type_system_1.normalizeType(node2.def.type).toString();
-        lines.push('<span class="functionDef">');
-        lines.push("<span class=\"functionType\">" + t + "</span>");
-        var r = baseNodeToHtml(source, node, parent, lastPos, lines);
-        lines.push('</span>');
-        return r;
-    }
-    else {
-        return baseNodeToHtml(source, node, parent, lastPos, lines);
-    }
-}
-exports.nodeToHtml = nodeToHtml;
-function baseNodeToHtml(source, node, parent, lastPos, lines) {
     if (!node)
         return lastPos;
     if (node.input !== source)
@@ -108,6 +98,36 @@ function baseNodeToHtml(source, node, parent, lastPos, lines) {
             lines.push(span(node.name, toHtml(node.allText)));
             return node.end;
     }
+    var closeSpan = false;
+    switch (node.name) {
+        case "emptyStatement":
+        case "compoundStatement":
+        case "ifStatement":
+        case "returnStatement":
+        case "continueStatement":
+        case "breakStatement":
+        case "forLoop":
+        case "doLoop":
+        case "whileLoop":
+        case "varDeclStatement":
+        //case "funcDef":
+        //case "intrinsicDef":
+        //case "typeDef":  
+        //case "importStatement":
+        case "exprStatement":
+            lines.push("<span class='statement'>");
+            closeSpan = true;
+            break;
+    }
+    // Check for the special case of a functionDef
+    var node2 = nodeLookup[node.start];
+    if (node.name === 'funcDef' && node2 && node2.def) {
+        var t = toHeronTypeString(type_system_1.alphabetizeVarNames(node2.def.type));
+        t = toHtml(t);
+        lines.push('<span class="functionDef">');
+        lines.push("<span class=\"functionType\">" + t + "</span>");
+        closeSpan = true;
+    }
     // A non-leaf node. Iterate over children.
     // If a child starts after the currentPos, it will add the necessary tokens
     var curPos = node.start;
@@ -115,21 +135,20 @@ function baseNodeToHtml(source, node, parent, lastPos, lines) {
         var c = _a[_i];
         curPos = nodeToHtml(source, c, node, curPos, lines);
     }
+    if (closeSpan)
+        lines.push("</span>");
     // If we have to add some padding leaf nodes, we will do that here.
     if (curPos < node.end)
         textTokenizer(source.substr(curPos, node.end - curPos), lines);
     return node.end;
 }
-exports.baseNodeToHtml = baseNodeToHtml;
+exports.nodeToHtml = nodeToHtml;
 function heronNodeToHtml(node) {
     var lines = [];
     var input = node.input;
-    lines.push('<div class="code hideTypes">');
-    lines.push('<span class="button">Toggle Types</span>');
     var r = nodeToHtml(input, node, null, 0, lines);
     if (r !== input.length)
         throw new Error("Did not parse to the end");
-    lines.push('</div>');
     return lines.join("");
 }
 exports.heronNodeToHtml = heronNodeToHtml;
@@ -144,17 +163,42 @@ function heronModuleToHtml(module) {
     return heronNodeToHtml(ast);
 }
 exports.heronModuleToHtml = heronModuleToHtml;
-function writeHeronModuleToHtml(pkg) {
+function heronPackageToHtml(pkg) {
     for (var _i = 0, _a = pkg.modules; _i < _a.length; _i++) {
         var m_1 = _a[_i];
         var html = heronModuleToHtml(m_1);
         //const fileName = path.join('src-html', m.file.filePath + ".html");
-        var fileName = m_1.file.filePath.replace('.heron', '.html').replace('input', 'output');
-        var fileContents = header + html + "<body></html>";
+        var fileName = m_1.file.filePath.replace('.heron', '.html').replace('input', 'source-browser');
+        var url = 'https://github.com/cdiggins/heron-language/tree/master/input/' + path.basename(m_1.file.filePath);
+        var fileContents = makeHtml(m_1.name, html, url);
         fs.writeFileSync(fileName, fileContents);
     }
 }
-exports.writeHeronModuleToHtml = writeHeronModuleToHtml;
-var header = '(templateObject_1 || (templateObject_1 = __makeTemplateObject(["<html><head><title>", "</title>\n    <link rel=\"stylesheet\" type=\"text/css\" href=\"styles.css\">\n    <link href=\"https://fonts.googleapis.com/css?family=Inconsolata\" rel=\"stylesheet\">\n    </head>\n    <body>"], ["<html><head><title>", "</title>\n    <link rel=\"stylesheet\" type=\"text/css\" href=\"styles.css\">\n    <link href=\"https://fonts.googleapis.com/css?family=Inconsolata\" rel=\"stylesheet\">\n    </head>\n    <body"])), myna_parser_1.Myna.name);
-var templateObject_1;
+exports.heronPackageToHtml = heronPackageToHtml;
+function toHeronTypeString(t) {
+    if (t instanceof heron_types_1.FunctionSet) {
+        throw new Error("Function sets not supported");
+    }
+    else if (t instanceof type_system_1.PolyType) {
+        var first = t.types[0];
+        if (type_system_1.isTypeConstant(first, "Func")) {
+            var args = heron_types_1.getFuncArgTypes(t);
+            var ret = heron_types_1.getFuncReturnType(t);
+            return "(" + args.map(toHeronTypeString).join(" ") + " -> " + toHeronTypeString(ret) + ")";
+        }
+        else {
+            return first.toString() + "<" + t.types.slice(1).map(toHeronTypeString).join(", ") + ">";
+        }
+    }
+    else if (t instanceof type_system_1.TypeVariable || typeof (t) === 'string') {
+        return "'" + t;
+    }
+    else {
+        return t.toString();
+    }
+}
+exports.toHeronTypeString = toHeronTypeString;
+function makeHtml(name, html, url) {
+    return "<html><head><title>" + name + "</title>\n<link rel=\"stylesheet\" type=\"text/css\" href=\"styles.css\">\n<link href=\"https://fonts.googleapis.com/css?family=Inconsolata\" rel=\"stylesheet\">\n</head>\n<body>\n<script>\n    var typeVis = true;\n\n    function changeClass(from, to) {\n        for (const e of document.getElementsByClassName(from)) {\n            className = e.getAttribute(\"class\").replace(from, to);            \n            e.setAttribute(\"class\", className);\n        }\n    }\n\n    function toggleTypeVis() {\n        if (typeVis) \n            changeClass(\"hideTypes\", \"showTypes\");\n        else \n            changeClass(\"showTypes\", \"hideTypes\");\n        typeVis = !typeVis;\n        return false;\n    }\n</script>\n<div class=\"code hideTypes\">\n<span class='gitHubLink'><a href=\"" + url + "\">View source on GitHub</a> | <a href=\"https://cdiggins.github.io/heron-language\">See Demo</a> | <a href=\"javascript:toggleTypeVis()\">Toggle Types</a> </span>\n" + html + "\n</div>\n</body>\n</html>";
+}
 //# sourceMappingURL=heron-to-html.js.map

@@ -8,7 +8,7 @@ import { Package } from "./heron-package";
 import { computeFuncType } from "./heron-types";
 import { parseType } from "./type-parser";
 import { normalizeType } from "./type-system";
-import { heronModuleToHtml } from "./heron-to-html";
+import { heronModuleToHtml, heronPackageToHtml } from "./heron-to-html";
 
 const m = Myna.Myna;
 const g = heronGrammar;
@@ -228,20 +228,7 @@ function tests() {
         console.log(intrinsics[k].toString());
     */
 
-    for (const m of pkg.modules) {
-        const html = heronModuleToHtml(m);
-        //const fileName = path.join('src-html', m.file.filePath + ".html");
-        const fileName = m.file.filePath.replace('.heron', '.html').replace('input', 'output');
-        const fileContents = `<html><head><title>${m.name}</title>
-<link rel="stylesheet" type="text/css" href="styles.css">
-<link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet">
-</head>
-<body>
-${html}
-</body></html>`;
-        fs.writeFileSync(fileName, fileContents);
-    }
-
+    heronPackageToHtml(pkg);
     console.log('Done');
 }
 

@@ -1,0 +1,92 @@
+<html><head><title>heron:geometry.vector:0.1</title>
+<link rel="stylesheet" type="text/css" href="styles.css">
+<link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet">
+</head>
+<body>
+<script>
+    var typeVis = true;
+
+    function changeClass(from, to) {
+        for (const e of document.getElementsByClassName(from)) {
+            className = e.getAttribute("class").replace(from, to);            
+            e.setAttribute("class", className);
+        }
+    }
+
+    function toggleTypeVis() {
+        if (typeVis) 
+            changeClass("hideTypes", "showTypes");
+        else 
+            changeClass("showTypes", "hideTypes");
+        typeVis = !typeVis;
+        return false;
+    }
+</script>
+<div class="code hideTypes">
+<span class='gitHubLink'><a href="https://github.com/cdiggins/heron-language/tree/master/input/geometry-vector3.heron">View source on GitHub</a> | <a href="https://cdiggins.github.io/heron-language">See Demo</a> | <a href="javascript:toggleTypeVis()">Toggle Types</a> </span>
+<span class="keyword">language</span> <span class="langVer">heron:std:0.1</span><span class="delimiter">;</span>
+
+<span class="keyword">module</span> <span class="moduleName">heron:geometry.vector:0.1</span>
+<span class="delimiter">{</span>
+    <span class="lineComment">// Several algorithms inspired by the following:</span>
+    <span class="lineComment">// https://referencesource.microsoft.com/#System.Numerics/System/Numerics/Vector3</span>
+    <span class="lineComment">// https://referencesource.microsoft.com/#System.Numerics/System/Numerics/Vector3_Intrinsics.cs</span>
+
+    <span class="lineComment">// Variables</span>
+
+    <span class='statement'><span class="keyword">var</span> <span class="varNameDecl">origin</span>  <span class="operator">=</span> <span class="varName">vector</span><span class="delimiter">(</span><span class="number">0</span><span class="delimiter">,</span> <span class="number">0</span><span class="delimiter">,</span> <span class="number">0</span><span class="delimiter">)</span></span><span class="delimiter">;</span>
+    <span class='statement'><span class="keyword">var</span> <span class="varNameDecl">ones</span>    <span class="operator">=</span> <span class="varName">vector</span><span class="delimiter">(</span><span class="number">1</span><span class="delimiter">,</span> <span class="number">1</span><span class="delimiter">,</span> <span class="number">1</span><span class="delimiter">)</span></span><span class="delimiter">;</span>
+    <span class='statement'><span class="keyword">var</span> <span class="varNameDecl">xaxis</span>   <span class="operator">=</span> <span class="varName">vector</span><span class="delimiter">(</span><span class="number">1</span><span class="delimiter">,</span> <span class="number">0</span><span class="delimiter">,</span> <span class="number">0</span><span class="delimiter">)</span></span><span class="delimiter">;</span>
+    <span class='statement'><span class="keyword">var</span> <span class="varNameDecl">yaxis</span>   <span class="operator">=</span> <span class="varName">vector</span><span class="delimiter">(</span><span class="number">0</span><span class="delimiter">,</span> <span class="number">1</span><span class="delimiter">,</span> <span class="number">0</span><span class="delimiter">)</span></span><span class="delimiter">;</span>
+    <span class='statement'><span class="keyword">var</span> <span class="varNameDecl">zaxis</span>   <span class="operator">=</span> <span class="varName">vector</span><span class="delimiter">(</span><span class="number">0</span><span class="delimiter">,</span> <span class="number">0</span><span class="delimiter">,</span> <span class="number">1</span><span class="delimiter">)</span></span><span class="delimiter">;</span>
+
+    <span class="lineComment">// Functions</span>
+
+    <span class="functionDef"><span class="functionType">(Float Float Float -&gt; Float3)</span><span class="keyword">function</span> <span class="funcName">vector</span><span class="delimiter">(</span><span class="funcParamName">x</span>: <span class="identifier">Float</span><span class="delimiter">,</span> <span class="funcParamName">y</span>: <span class="identifier">Float</span><span class="delimiter">,</span> <span class="funcParamName">z</span>: <span class="identifier">Float</span><span class="delimiter">)</span> 
+        <span class="operator">=</span> <span class="varName">float3</span><span class="delimiter">(</span><span class="varName">x</span><span class="delimiter">,</span> <span class="varName">y</span><span class="delimiter">,</span> <span class="varName">z</span><span class="delimiter">)</span></span><span class="delimiter">;</span>
+
+    <span class="functionDef"><span class="functionType">(Float -&gt; Float3)</span><span class="keyword">function</span> <span class="funcName">vector</span><span class="delimiter">(</span><span class="funcParamName">x</span>: <span class="identifier">Float</span><span class="delimiter">)</span>
+        <span class="operator">=</span> <span class="varName">vector</span><span class="delimiter">(</span><span class="varName">x</span><span class="delimiter">,</span> <span class="varName">x</span><span class="delimiter">,</span> <span class="varName">x</span><span class="delimiter">)</span></span><span class="delimiter">;</span>
+
+    <span class="functionDef"><span class="functionType">(Array&lt;Float&gt; -&gt; Float3)</span><span class="keyword">function</span> <span class="funcName">vector</span><span class="delimiter">(</span><span class="funcParamName">xs</span><span class="delimiter">)</span>
+        <span class="operator">=</span> <span class="varName">vector</span><span class="delimiter">(</span><span class="varName">xs</span><span class="operator">[</span><span class="number">0</span><span class="operator">]</span><span class="delimiter">,</span> <span class="varName">xs</span><span class="operator">[</span><span class="number">1</span><span class="operator">]</span><span class="delimiter">,</span> <span class="varName">xs</span><span class="operator">[</span><span class="number">2</span><span class="operator">]</span><span class="delimiter">)</span></span><span class="delimiter">;</span>
+
+    <span class="functionDef"><span class="functionType">(Float3 -&gt; Array&lt;Float&gt;)</span><span class="keyword">function</span> <span class="funcName">array</span><span class="delimiter">(</span><span class="funcParamName">v</span><span class="delimiter">)</span> 
+        <span class="operator">=</span> <span class="operator">[</span><span class="varName">v</span><span class="operator">.</span><span class="identifier">x</span><span class="delimiter">,</span> <span class="varName">v</span><span class="operator">.</span><span class="identifier">y</span><span class="delimiter">,</span> <span class="varName">v</span><span class="operator">.</span><span class="identifier">z</span><span class="operator">]</span></span><span class="delimiter">;</span>
+
+    <span class="functionDef"><span class="functionType">(Float3 -&gt; Float)</span><span class="keyword">function</span> <span class="funcName">sumComponents</span><span class="delimiter">(</span><span class="funcParamName">v</span><span class="delimiter">)</span> 
+        <span class="operator">=</span> <span class="varName">v</span><span class="operator">.</span><span class="identifier">x</span> <span class="operator">+</span> <span class="varName">v</span><span class="operator">.</span><span class="identifier">y</span> <span class="operator">+</span> <span class="varName">v</span><span class="operator">.</span><span class="identifier">z</span></span><span class="delimiter">;</span>
+    
+    <span class="functionDef"><span class="functionType">(Float3 Float3 -&gt; Float)</span><span class="keyword">function</span> <span class="funcName">dot</span><span class="delimiter">(</span><span class="funcParamName">a</span><span class="delimiter">,</span> <span class="funcParamName">b</span><span class="delimiter">)</span> 
+        <span class="operator">=</span> <span class="varName">sumComponents</span><span class="delimiter">(</span><span class="varName">a</span> <span class="operator">*</span> <span class="varName">b</span><span class="delimiter">)</span></span><span class="delimiter">;</span>    
+    
+    <span class="functionDef"><span class="functionType">(Float3 -&gt; Float)</span><span class="keyword">function</span> <span class="funcName">length</span><span class="delimiter">(</span><span class="funcParamName">v</span><span class="delimiter">)</span> 
+        <span class="operator">=</span> <span class="varName">sqrt</span><span class="delimiter">(</span><span class="varName">v</span><span class="operator">.</span><span class="identifier">length2</span><span class="delimiter">)</span></span><span class="delimiter">;</span>    
+    
+    <span class="functionDef"><span class="functionType">(Float3 -&gt; Float)</span><span class="keyword">function</span> <span class="funcName">length2</span><span class="delimiter">(</span><span class="funcParamName">v</span><span class="delimiter">)</span> 
+        <span class="operator">=</span> <span class="varName">v</span><span class="operator">.</span><span class="identifier">dot</span><span class="delimiter">(</span><span class="varName">v</span><span class="delimiter">)</span></span><span class="delimiter">;</span>        
+
+    <span class="functionDef"><span class="functionType">(Float3 Float3 -&gt; Float)</span><span class="keyword">function</span> <span class="funcName">distance</span><span class="delimiter">(</span><span class="funcParamName">a</span><span class="delimiter">,</span> <span class="funcParamName">b</span><span class="delimiter">)</span>
+        <span class="operator">=</span> <span class="delimiter">(</span><span class="varName">a</span> <span class="operator">-</span> <span class="varName">b</span><span class="delimiter">)</span><span class="operator">.</span><span class="identifier">length</span></span><span class="delimiter">;</span>
+
+    <span class="functionDef"><span class="functionType">(Float3 Float3 -&gt; Float)</span><span class="keyword">function</span> <span class="funcName">distance2</span><span class="delimiter">(</span><span class="funcParamName">a</span><span class="delimiter">,</span> <span class="funcParamName">b</span><span class="delimiter">)</span>
+        <span class="operator">=</span> <span class="delimiter">(</span><span class="varName">a</span> <span class="operator">-</span> <span class="varName">b</span><span class="delimiter">)</span><span class="operator">.</span><span class="identifier">length2</span></span><span class="delimiter">;</span>
+
+    <span class="functionDef"><span class="functionType">(Float3 -&gt; Float)</span><span class="keyword">function</span> <span class="funcName">normal</span><span class="delimiter">(</span><span class="funcParamName">v</span><span class="delimiter">)</span> 
+        <span class="operator">=</span> <span class="varName">v</span> <span class="operator">/</span> <span class="varName">v</span><span class="operator">.</span><span class="identifier">length</span></span><span class="delimiter">;</span>
+
+    <span class="functionDef"><span class="functionType">(Float3 Float3 -&gt; Float3)</span><span class="keyword">function</span> <span class="funcName">cross</span><span class="delimiter">(</span><span class="funcParamName">a</span><span class="delimiter">,</span> <span class="funcParamName">b</span><span class="delimiter">)</span>
+        <span class="operator">=</span> <span class="varName">vector</span><span class="delimiter">(</span><span class="varName">a</span><span class="operator">.</span><span class="identifier">y</span><span class="operator">*</span><span class="varName">b</span><span class="operator">.</span><span class="identifier">z</span> <span class="operator">-</span> <span class="varName">a</span><span class="operator">.</span><span class="identifier">z</span><span class="operator">*</span><span class="varName">b</span><span class="operator">.</span><span class="identifier">y</span><span class="delimiter">,</span> <span class="varName">a</span><span class="operator">.</span><span class="identifier">z</span><span class="operator">*</span><span class="varName">b</span><span class="operator">.</span><span class="identifier">x</span> <span class="operator">-</span> <span class="varName">a</span><span class="operator">.</span><span class="identifier">x</span><span class="operator">*</span><span class="varName">b</span><span class="operator">.</span><span class="identifier">z</span><span class="delimiter">,</span> <span class="varName">a</span><span class="operator">.</span><span class="identifier">x</span><span class="operator">*</span><span class="varName">b</span><span class="operator">.</span><span class="identifier">y</span> <span class="operator">-</span> <span class="varName">a</span><span class="operator">.</span><span class="identifier">y</span><span class="operator">*</span><span class="varName">b</span><span class="operator">.</span><span class="identifier">x</span><span class="delimiter">)</span></span><span class="delimiter">;</span>
+
+    <span class="functionDef"><span class="functionType">(Float3 Float3 -&gt; Float)</span><span class="keyword">function</span> <span class="funcName">reflect</span><span class="delimiter">(</span><span class="funcParamName">v</span><span class="delimiter">,</span> <span class="funcParamName">n</span><span class="delimiter">)</span>
+        <span class="operator">=</span> <span class="varName">v</span> <span class="operator">-</span> <span class="delimiter">(</span><span class="varName">n</span> <span class="operator">*</span> <span class="varName">dot</span><span class="delimiter">(</span><span class="varName">v</span><span class="delimiter">,</span> <span class="varName">n</span><span class="delimiter">)</span> <span class="operator">*</span> <span class="number">2.0</span><span class="delimiter">)</span></span><span class="delimiter">;</span>
+
+    <span class="functionDef"><span class="functionType">(Float Float Float -&gt; Float)</span><span class="keyword">function</span> <span class="funcName">lerp</span><span class="delimiter">(</span><span class="funcParamName">a</span><span class="delimiter">,</span> <span class="funcParamName">b</span><span class="delimiter">,</span> <span class="funcParamName">x</span><span class="delimiter">)</span>
+        <span class="operator">=</span> <span class="varName">a</span> <span class="operator">*</span> <span class="delimiter">(</span><span class="number">1.0</span> <span class="operator">-</span> <span class="varName">x</span><span class="delimiter">)</span> <span class="operator">+</span> <span class="varName">b</span> <span class="operator">*</span> <span class="varName">x</span></span><span class="delimiter">;</span>            
+
+    <span class="functionDef"><span class="functionType">(Float3 -&gt; Float3)</span><span class="keyword">function</span> <span class="funcName">negate</span><span class="delimiter">(</span><span class="funcParamName">v</span><span class="delimiter">)</span>
+        <span class="operator">=</span> <span class="varName">vector</span><span class="delimiter">(</span><span class="operator">-</span><span class="varName">v</span><span class="operator">.</span><span class="identifier">x</span><span class="delimiter">,</span> <span class="operator">-</span><span class="varName">v</span><span class="operator">.</span><span class="identifier">y</span><span class="delimiter">,</span> <span class="operator">-</span><span class="varName">v</span><span class="operator">.</span><span class="identifier">z</span><span class="delimiter">)</span></span><span class="delimiter">;</span>
+<span class="delimiter">}</span>
+</div>
+</body>
+</html>

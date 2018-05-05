@@ -207,14 +207,7 @@ function tests() {
     for (const k in intrinsics)
         console.log(intrinsics[k].toString());
     */
-    for (var _b = 0, _c = pkg.modules; _b < _c.length; _b++) {
-        var m_2 = _c[_b];
-        var html = heron_to_html_1.heronModuleToHtml(m_2);
-        //const fileName = path.join('src-html', m.file.filePath + ".html");
-        var fileName = m_2.file.filePath.replace('.heron', '.html').replace('input', 'output');
-        var fileContents = "<html><head><title>" + m_2.name + "</title>\n<link rel=\"stylesheet\" type=\"text/css\" href=\"styles.css\">\n<link href=\"https://fonts.googleapis.com/css?family=Inconsolata\" rel=\"stylesheet\">\n</head>\n<body>\n" + html + "\n</body></html>";
-        fs.writeFileSync(fileName, fileContents);
-    }
+    heron_to_html_1.heronPackageToHtml(pkg);
     console.log('Done');
 }
 /*
