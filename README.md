@@ -1,10 +1,12 @@
 # Heron Programming Language
 
+[![DeepScan grade](https://deepscan.io/api/projects/2208/branches/12139/badge/grade.svg)](https://deepscan.io/dashboard#view=project&pid=2208&bid=12139)
+
 See a demo of 3D geometry in thre browser at: [https://cdiggins.github.io/heron-language](https://cdiggins.github.io/heron-language)
 
 Heron is a small cross-platform language designed for ease of use, performance, and safety with a JavaScript like syntax. Heron emphasizes pure functional programming code, but looks like a traditional imperative or object-oriented code. 
 
-## Heron Design Principle 
+## Heron Design Goals
 
 Heron is intended as a language for expressing libraries of algorithms, that can be reused within other languages as opposed to a language for writing full applications. 
 
