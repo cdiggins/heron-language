@@ -1,5 +1,5 @@
 
-# History of Heron (why is this v0.3)
+# History of Heron 
 
 ### Why throw away a good name?
 
