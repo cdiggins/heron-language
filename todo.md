@@ -1,5 +1,33 @@
 ## Some things to do
 
+[] - I can't write "0.repeat" it complains, because not 
+[] - Fix the problem with Myna not reporting the correct location in an error. 
+[] - Add IDs to Myna 
+[] - Sound processing
+[] - Something animated 
+[] - Speed up execution
+[] - Float assignment operations (e.g. "v.x = 3" )
+[] - Automatic setters 
+[] - Bounding box computations 
+[] - Bounding sphere computations
+[] - Voronoi 
+[] - Poisonnian algorithms 
+[] - Some noise algorithms 
+[] - A way to output parameter descriptions
+[] - A way to reflect over functions 
+[] - Distance from spline to point 
+[] - Push modifier 
+[] - Heron normal form conversion 
+[] - SineWave Tube 
+[] - Arrow (as volumetric and as mesh )
+[] - Volumetric shaders working
+[] - Get vector * float working
+[] - Get arithmetic operators working on arrays
+[] - Quaternion math
+[] - Float2,Float3,Float4
+[] - Tests for vectors and other things like that
+[] - A simple generation test of GLSL code.
+[] - Performance benchmarks of generated Heron code (unoptimized vs optimized)
 [] - Remove my node modules
 [] - Move the type-inference code back into its own repository (making sure to follow the Heron model, with the TS and the JS in the same place?)
 [] - Add linter support 
@@ -299,3 +327,167 @@ Note:
 I also really want to define a scene object. And I want to generate C++, and ... 
 
 Generate the types.
+
+//==
+
+Modifier? 
+* Push
+* Cubify
+* Spherify
+* Transform (Skew/Twist/Taper)
+* Bend
+* Jitter
+* Relax 
+
+//== //== //== 
+
+* Torus / Sphere / Cylinder / Klein / Knot / Box / Platonic solid / N bottom pyramid / Prism /  
+
+//== //== //== 
+
+TODO:
+https://www.npmjs.com/package/xml-js
+
+MCG -> Heron
+
+//==
+
+Function inliner: partial evaluation.
+
+This is key. To get this to work I will have to simplify and streamline the representation. 
+
+Maybe put things in some kind of normalized form. 
+
+There are many different options there: I want to keep things similar to the original form obviously,
+BUT, at the same time, performing transformations is much easier if I normalize. 
+
+Therefore there are some choices to be made. There is nothing wrong with having the same code
+in multiple forms. 
+
+//==
+
+Heron normal form - for optimization. 
+
+Related to ANF/SSA and CPS  
+* https://en.wikipedia.org/wiki/A-normal_form
+* https://en.wikipedia.org/wiki/Continuation-passing_style
+* https://en.wikipedia.org/wiki/Static_single_assignment_form
+
+Requires: 
+1. Closures to be clearly define. 
+1. Conditionals. (efficient execution requires conditional expressions)
+
+All functions have either:
+1. Am I 
+
+In some cases I am going to want to augment my types (e.g. mapWithClosure).
+
+For conversion of Filters to GLSL, I can imagine using a "FilteredArray" struct. 
+
+Most of GLSL is actually going to be "inlining" of a function. 
+
+I plan on absolutely falling apart in the presence of recursion. 
+
+Recursion is so overrated. 
+
+A function without a closure, and a function with a closure, are different. 
+
+This is good to distinguish because I can get some stuff in a very happy place. 
+
+I need AST nodes. 
+I need Parse locations. 
+I need to have variable/parameter definitions and stuff. 
+
+Heron normal form is going to be designed as a proper standalone API for:
+1. Evaluation
+2. Optimization 
+3. Type-checking 
+
+What I want from HNF is: 
+1. TO simplify expressions.
+1. Compute certain values at the right time. 
+1. To inline stuff 
+
+//==
+
+If I can generate more efficient JavaScript code, I think we have something. 
+
+I could probably show it through some benchmarks of: 
+
+//===
+
+So there are like three things:
+* I want normals.
+* I would like a torus knot 
+* I would like to try generating just a little bit of shader code.
+
+* Teapot / bunny / 
+
+* Meshing using billboards? 
+* Random rendering / ray-tracing. 
+* "Scene" as an API: 
+* Using Heron as a file format
+
+* Mesh 
+
+http://acko.net/
+http://acko.net/blog/shadergraph-2/
+http://acko.net/blog/mathbox2/
+http://acko.net/blog/a-dom-for-robots/ 
+http://acko.net/blog/yak-shading/ 
+http://acko.net/files/mathbox2/iframe-volume.html
+ 
+
+//==
+
+This could really compete in the space of processing, or be used with D3
+
+3D Library ,amage,emt/ 
+
+// 
+
+Normal as the average of all touching faces? 
+
+I really want to a "deform" with strength. 
+
+Also the simple equation I had fro: 
+
+position/ rotation / scale. 
+
+//==
+
+I really need:
+
+1. Optional arguments
+2. Setters
+3. Objects 
+
+//==
+
+Check if buffers are zero ... if so we don't add that attribute. 
+
+//==
+
+Do I want to do strength? It could be added to the shader? 
+
+// STrength cocmputation
+Strength from X axis, Y axis, Z axis, Distance from 
+
+// So let's say I do a transform shader? 
+
+Well I will need quaternion support. 
+
+Distance point to spline:
+* https://www.tinaja.com/glib/cmindist.pdf
+* http://homepage.divms.uiowa.edu/~atkinson/ftp/CurvesAndSufacesClosestPoint.pdf
+
+// https://prideout.net/blog/?p=44
+// https://github.com/mrdoob/three.js/blob/master/src/geometries/ParametricGeometry.js
+// https://github.com/mrdoob/three.js/blob/master/examples/js/ParametricGeometries.js
+// https://paulbourke.net/geometry/
+// https://github.com/mrdoob/three.js/tree/master/src/geometries
+
+// TODO: https://github.com/mrdoob/three.js/blob/master/examples/js/CurveExtras.js
+// TODO: https://github.com/mrdoob/three.js/blob/master/src/math/Color.js
+// TODO: extrude, lathe, spirograph, colors (See tubeGeometry in Three.JS)
+// TODO: https://github.com/mrdoob/three.js/blob/master/examples/js/geometries/TeapotBufferGeometry.js

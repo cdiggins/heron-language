@@ -193,9 +193,17 @@ function tests() {
     text += 'var heronMain = (function () {\n';
     text += library + '\n';
     text += toJs.cb.toString();
-    const main = pkg.findFunction("main");
-    text += '\nreturn ' + funcDefName(main) + ';\n';
-    text += '})();\n';
+    text += '\n';
+   
+    // Originally we just exported the main
+    // const main = pkg.findFunction("main");    
+
+    // Now we export every function from the main module
+    text += 'return {';    
+    const m = pkg.getModule("heron:tests:0.1");
+    for (const f of m.functions) 
+        text += f.name + ' : ' + funcDefName(f) + ',\n';
+    text += '}; })();\n';
     //fs.writeFileSync(path.join(outputFolder, 'output.js'), text);
     fs.writeFileSync(path.join('demo', 'output.js'), text);
 

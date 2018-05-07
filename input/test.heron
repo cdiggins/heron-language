@@ -6,10 +6,8 @@ module heron:tests:0.1
     import heron:geometry.mesh:0.1;
     import heron:geometry.vector:0.1;
 
-    function main() {
-        simpleArrayTest();
-        return geometryTest();
-    }
+    function main() 
+        = simpleArrayTest();
 
     function simpleArrayTest() {
         var xs = [1, 11, 3];
@@ -58,32 +56,37 @@ module heron:tests:0.1
         print(xs.average);
     }
 
-    var red = vector(1, 0, 0);
-    var green = vector(0, 1, 0);
-    var blue = vector(0, 0, 1);
-
-    // Funky coloring function
-    function colorGeometry(g)
+    function colorModifier(g, amount: Float)
         = g.setVertexColors(g.uvBuffer.map(v => vector(
             sin(v.x * pi * 4f) / 2.0 + 0.5,
-            0,
-            cos(v.y * pi * 4f) / 2.0 + 0.5
-            )));
+            sin(amount),
+            cos(v.y * pi * 4f) / 2.0 + 0.5)));
 
-    // Given a geometry, gives us a function that returns an offset version of that geometry 
-    function demoGeometry(g) 
-        = (offX, offY, offZ, scl) => 
-            g.translate(vector(offX, offY, offZ))
-            .scale(vector(scl, scl, scl))
-            .colorGeometry;
+    function pushModifer(g, amount: Float)
+        = g.translate(g.normalBuffer.map(n => n * amount.vector));
+    
+    function scaleModifier(g, amount: Float)
+        = g.scale(amount.vector);
 
-    function geometryTest() 
-        = [
-            demoGeometry(sphere()),
-            demoGeometry(cylinder()),
-            demoGeometry(torus()),
-            demoGeometry(klein()),
-            demoGeometry(plane()),
-            demoGeometry(mobius())
+    function modifiers()
+        = [ 
+            pushModifer,
+            scaleModifier,            
+            colorModifier
+        ];
+
+    function primitives()
+        = [ 
+            sphere(), 
+            cylinder(), 
+            torus(), 
+            klein(), 
+            plane(), 
+            mobius(), 
+            tetrahedron, 
+            cube, 
+            octahedron, 
+            dodecahedron,
+            icosahedron
         ];
 }

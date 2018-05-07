@@ -48,8 +48,10 @@
     <span class="functionDef"><span class="functionType">(Float -&gt; Float3)</span><span class="keyword">function</span> <span class="funcName">vector</span><span class="delimiter">(</span><span class="funcParamName">x</span>: <span class="identifier">Float</span><span class="delimiter">)</span>
         <span class="operator">=</span> <span class="varName">vector</span><span class="delimiter">(</span><span class="varName">x</span><span class="delimiter">,</span> <span class="varName">x</span><span class="delimiter">,</span> <span class="varName">x</span><span class="delimiter">)</span></span><span class="delimiter">;</span>
 
-    <span class="functionDef"><span class="functionType">(Array&lt;Float&gt; -&gt; Float3)</span><span class="keyword">function</span> <span class="funcName">vector</span><span class="delimiter">(</span><span class="funcParamName">xs</span><span class="delimiter">)</span>
-        <span class="operator">=</span> <span class="varName">vector</span><span class="delimiter">(</span><span class="varName">xs</span><span class="operator">[</span><span class="number">0</span><span class="operator">]</span><span class="delimiter">,</span> <span class="varName">xs</span><span class="operator">[</span><span class="number">1</span><span class="operator">]</span><span class="delimiter">,</span> <span class="varName">xs</span><span class="operator">[</span><span class="number">2</span><span class="operator">]</span><span class="delimiter">)</span></span><span class="delimiter">;</span>
+<span class="fullComment">/*
+    function vector(xs)
+        = vector(xs[0], xs[1], xs[2]);
+*/</span>
 
     <span class="functionDef"><span class="functionType">(Float3 -&gt; Array&lt;Float&gt;)</span><span class="keyword">function</span> <span class="funcName">array</span><span class="delimiter">(</span><span class="funcParamName">v</span><span class="delimiter">)</span> 
         <span class="operator">=</span> <span class="operator">[</span><span class="varName">v</span><span class="operator">.</span><span class="identifier">x</span><span class="delimiter">,</span> <span class="varName">v</span><span class="operator">.</span><span class="identifier">y</span><span class="delimiter">,</span> <span class="varName">v</span><span class="operator">.</span><span class="identifier">z</span><span class="operator">]</span></span><span class="delimiter">;</span>

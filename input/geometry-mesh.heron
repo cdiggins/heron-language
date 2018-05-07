@@ -1,23 +1,11 @@
 language heron:std:0.1;
 
-// https://prideout.net/blog/?p=44
-// https://github.com/mrdoob/three.js/blob/master/src/geometries/ParametricGeometry.js
-// https://github.com/mrdoob/three.js/blob/master/examples/js/ParametricGeometries.js
-// https://paulbourke.net/geometry/
-// https://github.com/mrdoob/three.js/tree/master/src/geometries
-
-// TODO: https://github.com/mrdoob/three.js/blob/master/examples/js/CurveExtras.js
-// TODO: https://github.com/mrdoob/three.js/blob/master/src/math/Color.js
-// TODO: extrude, lathe, spirograph, colors (See tubeGeometry in Three.JS)
-// TODO: https://github.com/mrdoob/three.js/blob/master/examples/js/geometries/TeapotBufferGeometry.js
-
 module heron:geometry.mesh:0.1
 {
     import heron:std.array:0.1;
     import heron:geometry.vector:0.1;
 
     // Alternative constructors
-
     function mesh(vertexBuffer)
         = mesh(vertexBuffer, vertexBuffer.indices);
 
@@ -25,13 +13,28 @@ module heron:geometry.mesh:0.1
         = mesh(vertexBuffer);
 
     function mesh(vertexBuffer, indexBuffer)
-        = mesh(vertexBuffer, indexBuffer, vertexBuffer.setAll(origin));
+        = mesh(vertexBuffer, indexBuffer, origin.repeat(0));
 
     function mesh(vertexBuffer, indexBuffer, uvBuffer)
-        = mesh(vertexBuffer, indexBuffer, uvBuffer, vertexBuffer.setAll(origin));
+        = mesh(vertexBuffer, indexBuffer, uvBuffer, origin.repeat(0));
+
+    function mesh(vertexBuffer, indexBuffer, uvBuffer, colorBuffer)
+        = mesh(vertexBuffer, indexBuffer, uvBuffer, colorBuffer, origin.repeat(0))
+            .computeVertexNormals();
+
+    function setVertices(m, points)
+        = mesh(points, m.indexBuffer, m.uvBuffer, m.colorBuffer, m.normalBuffer);
+
+    function setVertexColors(m, colors)
+        = mesh(m.vertexBuffer, m.indexBuffer, m.uvBuffer, colors, m.normalBuffer);
+
+    function setVertexUVs(m, uvs)
+        = mesh(m.vertexBuffer, m.indexBuffer, uvs, m.colorBuffer, m.normalBuffer);
+
+    function setVertexNormals(m, normals)
+        = mesh(m.vertexBuffer, m.indexBuffer, m.uvBuffer, m.colorBuffer, normals);
 
     // Platonic solids
-
     var tetrahedron
         = mesh(
         [
@@ -185,8 +188,9 @@ module heron:geometry.mesh:0.1
         var uvs = cartesianProduct(0..uCount, 0..vCount, (u, v)
             => vector(u / uMax * uLength + uStart, v / vMax * vLength + vStart, 0));
         var points = uvs.map(uvw => f(uvw.x, uvw.y));
+        var normals = uvs.map(uvw => normalFromUV(uvw.x, uvw.y, f));
         var indices = quadStripToMeshIndices(points, vCount, uJoin, vJoin);
-        return mesh(points, indices, uvs);
+        return mesh(points, indices, uvs, origin.repeat(0), normals);
     }
 
     function meshFromUV(f, segments)
@@ -226,6 +230,12 @@ module heron:geometry.mesh:0.1
             (r1 + r2 * cos(v*2.0*pi)) * sin(u*2.0*pi),
             r2 * sin(v*2.0*pi));
 
+    // Given a function that generates coordinates from UV space will compute a local normal.
+    function normalFromUV(u, v, f)
+        = var eps = 0.0001 in          
+            var p = f(u, v) in 
+                cross(f(u + eps, v) - p, f(u, v + eps) - p); 
+
     function torus()
         = torus(2, 0.5, 32);
 
@@ -238,20 +248,14 @@ module heron:geometry.mesh:0.1
     function toVectors(xs)
         = (0 .. xs.count/3).map(i => vector(xs[i*3], xs[i*3+1], xs[i*3+2]));
 
-    function setVertices(m, points)
-        = mesh(points, m.indexBuffer, m.uvBuffer, m.colorBuffer);
-
-    function setVertexColors(m, colors)
-        = mesh(m.vertexBuffer, m.indexBuffer, m.uvBuffer, colors);
-
-    function setVertexUVs(m, uvs)
-        = mesh(m.vertexBuffer, m.indexBuffer, uvs, m.colorBuffer);
-
     function transform(m, f)
         = m.setVertices(m.vertexBuffer.map(f));
 
     function translate(m, amount)
         = m.transform(v => v + amount);
+
+    function translate(m, vectors)
+        = m.setVertices(m.vertexBuffer.zip(vectors, (p, v) => p + v));
 
     function scale(m, amount)
         = m.transform(v => v * amount);
@@ -261,15 +265,15 @@ module heron:geometry.mesh:0.1
         var v = b * pi * 2.0;
         var x = 0.0, y = 0.0, z = 0.0;
         if (u < pi) {
-            x = 3.0 * u.cos * ( 1.0 + u.sin ) + ( 2.0 * ( 1.0 - u.cos / 2.0 ) ) * u.cos * v.cos;
-            z = -8.0 * u.sin - 2.0 * ( 1.0 - u.cos / 2.0 ) * u.sin * v.cos;
+            x = 3.0 * u.cos * (1.0 + u.sin) + (2.0 * (1.0 - u.cos / 2.0)) * u.cos * v.cos;
+            z = -8.0 * u.sin - 2.0 * (1.0 - u.cos / 2.0) * u.sin * v.cos;
         } else {
-            x = 3.0 * u.cos * ( 1.0 + u.sin ) + ( 2.0 * ( 1.0 - u.cos / 2.0 ) ) * cos( v + pi );
+            x = 3.0 * u.cos * (1.0 + u.sin) + (2.0 * (1.0 - u.cos / 2.0)) * cos(v + pi);
             z = -8.0 * u.sin;
         }
-        y = -2.0 * ( 1.0 - u.cos / 2.0 ) * v.sin;
-
-        // Scale down, because it is big compared to other primitives
+        y = -2.0 * (1.0 - u.cos / 2.0) * v.sin;
+        // Scaled down, because it is too big compared to other primitives
+        // TODO: find a more well thoughts out scale factor (is it pi?)
         return vector(x / 4.0, y / 4.0, z / 4.0);
     }
 
@@ -297,4 +301,42 @@ module heron:geometry.mesh:0.1
 
     function mobius()
         = meshFromUV(mobiusPoint, 20, false);
+
+    function facePoint(mesh, f, i)
+        = mesh.vertexBuffer[mesh.indexBuffer[f * 3 + i]];
+    
+    // Works only if the mesh has non-degenerate faces (faces of  )
+    function faceNormal(mesh, f)
+        = cross(mesh.faceSide1(f), mesh.faceSide2(f)).normal;    
+
+    function faceSide1(mesh, f)
+        = mesh.facePoint(f, 1) - mesh.facePoint(f, 0);
+
+    function faceSide2(mesh, f)
+        = mesh.facePoint(f, 2) - mesh.facePoint(f, 0);
+
+    function faceNormals(mesh)
+        = (0..mesh.faceCount).map(i => mesh.faceNormal(i));
+
+    function computeVertexNormals(mesh) {
+        var sums = origin.repeat(mesh.vertexCount).mutable;
+        var counts = repeat(0, mesh.vertexCount).mutable;        
+        for (var f in 0..mesh.faceCount) {
+            var normal = mesh.faceNormal(f);
+            for (var i in 0..3) {
+                var index = mesh.indexBuffer[f*3 + i];
+                sums[index] += normal;
+                counts[index] += 1;
+            }
+        }
+        return mesh.setVertexNormals(zip(sums, counts, (a, b) => a / b.float.vector));
+    }
+
+    // Rotation is represented as a quaternion
+    function applyRotation(pos, rotXYZ, rotW) 
+        = pos + 2.0.vector * cross( rotXYZ, cross( rotXYZ, pos ) + rotW * pos );
+   
+    // Rotation is represented as a quaternion
+    function applyTRS(pos, trans, rotXYZ, rotW, scale) 
+        = applyRotation(pos * scale, rotXYZ, rotW) + trans;
 }

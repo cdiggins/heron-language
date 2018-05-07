@@ -32,12 +32,10 @@
     <span class="keyword">import</span> <span class="moduleName">heron:geometry.mesh:0.1</span><span class="delimiter">;</span>
     <span class="keyword">import</span> <span class="moduleName">heron:geometry.vector:0.1</span><span class="delimiter">;</span>
 
-    <span class="functionDef"><span class="functionType">( -&gt; Array&lt;(Float Float Float Float -&gt; Mesh)&gt;)</span><span class="keyword">function</span> <span class="funcName">main</span><span class="delimiter">()</span> <span class='statement'><span class="delimiter">{</span>
-        <span class='statement'><span class="varName">simpleArrayTest</span><span class="delimiter">()</span></span><span class="delimiter">;</span>
-        <span class='statement'><span class="keyword">return</span> <span class="varName">geometryTest</span><span class="delimiter">()</span></span><span class="delimiter">;</span>
-    </span><span class="delimiter">}</span>
+    <span class="functionDef"><span class="functionType">( -&gt; &#039;a)</span><span class="keyword">function</span> <span class="funcName">main</span><span class="delimiter">()</span> 
+        <span class="operator">=</span> <span class="varName">simpleArrayTest</span><span class="delimiter">()</span></span><span class="delimiter">;</span>
 
-    </span><span class="functionDef"><span class="functionType">( -&gt; &#039;a)</span><span class="keyword">function</span> <span class="funcName">simpleArrayTest</span><span class="delimiter">()</span> <span class='statement'><span class="delimiter">{</span>
+    <span class="functionDef"><span class="functionType">( -&gt; &#039;a)</span><span class="keyword">function</span> <span class="funcName">simpleArrayTest</span><span class="delimiter">()</span> <span class='statement'><span class="delimiter">{</span>
         <span class='statement'><span class="keyword">var</span> <span class="varNameDecl">xs</span> <span class="operator">=</span> <span class="operator">[</span><span class="number">1</span><span class="delimiter">,</span> <span class="number">11</span><span class="delimiter">,</span> <span class="number">3</span><span class="operator">]</span></span><span class="delimiter">;</span>
         <span class='statement'><span class="varName">print</span><span class="delimiter">(</span><span class="string">&#039;Expect [1, 11, 3]&#039;</span><span class="delimiter">)</span></span><span class="delimiter">;</span>
         <span class='statement'><span class="varName">print</span><span class="delimiter">(</span><span class="varName">xs</span><span class="delimiter">)</span></span><span class="delimiter">;</span>
@@ -84,33 +82,38 @@
         <span class='statement'><span class="varName">print</span><span class="delimiter">(</span><span class="varName">xs</span><span class="operator">.</span><span class="identifier">average</span><span class="delimiter">)</span></span><span class="delimiter">;</span></span>
     <span class="delimiter">}</span>
 
-    </span><span class='statement'><span class="keyword">var</span> <span class="varNameDecl">red</span> <span class="operator">=</span> <span class="varName">vector</span><span class="delimiter">(</span><span class="number">1</span><span class="delimiter">,</span> <span class="number">0</span><span class="delimiter">,</span> <span class="number">0</span><span class="delimiter">)</span></span><span class="delimiter">;</span>
-    <span class='statement'><span class="keyword">var</span> <span class="varNameDecl">green</span> <span class="operator">=</span> <span class="varName">vector</span><span class="delimiter">(</span><span class="number">0</span><span class="delimiter">,</span> <span class="number">1</span><span class="delimiter">,</span> <span class="number">0</span><span class="delimiter">)</span></span><span class="delimiter">;</span>
-    <span class='statement'><span class="keyword">var</span> <span class="varNameDecl">blue</span> <span class="operator">=</span> <span class="varName">vector</span><span class="delimiter">(</span><span class="number">0</span><span class="delimiter">,</span> <span class="number">0</span><span class="delimiter">,</span> <span class="number">1</span><span class="delimiter">)</span></span><span class="delimiter">;</span>
-
-    <span class="lineComment">// Funky coloring function</span>
-    <span class="functionDef"><span class="functionType">(Mesh -&gt; Mesh)</span><span class="keyword">function</span> <span class="funcName">colorGeometry</span><span class="delimiter">(</span><span class="funcParamName">g</span><span class="delimiter">)</span>
+    </span><span class="functionDef"><span class="functionType">(Mesh Float -&gt; Mesh)</span><span class="keyword">function</span> <span class="funcName">colorModifier</span><span class="delimiter">(</span><span class="funcParamName">g</span><span class="delimiter">,</span> <span class="funcParamName">amount</span>: <span class="identifier">Float</span><span class="delimiter">)</span>
         <span class="operator">=</span> <span class="varName">g</span><span class="operator">.</span><span class="identifier">setVertexColors</span><span class="delimiter">(</span><span class="varName">g</span><span class="operator">.</span><span class="identifier">uvBuffer</span><span class="operator">.</span><span class="identifier">map</span><span class="delimiter">(</span><span class="identifier">v</span> <span class="operator">=&gt;</span> <span class="varName">vector</span><span class="delimiter">(</span>
             <span class="varName">sin</span><span class="delimiter">(</span><span class="varName">v</span><span class="operator">.</span><span class="identifier">x</span> <span class="operator">*</span> <span class="varName">pi</span> <span class="operator">*</span> <span class="number">4f</span><span class="delimiter">)</span> <span class="operator">/</span> <span class="number">2.0</span> <span class="operator">+</span> <span class="number">0.5</span><span class="delimiter">,</span>
-            <span class="number">0</span><span class="delimiter">,</span>
-            <span class="varName">cos</span><span class="delimiter">(</span><span class="varName">v</span><span class="operator">.</span><span class="identifier">y</span> <span class="operator">*</span> <span class="varName">pi</span> <span class="operator">*</span> <span class="number">4f</span><span class="delimiter">)</span> <span class="operator">/</span> <span class="number">2.0</span> <span class="operator">+</span> <span class="number">0.5</span>
-            <span class="delimiter">)</span><span class="delimiter">)</span><span class="delimiter">)</span></span><span class="delimiter">;</span>
+            <span class="varName">sin</span><span class="delimiter">(</span><span class="varName">amount</span><span class="delimiter">)</span><span class="delimiter">,</span>
+            <span class="varName">cos</span><span class="delimiter">(</span><span class="varName">v</span><span class="operator">.</span><span class="identifier">y</span> <span class="operator">*</span> <span class="varName">pi</span> <span class="operator">*</span> <span class="number">4f</span><span class="delimiter">)</span> <span class="operator">/</span> <span class="number">2.0</span> <span class="operator">+</span> <span class="number">0.5</span><span class="delimiter">)</span><span class="delimiter">)</span><span class="delimiter">)</span></span><span class="delimiter">;</span>
 
-    <span class="lineComment">// Given a geometry, gives us a function that returns an offset version of that geometry</span>
-    <span class="functionDef"><span class="functionType">(Mesh -&gt; (Float Float Float Float -&gt; Mesh))</span><span class="keyword">function</span> <span class="funcName">demoGeometry</span><span class="delimiter">(</span><span class="funcParamName">g</span><span class="delimiter">)</span> 
-        <span class="operator">=</span> <span class="delimiter">(</span><span class="identifier">offX</span><span class="delimiter">,</span> <span class="identifier">offY</span><span class="delimiter">,</span> <span class="identifier">offZ</span><span class="delimiter">,</span> <span class="identifier">scl</span><span class="delimiter">)</span> <span class="operator">=&gt;</span> 
-            <span class="varName">g</span><span class="operator">.</span><span class="identifier">translate</span><span class="delimiter">(</span><span class="varName">vector</span><span class="delimiter">(</span><span class="varName">offX</span><span class="delimiter">,</span> <span class="varName">offY</span><span class="delimiter">,</span> <span class="varName">offZ</span><span class="delimiter">)</span><span class="delimiter">)</span>
-            <span class="operator">.</span><span class="identifier">scale</span><span class="delimiter">(</span><span class="varName">vector</span><span class="delimiter">(</span><span class="varName">scl</span><span class="delimiter">,</span> <span class="varName">scl</span><span class="delimiter">,</span> <span class="varName">scl</span><span class="delimiter">)</span><span class="delimiter">)</span>
-            <span class="operator">.</span><span class="identifier">colorGeometry</span></span><span class="delimiter">;</span>
+    <span class="functionDef"><span class="functionType">(Mesh Float -&gt; Mesh)</span><span class="keyword">function</span> <span class="funcName">pushModifer</span><span class="delimiter">(</span><span class="funcParamName">g</span><span class="delimiter">,</span> <span class="funcParamName">amount</span>: <span class="identifier">Float</span><span class="delimiter">)</span>
+        <span class="operator">=</span> <span class="varName">g</span><span class="operator">.</span><span class="identifier">translate</span><span class="delimiter">(</span><span class="varName">g</span><span class="operator">.</span><span class="identifier">normalBuffer</span><span class="operator">.</span><span class="identifier">map</span><span class="delimiter">(</span><span class="identifier">n</span> <span class="operator">=&gt;</span> <span class="varName">n</span> <span class="operator">*</span> <span class="varName">amount</span><span class="operator">.</span><span class="identifier">vector</span><span class="delimiter">)</span><span class="delimiter">)</span></span><span class="delimiter">;</span>
+    
+    <span class="functionDef"><span class="functionType">(Mesh Float -&gt; Mesh)</span><span class="keyword">function</span> <span class="funcName">scaleModifier</span><span class="delimiter">(</span><span class="funcParamName">g</span><span class="delimiter">,</span> <span class="funcParamName">amount</span>: <span class="identifier">Float</span><span class="delimiter">)</span>
+        <span class="operator">=</span> <span class="varName">g</span><span class="operator">.</span><span class="identifier">scale</span><span class="delimiter">(</span><span class="varName">amount</span><span class="operator">.</span><span class="identifier">vector</span><span class="delimiter">)</span></span><span class="delimiter">;</span>
 
-    <span class="functionDef"><span class="functionType">( -&gt; Array&lt;(Float Float Float Float -&gt; Mesh)&gt;)</span><span class="keyword">function</span> <span class="funcName">geometryTest</span><span class="delimiter">()</span> 
-        <span class="operator">=</span> <span class="operator">[</span>
-            <span class="varName">demoGeometry</span><span class="delimiter">(</span><span class="varName">sphere</span><span class="delimiter">()</span><span class="delimiter">)</span><span class="delimiter">,</span>
-            <span class="varName">demoGeometry</span><span class="delimiter">(</span><span class="varName">cylinder</span><span class="delimiter">()</span><span class="delimiter">)</span><span class="delimiter">,</span>
-            <span class="varName">demoGeometry</span><span class="delimiter">(</span><span class="varName">torus</span><span class="delimiter">()</span><span class="delimiter">)</span><span class="delimiter">,</span>
-            <span class="varName">demoGeometry</span><span class="delimiter">(</span><span class="varName">klein</span><span class="delimiter">()</span><span class="delimiter">)</span><span class="delimiter">,</span>
-            <span class="varName">demoGeometry</span><span class="delimiter">(</span><span class="varName">plane</span><span class="delimiter">()</span><span class="delimiter">)</span><span class="delimiter">,</span>
-            <span class="varName">demoGeometry</span><span class="delimiter">(</span><span class="varName">mobius</span><span class="delimiter">()</span><span class="delimiter">)</span>
+    <span class="functionDef"><span class="functionType">( -&gt; Array&lt;(Mesh Float -&gt; Mesh)&gt;)</span><span class="keyword">function</span> <span class="funcName">modifiers</span><span class="delimiter">()</span>
+        <span class="operator">=</span> <span class="operator">[</span> 
+            <span class="varName">pushModifer</span><span class="delimiter">,</span>
+            <span class="varName">scaleModifier</span><span class="delimiter">,</span>            
+            <span class="varName">colorModifier</span>
+        <span class="operator">]</span></span><span class="delimiter">;</span>
+
+    <span class="functionDef"><span class="functionType">( -&gt; Array&lt;Mesh&gt;)</span><span class="keyword">function</span> <span class="funcName">primitives</span><span class="delimiter">()</span>
+        <span class="operator">=</span> <span class="operator">[</span> 
+            <span class="varName">sphere</span><span class="delimiter">()</span><span class="delimiter">,</span> 
+            <span class="varName">cylinder</span><span class="delimiter">()</span><span class="delimiter">,</span> 
+            <span class="varName">torus</span><span class="delimiter">()</span><span class="delimiter">,</span> 
+            <span class="varName">klein</span><span class="delimiter">()</span><span class="delimiter">,</span> 
+            <span class="varName">plane</span><span class="delimiter">()</span><span class="delimiter">,</span> 
+            <span class="varName">mobius</span><span class="delimiter">()</span><span class="delimiter">,</span> 
+            <span class="varName">tetrahedron</span><span class="delimiter">,</span> 
+            <span class="varName">cube</span><span class="delimiter">,</span> 
+            <span class="varName">octahedron</span><span class="delimiter">,</span> 
+            <span class="varName">dodecahedron</span><span class="delimiter">,</span>
+            <span class="varName">icosahedron</span>
         <span class="operator">]</span></span><span class="delimiter">;</span>
 <span class="delimiter">}</span>
 </div>

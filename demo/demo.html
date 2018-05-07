@@ -37,12 +37,8 @@
 			// Used for controlling which geometry is show in the UI
 			const heronData = { 
 				geometryIndex: 0,
-				offset: {
-					x: 0,
-					y: 0,
-					z: 0,
-				},
-				scale: 3,
+				modifierIndex: 0, 
+				amount: 1,
 			};
 
 			function vectorsToJavaScript(xs) {
@@ -53,7 +49,8 @@
 			}
 
 			// A list of the geometris created
-			const heronGeometries = heronMain();
+			const heronGeometries = heronMain.primitives();
+			const heronModifiers = heronMain.modifiers();
 
 			// Used to create a heron geometry and associate it with a ThreeJS scene object
 			function makeHeronGeometry( sceneObject ) 
@@ -62,24 +59,28 @@
 					const r = new THREE.BufferGeometry();
 					const vertexBuffer = vectorsToJavaScript(heronMesh.vertexBuffer);
 					const colorBuffer = vectorsToJavaScript(heronMesh.colorBuffer);
-					//const normalBuffer = heronArrayToJavaScript(heronMesh.normalBuffer);
-					//const uvBuffer = heronArrayToJavaScript(heronMesh.uvBuffer);
+					const normalBuffer = vectorsToJavaScript(heronMesh.normalBuffer);
+					const uvBuffer = vectorsToJavaScript(heronMesh.uvBuffer);
 					r.setIndex( heronMesh.indexBuffer );
 					
 					//https://threejs.org/docs/#api/core/BufferGeometry
 					r.addAttribute( 'position', new THREE.Float32BufferAttribute( vertexBuffer, 3 ) );					
-					r.addAttribute( 'color', new THREE.Float32BufferAttribute( colorBuffer, 3 ) );
-					
-					// TODO: add normals 
-					//r.addAttribute( 'normal', new THREE.Float32BufferAttribute( normalBuffer, 3 ) );
+
+					if (colorBuffer.length > 0)
+						r.addAttribute( 'color', new THREE.Float32BufferAttribute( colorBuffer, 3 ) );					
+					if (normalBuffer.length > 0)
+						r.addAttribute( 'normal', new THREE.Float32BufferAttribute( normalBuffer, 3 ) );
+					if (uvBuffer.length > 0)
+						r.addAttribute( 'uv', new THREE.Float32BufferAttribute( uvBuffer, 3 ) );
 
 					return r;
 				}
 
 				function generateGeometry() {					
-					const f = heronGeometries[heronData.geometryIndex];
-					const hg = f(heronData.offset.x / 10, heronData.offset.y / 10, heronData.offset.z / 10, heronData.scale);
-					const g = heronGeometryToThreeJsGeometry(hg);
+					let hg = heronGeometries[heronData.geometryIndex];
+					const m = heronModifiers[heronData.modifierIndex];
+					hg = m(hg, heronData.amount); 
+					let g = heronGeometryToThreeJsGeometry(hg);
 					updateGroupGeometry( sceneObject, g );
 				}
 
@@ -90,14 +91,22 @@
 					'klein': 3,
 					'plane': 4,
 					'mobius': 5,
+					'tetrahedron': 6,
+            		'cube': 7, 
+            		'octahedron': 8,
+            		'dodecahedron': 9,
+            		'icosahedron': 10,					
 				};
 
+				const modifierIndices = {
+            		'scaleModifier': 0,
+					'pushModifer': 1,
+            		'colorModifier': 2,
+				}
+
 				gui.add(heronData, 'geometryIndex', geometryIndices).onChange( generateGeometry );
-				const f = gui.addFolder('translation');
-				f.add(heronData.offset, 'x').onChange( generateGeometry );
-				f.add(heronData.offset, 'y').onChange( generateGeometry );
-				f.add(heronData.offset, 'z').onChange( generateGeometry );
-				gui.add(heronData, 'scale').onChange( generateGeometry );
+				gui.add(heronData, 'modifierIndex', modifierIndices).onChange( generateGeometry );
+				gui.add(heronData, 'amount').onChange( generateGeometry );
 				generateGeometry();
 								
 				return { };
