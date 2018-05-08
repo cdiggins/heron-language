@@ -1,5 +1,11 @@
 language heron:std:0.1;
 
+// The following pages are inspirations for some of this 
+// https://prideout.net/blog/?p=44
+// https://github.com/mrdoob/three.js/blob/master/src/geometries/ParametricGeometry.js
+// https://github.com/mrdoob/three.js/blob/master/examples/js/ParametricGeometries.js
+// https://paulbourke.net/geometry/
+
 module heron:geometry.mesh:0.1
 {
     import heron:std.array:0.1;
@@ -230,11 +236,21 @@ module heron:geometry.mesh:0.1
             (r1 + r2 * cos(v*2.0*pi)) * sin(u*2.0*pi),
             r2 * sin(v*2.0*pi));
 
-    // Given a function that generates coordinates from UV space will compute a local normal.
+    function tangentFromUV(u, v, f, p: Float3, eps: Float)
+        = u - eps >= 0
+            ? p - f(u - eps, v)
+            : f(u + eps, v) - p;
+
+    function cotangentFromUV(u, v, f, p: Float3, eps: Float)
+        = v - eps >= 0
+            ? p - f(u, v - eps)
+            : f(u, v + eps) - p;
+
+    // Given a function that generates coordinates from UV space will compute a local normal.    
     function normalFromUV(u, v, f)
         = var eps = 0.0001 in          
-            var p = f(u, v) in 
-                cross(f(u + eps, v) - p, f(u, v + eps) - p).normal; 
+            var p = f(u, v) in
+                cross(tangentFromUV(u, v, f, p, eps), cotangentFromUV(u, v, f, p, eps)).normal; 
 
     function torus()
         = torus(2, 0.5, 32);
@@ -305,7 +321,6 @@ module heron:geometry.mesh:0.1
     function facePoint(mesh, f, i)
         = mesh.vertexBuffer[mesh.indexBuffer[f * 3 + i]];
     
-    // Works only if the mesh has non-degenerate faces (faces of  )
     function faceNormal(mesh, f)
         = cross(mesh.faceSide1(f), mesh.faceSide2(f)).normal;    
 
@@ -329,7 +344,7 @@ module heron:geometry.mesh:0.1
                 counts[index] += 1;
             }
         }
-        return mesh.setVertexNormals(zip(sums, counts, (a, b) => a / b.float.vector));
+        return mesh.setVertexNormals(zip(sums, counts, (a, b) => (a / b.float.vector)));
     }
 
     // Rotation is represented as a quaternion
