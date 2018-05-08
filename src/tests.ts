@@ -190,7 +190,7 @@ function tests() {
     const now = new Date();
     const library = fs.readFileSync(path.join('src', 'js-intrinsics.js'), 'utf-8');
     let text = '// Generated using Heron on ' + now.toDateString() + ' ' + now.toTimeString() + '\n'; 
-    text += 'var heronMain = (function () {\n';
+    text += 'var heron = (function () {\n';
     text += library + '\n';
     text += toJs.cb.toString();
     text += '\n';
@@ -203,7 +203,9 @@ function tests() {
     const m = pkg.getModule("heron:tests:0.1");
     for (const f of m.functions) 
         text += f.name + ' : ' + funcDefName(f) + ',\n';
-    text += '}; })();\n';
+    text += '};\n';
+    text += '})();\n';
+    text += 'heron.main()';
     //fs.writeFileSync(path.join(outputFolder, 'output.js'), text);
     fs.writeFileSync(path.join('demo', 'output.js'), text);
 

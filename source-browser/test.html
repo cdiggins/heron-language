@@ -32,10 +32,12 @@
     <span class="keyword">import</span> <span class="moduleName">heron:geometry.mesh:0.1</span><span class="delimiter">;</span>
     <span class="keyword">import</span> <span class="moduleName">heron:geometry.vector:0.1</span><span class="delimiter">;</span>
 
-    <span class="functionDef"><span class="functionType">( -&gt; &#039;a)</span><span class="keyword">function</span> <span class="funcName">main</span><span class="delimiter">()</span> 
-        <span class="operator">=</span> <span class="varName">simpleArrayTest</span><span class="delimiter">()</span></span><span class="delimiter">;</span>
+    <span class="functionDef"><span class="functionType">( -&gt; &#039;a)</span><span class="keyword">function</span> <span class="funcName">main</span><span class="delimiter">()</span> <span class='statement'><span class="delimiter">{</span>
+        <span class='statement'><span class="varName">simpleArrayTest</span><span class="delimiter">()</span></span><span class="delimiter">;</span>
+        <span class='statement'><span class="varName">simpleVectorTest</span><span class="delimiter">()</span></span><span class="delimiter">;</span></span>
+    <span class="delimiter">}</span>
 
-    <span class="functionDef"><span class="functionType">( -&gt; &#039;a)</span><span class="keyword">function</span> <span class="funcName">simpleArrayTest</span><span class="delimiter">()</span> <span class='statement'><span class="delimiter">{</span>
+    </span><span class="functionDef"><span class="functionType">( -&gt; &#039;a)</span><span class="keyword">function</span> <span class="funcName">simpleArrayTest</span><span class="delimiter">()</span> <span class='statement'><span class="delimiter">{</span>
         <span class='statement'><span class="keyword">var</span> <span class="varNameDecl">xs</span> <span class="operator">=</span> <span class="operator">[</span><span class="number">1</span><span class="delimiter">,</span> <span class="number">11</span><span class="delimiter">,</span> <span class="number">3</span><span class="operator">]</span></span><span class="delimiter">;</span>
         <span class='statement'><span class="varName">print</span><span class="delimiter">(</span><span class="string">&#039;Expect [1, 11, 3]&#039;</span><span class="delimiter">)</span></span><span class="delimiter">;</span>
         <span class='statement'><span class="varName">print</span><span class="delimiter">(</span><span class="varName">xs</span><span class="delimiter">)</span></span><span class="delimiter">;</span>
@@ -82,6 +84,44 @@
         <span class='statement'><span class="varName">print</span><span class="delimiter">(</span><span class="varName">xs</span><span class="operator">.</span><span class="identifier">average</span><span class="delimiter">)</span></span><span class="delimiter">;</span></span>
     <span class="delimiter">}</span>
 
+    </span><span class="functionDef"><span class="functionType">(Float3 -&gt; &#039;a)</span><span class="keyword">function</span> <span class="funcName">printVector</span><span class="delimiter">(</span><span class="funcParamName">v</span><span class="delimiter">)</span> <span class='statement'><span class="delimiter">{</span>
+        <span class='statement'><span class="keyword">var</span> <span class="varNameDecl">xs</span> <span class="operator">=</span> <span class="operator">[</span><span class="varName">v</span><span class="operator">.</span><span class="identifier">x</span><span class="delimiter">,</span> <span class="varName">v</span><span class="operator">.</span><span class="identifier">y</span><span class="delimiter">,</span> <span class="varName">v</span><span class="operator">.</span><span class="identifier">z</span><span class="operator">]</span></span><span class="delimiter">;</span>
+        <span class='statement'><span class="varName">print</span><span class="delimiter">(</span><span class="varName">xs</span><span class="delimiter">)</span></span><span class="delimiter">;</span></span>
+    <span class="delimiter">}</span>    
+
+    </span><span class="functionDef"><span class="functionType">( -&gt; &#039;a)</span><span class="keyword">function</span> <span class="funcName">simpleVectorTest</span><span class="delimiter">()</span> <span class='statement'><span class="delimiter">{</span>
+        <span class='statement'><span class="keyword">var</span> <span class="varNameDecl">v</span> <span class="operator">=</span> <span class="varName">vector</span><span class="delimiter">(</span><span class="number">4</span><span class="delimiter">,</span> <span class="number">3</span><span class="delimiter">,</span> <span class="number">0</span><span class="delimiter">)</span></span><span class="delimiter">;</span>
+
+        <span class='statement'><span class="varName">print</span><span class="delimiter">(</span><span class="string">&#039;Expect 5&#039;</span><span class="delimiter">)</span></span><span class="delimiter">;</span>
+        <span class='statement'><span class="varName">print</span><span class="delimiter">(</span><span class="varName">v</span><span class="operator">.</span><span class="identifier">length</span><span class="delimiter">)</span></span><span class="delimiter">;</span>
+
+        <span class='statement'><span class="varName">print</span><span class="delimiter">(</span><span class="string">&#039;Expect [4, 3, 0]&#039;</span><span class="delimiter">)</span></span><span class="delimiter">;</span>
+        <span class='statement'><span class="varName">print</span><span class="delimiter">(</span><span class="varName">v</span><span class="delimiter">)</span></span><span class="delimiter">;</span>
+
+        <span class='statement'><span class="keyword">var</span> <span class="varNameDecl">v1</span> <span class="operator">=</span> <span class="varName">vector</span><span class="delimiter">(</span><span class="number">1</span><span class="delimiter">,</span> <span class="number">0</span><span class="delimiter">,</span> <span class="number">0</span><span class="delimiter">)</span></span><span class="delimiter">;</span>
+        <span class='statement'><span class="keyword">var</span> <span class="varNameDecl">v2</span> <span class="operator">=</span> <span class="varName">vector</span><span class="delimiter">(</span><span class="number">0</span><span class="delimiter">,</span> <span class="number">1</span><span class="delimiter">,</span> <span class="number">0</span><span class="delimiter">)</span></span><span class="delimiter">;</span>
+        <span class='statement'><span class="varName">print</span><span class="delimiter">(</span><span class="string">&#039;Expect [0,0,1]&#039;</span><span class="delimiter">)</span></span><span class="delimiter">;</span>
+        <span class='statement'><span class="varName">print</span><span class="delimiter">(</span><span class="varName">v1</span><span class="operator">.</span><span class="identifier">cross</span><span class="delimiter">(</span><span class="varName">v2</span><span class="delimiter">)</span><span class="delimiter">)</span></span><span class="delimiter">;</span>       
+
+        <span class='statement'><span class="varName">print</span><span class="delimiter">(</span><span class="string">&#039;Expect [1,1,0]&#039;</span><span class="delimiter">)</span></span><span class="delimiter">;</span>
+        <span class='statement'><span class="keyword">var</span> <span class="varNameDecl">v3</span> <span class="operator">=</span> <span class="varName">v1</span> <span class="operator">+</span> <span class="varName">v2</span></span><span class="delimiter">;</span>
+        <span class='statement'><span class="varName">print</span><span class="delimiter">(</span><span class="varName">v3</span><span class="delimiter">)</span></span><span class="delimiter">;</span>       
+
+        <span class='statement'><span class="varName">print</span><span class="delimiter">(</span><span class="string">&#039;Expect [1,0,0]&#039;</span><span class="delimiter">)</span></span><span class="delimiter">;</span>
+        <span class='statement'><span class="keyword">var</span> <span class="varNameDecl">v4</span> <span class="operator">=</span> <span class="varName">v3</span> <span class="operator">-</span> <span class="varName">v2</span></span><span class="delimiter">;</span>
+        <span class='statement'><span class="varName">print</span><span class="delimiter">(</span><span class="varName">v4</span><span class="delimiter">)</span></span><span class="delimiter">;</span>       
+
+        <span class='statement'><span class="varName">print</span><span class="delimiter">(</span><span class="string">&#039;Expect [20,15,0]&#039;</span><span class="delimiter">)</span></span><span class="delimiter">;</span>
+        <span class='statement'><span class="keyword">var</span> <span class="varNameDecl">v5</span> <span class="operator">=</span> <span class="varName">v</span> <span class="operator">*</span> <span class="number">5.0</span><span class="operator">.</span><span class="identifier">vector</span></span><span class="delimiter">;</span>
+        <span class='statement'><span class="varName">print</span><span class="delimiter">(</span><span class="varName">v5</span><span class="delimiter">)</span></span><span class="delimiter">;</span>       
+
+        <span class='statement'><span class="varName">print</span><span class="delimiter">(</span><span class="string">&#039;Expect [1,1,0]&#039;</span><span class="delimiter">)</span></span><span class="delimiter">;</span>
+        <span class='statement'><span class="varName">print</span><span class="delimiter">(</span><span class="varName">v1</span> <span class="operator">+</span> <span class="varName">v2</span><span class="delimiter">)</span></span><span class="delimiter">;</span>       
+
+        <span class='statement'><span class="varName">print</span><span class="delimiter">(</span><span class="string">&#039;Expect [0.8, 0.6, 0]&#039;</span><span class="delimiter">)</span></span><span class="delimiter">;</span>
+        <span class='statement'><span class="varName">print</span><span class="delimiter">(</span><span class="varName">v</span><span class="operator">.</span><span class="identifier">normal</span><span class="delimiter">)</span></span><span class="delimiter">;</span></span>
+    <span class="delimiter">}</span>
+
     </span><span class="functionDef"><span class="functionType">(Mesh Float -&gt; Mesh)</span><span class="keyword">function</span> <span class="funcName">colorModifier</span><span class="delimiter">(</span><span class="funcParamName">g</span><span class="delimiter">,</span> <span class="funcParamName">amount</span>: <span class="identifier">Float</span><span class="delimiter">)</span>
         <span class="operator">=</span> <span class="varName">g</span><span class="operator">.</span><span class="identifier">setVertexColors</span><span class="delimiter">(</span><span class="varName">g</span><span class="operator">.</span><span class="identifier">uvBuffer</span><span class="operator">.</span><span class="identifier">map</span><span class="delimiter">(</span><span class="identifier">v</span> <span class="operator">=&gt;</span> <span class="varName">vector</span><span class="delimiter">(</span>
             <span class="varName">sin</span><span class="delimiter">(</span><span class="varName">v</span><span class="operator">.</span><span class="identifier">x</span> <span class="operator">*</span> <span class="varName">pi</span> <span class="operator">*</span> <span class="number">4f</span><span class="delimiter">)</span> <span class="operator">/</span> <span class="number">2.0</span> <span class="operator">+</span> <span class="number">0.5</span><span class="delimiter">,</span>
@@ -96,8 +136,8 @@
 
     <span class="functionDef"><span class="functionType">( -&gt; Array&lt;(Mesh Float -&gt; Mesh)&gt;)</span><span class="keyword">function</span> <span class="funcName">modifiers</span><span class="delimiter">()</span>
         <span class="operator">=</span> <span class="operator">[</span> 
-            <span class="varName">pushModifer</span><span class="delimiter">,</span>
             <span class="varName">scaleModifier</span><span class="delimiter">,</span>            
+            <span class="varName">pushModifer</span><span class="delimiter">,</span>
             <span class="varName">colorModifier</span>
         <span class="operator">]</span></span><span class="delimiter">;</span>
 

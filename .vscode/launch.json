@@ -8,8 +8,8 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Heron",
-            "program": "${workspaceRoot}/output/output.js",
+            "name": "Heron Test Output",
+            "program": "${workspaceRoot}/demo/node_test.js",
             "cwd": "${workspaceRoot}",
             "outFiles": ["${workspaceRoot}/build/**/*.js"],
             "sourceMaps": true

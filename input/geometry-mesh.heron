@@ -234,7 +234,7 @@ module heron:geometry.mesh:0.1
     function normalFromUV(u, v, f)
         = var eps = 0.0001 in          
             var p = f(u, v) in 
-                cross(f(u + eps, v) - p, f(u, v + eps) - p); 
+                cross(f(u + eps, v) - p, f(u, v + eps) - p).normal; 
 
     function torus()
         = torus(2, 0.5, 32);

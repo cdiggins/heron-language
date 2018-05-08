@@ -49,7 +49,7 @@ module heron:geometry.vector:0.1
         = (a - b).length2;
 
     function normal(v) 
-        = v / v.length;
+        = v / v.length.vector;
 
     function cross(a, b)
         = vector(a.y*b.z - a.z*b.y, a.z*b.x - a.x*b.z, a.x*b.y - a.y*b.x);

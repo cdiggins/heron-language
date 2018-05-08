@@ -6,8 +6,10 @@ module heron:tests:0.1
     import heron:geometry.mesh:0.1;
     import heron:geometry.vector:0.1;
 
-    function main() 
-        = simpleArrayTest();
+    function main() {
+        simpleArrayTest();
+        simpleVectorTest();
+    }
 
     function simpleArrayTest() {
         var xs = [1, 11, 3];
@@ -56,6 +58,44 @@ module heron:tests:0.1
         print(xs.average);
     }
 
+    function printVector(v) {
+        var xs = [v.x, v.y, v.z];
+        print(xs);
+    }    
+
+    function simpleVectorTest() {
+        var v = vector(4, 3, 0);
+
+        print('Expect 5');
+        print(v.length);
+
+        print('Expect [4, 3, 0]');
+        print(v);
+
+        var v1 = vector(1, 0, 0);
+        var v2 = vector(0, 1, 0);
+        print('Expect [0,0,1]');
+        print(v1.cross(v2));       
+
+        print('Expect [1,1,0]');
+        var v3 = v1 + v2;
+        print(v3);       
+
+        print('Expect [1,0,0]');
+        var v4 = v3 - v2;
+        print(v4);       
+
+        print('Expect [20,15,0]');
+        var v5 = v * 5.0.vector;
+        print(v5);       
+
+        print('Expect [1,1,0]');
+        print(v1 + v2);       
+
+        print('Expect [0.8, 0.6, 0]');
+        print(v.normal);
+    }
+
     function colorModifier(g, amount: Float)
         = g.setVertexColors(g.uvBuffer.map(v => vector(
             sin(v.x * pi * 4f) / 2.0 + 0.5,
@@ -70,8 +110,8 @@ module heron:tests:0.1
 
     function modifiers()
         = [ 
-            pushModifer,
             scaleModifier,            
+            pushModifer,
             colorModifier
         ];
 

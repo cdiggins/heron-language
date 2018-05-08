@@ -177,7 +177,7 @@ function tests() {
     var now = new Date();
     var library = fs.readFileSync(path.join('src', 'js-intrinsics.js'), 'utf-8');
     var text = '// Generated using Heron on ' + now.toDateString() + ' ' + now.toTimeString() + '\n';
-    text += 'var heronMain = (function () {\n';
+    text += 'var heron = (function () {\n';
     text += library + '\n';
     text += toJs.cb.toString();
     text += '\n';
@@ -190,7 +190,9 @@ function tests() {
         var f = _c[_b];
         text += f.name + ' : ' + heron_to_js_1.funcDefName(f) + ',\n';
     }
-    text += '}; })();\n';
+    text += '};\n';
+    text += '})();\n';
+    text += 'heron.main()';
     //fs.writeFileSync(path.join(outputFolder, 'output.js'), text);
     fs.writeFileSync(path.join('demo', 'output.js'), text);
     //outputPackageStats(pkg);
