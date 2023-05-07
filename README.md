@@ -1,11 +1,10 @@
 # Heron Programming Language
 
-[![DeepScan grade](https://deepscan.io/api/projects/2208/branches/12139/badge/grade.svg)](https://deepscan.io/dashboard#view=project&pid=2208&bid=12139)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/564c6796b20d4945ae86bd064eabfcb0)](https://www.codacy.com/app/cdiggins/heron-language?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=cdiggins/heron-language&amp;utm_campaign=Badge_Grade)
-
-See a demo of 3D geometry in thre browser at: [https://cdiggins.github.io/heron-language](https://cdiggins.github.io/heron-language)
+See a demo of 3D geometry in the browser at: [https://cdiggins.github.io/heron-language](https://cdiggins.github.io/heron-language)
 
 Heron is a small cross-platform language designed for ease of use, performance, and safety with a JavaScript like syntax. Heron emphasizes pure functional programming code, but looks like a traditional imperative or object-oriented code. 
+
+![heron-logo-screenshot](https://user-images.githubusercontent.com/1759994/236684195-4cd18d88-8cfd-4744-8c50-590aed2892b0.png)
 
 ## Heron Design Goals
 
