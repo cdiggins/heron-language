@@ -1,10 +1,40 @@
 # Heron Programming Language
 
+![heron-logo-screenshot](https://user-images.githubusercontent.com/1759994/236684195-4cd18d88-8cfd-4744-8c50-590aed2892b0.png)
+
 See a demo of 3D geometry in the browser at: [https://cdiggins.github.io/heron-language](https://cdiggins.github.io/heron-language)
 
-Heron is a small cross-platform language designed for ease of use, performance, and safety with a JavaScript like syntax. Heron emphasizes pure functional programming code, but looks like a traditional imperative or object-oriented code. 
+# About Heron 
 
-![heron-logo-screenshot](https://user-images.githubusercontent.com/1759994/236684195-4cd18d88-8cfd-4744-8c50-590aed2892b0.png)
+Heron is a small cross-platform language that was designed for ease of use, performance, and safety with a JavaScript like syntax. Heron emphasizes pure functional programming code, but looks like a traditional imperative or object-oriented code. 
+
+The Heron implementation was written in TypeScript and uses the [Myna parsing library](https://github.com/cdiggins/myna-parser)
+and the [cdiggins/type-inference](https://github.com/cdiggins/type-inference) project. 
+
+# Type Inference
+
+The most interesting feature of Heron is the fact that it supports type-inference of polymorphic higher-order functions. 
+
+![heron-example](https://user-images.githubusercontent.com/1759994/236684430-ee00d3c9-6fa6-4f3f-9511-7e319ca367c5.png)
+
+The [type inference module was developed as its own standalone library](https://github.com/cdiggins/type-inference) so that it can be reused in other projects. 
+
+# Citation
+
+To formally cite this project please use: 
+
+```
+@software{Heron Language,
+  author = {Diggins, Christopher},
+  title = {Heron Programming Language},
+  url = {https://github.com/cdiggins/heron-language},
+  year = {2018},
+}
+```
+
+## Status - Retired 
+
+Heron is not under active development. Many features and design ideas from Heron have influenced the [Plato language](https://github.com/cdiggins/plato).
 
 ## Heron Design Goals
 
@@ -57,7 +87,7 @@ At the top-level scope of a module the following definitions are allowed:
 
 ### Function Definitions
 
-Heron supports named functions and anonymous functions. Both function forms support either expressions as bodies or 
+Heron supports named functions and anonymous functions. Both function forms support either expression bodies or statement bodies.
 
 ```
 // Named function with statement body
